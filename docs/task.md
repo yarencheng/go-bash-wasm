@@ -412,12 +412,17 @@ Status codes:
 ### `dircolors`
 
 - [ ] Upstream: `third_party/coreutils/src/dircolors.c`
-- [ ] Flags to implement: -b, -c, -p
+- [ ] Output configuration: Missing implementation
+- [ ] Flag `-b`, `--sh`, `--bourne-shell`: `third_party/coreutils/src/dircolors.c:L158`
+- [ ] Flag `-c`, `--csh`, `--c-shell`: `third_party/coreutils/src/dircolors.c:L162`
+- [ ] Flag `-p`, `--print-database`: `third_party/coreutils/src/dircolors.c:L166`
+- [ ] Flag `--print-ls-colors`: `third_party/coreutils/src/dircolors.c:L170`
 
 ### `dirname`
 
+- [ ] Upstream: `third_party/coreutils/src/dirname.c`
 - [ ] Basic operation: Missing implementation
-- [ ] Flag `-z`: `third_party/coreutils/src/dirname.c:L99`
+- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/dirname.c:L76`
 
 ### `dirs`
 
@@ -522,16 +527,19 @@ Status codes:
 ### `expr`
 
 - [ ] Upstream: `third_party/coreutils/src/expr.c`
+- [ ] Expression evaluation: Missing implementation
 - [ ] Arithmetic (+, -, *, /, %): Missing implementation
 - [ ] Comparison (=, !=, <, <=, >, >=): Missing implementation
 - [ ] Logical (| , &): Missing implementation
+- [ ] String operators (match, substr, index, length): `third_party/coreutils/src/expr.c:L186`
 - [ ] String ops (match, substr, index, length): Missing implementation
 - [ ] Flags to implement: specific
 
 ### `factor`
 
 - [ ] Upstream: `third_party/coreutils/src/factor.c`
-- [ ] Flags to implement: -h
+- [ ] Prime factorization: Missing implementation
+- [ ] Flag `-h`, `--exponents`: `third_party/coreutils/src/factor.c:L2480`
 
 ### `false`
 
@@ -556,9 +564,15 @@ Status codes:
 ### `fmt`
 
 - [ ] Upstream: `third_party/coreutils/src/fmt.c`
-- [ ] Basic formatting: Missing implementation
-- [ ] Flags to implement: -WIDTH
-- [ ] Flag `-c`: `third_party/coreutils/src/fmt.c:L278`
+- [ ] Paragraph formatting: Missing implementation
+- [ ] Flag `-c`, `--crown-margin`: `third_party/coreutils/src/fmt.c:L185`
+- [ ] Flag `-p`, `--prefix=STRING`: `third_party/coreutils/src/fmt.c:L189`
+- [ ] Flag `-s`, `--split-only`: `third_party/coreutils/src/fmt.c:L194`
+- [ ] Flag `-t`, `--tagged-paragraph`: `third_party/coreutils/src/fmt.c:L198`
+- [ ] Flag `-u`, `--uniform-spacing`: `third_party/coreutils/src/fmt.c:L202`
+- [ ] Flag `-w`, `--width=WIDTH`: `third_party/coreutils/src/fmt.c:L206`
+- [ ] Flag `-g`, `--goal=WIDTH`: `third_party/coreutils/src/fmt.c:L212`
+- [ ] Flag `-WIDTH`: `third_party/coreutils/src/fmt.c:L178`
 - [ ] Flag `-g`: `third_party/coreutils/src/fmt.c:L305`
 - [ ] Flag `-p`: `third_party/coreutils/src/fmt.c:L282`
 - [ ] Flag `-s`: `third_party/coreutils/src/fmt.c:L287`
@@ -569,9 +583,11 @@ Status codes:
 ### `fold`
 
 - [ ] Upstream: `third_party/coreutils/src/fold.c`
-- [ ] Basic folding: Missing implementation
-- [ ] Flag `-b`: `third_party/coreutils/src/fold.c:L88`
-- [ ] Flag `-c`: `third_party/coreutils/src/fold.c:L92`
+- [ ] Line wrapping: Missing implementation
+- [ ] Flag `-b`, `--bytes`: `third_party/coreutils/src/fold.c:72`
+- [ ] Flag `-c`, `--characters`: `third_party/coreutils/src/fold.c:76`
+- [ ] Flag `-s`, `--spaces`: `third_party/coreutils/src/fold.c:80`
+- [ ] Flag `-w`, `--width=WIDTH`: `third_party/coreutils/src/fold.c:84`
 - [ ] Flag `-s`: `third_party/coreutils/src/fold.c:L96`
 - [ ] Flag `-w`: `third_party/coreutils/src/fold.c:L100`
 
@@ -590,7 +606,6 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/groups.c`
 - [ ] Basic listing: Missing implementation
 - [ ] Multiple users support: `third_party/coreutils/src/groups.c:L120`
-- [ ] Flags to implement: specific
 
 ### `hash`
 

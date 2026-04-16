@@ -1054,3 +1054,19 @@ Status codes:
 - [ ] Audit `groups` (group memberships)
     - Upstream: `third_party/coreutils/src/groups.c`
     - Flags: None specific
+### Batch 25: Coreutils (System Info & Joining)
+- [ ] Audit `hostid` (host id)
+    - Upstream: `third_party/coreutils/src/hostid.c`
+    - Flags: None specific
+- [ ] Audit `hostname` (host name)
+    - Upstream: `third_party/coreutils/src/hostname.c`
+    - Flags: None specific
+- [ ] Audit `id` (user/group id)
+    - Upstream: `third_party/coreutils/src/id.c`
+    - Flags: `-a`, `-Z`, `--context`, `-g`, `--group`, `-G`, `--groups`, `-n`, `--name`, `-r`, `--real`, `-u`, `--user`, `-z`, `--zero`
+- [ ] Audit `join` (join lines)
+    - Upstream: `third_party/coreutils/src/join.c`
+    - Flags: `-a FILENUM`, `-e STRING`, `-i`, `--ignore-case`, `-j FIELD`, `-o FORMAT`, `-t CHAR`, `-v FILENUM`, `-1 FIELD`, `-2 FIELD`, `--check-order`, `--nocheck-order`, `--header`, `-z`, `--zero-terminated`
+- [ ] Audit `logname` (login name)
+    - Upstream: `third_party/coreutils/src/logname.c`
+    - Flags: None specific

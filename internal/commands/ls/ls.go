@@ -56,6 +56,10 @@ type lsFlags struct {
 	ignoreBackups  *bool
 	siUnits        *bool
 	kibibytes      *bool
+	quotingStyle   *string
+	escape         *bool
+	quoteName      *bool
+	hideControl    *bool
 	sortOpt        *string
 }
 
@@ -96,6 +100,10 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		ignoreBackups: flagsSet.BoolP("ignore-backups", "B", false, "do not list implied entries ending with ~"),
 		siUnits:      flagsSet.Bool("si", false, "likewise, but use powers of 1000 not 1024"),
 		kibibytes:    flagsSet.BoolP("kibibytes", "k", false, "default to 1024-byte blocks for disk usage"),
+		quotingStyle: flagsSet.String("quoting-style", "literal", "use quoting style WORD for entry names: literal, shell, shell-always, shell-escape, shell-escape-always, c, escape"),
+		escape:       flagsSet.BoolP("escape", "b", false, "print C-style escapes for nongraphic characters"),
+		quoteName:    flagsSet.BoolP("quote-name", "Q", false, "enclose entry names in double quotes"),
+		hideControl:  flagsSet.BoolP("hide-control-chars", "q", false, "print ? instead of nongraphic characters"),
 		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
@@ -227,8 +235,8 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 	var results []string
 
 	if *f.all {
-		results = append(results, l.formatName(".", target, f))
-		results = append(results, l.formatName("..", target, f))
+		results = append(results, l.formatEntry(nil, ".", target, f))
+		results = append(results, l.formatEntry(nil, "..", target, f))
 	}
 
 	for _, entry := range entries {
@@ -296,6 +304,7 @@ func (l *Ls) formatName(name string, target string, f *lsFlags) string {
 }
 
 func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFlags) string {
+	name = applyQuoting(name, f)
 	style := *f.indicatorStyle
 	if *f.classify {
 		style = "classify"
@@ -307,29 +316,35 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 
 	switch style {
 	case "slash":
-		if entry.IsDir() {
+		if entry != nil && entry.IsDir() {
+			name += "/"
+		} else if entry == nil && (name == "." || name == "..") {
 			name += "/"
 		}
 	case "file-type":
-		if entry.IsDir() {
+		if entry != nil && entry.IsDir() {
 			name += "/"
-		} else if entry.Mode()&os.ModeSymlink != 0 {
+		} else if entry == nil && (name == "." || name == "..") {
+			name += "/"
+		} else if entry != nil && entry.Mode()&os.ModeSymlink != 0 {
 			name += "@"
-		} else if entry.Mode()&os.ModeSocket != 0 {
+		} else if entry != nil && entry.Mode()&os.ModeSocket != 0 {
 			name += "="
-		} else if entry.Mode()&os.ModeNamedPipe != 0 {
+		} else if entry != nil && entry.Mode()&os.ModeNamedPipe != 0 {
 			name += "|"
 		}
 	case "classify":
-		if entry.IsDir() {
+		if entry != nil && entry.IsDir() {
 			name += "/"
-		} else if entry.Mode()&os.ModeSymlink != 0 {
+		} else if entry == nil && (name == "." || name == "..") {
+			name += "/"
+		} else if entry != nil && entry.Mode()&os.ModeSymlink != 0 {
 			name += "@"
-		} else if entry.Mode()&os.ModeSocket != 0 {
+		} else if entry != nil && entry.Mode()&os.ModeSocket != 0 {
 			name += "="
-		} else if entry.Mode()&os.ModeNamedPipe != 0 {
+		} else if entry != nil && entry.Mode()&os.ModeNamedPipe != 0 {
 			name += "|"
-		} else if entry.Mode()&0111 != 0 {
+		} else if entry != nil && entry.Mode()&0111 != 0 {
 			name += "*"
 		}
 	}
@@ -340,14 +355,27 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 	}
 
 	if *f.sizeBlocks {
-		blocks := (entry.Size() + 1023) / 1024
+		size := int64(0)
+		if entry != nil {
+			size = entry.Size()
+		}
+		blocks := (size + 1023) / 1024
 		prefix += fmt.Sprintf("%d ", blocks)
 	}
 
 	if *f.long || *f.numeric || *f.noOwner || *f.noGroupLong {
-		sizeStr := fmt.Sprintf("%10d", entry.Size())
+		size := int64(0)
+		mode := os.FileMode(0)
+		if entry != nil {
+			size = entry.Size()
+			mode = entry.Mode()
+		} else if name == "." || name == ".." {
+			mode = os.ModeDir | 0755
+		}
+
+		sizeStr := fmt.Sprintf("%10d", size)
 		if *f.human || *f.siUnits {
-			sizeStr = fmt.Sprintf("%10s", formatHuman(entry.Size(), *f.siUnits))
+			sizeStr = fmt.Sprintf("%10s", formatHuman(size, *f.siUnits))
 		}
 		owner := "root"
 		group := "  root"
@@ -362,7 +390,7 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 			group = ""
 		}
 
-		fields := []string{entry.Mode().String()}
+		fields := []string{mode.String()}
 		if owner != "" {
 			fields = append(fields, owner)
 		}
@@ -373,8 +401,40 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 
 		return prefix + strings.Join(fields, "  ")
 	}
+	prefix += name
+	return prefix
+}
 
-	return prefix + name
+func applyQuoting(name string, f *lsFlags) string {
+	style := *f.quotingStyle
+	if *f.quoteName {
+		style = "c"
+	} else if *f.escape {
+		style = "escape"
+	}
+
+	switch style {
+	case "c":
+		return fmt.Sprintf("%q", name)
+	case "escape":
+		s := fmt.Sprintf("%q", name)
+		return s[1 : len(s)-1]
+	case "shell":
+		if strings.ContainsAny(name, " \t\n'\"") {
+			return fmt.Sprintf("'%s'", strings.ReplaceAll(name, "'", "'\\''"))
+		}
+		return name
+	default:
+		if *f.hideControl {
+			return strings.Map(func(r rune) rune {
+				if r < 32 || r == 127 {
+					return '?'
+				}
+				return r
+			}, name)
+		}
+		return name
+	}
 }
 
 func formatHuman(size int64, si bool) string {

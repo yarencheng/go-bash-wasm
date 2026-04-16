@@ -384,6 +384,40 @@ func TestLs_Run(t *testing.T) {
 		assert.NotContains(t, stdout.String(), "backup~")
 	})
 
+	t.Run("quote names -Q", func(t *testing.T) {
+		fs4 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs4, "/file with spaces", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs4,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-Q"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "\"file with spaces\"")
+	})
+
+	t.Run("escape names -b", func(t *testing.T) {
+		fs5 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs5, "/file\nnewline", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs5,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-b"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "file\\nnewline")
+	})
+
 	t.Run("invalid directory", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{

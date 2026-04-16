@@ -793,10 +793,9 @@ Status codes:
 - [ ] Flag `--full-time`: `third_party/coreutils/src/ls.c:L246`
 - [ ] Flag `--group-directories-first`: `third_party/coreutils/src/ls.c:L254`
 - [x] Flag `--hide`: `internal/commands/ls/ls.go`
-- [ ] Flag `--hyperlink`: `third_party/coreutils/src/ls.c:L289` (note: usage lists it)
 - [x] Flag `--indicator-style`: `internal/commands/ls/ls.go`
-- [ ] Flag `--quoting-style`: `third_party/coreutils/src/ls.c:L353`
-- [ ] Flag `--show-control-chars`: `third_party/coreutils/src/ls.c:L345`
+- [x] Flag `--quoting-style`: `internal/commands/ls/ls.go`
+- [x] Flag `--show-control-chars`: `internal/commands/ls/ls.go` (partial via -q)
 - [x] Flag `--si`: `internal/commands/ls/ls.go` (power of 1000)
 - [x] Flag `--sort`: `internal/commands/ls/ls.go` (unified flag)
 - [ ] Flag `--time`: `third_party/coreutils/src/ls.c:L388`
@@ -813,7 +812,7 @@ Status codes:
 - [x] Flag `-I`: `internal/commands/ls/ls.go` (ignore)
 - [ ] Flag `-L`: `third_party/coreutils/src/ls.c:L317`
 - [ ] Flag `-N`: `third_party/coreutils/src/ls.c:L329`
-- [ ] Flag `-Q`: `third_party/coreutils/src/ls.c:L349`
+- [x] Flag `-Q`: `internal/commands/ls/ls.go` (quote-name)
 - [x] Flag `-R`: `internal/commands/ls/ls.go` (recursive)
 - [x] Flag `-S`: `internal/commands/ls/ls.go` (sort-size)
 - [ ] Flag `-T`: `third_party/coreutils/src/ls.c:L411`
@@ -821,7 +820,7 @@ Status codes:
 - [x] Flag `-X`: `internal/commands/ls/ls.go` (extension sort)
 - [ ] Flag `-Z`: `third_party/coreutils/src/ls.c:L439`
 - [x] Flag `-a`: `internal/commands/ls/ls.go` (all)
-- [ ] Flag `-b`: `third_party/coreutils/src/ls.c:L161`
+- [x] Flag `-b`: `internal/commands/ls/ls.go` (escape)
 - [x] Flag `-c`: `internal/commands/ls/ls.go` (ctime)
 - [x] Flag `-d`: `internal/commands/ls/ls.go` (directory itself)
 - [x] Flag `-f`: `internal/commands/ls/ls.go` (do not sort, enable -aU)
@@ -834,7 +833,7 @@ Status codes:
 - [x] Flag `-n`: `internal/commands/ls/ls.go` (numeric)
 - [x] Flag `-o`: `internal/commands/ls/ls.go` (like -l but no group)
 - [x] Flag `-p`: `internal/commands/ls/ls.go` (indicator)
-- [ ] Flag `-q`: `third_party/coreutils/src/ls.c:L341`
+- [x] Flag `-q`: `internal/commands/ls/ls.go` (hide-control-chars)
 - [x] Flag `-r`: `internal/commands/ls/ls.go` (reverse)
 - [x] Flag `-s`: `internal/commands/ls/ls.go` (size in blocks)
 - [x] Flag `-t`: `internal/commands/ls/ls.go` (sort-time)

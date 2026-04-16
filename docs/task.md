@@ -788,13 +788,13 @@ Status codes:
 - [ ] Flag `--block-size`: `third_party/coreutils/src/ls.c:L165`
 - [ ] Flag `--color`: `third_party/coreutils/src/ls.c:L215`
 - [ ] Flag `--dereference-command-line-symlink-to-dir`: `third_party/coreutils/src/ls.c:L274`
-- [ ] Flag `--file-type`: `third_party/coreutils/src/ls.c:L237`
+- [x] Flag `--file-type`: `internal/commands/ls/ls.go`
 - [ ] Flag `--format`: `third_party/coreutils/src/ls.c:L241`
 - [ ] Flag `--full-time`: `third_party/coreutils/src/ls.c:L246`
 - [ ] Flag `--group-directories-first`: `third_party/coreutils/src/ls.c:L254`
-- [ ] Flag `--hide`: `third_party/coreutils/src/ls.c:L285`
+- [x] Flag `--hide`: `internal/commands/ls/ls.go`
 - [ ] Flag `--hyperlink`: `third_party/coreutils/src/ls.c:L289` (note: usage lists it)
-- [ ] Flag `--indicator-style`: `third_party/coreutils/src/ls.c:L289`
+- [x] Flag `--indicator-style`: `internal/commands/ls/ls.go`
 - [ ] Flag `--quoting-style`: `third_party/coreutils/src/ls.c:L353`
 - [ ] Flag `--show-control-chars`: `third_party/coreutils/src/ls.c:L345`
 - [ ] Flag `--si`: `third_party/coreutils/src/ls.c:L266`
@@ -810,36 +810,36 @@ Status codes:
 - [x] Flag `-F`: `internal/commands/ls/ls.go` (classify)
 - [x] Flag `-G`: `internal/commands/ls/ls.go` (no-group)
 - [ ] Flag `-H`: `third_party/coreutils/src/ls.c:L270`
-- [ ] Flag `-I`: `third_party/coreutils/src/ls.c:L309`
+- [x] Flag `-I`: `internal/commands/ls/ls.go` (ignore)
 - [ ] Flag `-L`: `third_party/coreutils/src/ls.c:L317`
 - [ ] Flag `-N`: `third_party/coreutils/src/ls.c:L329`
 - [ ] Flag `-Q`: `third_party/coreutils/src/ls.c:L349`
 - [x] Flag `-R`: `internal/commands/ls/ls.go` (recursive)
 - [x] Flag `-S`: `internal/commands/ls/ls.go` (sort-size)
 - [ ] Flag `-T`: `third_party/coreutils/src/ls.c:L411`
-- [ ] Flag `-U`: `third_party/coreutils/src/ls.c:L419`
+- [x] Flag `-U`: `internal/commands/ls/ls.go` (do not sort)
 - [ ] Flag `-X`: `third_party/coreutils/src/ls.c:L435`
 - [ ] Flag `-Z`: `third_party/coreutils/src/ls.c:L439`
 - [x] Flag `-a`: `internal/commands/ls/ls.go` (all)
 - [ ] Flag `-b`: `third_party/coreutils/src/ls.c:L161`
 - [x] Flag `-c`: `internal/commands/ls/ls.go` (ctime)
-- [x] Flag `-d`: `internal/commands/ls/ls.go` (partial via target arg)
-- [ ] Flag `-f`: `third_party/coreutils/src/ls.c:L228`
-- [ ] Flag `-g`: `third_party/coreutils/src/ls.c:L250`
+- [x] Flag `-d`: `internal/commands/ls/ls.go` (directory itself)
+- [x] Flag `-f`: `internal/commands/ls/ls.go` (do not sort, enable -aU)
+- [x] Flag `-g`: `internal/commands/ls/ls.go` (like -l but no owner)
 - [x] Flag `-h`: `internal/commands/ls/ls.go` (human-readable)
 - [x] Flag `-i`: `internal/commands/ls/ls.go` (inode)
 - [ ] Flag `-k`: `third_party/coreutils/src/ls.c:L313`
 - [x] Flag `-l`: `internal/commands/ls/ls.go` (long)
 - [x] Flag `-m`: `internal/commands/ls/ls.go` (comma)
 - [x] Flag `-n`: `internal/commands/ls/ls.go` (numeric)
-- [ ] Flag `-o`: `third_party/coreutils/src/ls.c:L333`
+- [x] Flag `-o`: `internal/commands/ls/ls.go` (like -l but no group)
 - [x] Flag `-p`: `internal/commands/ls/ls.go` (indicator)
 - [ ] Flag `-q`: `third_party/coreutils/src/ls.c:L341`
 - [x] Flag `-r`: `internal/commands/ls/ls.go` (reverse)
 - [ ] Flag `-s`: `third_party/coreutils/src/ls.c:L365`
 - [x] Flag `-t`: `internal/commands/ls/ls.go` (sort-time)
 - [x] Flag `-u`: `internal/commands/ls/ls.go` (atime)
-- [ ] Flag `-v`: `third_party/coreutils/src/ls.c:L423`
+- [x] Flag `-v`: `internal/commands/ls/ls.go` (natural sort)
 - [ ] Flag `-w`: `third_party/coreutils/src/ls.c:L427`
 - [ ] Flag `-x`: `third_party/coreutils/src/ls.c:L431`
 

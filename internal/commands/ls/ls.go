@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path"
 	"sort"
 	"strings"
 
@@ -40,6 +41,16 @@ type lsFlags struct {
 	ctime        *bool
 	atime        *bool
 	noGroup      *bool
+	directory    *bool
+	doNotSort    *bool
+	noOwner      *bool
+	noGroupLong  *bool
+	unsorted     *bool
+	versionSort  *bool
+	hide         *string
+	ignore       *string
+	indicatorStyle *string
+	fileType     *bool
 	sortOpt      *string
 }
 
@@ -65,6 +76,16 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		ctime:        flagsSet.BoolP("ctime", "c", false, "with -lt: sort by, and show, ctime; with -l: show ctime and sort by name"),
 		atime:        flagsSet.BoolP("atime", "u", false, "with -lt: sort by, and show, atime; with -l: show atime and sort by name"),
 		noGroup:      flagsSet.BoolP("no-group", "G", false, "in a long listing, don't print group names"),
+		directory:    flagsSet.BoolP("directory", "d", false, "list directories themselves, not their contents"),
+		doNotSort:    flagsSet.BoolP("do-not-sort", "f", false, "do not sort, enable -aU, disable -ls --color"),
+		noOwner:      flagsSet.BoolP("no-owner", "g", false, "like -l, but do not list owner"),
+		noGroupLong:  flagsSet.BoolP("no-group-long", "o", false, "like -l, but do not list group"),
+		unsorted:     flagsSet.BoolP("unsorted", "U", false, "do not sort; list entries in directory order"),
+		versionSort:  flagsSet.BoolP("version-sort", "v", false, "natural sort of (version) numbers"),
+		hide:         flagsSet.String("hide", "", "do not list implied entries matching shell PATTERN (overridden by -a or -A)"),
+		ignore:       flagsSet.StringP("ignore", "I", "", "do not list implied entries matching shell PATTERN"),
+		indicatorStyle: flagsSet.String("indicator-style", "none", "append indicator with style WORD to entry names: none (default), slash (-p), file-type (--file-type), classify (-F)"),
+		fileType:     flagsSet.Bool("file-type", false, "likewise, except do not append '*'"),
 		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
@@ -73,20 +94,58 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		return 2
 	}
 
+	if *f.doNotSort {
+		*f.all = true
+		*f.unsorted = true
+		// disable -l -s if they were set? The spec says "disable -ls".
+		// But usually it just means it changes the default or behaves as if they are off unless forced?
+		// Actually GNU ls -f DOES disable -l -s --color.
+		*f.long = false
+	}
+
 	targets := flagsSet.Args()
 	if len(targets) == 0 {
-		targets = []string{env.Cwd}
+		targets = []string{"."}
+	}
+
+	if *f.directory {
+		for i, target := range targets {
+			if i > 0 {
+				fmt.Fprint(env.Stdout, "  ")
+			}
+			fullPath := target
+			if !strings.HasPrefix(target, "/") {
+				fullPath = env.Cwd + "/" + target
+			}
+			info, err := env.FS.Stat(fullPath)
+			if err != nil {
+				fmt.Fprintf(env.Stderr, "ls: cannot access '%s': %v\n", target, err)
+				continue
+			}
+			fmt.Fprint(env.Stdout, l.formatEntry(info, target, target, &f))
+		}
+		fmt.Fprintln(env.Stdout)
+		return 0
 	}
 
 	exitCode := 0
 	for i, target := range targets {
+		displayTarget := target
+		fullPath := target
+		if target == "." {
+			displayTarget = env.Cwd
+			fullPath = env.Cwd
+		} else if !strings.HasPrefix(target, "/") {
+			fullPath = env.Cwd + "/" + target
+		}
+
 		if (len(targets) > 1 || *f.recursive) && i > 0 {
 			fmt.Fprintln(env.Stdout)
 		}
 		if len(targets) > 1 || *f.recursive {
-			fmt.Fprintf(env.Stdout, "%s:\n", target)
+			fmt.Fprintf(env.Stdout, "%s:\n", displayTarget)
 		}
-		if res := l.listDir(ctx, env, target, &f, true); res != 0 {
+		if res := l.listDir(ctx, env, fullPath, &f, true); res != 0 {
 			exitCode = res
 		}
 	}
@@ -103,7 +162,9 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 
 	// Determine sort mode
 	sortMode := "name"
-	if *f.sortSize || *f.sortOpt == "size" {
+	if *f.unsorted || *f.sortOpt == "none" {
+		sortMode = "none"
+	} else if *f.sortSize || *f.sortOpt == "size" {
 		sortMode = "size"
 	} else if *f.sortTime || *f.sortOpt == "time" {
 		sortMode = "time"
@@ -111,8 +172,8 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 		sortMode = "ctime"
 	} else if *f.atime || *f.sortOpt == "atime" {
 		sortMode = "atime"
-	} else if *f.sortOpt == "none" {
-		sortMode = "none"
+	} else if *f.versionSort || *f.sortOpt == "version" || *f.sortOpt == "v" {
+		sortMode = "version"
 	}
 
 	// Sort entries
@@ -127,6 +188,8 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 			case "ctime", "atime":
 				// Afero MemMapFs doesn't distinguish well, so we use ModTime for now but extensible
 				cmp = entries[i].ModTime().After(entries[j].ModTime())
+			case "version":
+				cmp = naturalLess(entries[i].Name(), entries[j].Name())
 			default:
 				cmp = entries[i].Name() < entries[j].Name()
 			}
@@ -153,10 +216,25 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 		if strings.HasPrefix(name, ".") && !*f.all && !*f.almostAll {
 			continue
 		}
+
+		if *f.ignore != "" {
+			matched, _ := path.Match(*f.ignore, name)
+			if matched {
+				continue
+			}
+		}
+
+		if *f.hide != "" && !*f.all && !*f.almostAll {
+			matched, _ := path.Match(*f.hide, name)
+			if matched {
+				continue
+			}
+		}
+
 		if *f.recursive && entry.IsDir() {
 			subDirs = append(subDirs, target+"/"+name)
 		}
-		results = append(results, l.formatEntry(entry, target, f))
+		results = append(results, l.formatEntry(entry, name, target, f))
 	}
 
 	sep := "  "
@@ -193,16 +271,43 @@ func (l *Ls) formatName(name string, target string, f *lsFlags) string {
 	return name
 }
 
-func (l *Ls) formatEntry(entry os.FileInfo, target string, f *lsFlags) string {
-	name := entry.Name()
+func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFlags) string {
+	style := *f.indicatorStyle
 	if *f.classify {
+		style = "classify"
+	} else if *f.fileType {
+		style = "file-type"
+	} else if *f.dirIndicator {
+		style = "slash"
+	}
+
+	switch style {
+	case "slash":
 		if entry.IsDir() {
 			name += "/"
+		}
+	case "file-type":
+		if entry.IsDir() {
+			name += "/"
+		} else if entry.Mode()&os.ModeSymlink != 0 {
+			name += "@"
+		} else if entry.Mode()&os.ModeSocket != 0 {
+			name += "="
+		} else if entry.Mode()&os.ModeNamedPipe != 0 {
+			name += "|"
+		}
+	case "classify":
+		if entry.IsDir() {
+			name += "/"
+		} else if entry.Mode()&os.ModeSymlink != 0 {
+			name += "@"
+		} else if entry.Mode()&os.ModeSocket != 0 {
+			name += "="
+		} else if entry.Mode()&os.ModeNamedPipe != 0 {
+			name += "|"
 		} else if entry.Mode()&0111 != 0 {
 			name += "*"
 		}
-	} else if *f.dirIndicator && entry.IsDir() {
-		name += "/"
 	}
 
 	prefix := ""
@@ -210,7 +315,7 @@ func (l *Ls) formatEntry(entry os.FileInfo, target string, f *lsFlags) string {
 		prefix = "0 "
 	}
 
-	if *f.long || *f.numeric {
+	if *f.long || *f.numeric || *f.noOwner || *f.noGroupLong {
 		sizeStr := fmt.Sprintf("%10d", entry.Size())
 		if *f.human {
 			sizeStr = fmt.Sprintf("%10s", formatHuman(entry.Size()))
@@ -221,10 +326,23 @@ func (l *Ls) formatEntry(entry os.FileInfo, target string, f *lsFlags) string {
 			owner = "0"
 			group = "  0"
 		}
-		if *f.noGroup {
+		if *f.noOwner {
+			owner = ""
+		}
+		if *f.noGroup || *f.noGroupLong {
 			group = ""
 		}
-		return fmt.Sprintf("%s%s  %s%s  %s  %s", prefix, entry.Mode().String(), owner, group, sizeStr, name)
+
+		fields := []string{entry.Mode().String()}
+		if owner != "" {
+			fields = append(fields, owner)
+		}
+		if group != "" {
+			fields = append(fields, group)
+		}
+		fields = append(fields, sizeStr, name)
+
+		return prefix + strings.Join(fields, "  ")
 	}
 
 	return prefix + name
@@ -241,4 +359,40 @@ func formatHuman(size int64) string {
 		exp++
 	}
 	return fmt.Sprintf("%.1f%c", float64(size)/float64(div), "KMGTPE"[exp])
+}
+
+func naturalLess(s1, s2 string) bool {
+	i, j := 0, 0
+	for i < len(s1) && j < len(s2) {
+		c1, c2 := s1[i], s2[j]
+		if isDigit(c1) && isDigit(c2) {
+			n1, nextI := parseDigits(s1, i)
+			n2, nextJ := parseDigits(s2, j)
+			if n1 != n2 {
+				return n1 < n2
+			}
+			i, j = nextI, nextJ
+		} else {
+			if c1 != c2 {
+				return c1 < c2
+			}
+			i++
+			j++
+		}
+	}
+	return len(s1) < len(s2)
+}
+
+func isDigit(c byte) bool {
+	return c >= '0' && c <= '9'
+}
+
+func parseDigits(s string, start int) (int, int) {
+	val := 0
+	i := start
+	for i < len(s) && isDigit(s[i]) {
+		val = val*10 + int(s[i]-'0')
+		i++
+	}
+	return val, i
 }

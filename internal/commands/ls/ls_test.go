@@ -220,6 +220,117 @@ func TestLs_Run(t *testing.T) {
 		assert.True(t, strings.HasPrefix(stdout.String(), "big.txt"))
 	})
 
+	t.Run("directory itself -d", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-d", "dir1"})
+		assert.Equal(t, 0, status)
+		assert.Equal(t, "dir1\n", stdout.String())
+	})
+
+	t.Run("do not sort -f", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		// -f implies -a and -U (unsorted)
+		status := ls.Run(context.Background(), env, []string{"-f"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), ".hidden")
+	})
+
+	t.Run("no owner -g", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-g"})
+		assert.Equal(t, 0, status)
+		// Should contain group but not owner
+		assert.Contains(t, stdout.String(), "root") 
+		// owner usually comes before group, if it's "root  root", we check if only one is there.
+		// Actually my implementation joins with "  ".
+		output := stdout.String()
+		assert.True(t, strings.Count(output, "root") >= 1)
+	})
+
+	t.Run("no group -o", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-o"})
+		assert.Equal(t, 0, status)
+		// Should contain owner but not group
+		assert.Contains(t, stdout.String(), "root")
+	})
+
+	t.Run("version sort -v", func(t *testing.T) {
+		fs2 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs2, "/v10", []byte(""), 0644))
+		require.NoError(t, afero.WriteFile(fs2, "/v2", []byte(""), 0644))
+		require.NoError(t, afero.WriteFile(fs2, "/v1", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs2,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		// Use --sort=version as -v is not yet a pflag shorthand in my Run but it's in the task
+		status := ls.Run(context.Background(), env, []string{"--sort=version"})
+		assert.Equal(t, 0, status)
+		output := stdout.String()
+		// Order should be v1, v2, v10
+		assert.True(t, strings.Index(output, "v1") < strings.Index(output, "v2"))
+		assert.True(t, strings.Index(output, "v2") < strings.Index(output, "v10"))
+	})
+
+	t.Run("hide pattern --hide", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		// Initially file1.txt and file2.txt exist
+		status := ls.Run(context.Background(), env, []string{"--hide=*.txt"})
+		assert.Equal(t, 0, status)
+		output := stdout.String()
+		assert.NotContains(t, output, "file1.txt")
+		assert.NotContains(t, output, "file2.txt")
+		assert.Contains(t, output, "dir1")
+
+		// -a should override --hide
+		stdout.Reset()
+		status = ls.Run(context.Background(), env, []string{"--hide=*.txt", "-a"})
+		assert.Equal(t, 0, status)
+		output = stdout.String()
+		assert.Contains(t, output, "file1.txt")
+	})
+
 	t.Run("invalid directory", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{

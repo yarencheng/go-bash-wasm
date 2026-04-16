@@ -7,29 +7,30 @@
 - **Strict Upstream Parity**: 
   - Tracks **GNU Bash 5.3** for shell logic and syntax.
   - Targets **GNU Coreutils 9.10** for utility behavior (e.g., `ls` with support for nearly all standard flags).
-- **WebAssembly Native (`wasip1`)**:
-  - Compiled with `GOOS=wasip1 GOARCH=wasm`.
-  - Platform-agnostic input handling ensures compatibility with WASM runtimes (Wasmtime, browser) while preserving advanced terminal features on native OSs.
+- **WebAssembly Browser & Native**:
+  - Compiled with `GOOS=js GOARCH=wasm` for in-browser execution.
+  - Interactive **xterm.js** terminal integration with full stdin/stdout piping.
+  - Platform-agnostic input handling ensures compatibility with standard Go and JS/WASM environments.
 - **Pure In-Memory Filesystem (VFS)**:
   - Uses `afero` for a fully detached, in-memory filesystem hierarchy.
   - Zero Disk I/O: Enforces absolute host isolation.
 - **Structured Observability**:
-  - Integrated with `zerolog` for high-performance, structured logging across all shell operations and command executions.
+  - Integrated with `zerolog` for high-performance, structured logging (native) and clean browser console output.
 
 ## 🛠 Architecture
 
 The project follows a clean, modular architecture:
-- `cmd/go-bash-wasm`: Minimal entry point for the simulator.
-- `internal/app`: Central application bootstrap and lifecycle management.
+- `cmd/go-bash-wasm/main.go`: Entry point for native execution.
+- `cmd/go-bash-wasm/main_js.go`: Entry point for JS/WASM execution (browser).
+- `index.html`: Browser frontend using xterm.js.
 - `internal/shell`: REPL and command execution logic with abstracted line reading.
-- `internal/commands`: Registry and high-parity implementation of core utilities (starting with `ls`).
+- `internal/commands`: Registry and high-parity implementation of core utilities.
 
 ## ⚙️ Building and Running
 
 ### Prerequisites
 - **Go 1.25+**
-- (Optional) **Docker** for containerized WASM builds.
-- (Optional) **Wasmtime** for running the compiled WASM binary.
+- **Docker** (Recommended) for containerized builds and web hosting.
 
 ### Run Locally (Native)
 To start the interactive shell locally on your host machine:
@@ -37,17 +38,19 @@ To start the interactive shell locally on your host machine:
 go run ./cmd/go-bash-wasm/
 ```
 
-### Build for WebAssembly
-To compile the project to a WASM binary compatible with WASI Preview 1:
+### Build for WebAssembly (Browser)
+To compile the project to a WASM binary for browser usage:
 ```bash
-GOOS=wasip1 GOARCH=wasm go build -o main.wasm ./cmd/go-bash-wasm/
+GOOS=js GOARCH=wasm go build -o main.wasm ./cmd/go-bash-wasm/
 ```
 
-### Build via Docker
-A multi-stage `build.Dockerfile` is provided for automated WASM compilation and verification:
+### Build & Run via Docker (Nginx)
+To build the WASM binary and host it with an interactive terminal via Nginx:
 ```bash
-docker build -t go-bash-wasm -f build.Dockerfile .
+docker build -t go-bash-wasm .
+docker run -it --rm -p 8080:80 go-bash-wasm
 ```
+Access the terminal at `http://localhost:8080`.
 
 ## 🧪 Testing
 

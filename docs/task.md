@@ -1741,3 +1741,64 @@ Status codes:
 ### `TIMEFORMAT`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] Output format for `time` reserved word: Missing implementation
+
+## Shell Expansions
+
+### Parameter Expansion
+- [ ] Basic expansion `${var}`: Missing implementation
+- [ ] Substring expansion `${var:offset:length}`: `third_party/bash/subst.c:L10170`
+- [ ] Prefix removal `${var#pattern}`, `${var##pattern}`: `third_party/bash/subst.c:L10313`
+- [ ] Suffix removal `${var%pattern}`, `${var%%pattern}`: `third_party/bash/subst.c:L10314`
+- [ ] Substring replacement `${var/pattern/string}`: `third_party/bash/subst.c:L10205`
+- [ ] Case modification `${var^}`, `${var^^}`, `${var,}`, `${var,,}`: `third_party/bash/subst.c:L10234`
+- [ ] Default values `${var:-default}`, `${var:=default}`: `third_party/bash/subst.c:L10338-10341`
+- [ ] Alternative/Error values `${var:?error}`, `${var:+alternative}`: `third_party/bash/subst.c:L10338-10341`
+
+### Command Substitution
+- [ ] Basic substitution $(command), `command`: `third_party/bash/subst.c:L11000`
+
+### Arithmetic Expansion
+- [ ] Basic expansion $( (expression) ): `third_party/bash/subst.c:L10825`
+
+### Brace Expansion
+- [ ] basic expansion {a,b,c}: `third_party/bash/braces.c`
+
+### Tilde Expansion
+- [ ] basic expansion ~, ~user: `third_party/bash/subst.c:L10740`
+
+## Redirections
+
+### Standard Redirections
+- [ ] Input redirection `[n]<word`: `third_party/bash/redir.c:L897`
+- [ ] Output redirection `[n]>word`: `third_party/bash/redir.c:L895`
+- [ ] Append redirection `[n]>>word`: `third_party/bash/redir.c:L896`
+- [ ] Force output `[n]>|word`: `third_party/bash/redir.c:L902`
+- [ ] Combined stderr/stdout `&>word`, `&>>word`: `third_party/bash/redir.c:L899-900`
+
+### File Descriptor Manipulation
+- [ ] Duplicating input `[n]<&word`: `third_party/bash/redir.c:L1115`
+- [ ] Duplicating output `[n]>&word`: `third_party/bash/redir.c:L1116`
+- [ ] Moving input `[n]<&digit-`: `third_party/bash/redir.c:L1117`
+- [ ] Moving output `[n]>&digit-`: `third_party/bash/redir.c:L1118`
+
+### Advanced Redirections
+- [ ] Here-Documents `[n]<<[-]word`: `third_party/bash/redir.c:L1042`
+- [ ] Here-Strings `[n]<<<word`: `third_party/bash/redir.c:L1044`
+- [ ] Process Substitution `<(list)`, `>(list)`: `third_party/bash/subst.c:L321`
+
+## Globbing Patterns
+
+### Standard Wildcards
+- [ ] Match any string `*`: `third_party/bash/lib/glob/glob.c`
+- [ ] Match any character `?`: `third_party/bash/lib/glob/glob.c`
+
+### Character Classes
+- [ ] Match set of characters `[...]`: `third_party/bash/lib/glob/smatch.c`
+- [ ] Negative match set `[!...]`, `[^...]`: `third_party/bash/lib/glob/smatch.c`
+
+### Extended Globbing (extglob)
+- [ ] Option `?(list)` (zero or one): `third_party/bash/lib/glob/smatch.c`
+- [ ] Option `*(list)` (zero or more): `third_party/bash/lib/glob/smatch.c`
+- [ ] Option `+(list)` (one or more): `third_party/bash/lib/glob/smatch.c`
+- [ ] Option `@(list)` (exactly one): `third_party/bash/lib/glob/smatch.c`
+- [ ] Option `!(list)` (anything but): `third_party/bash/lib/glob/smatch.c`

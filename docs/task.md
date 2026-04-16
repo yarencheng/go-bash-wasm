@@ -90,6 +90,42 @@ Status codes:
 - [ ] Basic exit: Missing implementation
 - [ ] Exit status parameter: `third_party/bash/builtins/exit.def:L25`
 
+### `head`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-n` (lines): `third_party/coreutils/src/head.c:L126`
+- [ ] Flag `-c` (bytes): `third_party/coreutils/src/head.c:L121`
+- [ ] Flag `-q` (quiet): `third_party/coreutils/src/head.c:L131`
+
+### `tail`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-n` (lines): `third_party/coreutils/src/tail.c:L314`
+- [ ] Flag `-c` (bytes): `third_party/coreutils/src/tail.c:L296`
+- [ ] Flag `-f` (follow): `third_party/coreutils/src/tail.c:L305`
+
+### `wc`
+
+- [ ] Basic counts: Missing implementation
+- [ ] Flag `-l` (lines): `third_party/coreutils/src/wc.c:L196`
+- [ ] Flag `-w` (words): `third_party/coreutils/src/wc.c:L214`
+- [ ] Flag `-c` (bytes): `third_party/coreutils/src/wc.c:L188`
+- [ ] Flag `-m` (chars): `third_party/coreutils/src/wc.c:L192`
+
+### `chmod`
+
+- [ ] Basic mode change: Missing implementation
+- [ ] Flag `-R` (recursive): `third_party/coreutils/src/chmod.c:L459`
+- [ ] Numeric mode support: `third_party/coreutils/src/chmod.c:L415`
+- [ ] Symbolic mode support: `third_party/coreutils/src/chmod.c:L414`
+
+### `chown`
+
+- [ ] Basic ownership change: Missing implementation
+- [ ] Flag `-R` (recursive): `third_party/coreutils/src/chown.c:L141`
+- [ ] Flag `--from`: `third_party/coreutils/src/chown.c:L121`
+
 <!-- Add new audits below this line -->
+
 
 

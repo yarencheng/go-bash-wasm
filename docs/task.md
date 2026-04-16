@@ -652,3 +652,206 @@ Status codes:
 - [ ] Flag `-f` (force): `third_party/bash/builtins/wait.def:L134`
 - [ ] Flag `-p var` (set pid var): `third_party/bash/builtins/wait.def:L137`
 
+
+### `df`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-a` (`--all`): `third_party/coreutils/src/df.c:L256`
+- [ ] Flag `-B` (`--block-size=SIZE`): `third_party/coreutils/src/df.c:L257`
+- [ ] Flag `-h` (`--human-readable`): `third_party/coreutils/src/df.c:L259`
+- [ ] Flag `-H` (`--si`): `third_party/coreutils/src/df.c:L260`
+- [ ] Flag `-i` (`--inodes`): `third_party/coreutils/src/df.c:L258`
+- [ ] Flag `-k` (1K blocks): `third_party/coreutils/src/df.c:L1307`
+- [ ] Flag `-l` (`--local`): `third_party/coreutils/src/df.c:L261`
+- [ ] Flag `--no-sync`: `third_party/coreutils/src/df.c:L266`
+- [ ] Flag `--output[=FIELD_LIST]`: `third_party/coreutils/src/df.c:L262`
+- [ ] Flag `-P` (`--portability`): `third_party/coreutils/src/df.c:L263`
+- [ ] Flag `--sync`: `third_party/coreutils/src/df.c:L265`
+- [ ] Flag `--total`: `third_party/coreutils/src/df.c:L267`
+- [ ] Flag `-t` (`--type=TYPE`): `third_party/coreutils/src/df.c:L268`
+- [ ] Flag `-T` (`--print-type`): `third_party/coreutils/src/df.c:L264`
+- [ ] Flag `-x` (`--exclude-type=TYPE`): `third_party/coreutils/src/df.c:L269`
+
+### `base32` / `base64` / `basenc`
+
+- [ ] Basic encoding/decoding: Missing implementation
+- [ ] Flag `-d` (`--decode`): `third_party/coreutils/src/basenc.c:L77`
+- [ ] Flag `-i` (`--ignore-garbage`): `third_party/coreutils/src/basenc.c:L79`
+- [ ] Flag `-w` (`--wrap=COLS`): `third_party/coreutils/src/basenc.c:L78`
+- [ ] Flag `--base64`: `third_party/coreutils/src/basenc.c:L81`
+- [ ] Flag `--base64url`: `third_party/coreutils/src/basenc.c:L82`
+- [ ] Flag `--base58`: `third_party/coreutils/src/basenc.c:L83`
+- [ ] Flag `--base32`: `third_party/coreutils/src/basenc.c:L84`
+- [ ] Flag `--base32hex`: `third_party/coreutils/src/basenc.c:L85`
+- [ ] Flag `--base16`: `third_party/coreutils/src/basenc.c:L86`
+- [ ] Flag `--base2msbf`: `third_party/coreutils/src/basenc.c:L87`
+- [ ] Flag `--base2lsbf`: `third_party/coreutils/src/basenc.c:L88`
+- [ ] Flag `--z85`: `third_party/coreutils/src/basenc.c:L89`
+
+### `nl`
+
+- [ ] Basic numbering: Missing implementation
+- [ ] Flag `-b` (`--body-numbering=STYLE`): `third_party/coreutils/src/nl.c:L153`
+- [ ] Flag `-d` (`--section-delimiter=CC`): `third_party/coreutils/src/nl.c:L162`
+- [ ] Flag `-f` (`--footer-numbering=STYLE`): `third_party/coreutils/src/nl.c:L154`
+- [ ] Flag `-h` (`--header-numbering=STYLE`): `third_party/coreutils/src/nl.c:L152`
+- [ ] Flag `-i` (`--line-increment=NUMBER`): `third_party/coreutils/src/nl.c:L156`
+- [ ] Flag `-l` (`--join-blank-lines=NUMBER`): `third_party/coreutils/src/nl.c:L158`
+- [ ] Flag `-n` (`--number-format=FORMAT`): `third_party/coreutils/src/nl.c:L161`
+- [ ] Flag `-p` (`--no-renumber`: `third_party/coreutils/src/nl.c:L157`
+- [ ] Flag `-s` (`--number-separator=STRING`): `third_party/coreutils/src/nl.c:L159`
+- [ ] Flag `-v` (`--starting-line-number=NUMBER`): `third_party/coreutils/src/nl.c:L155`
+- [ ] Flag `-w` (`--number-width=NUMBER`): `third_party/coreutils/src/nl.c:L160`
+
+### `shuf`
+
+- [ ] Basic shuffling: Missing implementation
+- [ ] Flag `-e` (`--echo`): `third_party/coreutils/src/shuf.c:L107`
+- [ ] Flag `-i` (`--input-range=LO-HI`): `third_party/coreutils/src/shuf.c:L108`
+- [ ] Flag `-n` (`--head-count=COUNT`): `third_party/coreutils/src/shuf.c:L109`
+- [ ] Flag `-o` (`--output=FILE`): `third_party/coreutils/src/shuf.c:L110`
+- [ ] Flag `--random-source=FILE`: `third_party/coreutils/src/shuf.c:L111`
+- [ ] Flag `-r` (`--repeat`): `third_party/coreutils/src/shuf.c:L112`
+- [ ] Flag `-z` (`--zero-terminated`): `third_party/coreutils/src/shuf.c:L113`
+
+### `tac`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-b` (`--before`): `third_party/coreutils/src/tac.c:L103`
+- [ ] Flag `-r` (`--regex`): `third_party/coreutils/src/tac.c:L104`
+- [ ] Flag `-s` (`--separator=STRING`): `third_party/coreutils/src/tac.c:L105`
+
+### `shopt` (builtin)
+
+- [ ] Basic option management: Missing implementation
+- [ ] Flag `-o` (restrict to set -o): `third_party/bash/builtins/shopt.def:L316`
+- [ ] Flag `-p` (reusable output): `third_party/bash/builtins/shopt.def:L319`
+- [ ] Flag `-q` (suppress output): `third_party/bash/builtins/shopt.def:L313`
+- [ ] Flag `-s` (enable): `third_party/bash/builtins/shopt.def:L307`
+- [ ] Flag `-u` (disable): `third_party/bash/builtins/shopt.def:L310`
+
+### `help` (builtin)
+
+- [ ] Basic discovery: Missing implementation
+- [ ] Flag `-d` (short description): `third_party/bash/builtins/help.def:L105`
+- [ ] Flag `-m` (manpage format): `third_party/bash/builtins/help.def:L108`
+- [ ] Flag `-s` (usage synopsis): `third_party/bash/builtins/help.def:L111`
+
+### `fc` (builtin)
+
+- [ ] Basic editing/re-execution: Missing implementation
+- [ ] Flag `-e ENAME` (select editor): `third_party/bash/builtins/fc.def:L232`
+- [ ] Flag `-l` (list): `third_party/bash/builtins/fc.def:L220`
+- [ ] Flag `-n` (omit numbers): `third_party/bash/builtins/fc.def:L216`
+- [ ] Flag `-r` (reverse): `third_party/bash/builtins/fc.def:L224`
+- [ ] Flag `-s` (re-execute): `third_party/bash/builtins/fc.def:L228`
+
+### `history` (builtin)
+
+- [ ] Basic management: Missing implementation
+- [ ] Flag `-c` (clear): `third_party/bash/builtins/history.def:L129`
+- [ ] Flag `-d offset` (delete): `third_party/bash/builtins/history.def:L145`
+- [ ] Flag `-a` (append to file): `third_party/bash/builtins/history.def:L126`
+- [ ] Flag `-n` (read new): `third_party/bash/builtins/history.def:L132`
+- [ ] Flag `-r` (read file): `third_party/bash/builtins/history.def:L135`
+- [ ] Flag `-w` (write file): `third_party/bash/builtins/history.def:L138`
+- [ ] Flag `-p` (expansion): `third_party/bash/builtins/history.def:L148`
+- [ ] Flag `-s` (append entry): `third_party/bash/builtins/history.def:L141`
+
+### `chown` / `chgrp`
+
+- [ ] Basic ownership change: Missing implementation
+- [ ] Flag `-c` (`--changes`): `third_party/coreutils/src/chown.c:L99`
+- [ ] Flag `-f` (`--silent`, `--quiet`): `third_party/coreutils/src/chown.c:L103`
+- [ ] Flag `-v` (`--verbose`): `third_party/coreutils/src/chown.c:L107`
+- [ ] Flag `--dereference`: `third_party/coreutils/src/chown.c:L111`
+- [ ] Flag `-h` (`--no-dereference`): `third_party/coreutils/src/chown.c:L116`
+- [ ] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `third_party/coreutils/src/chown.c:L121`
+- [ ] Flag `--no-preserve-root`: `third_party/coreutils/src/chown.c:L128`
+- [ ] Flag `--preserve-root`: `third_party/coreutils/src/chown.c:L131`
+- [ ] Flag `--reference=RFILE`: `third_party/coreutils/src/chown.c:L134`
+- [ ] Flag `-R` (`--recursive`): `third_party/coreutils/src/chown.c:L139`
+- [ ] Flag `-H`: `third_party/coreutils/src/chown.c:L143`
+- [ ] Flag `-L`: `third_party/coreutils/src/chown.c:L147`
+- [ ] Flag `-P`: `third_party/coreutils/src/chown.c:L151`
+
+### `chmod`
+
+- [ ] Basic mode change: Missing implementation
+- [ ] Flag `-c` (`--changes`): `third_party/coreutils/src/chmod.c:L425`
+- [ ] Flag `-f` (`--silent`, `--quiet`): `third_party/coreutils/src/chmod.c:L429`
+- [ ] Flag `-v` (`--verbose`): `third_party/coreutils/src/chmod.c:L433`
+- [ ] Flag `--dereference`: `third_party/coreutils/src/chmod.c:L437`
+- [ ] Flag `-h` (`--no-dereference`): `third_party/coreutils/src/chmod.c:L442`
+- [ ] Flag `--no-preserve-root`: `third_party/coreutils/src/chmod.c:L446`
+- [ ] Flag `--preserve-root`: `third_party/coreutils/src/chmod.c:L450`
+- [ ] Flag `--reference=RFILE`: `third_party/coreutils/src/chmod.c:L454`
+- [ ] Flag `-R` (`--recursive`): `third_party/coreutils/src/chmod.c:L459`
+
+### `touch`
+
+- [ ] Basic timestamp update: Missing implementation
+- [ ] Flag `-a` (access time only): `third_party/coreutils/src/touch.c:L230`
+- [ ] Flag `-c` (`--no-create`): `third_party/coreutils/src/touch.c:L234`
+- [ ] Flag `-d` (`--date=STRING`): `third_party/coreutils/src/touch.c:L238`
+- [ ] Flag `-h` (`--no-dereference`): `third_party/coreutils/src/touch.c:L246`
+- [ ] Flag `-m` (modification time only): `third_party/coreutils/src/touch.c:L251`
+- [ ] Flag `-r` (`--reference=FILE`): `third_party/coreutils/src/touch.c:L255`
+- [ ] Flag `-t [[CC]YY]MMDDhhmm[.ss]`: `third_party/coreutils/src/touch.c:L259`
+
+### `du`
+
+- [ ] Basic usage summary: Missing implementation
+- [ ] Flag `-0` (`--null`): `third_party/coreutils/src/du.c:L290`
+- [ ] Flag `-a` (`--all`): `third_party/coreutils/src/du.c:L294`
+- [ ] Flag `-A` (`--apparent-size`): `third_party/coreutils/src/du.c:L298`
+- [ ] Flag `-B` (`--block-size=SIZE`): `third_party/coreutils/src/du.c:L305`
+- [ ] Flag `-b` (`--bytes`): `third_party/coreutils/src/du.c:L310`
+- [ ] Flag `-c` (`--total`): `third_party/coreutils/src/du.c:L314`
+- [ ] Flag `-D` (`--dereference-args`): `third_party/coreutils/src/du.c:L318`
+- [ ] Flag `-d` (`--max-depth=N`): `third_party/coreutils/src/du.c:L322`
+- [ ] Flag `--files0-from=F`: `third_party/coreutils/src/du.c:L328`
+- [ ] Flag `-H`: `third_party/coreutils/src/du.c:L333`
+- [ ] Flag `-h` (`--human-readable`): `third_party/coreutils/src/du.c:L337`
+- [ ] Flag `--inodes`: `third_party/coreutils/src/du.c:L341`
+- [ ] Flag `-k`: `third_party/coreutils/src/du.c:L345`
+- [ ] Flag `-L` (`--dereference`): `third_party/coreutils/src/du.c:L349`
+- [ ] Flag `-l` (`--count-links`): `third_party/coreutils/src/du.c:L353`
+- [ ] Flag `-m`: `third_party/coreutils/src/du.c:L357`
+- [ ] Flag `-P` (`--no-dereference`): `third_party/coreutils/src/du.c:L361`
+- [ ] Flag `-S` (`--separate-dirs`): `third_party/coreutils/src/du.c:L365`
+- [ ] Flag `--si`: `third_party/coreutils/src/du.c:L369`
+- [ ] Flag `-s` (`--summarize`): `third_party/coreutils/src/du.c:L373`
+- [ ] Flag `-t` (`--threshold=SIZE`): `third_party/coreutils/src/du.c:L377`
+- [ ] Flag `--time[=WORD]`: `third_party/coreutils/src/du.c:L382`
+- [ ] Flag `--time-style=STYLE`: `third_party/coreutils/src/du.c:L389`
+- [ ] Flag `-X` (`--exclude-from=FILE`): `third_party/coreutils/src/du.c:L394`
+- [ ] Flag `--exclude=PATTERN`: `third_party/coreutils/src/du.c:L398`
+- [ ] Flag `-x` (`--one-file-system`: `third_party/coreutils/src/du.c:L402`
+
+### `tr`
+
+- [ ] Basic translation: Missing implementation
+- [ ] Flag `-c`, `-C`, `--complement`: `third_party/coreutils/src/tr.c:L296`
+- [ ] Flag `-d`, `--delete`: `third_party/coreutils/src/tr.c:L300`
+- [ ] Flag `-s`, `--squeeze-repeats`: `third_party/coreutils/src/tr.c:L304`
+- [ ] Flag `-t`, `--truncate-set1`: `third_party/coreutils/src/tr.c:L310`
+
+### `rmdir`
+
+- [ ] Basic removal: Missing implementation
+- [ ] Flag `--ignore-fail-on-non-empty`: `third_party/coreutils/src/rmdir.c:L178`
+- [ ] Flag `-p`, `--parents`: `third_party/coreutils/src/rmdir.c:L182`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/rmdir.c:L187`
+
+### `link`
+
+- [ ] Basic hard link: Missing implementation (exactly 2 args required)
+
+### `unlink`
+
+- [ ] Basic removal: Missing implementation (exactly 1 arg required)
+
+### `yes`
+
+- [ ] Basic repetition: Missing implementation

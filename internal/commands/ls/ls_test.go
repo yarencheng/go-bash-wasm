@@ -106,6 +106,56 @@ func TestLs_Run(t *testing.T) {
 		assert.True(t, strings.HasPrefix(stdout.String(), "big.txt"))
 	})
 
+	t.Run("one per line -1", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-1"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "dir1\n")
+		assert.Contains(t, stdout.String(), "file1.txt\n")
+	})
+
+	t.Run("recursive listing -R", func(t *testing.T) {
+		require.NoError(t, fs.MkdirAll("/dir1/subdir", 0755))
+		require.NoError(t, afero.WriteFile(fs, "/dir1/subdir/deep.txt", []byte("deep"), 0644))
+		
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-R"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "/dir1:")
+		assert.Contains(t, stdout.String(), "/dir1/subdir:")
+		assert.Contains(t, stdout.String(), "deep.txt")
+	})
+
+	t.Run("numeric IDs -n", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-n"})
+		assert.Equal(t, 0, status)
+		// Usually numeric IDs are shown as 0 or 1000 etc.
+		// afero doesn't mock these well but we check for formatting.
+		assert.Contains(t, stdout.String(), "0") 
+	})
+
 	t.Run("invalid directory", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{

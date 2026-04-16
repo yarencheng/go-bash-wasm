@@ -1258,3 +1258,82 @@ Status codes:
 - [ ] Audit `uname` (system info)
     - Upstream: `third_party/coreutils/src/uname.c`
     - Flags: `-a`, `-s`, `-n`, `-r`, `-v`, `-m`, `-p`, `-i`, `-o`
+### Batch 34: Bash Builtins (Execution & Job Control)
+- [ ] Audit `bind` (readline bind)
+    - Upstream: `third_party/bash/builtins/bind.def`
+    - Flags: `-lpvsPVS`, `-m`, `-f`, `-q`, `-u`, `-r`, `-x`
+- [ ] Audit `break` / `continue` (loop control)
+    - Upstream: `third_party/bash/builtins/break.def`
+    - Flags: None
+- [ ] Audit `builtin` (run builtin)
+    - Upstream: `third_party/bash/builtins/builtin.def`
+    - Flags: None
+- [ ] Audit `caller` (return context)
+    - Upstream: `third_party/bash/builtins/caller.def`
+    - Flags: None
+- [ ] Audit `command` (run command)
+    - Upstream: `third_party/bash/builtins/command.def`
+    - Flags: `-pVv`
+- [ ] Audit `complete` / `compgen` / `compopt` (completion)
+    - Upstream: `third_party/bash/builtins/complete.def`
+    - Flags: `-abcdefgjkvu`, `-pr`, `-DEI`, `-A`, `-G`, `-W`, `-F`, `-C`, `-X`, `-P`, `-S`
+- [ ] Audit `enable` (enable builtins)
+    - Upstream: `third_party/bash/builtins/enable.def`
+    - Flags: `-a`, `-dnps`, `-f`
+- [ ] Audit `eval` (evaluate args)
+    - Upstream: `third_party/bash/builtins/eval.def`
+    - Flags: None
+- [ ] Audit `exec` (replace shell)
+    - Upstream: `third_party/bash/builtins/exec.def`
+    - Flags: `-cl`, `-a`
+- [ ] Audit `exit` / `logout` (exit shell)
+    - Upstream: `third_party/bash/builtins/exit.def`
+    - Flags: None
+- [ ] Audit `fg` / `bg` (job control)
+    - Upstream: `third_party/bash/builtins/fg_bg.def`
+    - Flags: None
+- [ ] Audit `hash` (command hash)
+    - Upstream: `third_party/bash/builtins/hash.def`
+    - Flags: `-lr`, `-p`, `-dt`
+- [ ] Audit `help` (display help)
+    - Upstream: `third_party/bash/builtins/help.def`
+    - Flags: `-dms`
+- [ ] Audit `jobs` / `disown` (job list)
+    - Upstream: `third_party/bash/builtins/jobs.def`
+    - Flags: `-lnprs`, `-x`, `-h`, `-a`, `-r`
+- [ ] Audit `kill` (send signal)
+    - Upstream: `third_party/bash/builtins/kill.def`
+    - Flags: `-s`, `-n`, `-l`
+- [ ] Audit `let` (arithmetic)
+    - Upstream: `third_party/bash/builtins/let.def`
+    - Flags: None
+- [ ] Audit `mapfile` / `readarray` (read to array)
+    - Upstream: `third_party/bash/builtins/mapfile.def`
+    - Flags: `-d`, `-n`, `-O`, `-s`, `-t`, `-u`, `-C`, `-c`
+- [ ] Audit `pushd` / `popd` / `dirs` (dir stack)
+    - Upstream: `third_party/bash/builtins/pushd.def`
+    - Flags: `-n`, `-clpv`
+- [ ] Audit `read` (read line)
+    - Upstream: `third_party/bash/builtins/read.def`
+    - Flags: `-ers`, `-a`, `-d`, `-i`, `-n`, `-N`, `-p`, `-t`, `-u`
+- [ ] Audit `return` (return from func)
+    - Upstream: `third_party/bash/builtins/return.def`
+    - Flags: None
+- [ ] Audit `set` / `unset` (shell options)
+    - Upstream: `third_party/bash/builtins/set.def`
+    - Flags: `-abefhkmnptuvxBCEHPT`, `-o`, `-f`, `-v`, `-n`
+- [ ] Audit `shift` (shift args)
+    - Upstream: `third_party/bash/builtins/shift.def`
+    - Flags: None
+- [ ] Audit `source` / `.` (run script)
+    - Upstream: `third_party/bash/builtins/source.def`
+    - Flags: None
+- [ ] Audit `suspend` (suspend shell)
+    - Upstream: `third_party/bash/builtins/suspend.def`
+    - Flags: `-f`
+- [ ] Audit `times` (shell times)
+    - Upstream: `third_party/bash/builtins/times.def`
+    - Flags: None
+- [ ] Audit `ulimit` (resource limits)
+    - Upstream: `third_party/bash/builtins/ulimit.def`
+    - Flags: `-SHabcdefiklmnpqrstuvxPRT`

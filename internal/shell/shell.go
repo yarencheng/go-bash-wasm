@@ -5,9 +5,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/chzyer/readline"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
+
+// LineReader defines the interface for reading lines from the terminal.
+type LineReader interface {
+	Readline() (string, error)
+	Close() error
+}
 
 // Shell provides an interactive command-line environment.
 type Shell struct {
@@ -25,12 +30,7 @@ func New(registry *commands.Registry, env *commands.Environment) *Shell {
 
 // RunInteractive starts the REPL loop.
 func (s *Shell) RunInteractive() error {
-	rl, err := readline.NewEx(&readline.Config{
-		Prompt:          "$ ",
-		HistoryFile:     "", // Disable history file for WASM/mock simplicity
-		InterruptPrompt: "^C",
-		EOFPrompt:       "exit",
-	})
+	rl, err := newLineReader(s.Env)
 	if err != nil {
 		return err
 	}
@@ -62,8 +62,7 @@ func (s *Shell) RunInteractive() error {
 		cmdArgs := args[1:]
 
 		if cmd, ok := s.Registry.Get(cmdName); ok {
-			// Update environment output to readline's writers for terminal control
-			// In a real shell, we might wrapper these.
+			// In a real shell, we might wrap these or use readline's writers.
 			_ = cmd.Run(context.Background(), s.Env, cmdArgs)
 		} else {
 			fmt.Fprintf(s.Env.Stderr, "%s: command not found\n", cmdName)

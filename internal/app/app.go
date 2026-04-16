@@ -21,7 +21,7 @@ type App struct {
 }
 
 // New creates a new bash simulator application.
-func New(stdout, stderr io.Writer) *App {
+func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 	// Setup standard logger
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
 	log.Logger = logger
@@ -42,6 +42,7 @@ func New(stdout, stderr io.Writer) *App {
 	// Setup environment
 	env := &commands.Environment{
 		FS:     fs,
+		Stdin:  stdin,
 		Stdout: stdout,
 		Stderr: stderr,
 		Cwd:    "/",

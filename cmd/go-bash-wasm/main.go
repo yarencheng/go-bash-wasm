@@ -11,8 +11,8 @@ import (
 func main() {
 	ctx := context.Background()
 
-	// Initialize the application with standard output and error.
-	a := app.New(os.Stdout, os.Stderr)
+	// Initialize the application with standard input, output and error.
+	a := app.New(os.Stdin, os.Stdout, os.Stderr)
 
 	// Run the interactive shell.
 	if err := a.Run(ctx); err != nil {

@@ -10,7 +10,7 @@ import (
 // Environment defines the execution environment for a command.
 type Environment struct {
 	FS     afero.Fs
-	Stdin  io.Reader
+	Stdin  io.ReadCloser
 	Stdout io.Writer
 	Stderr io.Writer
 	Cwd    string

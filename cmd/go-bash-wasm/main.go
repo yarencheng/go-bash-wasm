@@ -1,13 +1,13 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 
 	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
+	"github.com/yarencheng/go-bash-wasm/internal/shell"
 )
 
 func main() {
@@ -30,8 +30,9 @@ func main() {
 		Cwd:    "/",
 	}
 
-	fmt.Println("\nRunning 'ls -F':")
-	if cmd, ok := registry.Get("ls"); ok {
-		cmd.Run(context.Background(), env, []string{"-F"})
+	shellObj := shell.New(registry, env)
+	if err := shellObj.RunInteractive(); err != nil {
+		fmt.Fprintf(os.Stderr, "shell error: %v\n", err)
+		os.Exit(1)
 	}
 }

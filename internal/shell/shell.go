@@ -1,0 +1,73 @@
+package shell
+
+import (
+	"context"
+	"fmt"
+	"strings"
+
+	"github.com/chzyer/readline"
+	"github.com/yarencheng/go-bash-wasm/internal/commands"
+)
+
+// Shell provides an interactive command-line environment.
+type Shell struct {
+	Registry *commands.Registry
+	Env      *commands.Environment
+}
+
+// New creates a new shell with the given registry and environment.
+func New(registry *commands.Registry, env *commands.Environment) *Shell {
+	return &Shell{
+		Registry: registry,
+		Env:      env,
+	}
+}
+
+// RunInteractive starts the REPL loop.
+func (s *Shell) RunInteractive() error {
+	rl, err := readline.NewEx(&readline.Config{
+		Prompt:          "$ ",
+		HistoryFile:     "", // Disable history file for WASM/mock simplicity
+		InterruptPrompt: "^C",
+		EOFPrompt:       "exit",
+	})
+	if err != nil {
+		return err
+	}
+	defer rl.Close()
+
+	for {
+		line, err := rl.Readline()
+		if err != nil {
+			// io.EOF is returned when Ctrl+D is pressed
+			break
+		}
+
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+
+		if line == "exit" {
+			break
+		}
+
+		// Parse simple command
+		args := strings.Fields(line)
+		if len(args) == 0 {
+			continue
+		}
+
+		cmdName := args[0]
+		cmdArgs := args[1:]
+
+		if cmd, ok := s.Registry.Get(cmdName); ok {
+			// Update environment output to readline's writers for terminal control
+			// In a real shell, we might wrapper these.
+			_ = cmd.Run(context.Background(), s.Env, cmdArgs)
+		} else {
+			fmt.Fprintf(s.Env.Stderr, "%s: command not found\n", cmdName)
+		}
+	}
+	return nil
+}

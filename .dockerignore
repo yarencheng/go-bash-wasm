@@ -1,0 +1,11 @@
+node_modules
+.svelte-kit
+build
+dist
+.git
+.agents
+scratch
+.DS_Store
+.env*
+*.pem
+*.key

@@ -1679,3 +1679,65 @@ Status codes:
 ### `while`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] Positive condition looping: Missing implementation
+
+## Shell Variables
+
+### `BASH_VERSION`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Version information string: Missing implementation
+
+### `CDPATH`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Search path for `cd` command: Missing implementation
+
+### `GLOBIGNORE`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Pattern-based pathname expansion ignore: Missing implementation
+
+### `HISTFILE`, `HISTFILESIZE`, `HISTSIZE`, `HISTIGNORE`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] History management persistence: Missing implementation
+
+### `HOME`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Logical login directory: Missing implementation
+
+### `HOSTNAME`, `HOSTTYPE`, `MACHTYPE`, `OSTYPE`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] System identity metadata: Missing implementation
+
+### `IGNOREEOF`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] EOF handling for interactive shells: Missing implementation
+
+### `MAILCHECK`, `MAILPATH`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Mail notification settings: Missing implementation
+
+### `PATH`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Command search path: Missing implementation
+
+### `PROMPT_COMMAND`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Pre-prompt execution hook: Missing implementation
+
+### `PS1`, `PS2`, `PS3`, `PS4`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Interactive prompt formatting: Missing implementation
+
+### `PWD`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Logical current directory tracking: Missing implementation
+
+### `SHELLOPTS`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] List of enabled shell options: Missing implementation
+
+### `TERM`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Terminal environment identification: Missing implementation
+
+### `TIMEFORMAT`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Output format for `time` reserved word: Missing implementation

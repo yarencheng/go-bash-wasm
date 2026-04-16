@@ -786,12 +786,12 @@ Status codes:
 - [ ] Color output (`--color`): `third_party/coreutils/src/ls.c:L215`
 - [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L157`
 - [ ] Flag `--block-size`: `third_party/coreutils/src/ls.c:L165`
-- [ ] Flag `--color`: `third_party/coreutils/src/ls.c:L215`
-- [ ] Flag `--dereference-command-line-symlink-to-dir`: `third_party/coreutils/src/ls.c:L274`
+- [x] Flag `--color`: `internal/commands/ls/ls.go` (ANSI colors)
+- [x] Flag `--dereference-command-line-symlink-to-dir`: `internal/commands/ls/ls.go` (-H)
 - [x] Flag `--file-type`: `internal/commands/ls/ls.go`
-- [ ] Flag `--format`: `third_party/coreutils/src/ls.c:L241`
-- [ ] Flag `--full-time`: `third_party/coreutils/src/ls.c:L246`
-- [ ] Flag `--group-directories-first`: `third_party/coreutils/src/ls.c:L254`
+- [x] Flag `--format`: `internal/commands/ls/ls.go` (across, commas, horizontal, long, single-column, verbose, vertical)
+- [x] Flag `--full-time`: `internal/commands/ls/ls.go`
+- [x] Flag `--group-directories-first`: `internal/commands/ls/ls.go`
 - [x] Flag `--hide`: `internal/commands/ls/ls.go`
 - [x] Flag `--indicator-style`: `internal/commands/ls/ls.go`
 - [x] Flag `--quoting-style`: `internal/commands/ls/ls.go`
@@ -799,8 +799,8 @@ Status codes:
 - [x] Flag `--si`: `internal/commands/ls/ls.go` (power of 1000)
 - [x] Flag `--sort`: `internal/commands/ls/ls.go` (unified flag)
 - [ ] Flag `--time`: `third_party/coreutils/src/ls.c:L388`
-- [ ] Flag `--time-style`: `third_party/coreutils/src/ls.c:L397`
-- [ ] Flag `--zero`: `third_party/coreutils/src/ls.c:L435` (mapped to ZERO_OPTION)
+- [x] Flag `--time-style`: `internal/commands/ls/ls.go`
+- [x] Flag `--zero`: `internal/commands/ls/ls.go` (NUL terminated)
 - [x] Flag `-1`: `internal/commands/ls/ls.go` (one-line)
 - [x] Flag `-A`: `internal/commands/ls/ls.go` (almost-all)
 - [x] Flag `-B`: `internal/commands/ls/ls.go` (ignore-backups)
@@ -808,9 +808,9 @@ Status codes:
 - [ ] Flag `-D`: `third_party/coreutils/src/ls.c:L224`
 - [x] Flag `-F`: `internal/commands/ls/ls.go` (classify)
 - [x] Flag `-G`: `internal/commands/ls/ls.go` (no-group)
-- [ ] Flag `-H`: `third_party/coreutils/src/ls.c:L270`
+- [x] Flag `-H`: `internal/commands/ls/ls.go` (dereference-command-line)
 - [x] Flag `-I`: `internal/commands/ls/ls.go` (ignore)
-- [ ] Flag `-L`: `third_party/coreutils/src/ls.c:L317`
+- [x] Flag `-L`: `internal/commands/ls/ls.go` (dereference)
 - [ ] Flag `-N`: `third_party/coreutils/src/ls.c:L329`
 - [x] Flag `-Q`: `internal/commands/ls/ls.go` (quote-name)
 - [x] Flag `-R`: `internal/commands/ls/ls.go` (recursive)
@@ -840,7 +840,7 @@ Status codes:
 - [x] Flag `-u`: `internal/commands/ls/ls.go` (atime)
 - [x] Flag `-v`: `internal/commands/ls/ls.go` (natural sort)
 - [ ] Flag `-w`: `third_party/coreutils/src/ls.c:L427`
-- [ ] Flag `-x`: `third_party/coreutils/src/ls.c:L431`
+- [x] Flag `-x`: `internal/commands/ls/ls.go` (across/horizontal)
 
 ### `mapfile`
 

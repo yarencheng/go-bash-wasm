@@ -1178,3 +1178,37 @@ Status codes:
 - [ ] Audit `yes` (repeat string)
     - Upstream: `third_party/coreutils/src/yes.c`
     - Flags: None specific
+### Batch 32: Bash Builtins (State & Control)
+- [ ] Audit `alias` (manage aliases)
+    - Upstream: `third_party/bash/builtins/alias.def`
+    - Flags: `-p`
+- [ ] Audit `unalias` (remove aliases)
+    - Upstream: `third_party/bash/builtins/alias.def`
+    - Flags: `-a`
+- [ ] Audit `declare` / `typeset` (attributes)
+    - Upstream: `third_party/bash/builtins/declare.def`
+    - Flags: `-a`, `-A`, `-f`, `-F`, `-g`, `-I`, `-i`, `-l`, `-n`, `-p`, `-r`, `-t`, `-u`, `-x`
+- [ ] Audit `local` (local variables)
+    - Upstream: `third_party/bash/builtins/declare.def`
+    - Flags: (same as `declare`)
+- [ ] Audit `fc` (history control)
+    - Upstream: `third_party/bash/builtins/fc.def`
+    - Flags: `-e`, `-l`, `-n`, `-r`, `-s`
+- [ ] Audit `shopt` (shell options)
+    - Upstream: `third_party/bash/builtins/shopt.def`
+    - Flags: `-o`, `-p`, `-q`, `-s`, `-u`
+- [ ] Audit `trap` (signal handlers)
+    - Upstream: `third_party/bash/builtins/trap.def`
+    - Flags: `-l`, `-p`, `-P`
+- [ ] Audit `type` (command type)
+    - Upstream: `third_party/bash/builtins/type.def`
+    - Flags: `-a`, `-f`, `-P`, `-p`, `-t`
+- [ ] Audit `umask` (file mode mask)
+    - Upstream: `third_party/bash/builtins/umask.def`
+    - Flags: `-p`, `-S`
+- [ ] Audit `wait` (job wait)
+    - Upstream: `third_party/bash/builtins/wait.def`
+    - Flags: `-f`, `-n`, `-p var`
+- [ ] Audit `history` (history list)
+    - Upstream: `third_party/bash/builtins/history.def`
+    - Flags: `-c`, `-d offset`, `-a`, `-n`, `-r`, `-w`, `-p`, `-s`

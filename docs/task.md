@@ -1168,3 +1168,13 @@ Status codes:
 - [ ] Audit `users` (logged users)
     - Upstream: `third_party/coreutils/src/users.c`
     - Flags: None specific
+### Batch 31: Coreutils (Final Utilities)
+- [ ] Audit `who` (logged users)
+    - Upstream: `third_party/coreutils/src/who.c`
+    - Flags: `-a`, `--all`, `-b`, `--boot`, `-d`, `--dead`, `-H`, `--heading`, `-l`, `--login`, `--lookup`, `-m`, `-p`, `--process`, `-q`, `--count`, `-r`, `--runlevel`, `-s`, `--short`, `-t`, `--time`, `-T`, `-w`, `--mesg`, `-u`, `--users`
+- [ ] Audit `whoami` (effective user)
+    - Upstream: `third_party/coreutils/src/whoami.c`
+    - Flags: None specific
+- [ ] Audit `yes` (repeat string)
+    - Upstream: `third_party/coreutils/src/yes.c`
+    - Flags: None specific

@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-* use Go 1.26
+* use Go 1.25
 * use zerolog
 * use testify
 * use mvdan.cc/sh

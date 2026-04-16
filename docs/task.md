@@ -1038,3 +1038,19 @@ Status codes:
 - [ ] Audit `expand` (tabs to spaces)
     - Upstream: `third_party/coreutils/src/expand.c`
     - Flags: `-i`, `--initial`, `-t`, `--tabs=N`
+### Batch 24: Coreutils (Text Processing & Math)
+- [ ] Audit `expr` (expressions)
+    - Upstream: `third_party/coreutils/src/expr.c`
+    - Flags: None specific
+- [ ] Audit `factor` (prime factors)
+    - Upstream: `third_party/coreutils/src/factor.c`
+    - Flags: `-h`, `--exponents`
+- [ ] Audit `fmt` (paragraph formatting)
+    - Upstream: `third_party/coreutils/src/fmt.c`
+    - Flags: `-WIDTH`, `-c`, `--crown-margin`, `-p`, `--prefix=STRING`, `-s`, `--split-only`, `-t`, `--tagged-paragraph`, `-u`, `--uniform-spacing`, `-w`, `--width=WIDTH`, `-g`, `--goal=WIDTH`
+- [ ] Audit `fold` (line wrapping)
+    - Upstream: `third_party/coreutils/src/fold.c`
+    - Flags: `-b`, `--bytes`, `-c`, `--characters`, `-s`, `--spaces`, `-w`, `--width=WIDTH`
+- [ ] Audit `groups` (group memberships)
+    - Upstream: `third_party/coreutils/src/groups.c`
+    - Flags: None specific

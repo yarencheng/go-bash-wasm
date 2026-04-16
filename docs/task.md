@@ -965,3 +965,7 @@ Status codes:
 - [ ] Audit `getlimits` (platform limits)
     - Upstream: `third_party/coreutils/src/getlimits.c`
     - Flags: None specific.
+### Batch 19: Security Context (chcon)
+- [ ] Audit `chcon` (change context)
+    - Upstream: `third_party/coreutils/src/chcon.c`
+    - Flags: `-R`, `--dereference`, `-h`, `--no-preserve-root`, `--preserve-root`, `--reference`, `-u`, `-r`, `-t`, `-l`, `-v`, `-H`, `-L`, `-P`

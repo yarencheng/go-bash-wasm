@@ -486,3 +486,94 @@ Status codes:
 - [ ] Flag `-p` (reusable input): `third_party/bash/builtins/umask.def:L91`
 - [ ] Flag `-S` (symbolic): `third_party/bash/builtins/umask.def:L88`
 
+
+### `sort`
+
+- [ ] Basic sort: Missing implementation
+- [ ] Ordering flags (`-b`, `-i`, `-d`, `-f`, `-g`, `-h`, `-n`, `-M`, `-R`, `-V`, `-r`): `third_party/coreutils/src/sort.c:L437-490`
+- [ ] Flag `-c` / `-C` (`--check`): `third_party/coreutils/src/sort.c:L501-507`
+- [ ] Flag `-k` (`--key`): `third_party/coreutils/src/sort.c:L524`
+- [ ] Flag `-m` (`--merge`): `third_party/coreutils/src/sort.c:L528`
+- [ ] Flag `-o` (`--output`): `third_party/coreutils/src/sort.c:L532`
+- [ ] Flag `-u` (`--unique`): `third_party/coreutils/src/sort.c:L557`
+- [ ] Flag `-z` (`--zero-terminated`): `third_party/coreutils/src/sort.c:L562`
+- [ ] Flag `-S` (`--buffer-size`): `third_party/coreutils/src/sort.c:L540`
+- [ ] Flag `-t` (`--field-separator`): `third_party/coreutils/src/sort.c:L544`
+- [ ] Flag `-T` (`--temporary-directory`): `third_party/coreutils/src/sort.c:L548`
+- [ ] Flag `--parallel`: `third_party/coreutils/src/sort.c:L553`
+
+### `uniq`
+
+- [ ] Basic filtering: Missing implementation
+- [ ] Flag `-c` (`--count`): `third_party/coreutils/src/uniq.c:172`
+- [ ] Flag `-d` (`--repeated`): `third_party/coreutils/src/uniq.c:176`
+- [ ] Flag `-D`: `third_party/coreutils/src/uniq.c:180`
+- [ ] Flag `-u` (`--unique`): `third_party/coreutils/src/uniq.c:206`
+- [ ] Flag `-i` (`--ignore-case`: `third_party/coreutils/src/uniq.c:198`
+- [ ] Flag `-f` (`--skip-fields`): `third_party/coreutils/src/uniq.c:189`
+- [ ] Flag `-s` (`--skip-chars`): `third_party/coreutils/src/uniq.c:202`
+- [ ] Flag `-w` (`--check-chars`): `third_party/coreutils/src/uniq.c:214`
+- [ ] Flag `-z` (`--zero-terminated`): `third_party/coreutils/src/uniq.c:210`
+
+### `expand`
+
+- [ ] Basic conversion: Missing implementation
+- [ ] Flag `-i` (`--initial`): `third_party/coreutils/src/expand.c:L78`
+- [ ] Flag `-t` (`--tabs`): `third_party/coreutils/src/expand.c:L82`
+
+### `unexpand`
+
+- [ ] Basic conversion: Missing implementation
+- [ ] Flag `-a` (`--all`): `third_party/coreutils/src/unexpand.c:L87`
+- [ ] Flag `--first-only`: `third_party/coreutils/src/unexpand.c:L91`
+- [ ] Flag `-t` (`--tabs`): `third_party/coreutils/src/unexpand.c:L95`
+
+### `fmt`
+
+- [ ] Basic formatting: Missing implementation
+- [ ] Flag `-w` (`--width`): `third_party/coreutils/src/fmt.c:L299`
+- [ ] Flag `-g` (`--goal`): `third_party/coreutils/src/fmt.c:L305`
+- [ ] Flag `-c` (`--crown-margin`): `third_party/coreutils/src/fmt.c:L278`
+- [ ] Flag `-t` (`--tagged-paragraph`): `third_party/coreutils/src/fmt.c:L291`
+- [ ] Flag `-u` (`--uniform-spacing`): `third_party/coreutils/src/fmt.c:L295`
+- [ ] Flag `-p` (`--prefix`): `third_party/coreutils/src/fmt.c:L282`
+- [ ] Flag `-s` (`--split-only`): `third_party/coreutils/src/fmt.c:L287`
+
+### `fold`
+
+- [ ] Basic folding: Missing implementation
+- [ ] Flag `-b` (`--bytes`): `third_party/coreutils/src/fold.c:L88`
+- [ ] Flag `-c` (`--characters`): `third_party/coreutils/src/fold.c:L92`
+- [ ] Flag `-s` (`--spaces`): `third_party/coreutils/src/fold.c:L96`
+- [ ] Flag `-w` (`--width`): `third_party/coreutils/src/fold.c:L100`
+
+### `alias` (builtin)
+
+- [ ] Define/Display aliases: Missing implementation
+- [ ] Flag `-p` (reusable format): `third_party/bash/builtins/alias.def:L36`
+
+### `unalias` (builtin)
+
+- [ ] Remove aliases: Missing implementation
+- [ ] Flag `-a` (remove all): `third_party/bash/builtins/unalias.def:L165`
+
+### `builtin` (builtin)
+
+- [ ] Basic execution: Missing implementation
+
+### `command` (builtin)
+
+- [ ] Basic execution: Missing implementation
+- [ ] Flag `-p` (default PATH): `third_party/bash/builtins/command.def:L33`
+- [ ] Flag `-v` (identify command): `third_party/bash/builtins/command.def:L35`
+- [ ] Flag `-V` (verbose description): `third_party/bash/builtins/command.def:L37`
+
+### `type` (builtin)
+
+- [ ] Basic identification: Missing implementation
+- [ ] Flag `-a` (all): `third_party/bash/builtins/type.def:L32`
+- [ ] Flag `-f` (no functions): `third_party/bash/builtins/type.def:L35`
+- [ ] Flag `-p` (path only): `third_party/bash/builtins/type.def:L39`
+- [ ] Flag `-P` (force path): `third_party/bash/builtins/type.def:L36`
+- [ ] Flag `-t` (type): `third_party/bash/builtins/type.def:L41`
+

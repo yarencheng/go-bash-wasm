@@ -1108,3 +1108,22 @@ Status codes:
 - [ ] Audit `ptx` (permuted index)
     - Upstream: `third_party/coreutils/src/ptx.c`
     - Flags: `-A`, `--auto-reference`, `-G`, `--traditional`, `-F`, `--flag-truncation=STRING`, `-M`, `--macro-name=STRING`, `-O`, `--format=roff`, `-R`, `--right-side-refs`, `-S`, `--sentence-regexp=REGEXP`, `-T`, `--format=tex`, `-W`, `--word-regexp=REGEXP`, `-b`, `--break-file=FILE`, `-f`, `--ignore-case`, `-g`, `--gap-size=NUMBER`, `-i`, `--ignore-file=FILE`, `-o`, `--only-file=FILE`, `-r`, `--references`, `-t`, `--typeset-mode`, `-w`, `--width=NUMBER`
+### Batch 28: Coreutils (Paths & Generation)
+- [ ] Audit `readlink` (read symlinks)
+    - Upstream: `third_party/coreutils/src/readlink.c`
+    - Flags: `-f`, `--canonicalize`, `-e`, `--canonicalize-existing`, `-m`, `--canonicalize-missing`, `-n`, `--no-newline`, `-q`, `--quiet`, `-s`, `--silent`, `-v`, `--verbose`, `-z`, `--zero`
+- [ ] Audit `realpath` (resolved paths)
+    - Upstream: `third_party/coreutils/src/realpath.c`
+    - Flags: `-E`, `--canonicalize`, `-e`, `--canonicalize-existing`, `-m`, `--canonicalize-missing`, `-L`, `--logical`, `-P`, `--physical`, `-q`, `--quiet`, `--relative-to=DIR`, `--relative-base=DIR`, `-s`, `--strip`, `-z`, `--zero`
+- [ ] Audit `runcon` (security context)
+    - Upstream: `third_party/coreutils/src/runcon.c`
+    - Flags: `-c`, `--compute`, `-t`, `--type=TYPE`, `-u`, `--user=USER`, `-r`, `--role=ROLE`, `-l`, `--range=RANGE`
+- [ ] Audit `seq` (number sequences)
+    - Upstream: `third_party/coreutils/src/seq.c`
+    - Flags: `-f`, `--format=FORMAT`, `-s`, `--separator=STRING`, `-w`, `--equal-width`
+- [ ] Audit `shred` (secure delete)
+    - Upstream: `third_party/coreutils/src/shred.c`
+    - Flags: `-f`, `--force`, `-n`, `--iterations=N`, `--random-source=FILE`, `-s`, `--size=N`, `-u`, `--remove[=HOW]`, `-v`, `--verbose`, `-x`, `--exact`, `-z`, `--zero`
+- [ ] Audit `shuf` (random permutations)
+    - Upstream: `third_party/coreutils/src/shuf.c`
+    - Flags: `-e`, `--echo`, `-i`, `--input-range=LO-HI`, `-n`, `--head-count=COUNT`, `-o`, `--output=FILE`, `--random-source=FILE`, `-r`, `--repeat`, `-z`, `--zero-terminated`

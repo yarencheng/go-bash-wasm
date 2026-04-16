@@ -1,3 +1,6 @@
 [submodule "third_party/bash"]
 	path = third_party/bash
 	url = https://git.savannah.gnu.org/git/bash.git
+[submodule "third_party/coreutils"]
+	path = third_party/coreutils
+	url = https://git.savannah.gnu.org/git/coreutils.git

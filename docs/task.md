@@ -1070,3 +1070,22 @@ Status codes:
 - [ ] Audit `logname` (login name)
     - Upstream: `third_party/coreutils/src/logname.c`
     - Flags: None specific
+### Batch 26: Coreutils (Process & Number Formatting)
+- [ ] Audit `nice` (niceness)
+    - Upstream: `third_party/coreutils/src/nice.c`
+    - Flags: `-n`, `--adjustment=N`
+- [ ] Audit `nl` (number lines)
+    - Upstream: `third_party/coreutils/src/nl.c`
+    - Flags: `-b STYLE`, `-d CC`, `-f STYLE`, `-h STYLE`, `-i NUMBER`, `-l NUMBER`, `-n FORMAT`, `-p`, `-s STRING`, `-v NUMBER`, `-w NUMBER`
+- [ ] Audit `nohup` (hangup immune)
+    - Upstream: `third_party/coreutils/src/nohup.c`
+    - Flags: None specific
+- [ ] Audit `nproc` (processor count)
+    - Upstream: `third_party/coreutils/src/nproc.c`
+    - Flags: `--all`, `--ignore=N`
+- [ ] Audit `numfmt` (reformat numbers)
+    - Upstream: `third_party/coreutils/src/numfmt.c`
+    - Flags: `--debug`, `-d`, `--delimiter=X`, `--field=FIELDS`, `--format=FORMAT`, `--from=UNIT`, `--from-unit=N`, `--grouping`, `--header[=N]`, `--invalid=MODE`, `--padding=N`, `--round=METHOD`, `--suffix=SUFFIX`, `--unit-separator=SEP`, `--to=UNIT`, `--to-unit=N`, `-z`, `--zero-terminated`
+- [ ] Audit `od` (octal dump)
+    - Upstream: `third_party/coreutils/src/od.c`
+    - Flags: `-A`, `--address-radix=RADIX`, `--endian`, `-j`, `--skip-bytes=BYTES`, `-N`, `--read-bytes=BYTES`, `-S`, `--strings`, `-t`, `--format=TYPE`, `-v`, `--output-duplicates`, `-w`, `--width`, `--traditional`, `-a`, `-b`, `-c`, `-d`, `-f`, `-i`, `-l`, `-o`, `-s`, `-x`

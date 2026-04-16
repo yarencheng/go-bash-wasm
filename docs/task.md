@@ -158,7 +158,28 @@ Status codes:
 - [ ] Flag `-h` (human-readable): `third_party/coreutils/src/df.c:L1644`
 - [ ] Flag `-a` (all files): `third_party/coreutils/src/df.c:L1625`
 
+### `printf`
+
+- [ ] Basic formatting: Missing implementation
+- [ ] Flag `-v VAR` (assign to variable): `third_party/bash/builtins/printf.def:L301`
+- [ ] Format `%b` (expand escapes): `third_party/bash/builtins/printf.def:L558`
+- [ ] Format `%q` (shell quote): `third_party/bash/builtins/printf.def:L672`
+
+### `test` / `[`
+
+- [ ] Unary operators (-e, -f, -d, etc.): Missing implementation
+- [ ] String operators (=, !=, -z, -n): Missing implementation
+- [ ] Numeric operators (-eq, -ne, etc.): Missing implementation
+- [ ] Logical operators (!, -a, -o): Missing implementation
+
+### `sleep`
+
+- [ ] Basic sleep: Missing implementation
+- [ ] Multiple arguments (sum): `third_party/coreutils/src/sleep.c:L135`
+- [ ] Suffixes (s, m, h, d): `third_party/coreutils/src/sleep.c:L65`
+
 <!-- Add new audits below this line -->
+
 
 
 

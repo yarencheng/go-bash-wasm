@@ -376,3 +376,113 @@ Status codes:
 
 
 
+
+### `comm`
+
+- [ ] Basic comparison: Missing implementation
+- [ ] Flag `-1` (suppress column 1): `third_party/coreutils/src/comm.c:L467`
+- [ ] Flag `-2` (suppress column 2): `third_party/coreutils/src/comm.c:L468`
+- [ ] Flag `-3` (suppress column 3): `third_party/coreutils/src/comm.c:L469`
+- [ ] Flag `--check-order`: `third_party/coreutils/src/comm.c:L473`
+- [ ] Flag `--nocheck-order`: `third_party/coreutils/src/comm.c:L474`
+- [ ] Flag `--output-delimiter`: `third_party/coreutils/src/comm.c:L477`
+- [ ] Flag `--total`: `third_party/coreutils/src/comm.c:L478`
+- [ ] Flag `-z` (`--zero-terminated`): `third_party/coreutils/src/comm.c:L480`
+
+### `join`
+
+- [ ] Basic join: Missing implementation
+- [ ] Flag `-a FILENUM`: `third_party/coreutils/src/join.c:L210`
+- [ ] Flag `-e STRING`: `third_party/coreutils/src/join.c:L215`
+- [ ] Flag `-i` (`--ignore-case`): `third_party/coreutils/src/join.c:L220`
+- [ ] Flag `-j FIELD`: `third_party/coreutils/src/join.c:L224`
+- [ ] Flag `-o FORMAT`: `third_party/coreutils/src/join.c:L228`
+- [ ] Flag `-t CHAR`: `third_party/coreutils/src/join.c:L232`
+- [ ] Flag `-v FILENUM`: `third_party/coreutils/src/join.c:L236`
+- [ ] Flag `-1 FIELD`: `third_party/coreutils/src/join.c:L240`
+- [ ] Flag `-2 FIELD`: `third_party/coreutils/src/join.c:L244`
+- [ ] Flag `--check-order`: `third_party/coreutils/src/join.c:L248`
+- [ ] Flag `--nocheck-order`: `third_party/coreutils/src/join.c:L253`
+- [ ] Flag `--header`: `third_party/coreutils/src/join.c:L257`
+- [ ] Flag `-z` (`--zero-terminated`): `third_party/coreutils/src/join.c:L262`
+
+### `paste`
+
+- [ ] Basic paste: Missing implementation
+- [ ] Flag `-d` (`--delimiters`): `third_party/coreutils/src/paste.c:L468`
+- [ ] Flag `-s` (`--serial`): `third_party/coreutils/src/paste.c:L473`
+- [ ] Flag `-z` (`--zero-terminated`): `third_party/coreutils/src/paste.c:L479`
+
+### `split`
+
+- [ ] Basic split: Missing implementation
+- [ ] Flag `-a` (`--suffix-length`): `third_party/coreutils/src/split.c:L238`
+- [ ] Flag `-b` (`--bytes`): `third_party/coreutils/src/split.c:L246`
+- [ ] Flag `-l` (`--lines`): `third_party/coreutils/src/split.c:L278`
+- [ ] Flag `-C` (`--line-bytes`): `third_party/coreutils/src/split.c:L250`
+- [ ] Flag `-n` (`--number`): `third_party/coreutils/src/split.c:L282`
+- [ ] Flag `-d` (`--numeric-suffixes`): `third_party/coreutils/src/split.c:L254`
+- [ ] Flag `-x` (`--hex-suffixes`): `third_party/coreutils/src/split.c:L262`
+- [ ] Flag `-e` (`--elide-empty-files`): `third_party/coreutils/src/split.c:L270`
+- [ ] Flag `-t` (`--separator`): `third_party/coreutils/src/split.c:L286`
+- [ ] Flag `-u` (`--unbuffered`): `third_party/coreutils/src/split.c:L291`
+- [ ] Flag `--filter`: `third_party/coreutils/src/split.c:L274`
+- [ ] Flag `--verbose`: `third_party/coreutils/src/split.c:L295`
+
+### `csplit`
+
+- [ ] Basic split: Missing implementation
+- [ ] Flag `-b` (`--suffix-format`): `third_party/coreutils/src/csplit.c:1423`
+- [ ] Flag `-f` (`--prefix`): `third_party/coreutils/src/csplit.c:1427`
+- [ ] Flag `-k` (`--keep-files`): `third_party/coreutils/src/csplit.c:1431`
+- [ ] Flag `--suppress-matched`: `third_party/coreutils/src/csplit.c:1435`
+- [ ] Flag `-n` (`--digits`): `third_party/coreutils/src/csplit.c:1439`
+- [ ] Flag `-s` (`--quiet`): `third_party/coreutils/src/csplit.c:1443`
+- [ ] Flag `-z` (`--elide-empty-files`): `third_party/coreutils/src/csplit.c:1447`
+
+### `mktemp`
+
+- [ ] Basic creation: Missing implementation
+- [ ] Flag `-d` (`--directory`): `third_party/coreutils/src/mktemp.c:L76`
+- [ ] Flag `-u` (`--dry-run`): `third_party/coreutils/src/mktemp.c:L80`
+- [ ] Flag `-q` (`--quiet`): `third_party/coreutils/src/mktemp.c:L84`
+- [ ] Flag `--suffix`: `third_party/coreutils/src/mktemp.c:L88`
+- [ ] Flag `-p` (`--tmpdir`): `third_party/coreutils/src/mktemp.c:L93`
+- [ ] Flag `-t` (deprecated): `third_party/coreutils/src/mktemp.c:101`
+
+### `truncate`
+
+- [ ] Basic truncation: Missing implementation
+- [ ] Flag `-c` (`--no-create`): `third_party/coreutils/src/truncate.c:L82`
+- [ ] Flag `-o` (`--io-blocks`): `third_party/coreutils/src/truncate.c:L85`
+- [ ] Flag `-r` (`--reference`): `third_party/coreutils/src/truncate.c:L88`
+- [ ] Flag `-s` (`--size`): `third_party/coreutils/src/truncate.c:L91`
+
+### `source` / `.` (builtin)
+
+- [ ] Basic sourcing: Missing implementation
+- [ ] Flag `-p path`: `third_party/bash/builtins/source.def:L126`
+
+### `return` (builtin)
+
+- [ ] Basic return: Missing implementation
+- [ ] Exit status parameter: `third_party/bash/builtins/return.def:L61`
+
+### `shift` (builtin)
+
+- [ ] Basic shift: Missing implementation
+- [ ] Shifting n parameters: `third_party/bash/builtins/shift.def:L64`
+
+### `trap` (builtin)
+
+- [ ] Basic trapping: Missing implementation
+- [ ] Flag `-l` (list): `third_party/bash/builtins/trap.def:L125`
+- [ ] Flag `-p` (print): `third_party/bash/builtins/trap.def:L128`
+- [ ] Flag `-P` (print action only): `third_party/bash/builtins/trap.def:L131`
+
+### `umask` (builtin)
+
+- [ ] Basic mask management: Missing implementation
+- [ ] Flag `-p` (reusable input): `third_party/bash/builtins/umask.def:L91`
+- [ ] Flag `-S` (symbolic): `third_party/bash/builtins/umask.def:L88`
+

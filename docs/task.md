@@ -797,14 +797,14 @@ Status codes:
 - [x] Flag `--indicator-style`: `internal/commands/ls/ls.go`
 - [ ] Flag `--quoting-style`: `third_party/coreutils/src/ls.c:L353`
 - [ ] Flag `--show-control-chars`: `third_party/coreutils/src/ls.c:L345`
-- [ ] Flag `--si`: `third_party/coreutils/src/ls.c:L266`
+- [x] Flag `--si`: `internal/commands/ls/ls.go` (power of 1000)
 - [x] Flag `--sort`: `internal/commands/ls/ls.go` (unified flag)
 - [ ] Flag `--time`: `third_party/coreutils/src/ls.c:L388`
 - [ ] Flag `--time-style`: `third_party/coreutils/src/ls.c:L397`
 - [ ] Flag `--zero`: `third_party/coreutils/src/ls.c:L435` (mapped to ZERO_OPTION)
 - [x] Flag `-1`: `internal/commands/ls/ls.go` (one-line)
 - [x] Flag `-A`: `internal/commands/ls/ls.go` (almost-all)
-- [ ] Flag `-B`: `third_party/coreutils/src/ls.c:L170`
+- [x] Flag `-B`: `internal/commands/ls/ls.go` (ignore-backups)
 - [ ] Flag `-C`: `third_party/coreutils/src/ls.c:L181`
 - [ ] Flag `-D`: `third_party/coreutils/src/ls.c:L224`
 - [x] Flag `-F`: `internal/commands/ls/ls.go` (classify)
@@ -818,7 +818,7 @@ Status codes:
 - [x] Flag `-S`: `internal/commands/ls/ls.go` (sort-size)
 - [ ] Flag `-T`: `third_party/coreutils/src/ls.c:L411`
 - [x] Flag `-U`: `internal/commands/ls/ls.go` (do not sort)
-- [ ] Flag `-X`: `third_party/coreutils/src/ls.c:L435`
+- [x] Flag `-X`: `internal/commands/ls/ls.go` (extension sort)
 - [ ] Flag `-Z`: `third_party/coreutils/src/ls.c:L439`
 - [x] Flag `-a`: `internal/commands/ls/ls.go` (all)
 - [ ] Flag `-b`: `third_party/coreutils/src/ls.c:L161`
@@ -828,7 +828,7 @@ Status codes:
 - [x] Flag `-g`: `internal/commands/ls/ls.go` (like -l but no owner)
 - [x] Flag `-h`: `internal/commands/ls/ls.go` (human-readable)
 - [x] Flag `-i`: `internal/commands/ls/ls.go` (inode)
-- [ ] Flag `-k`: `third_party/coreutils/src/ls.c:L313`
+- [x] Flag `-k`: `internal/commands/ls/ls.go` (kibibytes)
 - [x] Flag `-l`: `internal/commands/ls/ls.go` (long)
 - [x] Flag `-m`: `internal/commands/ls/ls.go` (comma)
 - [x] Flag `-n`: `internal/commands/ls/ls.go` (numeric)
@@ -836,7 +836,7 @@ Status codes:
 - [x] Flag `-p`: `internal/commands/ls/ls.go` (indicator)
 - [ ] Flag `-q`: `third_party/coreutils/src/ls.c:L341`
 - [x] Flag `-r`: `internal/commands/ls/ls.go` (reverse)
-- [ ] Flag `-s`: `third_party/coreutils/src/ls.c:L365`
+- [x] Flag `-s`: `internal/commands/ls/ls.go` (size in blocks)
 - [x] Flag `-t`: `internal/commands/ls/ls.go` (sort-time)
 - [x] Flag `-u`: `internal/commands/ls/ls.go` (atime)
 - [x] Flag `-v`: `internal/commands/ls/ls.go` (natural sort)

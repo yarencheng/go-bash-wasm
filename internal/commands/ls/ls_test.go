@@ -331,6 +331,59 @@ func TestLs_Run(t *testing.T) {
 		assert.Contains(t, output, "file1.txt")
 	})
 
+	t.Run("sort by extension -X", func(t *testing.T) {
+		fs3 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs3, "/a.txt", []byte(""), 0644))
+		require.NoError(t, afero.WriteFile(fs3, "/b.bin", []byte(""), 0644))
+		require.NoError(t, afero.WriteFile(fs3, "/c.txt", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs3,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-X"})
+		assert.Equal(t, 0, status)
+		output := stdout.String()
+		// .bin should come before .txt
+		assert.True(t, strings.Index(output, "b.bin") < strings.Index(output, "a.txt"))
+	})
+
+	t.Run("size in blocks -s", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-s"})
+		assert.Equal(t, 0, status)
+		// Should contain a block number before names
+		assert.Contains(t, stdout.String(), "1") 
+	})
+
+	t.Run("ignore backups -B", func(t *testing.T) {
+		require.NoError(t, afero.WriteFile(fs, "/backup~", []byte(""), 0644))
+		defer func() { _ = fs.Remove("/backup~") }()
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-B"})
+		assert.Equal(t, 0, status)
+		assert.NotContains(t, stdout.String(), "backup~")
+	})
+
 	t.Run("invalid directory", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{

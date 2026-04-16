@@ -50,8 +50,13 @@ type lsFlags struct {
 	hide         *string
 	ignore       *string
 	indicatorStyle *string
-	fileType     *bool
-	sortOpt      *string
+	fileType       *bool
+	sortExt        *bool
+	sizeBlocks     *bool
+	ignoreBackups  *bool
+	siUnits        *bool
+	kibibytes      *bool
+	sortOpt        *string
 }
 
 func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) int {
@@ -86,6 +91,11 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		ignore:       flagsSet.StringP("ignore", "I", "", "do not list implied entries matching shell PATTERN"),
 		indicatorStyle: flagsSet.String("indicator-style", "none", "append indicator with style WORD to entry names: none (default), slash (-p), file-type (--file-type), classify (-F)"),
 		fileType:     flagsSet.Bool("file-type", false, "likewise, except do not append '*'"),
+		sortExt:      flagsSet.BoolP("sort-extension", "X", false, "sort alphabetically by entry extension"),
+		sizeBlocks:   flagsSet.BoolP("size", "s", false, "print the allocated size of each file, in blocks"),
+		ignoreBackups: flagsSet.BoolP("ignore-backups", "B", false, "do not list implied entries ending with ~"),
+		siUnits:      flagsSet.Bool("si", false, "likewise, but use powers of 1000 not 1024"),
+		kibibytes:    flagsSet.BoolP("kibibytes", "k", false, "default to 1024-byte blocks for disk usage"),
 		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
@@ -174,6 +184,8 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 		sortMode = "atime"
 	} else if *f.versionSort || *f.sortOpt == "version" || *f.sortOpt == "v" {
 		sortMode = "version"
+	} else if *f.sortExt || *f.sortOpt == "extension" || *f.sortOpt == "X" {
+		sortMode = "extension"
 	}
 
 	// Sort entries
@@ -190,6 +202,14 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 				cmp = entries[i].ModTime().After(entries[j].ModTime())
 			case "version":
 				cmp = naturalLess(entries[i].Name(), entries[j].Name())
+			case "extension":
+				extI := path.Ext(entries[i].Name())
+				extJ := path.Ext(entries[j].Name())
+				if extI != extJ {
+					cmp = extI < extJ
+				} else {
+					cmp = entries[i].Name() < entries[j].Name()
+				}
 			default:
 				cmp = entries[i].Name() < entries[j].Name()
 			}
@@ -229,6 +249,10 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 			if matched {
 				continue
 			}
+		}
+
+		if *f.ignoreBackups && strings.HasSuffix(name, "~") {
+			continue
 		}
 
 		if *f.recursive && entry.IsDir() {
@@ -315,10 +339,15 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 		prefix = "0 "
 	}
 
+	if *f.sizeBlocks {
+		blocks := (entry.Size() + 1023) / 1024
+		prefix += fmt.Sprintf("%d ", blocks)
+	}
+
 	if *f.long || *f.numeric || *f.noOwner || *f.noGroupLong {
 		sizeStr := fmt.Sprintf("%10d", entry.Size())
-		if *f.human {
-			sizeStr = fmt.Sprintf("%10s", formatHuman(entry.Size()))
+		if *f.human || *f.siUnits {
+			sizeStr = fmt.Sprintf("%10s", formatHuman(entry.Size(), *f.siUnits))
 		}
 		owner := "root"
 		group := "  root"
@@ -348,8 +377,11 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 	return prefix + name
 }
 
-func formatHuman(size int64) string {
-	const unit = 1024
+func formatHuman(size int64, si bool) string {
+	unit := int64(1024)
+	if si {
+		unit = 1000
+	}
 	if size < unit {
 		return fmt.Sprintf("%d", size)
 	}

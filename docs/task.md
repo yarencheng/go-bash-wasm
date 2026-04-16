@@ -54,19 +54,29 @@ Status codes:
 ### `basename`
 
 - [ ] Basic operation: Missing implementation
-- [ ] Flag `-a`: `third_party/coreutils/src/basename.c:L155`
-- [ ] Flag `-s`: `third_party/coreutils/src/basename.c:L150`
-- [ ] Flag `-z`: `third_party/coreutils/src/basename.c:L159`
+- [ ] Flag `-a`, `--multiple`: `third_party/coreutils/src/basename.c:L155`
+- [ ] Flag `-s`, `--suffix=SUFFIX`: `third_party/coreutils/src/basename.c:L150`
+- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/basename.c:L159`
 
 ### `basenc`
 
 - [ ] Upstream: `third_party/coreutils/src/basenc.c`
-- [ ] Flags to implement: -d, -i, -w
+- [ ] Basic encoding/decoding: Missing implementation
+- [ ] Flag `-d`, `--decode`: `third_party/coreutils/src/basenc.c:L125`
+- [ ] Flag `-i`, `--ignore-garbage`: `third_party/coreutils/src/basenc.c:L129`
+- [ ] Flag `-w`, `--wrap=COLS`: `third_party/coreutils/src/basenc.c:L133`
+- [ ] Flag `--base16`: `third_party/coreutils/src/basenc.c:L142`
+- [ ] Flag `--base32`: `third_party/coreutils/src/basenc.c:L141`
+- [ ] Flag `--base32hex`: `third_party/coreutils/src/basenc.c:L143`
+- [ ] Flag `--base64`: `third_party/coreutils/src/basenc.c:L141`
+- [ ] Flag `--base64url`: `third_party/coreutils/src/basenc.c:L141`
+- [ ] Flag `--z85`: `third_party/coreutils/src/basenc.c:L145`
 
 ### `bg`
 
 - [ ] Upstream: `third_party/bash/builtins/fg_bg.def`
 - [ ] Basic job management: Missing implementation
+- [ ] Job specification support: `third_party/bash/builtins/fg_bg.def:L65`
 
 ### `bind`
 
@@ -126,12 +136,22 @@ Status codes:
 ### `chcon`
 
 - [ ] Upstream: `third_party/coreutils/src/chcon.c`
-- [ ] Flags to implement: -H, -L, -P, -R, -h, -l, -r, -t, -u, -v
+- [ ] Flag `-h`, `--no-dereference`: `third_party/coreutils/src/chcon.c:L125`
+- [ ] Flag `-H`: `third_party/coreutils/src/chcon.c:L121`
+- [ ] Flag `-L`: `third_party/coreutils/src/chcon.c:L131`
+- [ ] Flag `-P`: `third_party/coreutils/src/chcon.c:L135`
+- [ ] Flag `-R`, `--recursive`: `third_party/coreutils/src/chcon.c:L139`
+- [ ] Flag `-u`, `--user=USER`: `third_party/coreutils/src/chcon.c:L147`
+- [ ] Flag `-r`, `--role=ROLE`: `third_party/coreutils/src/chcon.c:L143`
+- [ ] Flag `-t`, `--type=TYPE`: `third_party/coreutils/src/chcon.c:L151`
+- [ ] Flag `-l`, `--range=RANGE`: `third_party/coreutils/src/chcon.c:L155`
+- [ ] Flag `--reference=RFILE`: `third_party/coreutils/src/chcon.c:L131`
 
 ### `chgrp`
 
-- [ ] Upstream: `third_party/coreutils/src/coreutils-chgrp.c`
-- [ ] Inherits flags from `chown`
+- [ ] Upstream: `third_party/coreutils/src/chown-chgrp.c`
+- [ ] Inherits flags from `chown`: `--dereference`, `--no-dereference`, `--recursive`, `--from`, `--reference`, `-H`, `-L`, `-P`, `-c`, `-f`, `-v`
+- [ ] Basic group change: Missing implementation
 
 ### `chmod`
 
@@ -173,7 +193,20 @@ Status codes:
 ### `cksum`
 
 - [ ] Upstream: `third_party/coreutils/src/cksum.c`
-- [ ] Flags to implement: -a, -b, -c, -l, -r, -s, -t, -w, -z
+- [ ] Basic CRC-32: Missing implementation
+- [ ] Flag `-a`, `--algorithm=ALGO`: `third_party/coreutils/src/cksum.c:L186`
+- [ ] Flag `-c`, `--check`: `third_party/coreutils/src/cksum.c:L148`
+- [ ] Flag `-l`, `--length=BITS`: `third_party/coreutils/src/cksum.c:L181`
+- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/cksum.c:L158`
+- [ ] Flag `--base64`: `third_party/coreutils/src/cksum.c:L187`
+- [ ] Flag `--raw`: `third_party/coreutils/src/cksum.c:L189`
+- [ ] Flag `--tag`: `third_party/coreutils/src/cksum.c:L157`
+- [ ] Flag `--untagged`: `third_party/coreutils/src/cksum.c:L190`
+- [ ] Flag `--ignore-missing`: `third_party/coreutils/src/cksum.c:L149`
+- [ ] Flag `--quiet`: `third_party/coreutils/src/cksum.c:L150`
+- [ ] Flag `--status`: `third_party/coreutils/src/cksum.c:L151`
+- [ ] Flag `--strict`: `third_party/coreutils/src/cksum.c:L154`
+- [ ] Flag `-w`, `--warn`: `third_party/coreutils/src/cksum.c:L153`
 
 ### `comm`
 

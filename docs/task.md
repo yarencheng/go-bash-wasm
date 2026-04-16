@@ -1089,3 +1089,22 @@ Status codes:
 - [ ] Audit `od` (octal dump)
     - Upstream: `third_party/coreutils/src/od.c`
     - Flags: `-A`, `--address-radix=RADIX`, `--endian`, `-j`, `--skip-bytes=BYTES`, `-N`, `--read-bytes=BYTES`, `-S`, `--strings`, `-t`, `--format=TYPE`, `-v`, `--output-duplicates`, `-w`, `--width`, `--traditional`, `-a`, `-b`, `-c`, `-d`, `-f`, `-i`, `-l`, `-o`, `-s`, `-x`
+### Batch 27: Coreutils (Text Formatting & Info)
+- [ ] Audit `paste` (merge lines)
+    - Upstream: `third_party/coreutils/src/paste.c`
+    - Flags: `-d`, `--delimiters=LIST`, `-s`, `--serial`, `-z`, `--zero-terminated`
+- [ ] Audit `pathchk` (check filenames)
+    - Upstream: `third_party/coreutils/src/pathchk.c`
+    - Flags: `-p`, `-P`, `--portability`
+- [ ] Audit `pinky` (user info)
+    - Upstream: `third_party/coreutils/src/pinky.c`
+    - Flags: `-l`, `-b`, `-h`, `-p`, `-s`, `-f`, `-w`, `-i`, `-q`, `--lookup`
+- [ ] Audit `pr` (format for print)
+    - Upstream: `third_party/coreutils/src/pr.c`
+    - Flags: `+FIRST_PAGE[:LAST_PAGE]`, `--pages=FIRST_PAGE[:LAST_PAGE]`, `-COLS`, `--columns=COLS`, `-a`, `--across`, `-c`, `--show-control-chars`, `-d`, `--double-space`, `-D`, `--date-format=FORMAT`, `-e`, `--expand-tabs`, `-F`, `-f`, `--form-feed`, `-h`, `--header=HEADER`, `-i`, `--output-tabs`, `-J`, `--join-lines`, `-l`, `--length=PAGE_LENGTH`, `-m`, `--merge`, `-n`, `--number-lines`, `-N`, `--first-line-number=NUMBER`, `-o`, `--indent=MARGIN`, `-r`, `--no-file-warnings`, `-s`, `--separator`, `-S`, `--sep-string`, `-t`, `--omit-header`, `-T`, `--omit-pagination`, `-v`, `--show-nonprinting`, `-w`, `--width=PAGE_WIDTH`, `-W`, `--page-width=PAGE_WIDTH`
+- [ ] Audit `printenv` (environment)
+    - Upstream: `third_party/coreutils/src/printenv.c`
+    - Flags: `-0`, `--null`
+- [ ] Audit `ptx` (permuted index)
+    - Upstream: `third_party/coreutils/src/ptx.c`
+    - Flags: `-A`, `--auto-reference`, `-G`, `--traditional`, `-F`, `--flag-truncation=STRING`, `-M`, `--macro-name=STRING`, `-O`, `--format=roff`, `-R`, `--right-side-refs`, `-S`, `--sentence-regexp=REGEXP`, `-T`, `--format=tex`, `-W`, `--word-regexp=REGEXP`, `-b`, `--break-file=FILE`, `-f`, `--ignore-case`, `-g`, `--gap-size=NUMBER`, `-i`, `--ignore-file=FILE`, `-o`, `--only-file=FILE`, `-r`, `--references`, `-t`, `--typeset-mode`, `-w`, `--width=NUMBER`

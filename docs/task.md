@@ -870,3 +870,82 @@ Status codes:
 - [ ] Flag `--ignore-signal[=SIG]`: `third_party/coreutils/src/env.c:L156`
 - [ ] Flag `--list-signal-handling`: `third_party/coreutils/src/env.c:L160`
 - [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/env.c:L164`
+### Batch 17: Multi-Utility Expansion (od, who, uptime, users, pinky, shred, cksum/sum, mknod, mkfifo, nproc, hostid, logname, pathchk, tsort, vdir, chroot, nice, nohup, stdbuf, runcon, timeout, truncate, factor, numfmt, pr, ptx)
+- [ ] Audit `od` (octal dump)
+    - Upstream: `third_party/coreutils/src/od.c`
+    - Flags: `-A`, `-j`, `-N`, `-S`, `-t`, `-v`, `-w`
+- [ ] Audit `who` (logged in users)
+    - Upstream: `third_party/coreutils/src/who.c`
+    - Flags: `-a`, `-b`, `-d`, `-H`, `-l`, `-m`, `-p`, `-q`, `-r`, `-s`, `-t`, `-u`, `-w`, `-y`
+- [ ] Audit `uptime` (system runtime)
+    - Upstream: `third_party/coreutils/src/uptime.c`
+    - Flags: `-p`, `-s`
+- [ ] Audit `users` (list users)
+    - Upstream: `third_party/coreutils/src/users.c`
+    - Flags: None specific beyond standard.
+- [ ] Audit `pinky` (user info)
+    - Upstream: `third_party/coreutils/src/pinky.c`
+    - Flags: `-l`, `-b`, `-h`, `-p`, `-s`, `-f`, `-w`, `-i`, `-q`
+- [ ] Audit `shred` (secure delete)
+    - Upstream: `third_party/coreutils/src/shred.c`
+    - Flags: `-f`, `-n`, `--random-source`, `-s`, `-u`, `-v`, `-x`, `-z`
+- [ ] Audit `cksum` / `sum` (checksum)
+    - Upstream: `third_party/coreutils/src/cksum.c`
+    - Flags: `-a`, `--base64`, `-c`, `-l`, `--raw`, `--tag`, `--untagged`, `-z`, `--ignore-missing`, `--quiet`, `--status`, `--strict`, `-w`, `--debug`
+- [ ] Audit `mknod` (make special files)
+    - Upstream: `third_party/coreutils/src/mknod.c`
+    - Flags: `-m`, `-Z`, `--context`
+- [ ] Audit `mkfifo` (make FIFOs)
+    - Upstream: `third_party/coreutils/src/mkfifo.c`
+    - Flags: `-m`, `-Z`, `--context`
+- [ ] Audit `nproc` (CPU count)
+    - Upstream: `third_party/coreutils/src/nproc.c`
+    - Flags: `--all`, `--ignore=N`
+- [ ] Audit `hostid` (host identifier)
+    - Upstream: `third_party/coreutils/src/hostid.c`
+    - Flags: None specific.
+- [ ] Audit `logname` (login name)
+    - Upstream: `third_party/coreutils/src/logname.c`
+    - Flags: None specific.
+- [ ] Audit `pathchk` (path validity)
+    - Upstream: `third_party/coreutils/src/pathchk.c`
+    - Flags: `-p`, `-P`, `--portability`
+- [ ] Audit `tsort` (topo sort)
+    - Upstream: `third_party/coreutils/src/tsort.c`
+    - Flags: None (found `-w` but it's a no-op).
+- [ ] Audit `vdir` (ls -lb)
+    - Upstream: `third_party/coreutils/src/ls.c` (as vdir)
+    - Parity: Alias of ls with specific defaults.
+- [ ] Audit `chroot` (change root)
+    - Upstream: `third_party/coreutils/src/chroot.c`
+    - Flags: `--groups`, `--userspec`, `--skip-chdir`
+- [ ] Audit `nice` (scheduling priority)
+    - Upstream: `third_party/coreutils/src/nice.c`
+    - Flags: `-n`, `-N` (legacy)
+- [ ] Audit `nohup` (immune to hangups)
+    - Upstream: `third_party/coreutils/src/nohup.c`
+    - Flags: None specific.
+- [ ] Audit `stdbuf` (buffer control)
+    - Upstream: `third_party/coreutils/src/stdbuf.c`
+    - Flags: `-i`, `-o`, `-e`
+- [ ] Audit `runcon` (security context)
+    - Upstream: `third_party/coreutils/src/runcon.c`
+    - Flags: `-r`, `-t`, `-u`, `-l`, `-c`
+- [ ] Audit `timeout` (timed run)
+    - Upstream: `third_party/coreutils/src/timeout.c`
+    - Flags: `-f`, `-k`, `-p`, `-s`, `-v`
+- [ ] Audit `truncate` (resize file)
+    - Upstream: `third_party/coreutils/src/truncate.c`
+    - Flags: `-c`, `-o`, `-r`, `-s`
+- [ ] Audit `factor` (prime factors)
+    - Upstream: `third_party/coreutils/src/factor.c`
+    - Flags: `-h`, `--exponents`
+- [ ] Audit `numfmt` (format numbers)
+    - Upstream: `third_party/coreutils/src/numfmt.c`
+    - Flags: `--debug`, `-d`, `--field`, `--format`, `--from`, `--from-unit`, `--grouping`, `--header`, `--invalid`, `--padding`, `--round`, `--suffix`, `--unit-separator`, `--to`, `--to-unit`, `-z`
+- [ ] Audit `pr` (paginate)
+    - Upstream: `third_party/coreutils/src/pr.c`
+    - Flags: `+N`, `-N`, `-a`, `-c`, `-d`, `-D`, `-e`, `-F`, `-h`, `-i`, `-J`, `-l`, `-m`, `-n`, `-N`, `-o`, `-r`, `-s`, `-S`, `-t`, `-T`, `-v`, `-w`, `-W`
+- [ ] Audit `ptx` (permuted index)
+    - Upstream: `third_party/coreutils/src/ptx.c`
+    - Flags: `-A`, `-G`, `-F`, `-M`, `-O`, `-R`, `-S`, `-T`, `-W`, `-b`, `-f`, `-g`, `-i`, `-o`, `-r`, `-t`, `-w`

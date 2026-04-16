@@ -1006,3 +1006,16 @@ Status codes:
 - [ ] Audit `ulimit` (resource limits)
     - Upstream: `third_party/bash/builtins/ulimit.def`
     - Flags: `-S`, `-H`, `-a`, `-b`, `-c`, `-d`, `-e`, `-f`, `-i`, `-k`, `-l`, `-m`, `-n`, `-p`, `-q`, `-r`, `-s`, `-t`, `-u`, `-v`, `-x`, `-P`, `-R`, `-T`
+### Batch 22: Bash Builtins (State & Navigation)
+- [ ] Audit `export` (environment variables)
+    - Upstream: `third_party/bash/builtins/setattr.def`
+    - Flags: `-f`, `-n`, `-p`
+- [ ] Audit `readonly` (constant variables)
+    - Upstream: `third_party/bash/builtins/setattr.def`
+    - Flags: `-a`, `-A`, `-f`, `-p`
+- [ ] Audit `cd` (navigation)
+    - Upstream: `third_party/bash/builtins/cd.def`
+    - Flags: `-L`, `-P`, `-e`, `-@`
+- [ ] Audit `pwd` (working directory)
+    - Upstream: `third_party/bash/builtins/cd.def`
+    - Flags: `-L`, `-P`

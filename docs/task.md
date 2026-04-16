@@ -1146,3 +1146,25 @@ Status codes:
 - [ ] Audit `truncate` (size adjust)
     - Upstream: `third_party/coreutils/src/truncate.c`
     - Flags: `-c`, `--no-create`, `-o`, `--io-blocks`, `-r`, `--reference=RFILE`, `-s`, `--size=SIZE`
+### Batch 30: Coreutils (Misc System utilities)
+- [ ] Audit `tsort` (topo sort)
+    - Upstream: `third_party/coreutils/src/tsort.c`
+    - Flags: None specific
+- [ ] Audit `tty` (terminal name)
+    - Upstream: `third_party/coreutils/src/tty.c`
+    - Flags: `-s`, `--silent`, `--quiet`
+- [ ] Audit `unexpand` (spaces to tabs)
+    - Upstream: `third_party/coreutils/src/unexpand.c`
+    - Flags: `-a`, `--all`, `--first-only`, `-t`, `--tabs=N`
+- [ ] Audit `uniq` (unique lines)
+    - Upstream: `third_party/coreutils/src/uniq.c`
+    - Flags: `-c`, `--count`, `-d`, `--repeated`, `-D`, `--all-repeated[=METHOD]`, `-f`, `--skip-fields=N`, `--group[=METHOD]`, `-i`, `--ignore-case`, `-s`, `--skip-chars=N`, `-u`, `--unique`, `-z`, `--zero-terminated`, `-w`, `--check-chars=N`
+- [ ] Audit `unlink` (system unlink)
+    - Upstream: `third_party/coreutils/src/unlink.c`
+    - Flags: None specific
+- [ ] Audit `uptime` (uptime)
+    - Upstream: `third_party/coreutils/src/uptime.c`
+    - Flags: None specific
+- [ ] Audit `users` (logged users)
+    - Upstream: `third_party/coreutils/src/users.c`
+    - Flags: None specific

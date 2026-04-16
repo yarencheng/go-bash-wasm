@@ -784,8 +784,8 @@ Status codes:
 
 - [x] Basic listing: `internal/commands/ls/ls.go`
 - [ ] Color output (`--color`): `third_party/coreutils/src/ls.c:L215`
-- [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L157`
-- [ ] Flag `--block-size`: `third_party/coreutils/src/ls.c:L165`
+- [x] Flag `--author`: `internal/commands/ls/ls.go` (partial via info)
+- [x] Flag `--block-size`: `internal/commands/ls/ls.go`
 - [x] Flag `--color`: `internal/commands/ls/ls.go` (ANSI colors)
 - [x] Flag `--dereference-command-line-symlink-to-dir`: `internal/commands/ls/ls.go` (-H)
 - [x] Flag `--file-type`: `internal/commands/ls/ls.go`
@@ -798,7 +798,7 @@ Status codes:
 - [x] Flag `--show-control-chars`: `internal/commands/ls/ls.go` (partial via -q)
 - [x] Flag `--si`: `internal/commands/ls/ls.go` (power of 1000)
 - [x] Flag `--sort`: `internal/commands/ls/ls.go` (unified flag)
-- [ ] Flag `--time`: `third_party/coreutils/src/ls.c:L388`
+- [x] Flag `--time`: `internal/commands/ls/ls.go` (atime, ctime, mtime)
 - [x] Flag `--time-style`: `internal/commands/ls/ls.go`
 - [x] Flag `--zero`: `internal/commands/ls/ls.go` (NUL terminated)
 - [x] Flag `-1`: `internal/commands/ls/ls.go` (one-line)

@@ -222,7 +222,39 @@ Status codes:
 
 - [ ] Basic output: Missing implementation
 
+### `sort`
+
+- [ ] Basic sorting: Missing implementation
+- [ ] Flag `-n` (numeric): `third_party/coreutils/src/sort.c:L464`
+- [ ] Flag `-r` (reverse): `third_party/coreutils/src/sort.c:L478`
+- [ ] Flag `-u` (unique): `third_party/coreutils/src/sort.c:L557`
+- [ ] Flag `-k` (key): `third_party/coreutils/src/sort.c:L524`
+- [ ] Flag `-t` (separator): `third_party/coreutils/src/sort.c:L544`
+
+### `uniq`
+
+- [ ] Basic filtering: Missing implementation
+- [ ] Flag `-c` (count): `third_party/coreutils/src/uniq.c:L172`
+- [ ] Flag `-d` (repeated): `third_party/coreutils/src/uniq.c:L176`
+- [ ] Flag `-u` (unique): `third_party/coreutils/src/uniq.c:L207`
+- [ ] Flag `-i` (ignore case): `third_party/coreutils/src/uniq.c:L198`
+
+### `cut`
+
+- [ ] Basic selection: Missing implementation
+- [ ] Flag `-f` (fields): `third_party/coreutils/src/cut.c:L155`
+- [ ] Flag `-d` (delimiter): `third_party/coreutils/src/cut.c:L151`
+- [ ] Flag `-b` (bytes): `third_party/coreutils/src/cut.c:L143`
+- [ ] Flag `-c` (chars): `third_party/coreutils/src/cut.c:L147`
+
+### `tee`
+
+- [ ] Basic copy: Missing implementation
+- [ ] Flag `-a` (append): `third_party/coreutils/src/tee.c:L93`
+- [ ] Flag `-i` (ignore interrupts): `third_party/coreutils/src/tee.c:L97`
+
 <!-- Add new audits below this line -->
+
 
 
 

@@ -546,7 +546,6 @@ Status codes:
 - [ ] Comparison (=, !=, <, <=, >, >=): Missing implementation
 - [ ] Logical (| , &): Missing implementation
 - [ ] String operators (match, substr, index, length): `third_party/coreutils/src/expr.c:L186`
-- [ ] String ops (match, substr, index, length): Missing implementation
 - [ ] Flag `--help`: `third_party/coreutils/src/expr.c:L157`
 - [ ] Flag `--version`: `third_party/coreutils/src/expr.c:L160`
 
@@ -570,11 +569,6 @@ Status codes:
 - [ ] Flag `-n`: `third_party/bash/builtins/fc.def:L216` (no numbers)
 - [ ] Flag `-r`: `third_party/bash/builtins/fc.def:L224` (reverse order)
 - [ ] Flag `-s`: `third_party/bash/builtins/fc.def:L228` (re-execute)
-- [ ] Flag `-e ENAME`: `third_party/bash/builtins/fc.def:L232`
-- [ ] Flag `-l`: `third_party/bash/builtins/fc.def:L220`
-- [ ] Flag `-n`: `third_party/bash/builtins/fc.def:L216`
-- [ ] Flag `-r`: `third_party/bash/builtins/fc.def:L224`
-- [ ] Flag `-s`: `third_party/bash/builtins/fc.def:L228`
 
 ### `fg`
 
@@ -592,12 +586,6 @@ Status codes:
 - [ ] Flag `-w`, `--width=WIDTH`: `third_party/coreutils/src/fmt.c:L206`
 - [ ] Flag `-g`, `--goal=WIDTH`: `third_party/coreutils/src/fmt.c:L212`
 - [ ] Flag `-WIDTH`: `third_party/coreutils/src/fmt.c:L178`
-- [ ] Flag `-g`: `third_party/coreutils/src/fmt.c:L305`
-- [ ] Flag `-p`: `third_party/coreutils/src/fmt.c:L282`
-- [ ] Flag `-s`: `third_party/coreutils/src/fmt.c:L287`
-- [ ] Flag `-t`: `third_party/coreutils/src/fmt.c:L291`
-- [ ] Flag `-u`: `third_party/coreutils/src/fmt.c:L295`
-- [ ] Flag `-w`: `third_party/coreutils/src/fmt.c:L299`
 
 ### `fold`
 
@@ -653,23 +641,19 @@ Status codes:
 - [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105` (short description)
 - [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108` (man-page format)
 - [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111` (syntax only)
-- [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105`
-- [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108`
-- [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111`
 
 ### `history`
 
 - [ ] Upstream: `third_party/bash/builtins/history.def`
 - [ ] Basic management: Missing implementation
 - [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145` (delete entry)
-- [ ] Flag `-a`: `third_party/bash/builtins/history.def:L126`
-- [ ] Flag `-c`: `third_party/bash/builtins/history.def:L129`
-- [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145`
-- [ ] Flag `-n`: `third_party/bash/builtins/history.def:L132`
-- [ ] Flag `-p`: `third_party/bash/builtins/history.def:L148`
-- [ ] Flag `-r`: `third_party/bash/builtins/history.def:L135`
-- [ ] Flag `-s`: `third_party/bash/builtins/history.def:L141`
-- [ ] Flag `-w`: `third_party/bash/builtins/history.def:L138`
+- [ ] Flag `-a`: `third_party/bash/builtins/history.def:L126` (append)
+- [ ] Flag `-c`: `third_party/bash/builtins/history.def:L129` (clear)
+- [ ] Flag `-n`: `third_party/bash/builtins/history.def:L132` (read non-recorded)
+- [ ] Flag `-p`: `third_party/bash/builtins/history.def:L148` (print/expand)
+- [ ] Flag `-r`: `third_party/bash/builtins/history.def:L135` (read file)
+- [ ] Flag `-s`: `third_party/bash/builtins/history.def:L141` (store/append)
+- [ ] Flag `-w`: `third_party/bash/builtins/history.def:L138` (write file)
 
 ### `hostid`
 

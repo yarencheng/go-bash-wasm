@@ -1127,3 +1127,22 @@ Status codes:
 - [ ] Audit `shuf` (random permutations)
     - Upstream: `third_party/coreutils/src/shuf.c`
     - Flags: `-e`, `--echo`, `-i`, `--input-range=LO-HI`, `-n`, `--head-count=COUNT`, `-o`, `--output=FILE`, `--random-source=FILE`, `-r`, `--repeat`, `-z`, `--zero-terminated`
+### Batch 29: Coreutils (Execution & Manipulation)
+- [ ] Audit `stdbuf` (stream buffering)
+    - Upstream: `third_party/coreutils/src/stdbuf.c`
+    - Flags: `-i`, `--input=MODE`, `-o`, `--output=MODE`, `-e`, `--error=MODE`
+- [ ] Audit `tac` (reverse cat)
+    - Upstream: `third_party/coreutils/src/tac.c`
+    - Flags: `-b`, `--before`, `-r`, `--regex`, `-s`, `--separator=STRING`
+- [ ] Audit `timeout` (timed execution)
+    - Upstream: `third_party/coreutils/src/timeout.c`
+    - Flags: `-f`, `--foreground`, `-k`, `--kill-after=DURATION`, `-p`, `--preserve-status`, `-s`, `--signal=SIGNAL`, `-v`, `--verbose`
+- [ ] Audit `touch` (file timestamps)
+    - Upstream: `third_party/coreutils/src/touch.c`
+    - Flags: `-a`, `-c`, `--no-create`, `-d`, `--date=STRING`, `-f`, `-h`, `--no-dereference`, `-m`, `-r`, `--reference=FILE`, `-t`, `--time=WORD`
+- [ ] Audit `tr` (translate)
+    - Upstream: `third_party/coreutils/src/tr.c`
+    - Flags: `-c`, `-C`, `--complement`, `-d`, `--delete`, `-s`, `--squeeze-repeats`, `-t`, `--truncate-set1`
+- [ ] Audit `truncate` (size adjust)
+    - Upstream: `third_party/coreutils/src/truncate.c`
+    - Flags: `-c`, `--no-create`, `-o`, `--io-blocks`, `-r`, `--reference=RFILE`, `-s`, `--size=SIZE`

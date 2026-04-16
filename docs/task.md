@@ -1802,3 +1802,27 @@ Status codes:
 - [ ] Option `+(list)` (one or more): `third_party/bash/lib/glob/smatch.c`
 - [ ] Option `@(list)` (exactly one): `third_party/bash/lib/glob/smatch.c`
 - [ ] Option `!(list)` (anything but): `third_party/bash/lib/glob/smatch.c`
+
+## Execution Flow
+
+### Pipelines
+- [ ] Basic pipe `|`: `third_party/bash/execute_cmd.c:L191`
+- [ ] Combined stderr pipe `|&`: `third_party/bash/execute_cmd.c:L191`
+
+### Compound Commands & Lists
+- [ ] Sequential list `;`: `third_party/bash/execute_cmd.c:L193`
+- [ ] Background execution `&`: `third_party/bash/execute_cmd.c:L193`
+- [ ] Logical AND `&&`: `third_party/bash/execute_cmd.c:L193`
+- [ ] Logical OR `||`: `third_party/bash/execute_cmd.c:L193`
+- [ ] Subshell execution `( list )`: `third_party/bash/execute_cmd.c:L185`
+
+## Signal & Trap Handling
+
+### Core Signal Handling
+- [ ] Trap initialization: `third_party/bash/trap.c:L154`
+- [ ] Signal decoding (names/numbers): `third_party/bash/trap.c:L236`
+- [ ] Pending trap execution: `third_party/bash/trap.c:L328`
+
+### Subshell & Inheritance
+- [ ] Signal inheritance rules: `third_party/bash/trap.c:L568`
+- [ ] Trap reset in subshells: `third_party/bash/trap.c:L447`

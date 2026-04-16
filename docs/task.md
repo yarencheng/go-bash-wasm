@@ -788,7 +788,8 @@ Status codes:
 ### `logname`
 
 - [ ] Upstream: `third_party/coreutils/src/logname.c`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/logname.c:L44`
+- [ ] Flag `--version`: `third_party/coreutils/src/logname.c:L44`
 
 ### `logout`
 
@@ -869,7 +870,7 @@ Status codes:
 - [ ] Flag `-u`: `third_party/bash/builtins/mapfile.def:L238` (fd)
 - [ ] Flag `-C`: `third_party/bash/builtins/mapfile.def:L238` (callback)
 - [ ] Flag `-c`: `third_party/bash/builtins/mapfile.def:L238` (quantum)
-- [ ] Flags to implement: -C, -O, -c, -d, -n, -s, -t, -u
+- [ ] Flag `-s`: `third_party/bash/builtins/mapfile.def:L76` (array is same)
 - [ ] Aliases: `readarray`
 
 ### `md5sum`
@@ -894,7 +895,8 @@ Status codes:
 ### `mknod`
 
 - [ ] Upstream: `third_party/coreutils/src/mknod.c`
-- [ ] Flags to implement: -Z, -m
+- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mknod.c:L157`
+- [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mknod.c:L161`
 
 ### `mktemp`
 
@@ -958,7 +960,8 @@ Status codes:
 ### `nohup`
 
 - [ ] Upstream: `third_party/coreutils/src/nohup.c`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/nohup.c:L59`
+- [ ] Flag `--version`: `third_party/coreutils/src/nohup.c:L59`
 
 ### `nproc`
 
@@ -1012,7 +1015,7 @@ Status codes:
 ### `popd`
 
 - [ ] Upstream: `third_party/bash/builtins/pushd.def`
-- [ ] Flags to implement: -n
+- [ ] Flag `-n`: `third_party/bash/builtins/pushd.def:L165` (don't rotate)
 
 ### `pr`
 
@@ -1094,7 +1097,12 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/readlink.c`
 - [ ] Basic output: Missing implementation
-- [ ] Flags to implement: -e, -m, -q, -s, -v, -z
+- [ ] Flag `-e`, `--canonicalize-existing`: `third_party/coreutils/src/readlink.c:L44`
+- [ ] Flag `-m`, `--canonicalize-missing`: `third_party/coreutils/src/readlink.c:L45`
+- [ ] Flag `-q`, `--quiet`: `third_party/coreutils/src/readlink.c:L46`
+- [ ] Flag `-s`, `--silent`: `third_party/coreutils/src/readlink.c:L47`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/readlink.c:L48`
+- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/readlink.c:L49`
 - [ ] Flag `-f`: `third_party/coreutils/src/readlink.c:L135`
 - [ ] Flag `-n`: `third_party/coreutils/src/readlink.c:L141`
 
@@ -1111,7 +1119,12 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/realpath.c`
 - [ ] Basic output: Missing implementation
-- [ ] Flags to implement: -E, -L, -P, -q, -s, -z
+- [ ] Flag `-E`, `--canonicalize-existing`: `third_party/coreutils/src/realpath.c:L44`
+- [ ] Flag `-L`, `--logical`: `third_party/coreutils/src/realpath.c:L45`
+- [ ] Flag `-P`, `--physical`: `third_party/coreutils/src/realpath.c:L46`
+- [ ] Flag `-q`, `--quiet`: `third_party/coreutils/src/realpath.c:L47`
+- [ ] Flag `-s`, `--strip`: `third_party/coreutils/src/realpath.c:L48`
+- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/realpath.c:L49`
 - [ ] Flag `--relative-to`: `third_party/coreutils/src/realpath.c:L246`
 - [ ] Flag `-e`: `third_party/coreutils/src/realpath.c:L220`
 - [ ] Flag `-m`: `third_party/coreutils/src/realpath.c:L224`
@@ -1126,7 +1139,9 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/rm.c`
 - [ ] Basic removal: Missing implementation
-- [ ] Flags to implement: -I, -d, -v
+- [ ] Flag `-I`: `third_party/coreutils/src/rm.c:L157` (prompt once)
+- [ ] Flag `-d`, `--dir`: `third_party/coreutils/src/rm.c:L162` (remove empty directories)
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/rm.c:L167`
 - [ ] Flag `-f`: `third_party/coreutils/src/rm.c:L137`
 - [ ] Flag `-i`: `third_party/coreutils/src/rm.c:L142`
 - [ ] Flag `-r`: `third_party/coreutils/src/rm.c:L172`
@@ -1143,7 +1158,11 @@ Status codes:
 ### `runcon`
 
 - [ ] Upstream: `third_party/coreutils/src/runcon.c`
-- [ ] Flags to implement: -c, -l, -r, -t, -u
+- [ ] Flag `-c`, `--compute`: `third_party/coreutils/src/runcon.c:L123`
+- [ ] Flag `-l`, `--user=USER`: `third_party/coreutils/src/runcon.c:L127`
+- [ ] Flag `-r`, `--role=ROLE`: `third_party/coreutils/src/runcon.c:L131`
+- [ ] Flag `-t`, `--type=TYPE`: `third_party/coreutils/src/runcon.c:L135`
+- [ ] Flag `-u`, `--user=USER`: `third_party/coreutils/src/runcon.c:L139`
 
 ### `select`
 
@@ -1154,7 +1173,9 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/seq.c`
 - [ ] Basic sequence: Missing implementation
-- [ ] Flags to implement: -f
+- [ ] Flag `-f`, `--format=FORMAT`: `third_party/coreutils/src/seq.c:L592`
+- [ ] Flag `-s`, `--separator=STRING`: `third_party/coreutils/src/seq.c:L596`
+- [ ] Flag `-w`, `--equal-width`: `third_party/coreutils/src/seq.c:L600`
 - [ ] Flag `-s`: `third_party/coreutils/src/seq.c:L596`
 - [ ] Flag `-w`: `third_party/coreutils/src/seq.c:L600`
 
@@ -1255,7 +1276,8 @@ Status codes:
 - [ ] Basic sleep: Missing implementation
 - [ ] Multiple arguments (sum): `third_party/coreutils/src/sleep.c:L135`
 - [ ] Suffixes (s, m, h, d): `third_party/coreutils/src/sleep.c:L65`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/sleep.c:L44`
+- [ ] Flag `--version`: `third_party/coreutils/src/sleep.c:L44`
 
 ### `sort`
 
@@ -1324,22 +1346,27 @@ Status codes:
 ### `stdbuf`
 
 - [ ] Upstream: `third_party/coreutils/src/stdbuf.c`
-- [ ] Flags to implement: -e, -i, -o
+- [ ] Flag `-e`, `--error=MODE`: `third_party/coreutils/src/stdbuf.c:L130`
+- [ ] Flag `-i`, `--input=MODE`: `third_party/coreutils/src/stdbuf.c:L134`
+- [ ] Flag `-o`, `--output=MODE`: `third_party/coreutils/src/stdbuf.c:L138`
 
 ### `stty`
 
 - [ ] Upstream: `third_party/coreutils/src/stty.c`
-- [ ] Flags to implement: -F, -a, -g
+- [ ] Flag `-F`, `--file=DEVICE`: `third_party/coreutils/src/stty.c:L1022`
+- [ ] Flag `-a`, `--all`: `third_party/coreutils/src/stty.c:L1026`
+- [ ] Flag `-g`, `--save`: `third_party/coreutils/src/stty.c:1030`
 
 ### `sum`
 
 - [ ] Upstream: `third_party/coreutils/src/sum.c`
-- [ ] Flags to implement: -r, -s
+- [ ] Flag `-r`: `third_party/coreutils/src/sum.c:L142` (BSD algorithm)
+- [ ] Flag `-s`, `--sysv`: `third_party/coreutils/src/sum.c:L146` (System V algorithm)
 
 ### `suspend`
 
 - [ ] Upstream: `third_party/bash/builtins/suspend.def`
-- [ ] Flags to implement: -f
+- [ ] Flag `-f`: `third_party/bash/builtins/suspend.def:L64` (force)
 
 ### `sync`
 
@@ -1395,7 +1422,8 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/timeout.c`
 - [ ] Basic output: Missing implementation
-- [ ] Flags to implement: -f, -p, -v
+- [ ] Flag `--help`: `third_party/coreutils/src/timeout.c:L44`
+- [ ] Flag `--version`: `third_party/coreutils/src/timeout.c:L44`
 - [ ] Flag `-k`: `third_party/coreutils/src/timeout.c:L531`
 - [ ] Flag `-s`: `third_party/coreutils/src/timeout.c:L539`
 
@@ -1409,7 +1437,7 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/touch.c`
 - [ ] Basic touch: Missing implementation
 - [ ] Basic timestamp update: Missing implementation
-- [ ] Flags to implement: -f, -t
+- [ ] Flag `-t STAMP`: `third_party/coreutils/src/touch.c:L259` (explicit timestamp)
 - [ ] Flag `-a`: `third_party/coreutils/src/touch.c:L230`
 - [ ] Flag `-c`: `third_party/coreutils/src/touch.c:L234`
 - [ ] Flag `-d`: `third_party/coreutils/src/touch.c:L238`
@@ -1451,7 +1479,8 @@ Status codes:
 ### `tsort`
 
 - [ ] Upstream: `third_party/coreutils/src/tsort.c`
-- [ ] Flags to implement: -w, a, but, it's, no-op), specific
+- [ ] Flag `--help`: `third_party/coreutils/src/tsort.c:L52`
+- [ ] Flag `--version`: `third_party/coreutils/src/tsort.c:L52`
 
 ### `tty`
 
@@ -1537,7 +1566,8 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/unlink.c`
 - [ ] Basic removal: Missing implementation (exactly 1 arg required)
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/unlink.c:L52`
+- [ ] Flag `--version`: `third_party/coreutils/src/unlink.c:L52`
 
 ### `unset`
 
@@ -1602,12 +1632,14 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/whoami.c`
 - [ ] Basic output: Missing implementation
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/whoami.c:L44`
+- [ ] Flag `--version`: `third_party/coreutils/src/whoami.c:L44`
 
 ### `yes`
 
 - [ ] Upstream: `third_party/coreutils/src/yes.c`
 - [ ] Basic operation: Missing implementation
 - [ ] Basic repetition: Missing implementation
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/yes.c:L48`
+- [ ] Flag `--version`: `third_party/coreutils/src/yes.c:L48`
 

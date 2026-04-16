@@ -1258,6 +1258,22 @@ Status codes:
 - [ ] Audit `uname` (system info)
     - Upstream: `third_party/coreutils/src/uname.c`
     - Flags: `-a`, `-s`, `-n`, `-r`, `-v`, `-m`, `-p`, `-i`, `-o`
+### Batch 35: Coreutils (Final Cleanup)
+- [ ] Audit `chcon` (change context)
+    - Upstream: `third_party/coreutils/src/chcon.c`
+    - Flags: `--dereference`, `-h`, `-u`, `-r`, `-t`, `-l`, `--no-preserve-root`, `--preserve-root`, `--reference`, `-R`, `-v`, `-H`, `-L`, `-P`
+- [ ] Audit `dd` (convert and copy)
+    - Upstream: `third_party/coreutils/src/dd.c`
+    - Operands: `bs`, `cbs`, `conv`, `count`, `ibs`, `if`, `iflag`, `obs`, `of`, `oflag`, `seek`, `skip`, `status`
+- [ ] Audit `dircolors` (color setup)
+    - Upstream: `third_party/coreutils/src/dircolors.c`
+    - Flags: `-b`, `-c`, `-p`, `--print-ls-colors`
+- [ ] Audit `sum` (checksum)
+    - Upstream: `third_party/coreutils/src/sum.c` (legacy) or `cksum.c`
+    - Flags: `-r`, `-s`
+- [ ] Audit `md5sum` / `sha1sum` / etc (checksum)
+    - Upstream: `third_party/coreutils/src/cksum.c` (wrappers)
+    - Flags: (same as `cksum`)
 ### Batch 34: Bash Builtins (Execution & Job Control)
 - [ ] Audit `bind` (readline bind)
     - Upstream: `third_party/bash/builtins/bind.def`

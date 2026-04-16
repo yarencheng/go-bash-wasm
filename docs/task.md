@@ -688,7 +688,19 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/join.c`
 - [ ] Basic join: Missing implementation
-- [ ] Flags to implement: -1, -2, -a, -e, -j, -o, -t, -v, CHAR, FIELD, FILENUM, FORMAT, STRING
+- [ ] Flag `-1 FIELD`: `third_party/coreutils/src/join.c:L186`
+- [ ] Flag `-2 FIELD`: `third_party/coreutils/src/join.c:L187`
+- [ ] Flag `-a FILENUM`: `third_party/coreutils/src/join.c:L188`
+- [ ] Flag `-e STRING`: `third_party/coreutils/src/join.c:L189`
+- [ ] Flag `-i`, `--ignore-case`: `third_party/coreutils/src/join.c:L190`
+- [ ] Flag `-j FIELD`: `third_party/coreutils/src/join.c:L191`
+- [ ] Flag `-o FORMAT`: `third_party/coreutils/src/join.c:L192`
+- [ ] Flag `-t CHAR`: `third_party/coreutils/src/join.c:L193`
+- [ ] Flag `-v FILENUM`: `third_party/coreutils/src/join.c:L194`
+- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/join.c:L195`
+- [ ] Flag `--check-order`: `third_party/coreutils/src/join.c:L196`
+- [ ] Flag `--nocheck-order`: `third_party/coreutils/src/join.c:L197`
+- [ ] Flag `--header`: `third_party/coreutils/src/join.c:L198`
 - [ ] Flag `--check-order`: `third_party/coreutils/src/join.c:L248`
 - [ ] Flag `--header`: `third_party/coreutils/src/join.c:L257`
 - [ ] Flag `--nocheck-order`: `third_party/coreutils/src/join.c:L253`
@@ -863,7 +875,8 @@ Status codes:
 ### `nice`
 
 - [ ] Upstream: `third_party/coreutils/src/nice.c`
-- [ ] Flags to implement: -N, -n
+- [ ] Priority adjustment: Missing implementation
+- [ ] Flag `-n`, `--adjustment=N`: `third_party/coreutils/src/nice.c:L160`
 
 ### `nl`
 

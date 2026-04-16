@@ -129,7 +129,7 @@ Status codes:
 - [ ] Upstream: `third_party/bash/builtins/cd.def`
 - [ ] Basic change directory: Missing implementation
 - [ ] CDPATH support: `third_party/bash/builtins/cd.def:L84`
-- [ ] Flags to implement: -e
+- [ ] Flag `-e`: `third_party/bash/builtins/cd.def:L98` (exit status if -P cannot be satisfied)
 - [ ] Flag `-L`: `third_party/bash/builtins/cd.def:L94`
 - [ ] Flag `-P`: `third_party/bash/builtins/cd.def:L96`
 
@@ -232,7 +232,7 @@ Status codes:
 ### `compgen`
 
 - [ ] Upstream: `third_party/bash/builtins/complete.def`
-- [ ] Flags to implement: -V, -abcdefgjksuv, -o, -A, -G, -W, -F, -C, -X, -P, -S
+- [ ] Inherits all `complete` flags: `third_party/bash/builtins/complete.def`
 
 ### `complete`
 
@@ -268,7 +268,9 @@ Status codes:
 ### `compopt`
 
 - [ ] Upstream: `third_party/bash/builtins/complete.def`
-- [ ] Flags to implement: -o, -D, -E
+- [ ] Flag `-o`, `--options`: `third_party/bash/builtins/complete.def:L323`
+- [ ] Flag `-D`, `--default`: `third_party/bash/builtins/complete.def:L321`
+- [ ] Flag `-E`, `--empty`: `third_party/bash/builtins/complete.def:L322`
 
 ### `continue`
 
@@ -427,12 +429,17 @@ Status codes:
 ### `dirs`
 
 - [ ] Upstream: `third_party/bash/builtins/pushd.def`
-- [ ] Flags to implement: -c, -l, -p, -v
+- [ ] Flag `-c`: `third_party/bash/builtins/pushd.def:L377` (clear stack)
+- [ ] Flag `-l`: `third_party/bash/builtins/pushd.def:L380` (long listing)
+- [ ] Flag `-p`: `third_party/bash/builtins/pushd.def:L387` (print with one line per entry)
+- [ ] Flag `-v`: `third_party/bash/builtins/pushd.def:L390` (verbose)
 
 ### `disown`
 
 - [ ] Upstream: `third_party/bash/builtins/jobs.def`
-- [ ] Flags to implement: -a, -h, -r
+- [ ] Flag `-a`: `third_party/bash/builtins/jobs.def:L196` (all jobs)
+- [ ] Flag `-h`: `third_party/bash/builtins/jobs.def:L199` (mark to not receive SIGHUP)
+- [ ] Flag `-r`: `third_party/bash/builtins/jobs.def:L202` (running jobs only)
 
 ### `du`
 
@@ -475,7 +482,12 @@ Status codes:
 ### `enable`
 
 - [ ] Upstream: `third_party/bash/builtins/enable.def`
-- [ ] Flags to implement: -a, -d, -dnps, -f, -n, -p, -s
+- [ ] Flag `-a`: `third_party/bash/builtins/enable.def:L157` (display all)
+- [ ] Flag `-d`: `third_party/bash/builtins/enable.def:L160` (delete loaded)
+- [ ] Flag `-n`: `third_party/bash/builtins/enable.def:L163` (disable)
+- [ ] Flag `-p`: `third_party/bash/builtins/enable.def:L166` (print status)
+- [ ] Flag `-s`: `third_party/bash/builtins/enable.def:L169` (POSIX special only)
+- [ ] Flag `-f filename`: `third_party/bash/builtins/enable.def:L172` (load from dynamic file)
 
 ### `env`
 
@@ -502,7 +514,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/exec.def`
 - [ ] Basic execution: Missing implementation
-- [ ] Flags to implement: -a, -cl
+- [ ] Flag `-l`: `third_party/bash/builtins/exec.def:L117` (login shell)
 - [ ] Flag `-a name`: `third_party/bash/builtins/exec.def:L120`
 - [ ] Flag `-c`: `third_party/bash/builtins/exec.def:L114`
 
@@ -522,7 +534,9 @@ Status codes:
 ### `export`
 
 - [ ] Upstream: `third_party/bash/builtins/setattr.def`
-- [ ] Flags to implement: -f, -n, -p
+- [ ] Flag `-f`: `third_party/bash/builtins/setattr.def:L142` (functions)
+- [ ] Flag `-n`: `third_party/bash/builtins/setattr.def:L142` (remove export attribute)
+- [ ] Flag `-p`: `third_party/bash/builtins/setattr.def:L142` (print)
 
 ### `expr`
 
@@ -533,7 +547,8 @@ Status codes:
 - [ ] Logical (| , &): Missing implementation
 - [ ] String operators (match, substr, index, length): `third_party/coreutils/src/expr.c:L186`
 - [ ] String ops (match, substr, index, length): Missing implementation
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/expr.c:L157`
+- [ ] Flag `--version`: `third_party/coreutils/src/expr.c:L160`
 
 ### `factor`
 
@@ -550,7 +565,11 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/fc.def`
 - [ ] Basic editing/re-execution: Missing implementation
-- [ ] Flags to implement: -e
+- [ ] Flag `-e ENAME`: `third_party/bash/builtins/fc.def:L232` (editor name)
+- [ ] Flag `-l`: `third_party/bash/builtins/fc.def:L220` (list mode)
+- [ ] Flag `-n`: `third_party/bash/builtins/fc.def:L216` (no numbers)
+- [ ] Flag `-r`: `third_party/bash/builtins/fc.def:L224` (reverse order)
+- [ ] Flag `-s`: `third_party/bash/builtins/fc.def:L228` (re-execute)
 - [ ] Flag `-e ENAME`: `third_party/bash/builtins/fc.def:L232`
 - [ ] Flag `-l`: `third_party/bash/builtins/fc.def:L220`
 - [ ] Flag `-n`: `third_party/bash/builtins/fc.def:L216`
@@ -594,7 +613,8 @@ Status codes:
 ### `getlimits`
 
 - [ ] Upstream: `third_party/coreutils/src/getlimits.c`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/getlimits.c:L52`
+- [ ] Flag `--version`: `third_party/coreutils/src/getlimits.c:L52`
 
 ### `getopts`
 
@@ -630,7 +650,9 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/help.def`
 - [ ] Basic discovery: Missing implementation
-- [ ] Flags to implement: -dms
+- [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105` (short description)
+- [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108` (man-page format)
+- [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111` (syntax only)
 - [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105`
 - [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108`
 - [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111`
@@ -639,7 +661,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/history.def`
 - [ ] Basic management: Missing implementation
-- [ ] Flags to implement: -d, offset
+- [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145` (delete entry)
 - [ ] Flag `-a`: `third_party/bash/builtins/history.def:L126`
 - [ ] Flag `-c`: `third_party/bash/builtins/history.def:L129`
 - [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145`
@@ -652,14 +674,16 @@ Status codes:
 ### `hostid`
 
 - [ ] Upstream: `third_party/coreutils/src/hostid.c`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/hostid.c:L52`
+- [ ] Flag `--version`: `third_party/coreutils/src/hostid.c:L52`
 
 ### `hostname`
 
 - [ ] Upstream: `third_party/coreutils/src/hostname.c`
 - [ ] Basic output: Missing implementation
 - [ ] Set hostname support: `third_party/coreutils/src/hostname.c:L95`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/coreutils/src/hostname.c:L65`
+- [ ] Flag `--version`: `third_party/coreutils/src/hostname.c:L65`
 
 ### `id`
 
@@ -677,12 +701,29 @@ Status codes:
 ### `install`
 
 - [ ] Upstream: `third_party/coreutils/src/install.c`
-- [ ] Flags to implement: -C, -D, -S, -T, -Z, -b, -c, -d, -g, -m, -o, -p, -s, -t, -v
+- [ ] Flag `-c`: `third_party/coreutils/src/install.c:L129` (ignored)
+- [ ] Flag `-d`, `--directory`: `third_party/coreutils/src/install.c:L132`
+- [ ] Flag `-D`: `third_party/coreutils/src/install.c:L135`
+- [ ] Flag `-g`, `--group=GROUP`: `third_party/coreutils/src/install.c:L138`
+- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/install.c:L141`
+- [ ] Flag `-o`, `--owner=OWNER`: `third_party/coreutils/src/install.c:L144`
+- [ ] Flag `-p`, `--preserve-timestamps`: `third_party/coreutils/src/install.c:L147`
+- [ ] Flag `-s`, `--strip`: `third_party/coreutils/src/install.c:L150`
+- [ ] Flag `-S`, `--suffix=SUFFIX`: `third_party/coreutils/src/install.c:L153`
+- [ ] Flag `-t`, `--target-directory=DIR`: `third_party/coreutils/src/install.c:L156`
+- [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/install.c:L159`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/install.c:L162`
+- [ ] Flag `-C`, `--compare`: `third_party/coreutils/src/install.c:L165`
 
 ### `jobs`
 
 - [ ] Upstream: `third_party/bash/builtins/jobs.def`
-- [ ] Flags to implement: -a, -h, -l, -lnprs, -n, -p, -r, -s, -x
+- [ ] Flag `-l`: `third_party/bash/builtins/jobs.def:L94` (long format)
+- [ ] Flag `-n`: `third_party/bash/builtins/jobs.def:L97` (only jobs that changed)
+- [ ] Flag `-p`: `third_party/bash/builtins/jobs.def:L100` (only PIDs)
+- [ ] Flag `-r`: `third_party/bash/builtins/jobs.def:L103` (running only)
+- [ ] Flag `-s`: `third_party/bash/builtins/jobs.def:L106` (stopped only)
+- [ ] Flag `-x command`: `third_party/bash/builtins/jobs.def:L109` (execute command)
 
 ### `join`
 
@@ -719,14 +760,14 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/kill.def`
 - [ ] Basic signaling: Missing implementation
-- [ ] Flags to implement: -n, -s
+- [ ] Flag `-n num`: `third_party/bash/builtins/kill.def:L130`
 - [ ] Flag `-l`: `third_party/coreutils/src/kill.c:L277` / `third_party/bash/builtins/kill.def:L114`
 - [ ] Flag `-s SIGNAL`: `third_party/coreutils/src/kill.c:L262` / `third_party/bash/builtins/kill.def:L129`
 
 ### `let`
 
 - [ ] Upstream: `third_party/bash/builtins/let.def`
-- [ ] Flags to implement: specific
+- [ ] Flag `--help`: `third_party/bash/builtins/let.def:L52` (hypothetical, usually handled as builtin)
 
 ### `link`
 
@@ -742,7 +783,7 @@ Status codes:
 ### `local`
 
 - [ ] Upstream: `third_party/bash/builtins/declare.def`
-- [ ] Flags to implement: as, declare`)
+- [ ] Inherits all `declare` attributes: `third_party/bash/builtins/declare.def`
 
 ### `logname`
 
@@ -834,20 +875,21 @@ Status codes:
 ### `md5sum`
 
 - [ ] Upstream: `third_party/coreutils/src/cksum.c`
-- [ ] Flags to implement: as, cksum`)
+- [ ] Inherits all `cksum` hash flags: `third_party/coreutils/src/cksum.c`
 
 ### `mkdir`
 
-- [ ] Basic creation: Missing implementation
-- [ ] Flag `-m`, `--mode`: `third_party/coreutils/src/mkdir.c:L65`
+- [ ] Upstream: `third_party/coreutils/src/mkdir.c`
+- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mkdir.c:L65`
 - [ ] Flag `-p`, `--parents`: `third_party/coreutils/src/mkdir.c:L69`
 - [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/mkdir.c:L74`
-- [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/mkdir.c:L78`
+- [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mkdir.c:L78`
 
 ### `mkfifo`
 
 - [ ] Upstream: `third_party/coreutils/src/mkfifo.c`
-- [ ] Flags to implement: -Z, -m
+- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mkfifo.c:L60`
+- [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mkfifo.c:L64`
 
 ### `mknod`
 
@@ -890,7 +932,17 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/nl.c`
 - [ ] Basic numbering: Missing implementation
-- [ ] Flags to implement: CC, FORMAT, NUMBER, STRING, STYLE
+- [ ] Flag `-b STYLE`: `third_party/coreutils/src/nl.c:L129`
+- [ ] Flag `-d CC`: `third_party/coreutils/src/nl.c:L132`
+- [ ] Flag `-f STYLE`: `third_party/coreutils/src/nl.c:L135`
+- [ ] Flag `-h STYLE`: `third_party/coreutils/src/nl.c:L138`
+- [ ] Flag `-i NUMBER`: `third_party/coreutils/src/nl.c:L141`
+- [ ] Flag `-l NUMBER`: `third_party/coreutils/src/nl.c:L144`
+- [ ] Flag `-n FORMAT`: `third_party/coreutils/src/nl.c:L147`
+- [ ] Flag `-p`: `third_party/coreutils/src/nl.c:L150`
+- [ ] Flag `-s STRING`: `third_party/coreutils/src/nl.c:L153`
+- [ ] Flag `-v NUMBER`: `third_party/coreutils/src/nl.c:L156`
+- [ ] Flag `-w NUMBER`: `third_party/coreutils/src/nl.c:L159`
 - [ ] Flag `-b`: `third_party/coreutils/src/nl.c:L153`
 - [ ] Flag `-d`: `third_party/coreutils/src/nl.c:L162`
 - [ ] Flag `-f`: `third_party/coreutils/src/nl.c:L154`
@@ -915,7 +967,8 @@ Status codes:
 ### `numfmt`
 
 - [ ] Upstream: `third_party/coreutils/src/numfmt.c`
-- [ ] Flags to implement: -d, -z
+- [ ] Flag `-d`, `--delimiter=X`: `third_party/coreutils/src/numfmt.c:L1022`
+- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/numfmt.c:L1053`
 
 ### `od`
 
@@ -940,12 +993,21 @@ Status codes:
 ### `pathchk`
 
 - [ ] Upstream: `third_party/coreutils/src/pathchk.c`
-- [ ] Flags to implement: -P, -p
+- [ ] Flag `-p`: `third_party/coreutils/src/pathchk.c:L360`
+- [ ] Flag `-P`: `third_party/coreutils/src/pathchk.c:L363`
 
 ### `pinky`
 
 - [ ] Upstream: `third_party/coreutils/src/pinky.c`
-- [ ] Flags to implement: -b, -f, -h, -i, -l, -p, -q, -s, -w
+- [ ] Flag `-b`: `third_party/coreutils/src/pinky.c:L467`
+- [ ] Flag `-f`: `third_party/coreutils/src/pinky.c:L468`
+- [ ] Flag `-h`: `third_party/coreutils/src/pinky.c:L469`
+- [ ] Flag `-i`: `third_party/coreutils/src/pinky.c:L470`
+- [ ] Flag `-l`: `third_party/coreutils/src/pinky.c:L471`
+- [ ] Flag `-p`: `third_party/coreutils/src/pinky.c:L473`
+- [ ] Flag `-q`: `third_party/coreutils/src/pinky.c:L472`
+- [ ] Flag `-s`: `third_party/coreutils/src/pinky.c:L474`
+- [ ] Flag `-w`: `third_party/coreutils/src/pinky.c:L475`
 
 ### `popd`
 
@@ -981,12 +1043,28 @@ Status codes:
 ### `ptx`
 
 - [ ] Upstream: `third_party/coreutils/src/ptx.c`
-- [ ] Flags to implement: -A, -F, -G, -M, -O, -R, -S, -T, -W, -b, -f, -g, -i, -o, -r, -t, -w
+- [ ] Flag `-A`, `--auto-reference`: `third_party/coreutils/src/ptx.c:L1863`
+- [ ] Flag `-F`, `--flag-truncation=STRING`: `third_party/coreutils/src/ptx.c:L1867`
+- [ ] Flag `-G`, `--gnu-extensions`: `third_party/coreutils/src/ptx.c:L1871`
+- [ ] Flag `-M`, `--macro-name=STRING`: `third_party/coreutils/src/ptx.c:L1875`
+- [ ] Flag `-O`, `--format=roff`: `third_party/coreutils/src/ptx.c:L1879`
+- [ ] Flag `-R`, `--right-side-refs`: `third_party/coreutils/src/ptx.c:L1883`
+- [ ] Flag `-S`, `--sentence-regexp=REGEXP`: `third_party/coreutils/src/ptx.c:L1887`
+- [ ] Flag `-T`, `--format=tex`: `third_party/coreutils/src/ptx.c:L1891`
+- [ ] Flag `-W`, `--word-regexp=REGEXP`: `third_party/coreutils/src/ptx.c:L1895`
+- [ ] Flag `-b`, `--break-file=FILE`: `third_party/coreutils/src/ptx.c:L1899`
+- [ ] Flag `-f`, `--ignore-case`: `third_party/coreutils/src/ptx.c:L1903`
+- [ ] Flag `-g`, `--gap-size=NUMBER`: `third_party/coreutils/src/ptx.c:L1907`
+- [ ] Flag `-i`, `--ignore-file=FILE`: `third_party/coreutils/src/ptx.c:L1911`
+- [ ] Flag `-o`, `--only-file=FILE`: `third_party/coreutils/src/ptx.c:L1915`
+- [ ] Flag `-r`, `--references`: `third_party/coreutils/src/ptx.c:L1919`
+- [ ] Flag `-t`, `--typeset-mode`: `third_party/coreutils/src/ptx.c:L1923`
+- [ ] Flag `-w`, `--width=NUMBER`: `third_party/coreutils/src/ptx.c:L1927`
 
 ### `pushd`
 
 - [ ] Upstream: `third_party/bash/builtins/pushd.def`
-- [ ] Flags to implement: -c, -clpv, -l, -n, -p, -v
+- [ ] Flag `-n`: `third_party/bash/builtins/pushd.def:L129` (don't change directory)
 
 ### `pwd`
 
@@ -1464,17 +1542,21 @@ Status codes:
 ### `unset`
 
 - [ ] Upstream: `third_party/bash/builtins/set.def`
-- [ ] Flags to implement: -f, -v, -n
+- [ ] Flag `-f`: `third_party/bash/builtins/set.def:L643` (functions)
+- [ ] Flag `-v`: `third_party/bash/builtins/set.def:L637` (variables)
+- [ ] Flag `-n`: `third_party/bash/builtins/set.def:L640` (nameref)
 
 ### `uptime`
 
 - [ ] Upstream: `third_party/coreutils/src/uptime.c`
-- [ ] Flags to implement: -p, -s, specific
+- [ ] Flag `-p`, `--pretty`: `third_party/coreutils/src/uptime.c:L130`
+- [ ] Flag `-s`, `--since`: `third_party/coreutils/src/uptime.c:L135`
 
 ### `users`
 
 - [ ] Upstream: `third_party/coreutils/src/users.c`
-- [ ] Flags to implement: beyond, specific, standard
+- [ ] Flag `--help`: `third_party/coreutils/src/users.c:L44`
+- [ ] Flag `--version`: `third_party/coreutils/src/users.c:L44`
 
 ### `vdir`
 
@@ -1484,7 +1566,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/wait.def`
 - [ ] Basic waiting: Missing implementation
-- [ ] Flags to implement: -p, var
+- [ ] Optional: jobspec or process ID
 - [ ] Flag `-f`: `third_party/bash/builtins/wait.def:L134`
 - [ ] Flag `-n`: `third_party/bash/builtins/wait.def:L131`
 - [ ] Flag `-p var`: `third_party/bash/builtins/wait.def:L137`
@@ -1503,7 +1585,18 @@ Status codes:
 ### `who`
 
 - [ ] Upstream: `third_party/coreutils/src/who.c`
-- [ ] Flags to implement: -H, -T, -a, -b, -d, -l, -m, -p, -q, -r, -s, -t, -u, -w, -y
+- [ ] Flag `-H`, `--heading`: `third_party/coreutils/src/who.c:L592`
+- [ ] Flag `-a`, `--all`: `third_party/coreutils/src/who.c:L584`
+- [ ] Flag `-b`, `--boot`: `third_party/coreutils/src/who.c:L588`
+- [ ] Flag `-d`, `--dead`: `third_party/coreutils/src/who.c:L596`
+- [ ] Flag `-l`, `--login`: `third_party/coreutils/src/who.c:L604`
+- [ ] Flag `-m`: `third_party/coreutils/src/who.c:L608`
+- [ ] Flag `-p`, `--process`: `third_party/coreutils/src/who.c:L616`
+- [ ] Flag `-q`, `--count`: `third_party/coreutils/src/who.c:L620`
+- [ ] Flag `-r`, `--runlevel`: `third_party/coreutils/src/who.c:L624`
+- [ ] Flag `-s`, `--short`: `third_party/coreutils/src/who.c:L628`
+- [ ] Flag `-t`, `--time`: `third_party/coreutils/src/who.c:L632`
+- [ ] Flag `-u`, `--users`: `third_party/coreutils/src/who.c:L636`
 
 ### `whoami`
 

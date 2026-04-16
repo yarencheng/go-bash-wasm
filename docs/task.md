@@ -855,3 +855,18 @@ Status codes:
 ### `yes`
 
 - [ ] Basic repetition: Missing implementation
+
+### `env`
+
+- [ ] Basic execution: Missing implementation
+- [ ] Flag `-a`, `--argv0=ARG`: `third_party/coreutils/src/env.c:L123`
+- [ ] Flag `-i`, `--ignore-environment`: `third_party/coreutils/src/env.c:L127`
+- [ ] Flag `-0`, `--null`: `third_party/coreutils/src/env.c:L131`
+- [ ] Flag `-u`, `--unset=NAME`: `third_party/coreutils/src/env.c:L135`
+- [ ] Flag `-C`, `--chdir=DIR`: `third_party/coreutils/src/env.c:L139`
+- [ ] Flag `-S`, `--split-string=S`: `third_party/coreutils/src/env.c:L143`
+- [ ] Flag `--block-signal[=SIG]`: `third_party/coreutils/src/env.c:L148`
+- [ ] Flag `--default-signal[=SIG]`: `third_party/coreutils/src/env.c:L152`
+- [ ] Flag `--ignore-signal[=SIG]`: `third_party/coreutils/src/env.c:L156`
+- [ ] Flag `--list-signal-handling`: `third_party/coreutils/src/env.c:L160`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/env.c:L164`

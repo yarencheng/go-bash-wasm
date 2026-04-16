@@ -69,6 +69,8 @@ type lsFlags struct {
 	timeStyle      *string
 	color          *string
 	fullTime       *bool
+	timeOpt        *string
+	blockSize      *string
 	sortOpt        *string
 }
 
@@ -121,6 +123,8 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		timeStyle:    flagsSet.String("time-style", "locale", "time/date format with -l: full-iso, long-iso, iso, locale"),
 		color:        flagsSet.String("color", "never", "colorize the output; WHEN can be 'always' (default if omitted), 'auto', or 'never'"),
 		fullTime:     flagsSet.Bool("full-time", false, "like -l --time-style=full-iso"),
+		timeOpt:      flagsSet.String("time", "", "show time as WORD instead of modification time: atime, access, use, ctime, status"),
+		blockSize:    flagsSet.String("block-size", "", "scale sizes by SIZE when printing them"),
 		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
@@ -435,28 +439,35 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 		prefix = "0 "
 	}
 
+	scale := int64(1024)
+	if *f.blockSize != "" {
+		fmt.Sscanf(*f.blockSize, "%d", &scale)
+	}
+
 	if *f.sizeBlocks {
 		size := int64(0)
 		if entry != nil {
 			size = entry.Size()
 		}
-		blocks := (size + 1023) / 1024
+		blocks := (size + scale - 1) / scale
 		prefix += fmt.Sprintf("%d ", blocks)
 	}
 
-	if *f.long || *f.numeric || *f.noOwner || *f.noGroupLong {
+	if *f.long || *f.numeric || *f.noOwner || *f.noGroupLong || *f.format == "long" || *f.format == "verbose" {
 		size := int64(0)
 		mode := os.FileMode(0)
 		if entry != nil {
 			size = entry.Size()
 			mode = entry.Mode()
-		} else if name == "." || name == ".." {
+		} else if rawName == "." || rawName == ".." {
 			mode = os.ModeDir | 0755
 		}
 
 		sizeStr := fmt.Sprintf("%10d", size)
 		if *f.human || *f.siUnits {
 			sizeStr = fmt.Sprintf("%10s", formatHuman(size, *f.siUnits))
+		} else if *f.blockSize != "" {
+			sizeStr = fmt.Sprintf("%10d", (size+scale-1)/scale)
 		}
 		owner := "root"
 		group := "  root"

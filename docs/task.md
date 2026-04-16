@@ -969,3 +969,40 @@ Status codes:
 - [ ] Audit `chcon` (change context)
     - Upstream: `third_party/coreutils/src/chcon.c`
     - Flags: `-R`, `--dereference`, `-h`, `--no-preserve-root`, `--preserve-root`, `--reference`, `-u`, `-r`, `-t`, `-l`, `-v`, `-H`, `-L`, `-P`
+### Batch 21: Bash Builtins (bind, job control, resource limits, etc.)
+- [ ] Audit `bind` (readline bindings)
+    - Upstream: `third_party/bash/builtins/bind.def`
+    - Flags: `-m`, `-l`, `-P`, `-p`, `-S`, `-s`, `-V`, `-v`, `-q`, `-u`, `-r`, `-f`, `-x`, `-X`
+- [ ] Audit `break` / `continue` (loop control)
+    - Upstream: `third_party/bash/builtins/break.def`
+    - Flags: `[n]`
+- [ ] Audit `caller` (stack trace)
+    - Upstream: `third_party/bash/builtins/caller.def`
+    - Flags: `[expr]`
+- [ ] Audit `complete` / `compgen` / `compopt` (programmable completion)
+    - Upstream: `third_party/bash/builtins/complete.def`
+    - Flags: `-abcdefgjksuv`, `-o`, `-A`, `-G`, `-W`, `-F`, `-C`, `-X`, `-P`, `-S`, `-V`, `-p`, `-r`, `-D`, `-E`, `-I`
+- [ ] Audit `enable` (builtin control)
+    - Upstream: `third_party/bash/builtins/enable.def`
+    - Flags: `-a`, `-n`, `-p`, `-s`, `-f`, `-d`
+- [ ] Audit `fg` / `bg` (job control)
+    - Upstream: `third_party/bash/builtins/fg_bg.def`
+    - Flags: `[job_spec]`
+- [ ] Audit `jobs` / `disown` (job management)
+    - Upstream: `third_party/bash/builtins/jobs.def`
+    - Flags: `-l`, `-n`, `-p`, `-r`, `-s`, `-x` (jobs); `-h`, `-a`, `-r` (disown)
+- [ ] Audit `let` (arithmetic)
+    - Upstream: `third_party/bash/builtins/let.def`
+    - Flags: None specific
+- [ ] Audit `mapfile` / `readarray` (array input)
+    - Upstream: `third_party/bash/builtins/mapfile.def`
+    - Flags: `-d`, `-u`, `-n`, `-O`, `-t`, `-C`, `-c`, `-s`
+- [ ] Audit `pushd` / `popd` / `dirs` (directory stack)
+    - Upstream: `third_party/bash/builtins/pushd.def`
+    - Flags: `-n` (pushd/popd); `-c`, `-l`, `-p`, `-v` (dirs)
+- [ ] Audit `suspend` (shell suspension)
+    - Upstream: `third_party/bash/builtins/suspend.def`
+    - Flags: `-f`
+- [ ] Audit `ulimit` (resource limits)
+    - Upstream: `third_party/bash/builtins/ulimit.def`
+    - Flags: `-S`, `-H`, `-a`, `-b`, `-c`, `-d`, `-e`, `-f`, `-i`, `-k`, `-l`, `-m`, `-n`, `-p`, `-q`, `-r`, `-s`, `-t`, `-u`, `-v`, `-x`, `-P`, `-R`, `-T`

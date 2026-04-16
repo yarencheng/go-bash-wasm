@@ -125,7 +125,41 @@ Status codes:
 - [ ] Flag `-R` (recursive): `third_party/coreutils/src/chown.c:L141`
 - [ ] Flag `--from`: `third_party/coreutils/src/chown.c:L121`
 
+### `ln`
+
+- [ ] Basic link creation: Missing implementation
+- [ ] Flag `-s` (symbolic): `third_party/coreutils/src/ln.c:L574`
+- [ ] Flag `-f` (force): `third_party/coreutils/src/ln.c:L553`
+- [ ] Flag `-v` (verbose): `third_party/coreutils/src/ln.c:L595`
+
+### `touch`
+
+- [ ] Basic touch: Missing implementation
+- [ ] Flag `-a` (access time): `third_party/coreutils/src/touch.c:L299`
+- [ ] Flag `-m` (mod time): `third_party/coreutils/src/touch.c:L318`
+- [ ] Flag `-c` (no create): `third_party/coreutils/src/touch.c:L303`
+
+### `rmdir`
+
+- [ ] Basic rmdir: Missing implementation
+- [ ] Flag `-p` (parents): `third_party/coreutils/src/rmdir.c:L215`
+- [ ] Flag `-v` (verbose): `third_party/coreutils/src/rmdir.c:L221`
+
+### `du`
+
+- [ ] Basic du: Missing implementation
+- [ ] Flag `-s` (summarize): `third_party/coreutils/src/du.c:L373` (usage) / `L787` (main)
+- [ ] Flag `-h` (human-readable): `third_party/coreutils/src/du.c:L337`
+- [ ] Flag `-a` (all files): `third_party/coreutils/src/du.c:L294`
+
+### `df`
+
+- [ ] Basic df: Missing implementation
+- [ ] Flag `-h` (human-readable): `third_party/coreutils/src/df.c:L1644`
+- [ ] Flag `-a` (all files): `third_party/coreutils/src/df.c:L1625`
+
 <!-- Add new audits below this line -->
+
 
 
 

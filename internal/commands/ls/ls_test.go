@@ -201,8 +201,8 @@ func TestLs_Run(t *testing.T) {
 		lines := strings.Split(strings.TrimSpace(output), "\n")
 		for _, line := range lines {
 			parts := strings.Fields(line)
-			// Mode, owner, size, name (if no group and no numeric)
-			assert.LessOrEqual(t, len(parts), 5) 
+			// Mode, owner, size, month, day, time, name
+			assert.LessOrEqual(t, len(parts), 7) 
 		}
 	})
 
@@ -416,6 +416,58 @@ func TestLs_Run(t *testing.T) {
 		status := ls.Run(context.Background(), env, []string{"-b"})
 		assert.Equal(t, 0, status)
 		assert.Contains(t, stdout.String(), "file\\nnewline")
+	})
+
+	t.Run("group directories first --group-directories-first", func(t *testing.T) {
+		fs6 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs6, "/file.txt", []byte(""), 0644))
+		require.NoError(t, fs6.Mkdir("/adir", 0755))
+		require.NoError(t, afero.WriteFile(fs6, "/zfile.txt", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs6,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--group-directories-first"})
+		assert.Equal(t, 0, status)
+		output := stdout.String()
+		// adir should come before any file, even if it starts with 'a' (alphabetical would put it first anyway)
+		// but let's compare with zfile.txt
+		assert.True(t, strings.Index(output, "adir") < strings.Index(output, "file.txt"))
+	})
+
+	t.Run("zero terminated --zero", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--zero"})
+		assert.Equal(t, 0, status)
+		// Should contain null characters
+		assert.Contains(t, stdout.String(), "\x00")
+	})
+
+	t.Run("color output --color", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--color=always"})
+		assert.Equal(t, 0, status)
+		// Should contain ANSI color codes (e.g., \033[1;34m for directories)
+		assert.Contains(t, stdout.String(), "\033[1;34m")
 	})
 
 	t.Run("invalid directory", func(t *testing.T) {

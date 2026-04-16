@@ -7,6 +7,7 @@ import (
 	"path"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/pflag"
@@ -60,6 +61,14 @@ type lsFlags struct {
 	escape         *bool
 	quoteName      *bool
 	hideControl    *bool
+	groupDirsFirst *bool
+	zero           *bool
+	dereference    *bool
+	dereferenceArg *bool
+	format         *string
+	timeStyle      *string
+	color          *string
+	fullTime       *bool
 	sortOpt        *string
 }
 
@@ -104,6 +113,14 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		escape:       flagsSet.BoolP("escape", "b", false, "print C-style escapes for nongraphic characters"),
 		quoteName:    flagsSet.BoolP("quote-name", "Q", false, "enclose entry names in double quotes"),
 		hideControl:  flagsSet.BoolP("hide-control-chars", "q", false, "print ? instead of nongraphic characters"),
+		groupDirsFirst: flagsSet.Bool("group-directories-first", false, "group directories before files"),
+		zero:         flagsSet.Bool("zero", false, "end each output line with NUL, not newline"),
+		dereference:  flagsSet.BoolP("dereference", "L", false, "when showing file information for a symbolic link, show information for the file the link references rather than for the link itself"),
+		dereferenceArg: flagsSet.BoolP("dereference-command-line", "H", false, "follow symbolic links listed on the command line"),
+		format:       flagsSet.String("format", "vertical", "across (-x), commas (-m), horizontal (-x), long (-l), single-column (-1), verbose (-l), vertical (-C)"),
+		timeStyle:    flagsSet.String("time-style", "locale", "time/date format with -l: full-iso, long-iso, iso, locale"),
+		color:        flagsSet.String("color", "never", "colorize the output; WHEN can be 'always' (default if omitted), 'auto', or 'never'"),
+		fullTime:     flagsSet.Bool("full-time", false, "like -l --time-style=full-iso"),
 		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
@@ -135,7 +152,7 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 			if !strings.HasPrefix(target, "/") {
 				fullPath = env.Cwd + "/" + target
 			}
-			info, err := env.FS.Stat(fullPath)
+			info, err := l.stat(env.FS, fullPath, *f.dereference || *f.dereferenceArg)
 			if err != nil {
 				fmt.Fprintf(env.Stderr, "ls: cannot access '%s': %v\n", target, err)
 				continue
@@ -147,7 +164,17 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	exitCode := 0
-	for i, target := range targets {
+	var fileEntries []struct {
+		info os.FileInfo
+		name string
+		path string
+	}
+	var dirTargets []struct {
+		name string
+		path string
+	}
+
+	for _, target := range targets {
 		displayTarget := target
 		fullPath := target
 		if target == "." {
@@ -157,13 +184,48 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 			fullPath = env.Cwd + "/" + target
 		}
 
-		if (len(targets) > 1 || *f.recursive) && i > 0 {
+		info, err := l.stat(env.FS, fullPath, *f.dereference || *f.dereferenceArg)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "ls: cannot access '%s': %v\n", target, err)
+			exitCode = 2
+			continue
+		}
+
+		if info.IsDir() && !*f.directory {
+			dirTargets = append(dirTargets, struct {
+				name string
+				path string
+			}{displayTarget, fullPath})
+		} else {
+			fileEntries = append(fileEntries, struct {
+				info os.FileInfo
+				name string
+				path string
+			}{info, displayTarget, fullPath})
+		}
+	}
+
+	if len(fileEntries) > 0 {
+		var results []string
+		for _, fe := range fileEntries {
+			results = append(results, l.formatEntry(fe.info, fe.name, fe.path, &f))
+		}
+		sep := "  "
+		if *f.oneLine || *f.long || *f.numeric || *f.format == "long" || *f.format == "verbose" || *f.format == "single-column" {
+			sep = "\n"
+		}
+		fmt.Fprint(env.Stdout, strings.Join(results, sep))
+		fmt.Fprintln(env.Stdout)
+	}
+
+	for i, dt := range dirTargets {
+		if (len(targets) > 1 || *f.recursive) && (i > 0 || len(fileEntries) > 0) {
 			fmt.Fprintln(env.Stdout)
 		}
 		if len(targets) > 1 || *f.recursive {
-			fmt.Fprintf(env.Stdout, "%s:\n", displayTarget)
+			fmt.Fprintf(env.Stdout, "%s:\n", dt.name)
 		}
-		if res := l.listDir(ctx, env, fullPath, &f, true); res != 0 {
+		if res := l.listDir(ctx, env, dt.path, &f, true); res != 0 {
 			exitCode = res
 		}
 	}
@@ -197,8 +259,19 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 	}
 
 	// Sort entries
-	if sortMode != "none" {
+	if sortMode != "none" || *f.groupDirsFirst {
 		sort.Slice(entries, func(i, j int) bool {
+			if *f.groupDirsFirst {
+				if entries[i].IsDir() && !entries[j].IsDir() {
+					return true
+				}
+				if !entries[i].IsDir() && entries[j].IsDir() {
+					return false
+				}
+			}
+			if sortMode == "none" {
+				return false // Should not happen with groupDirsFirst but safe
+			}
 			var cmp bool
 			switch sortMode {
 			case "size":
@@ -270,15 +343,19 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 	}
 
 	sep := "  "
-	if *f.oneLine || *f.long || *f.numeric {
+	if *f.zero {
+		sep = "\x00"
+	} else if *f.oneLine || *f.long || *f.numeric || *f.format == "long" || *f.format == "verbose" || *f.format == "single-column" {
 		sep = "\n"
-	} else if *f.comma {
+	} else if *f.comma || *f.format == "commas" {
 		sep = ", "
 	}
 
 	if len(results) > 0 {
 		fmt.Fprint(env.Stdout, strings.Join(results, sep))
-		if !*f.comma || *f.long || *f.oneLine {
+		if *f.zero {
+			fmt.Fprint(env.Stdout, "\x00")
+		} else if !(*f.comma || *f.format == "commas") || *f.long || *f.oneLine {
 			fmt.Fprintln(env.Stdout)
 		} else {
 			fmt.Fprintln(env.Stdout)
@@ -304,7 +381,11 @@ func (l *Ls) formatName(name string, target string, f *lsFlags) string {
 }
 
 func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFlags) string {
+	rawName := name
 	name = applyQuoting(name, f)
+	if *f.color == "always" {
+		name = applyColor(name, entry)
+	}
 	style := *f.indicatorStyle
 	if *f.classify {
 		style = "classify"
@@ -397,12 +478,61 @@ func (l *Ls) formatEntry(entry os.FileInfo, name string, target string, f *lsFla
 		if group != "" {
 			fields = append(fields, group)
 		}
-		fields = append(fields, sizeStr, name)
+
+		timeFormat := "Jan _2 15:04"
+		if *f.fullTime || *f.timeStyle == "full-iso" {
+			timeFormat = "2006-01-02 15:04:05.000000000 -0700"
+		} else if *f.timeStyle == "long-iso" {
+			timeFormat = "2006-01-02 15:04"
+		} else if *f.timeStyle == "iso" {
+			timeFormat = "01-02 15:04"
+		}
+
+		mtime := entry.ModTime().Format(timeFormat)
+		if entry == nil && (rawName == "." || rawName == "..") {
+			mtime = time.Now().Format(timeFormat)
+		}
+
+		fields = append(fields, sizeStr, mtime, name)
 
 		return prefix + strings.Join(fields, "  ")
 	}
 	prefix += name
 	return prefix
+}
+
+func applyColor(name string, entry os.FileInfo) string {
+	if entry == nil {
+		return "\033[1;34m" + name + "\033[0m" // Assume dir for . and ..
+	}
+	mode := entry.Mode()
+	if mode.IsDir() {
+		return "\033[1;34m" + name + "\033[0m"
+	}
+	if mode&os.ModeSymlink != 0 {
+		return "\033[1;36m" + name + "\033[0m"
+	}
+	if mode&os.ModeSocket != 0 {
+		return "\033[1;35m" + name + "\033[0m"
+	}
+	if mode&os.ModeNamedPipe != 0 {
+		return "\033[33m" + name + "\033[0m"
+	}
+	if mode&0111 != 0 {
+		return "\033[1;32m" + name + "\033[0m"
+	}
+	return name
+}
+
+func (l *Ls) stat(fs afero.Fs, path string, dereference bool) (os.FileInfo, error) {
+	if dereference {
+		return fs.Stat(path)
+	}
+	if lstater, ok := fs.(afero.Lstater); ok {
+		info, _, err := lstater.LstatIfPossible(path)
+		return info, err
+	}
+	return fs.Stat(path)
 }
 
 func applyQuoting(name string, f *lsFlags) string {

@@ -1,25 +1,60 @@
 # go-bash-wasm
 
-**go-bash-wasm** is a clean-room simulator of the GNU Bash shell and Coreutils written entirely in Go. Built and optimized for WebAssembly (WASM), it enables a rich terminal experience directly inside a sandboxed ecosystem.
+**go-bash-wasm** is a high-fidelity, clean-room simulator of the GNU Bash shell and Coreutils, written in Go and optimized for WebAssembly (WASM). It brings the power of a standard UNIX environment to sandboxed ecosystems like browsers, edge computing, and secure server-side runtimes.
 
-## Overview
+## 🚀 Key Features
 
-Providing shell environments in the browser, edge, or safe embedded ecosystems requires robust security and absolute isolation. `go-bash-wasm` brings the standard UNIX utilities and shell execution pipeline to practically anywhere WASM can run. 
+- **Strict Upstream Parity**: 
+  - Tracks **GNU Bash 5.3** for shell logic and syntax.
+  - Targets **GNU Coreutils 9.10** for utility behavior (e.g., `ls` with support for nearly all standard flags).
+- **WebAssembly Native (`wasip1`)**:
+  - Compiled with `GOOS=wasip1 GOARCH=wasm`.
+  - Platform-agnostic input handling ensures compatibility with WASM runtimes (Wasmtime, browser) while preserving advanced terminal features on native OSs.
+- **Pure In-Memory Filesystem (VFS)**:
+  - Uses `afero` for a fully detached, in-memory filesystem hierarchy.
+  - Zero Disk I/O: Enforces absolute host isolation.
+- **Structured Observability**:
+  - Integrated with `zerolog` for high-performance, structured logging across all shell operations and command executions.
 
-By executing purely in-memory, it provides an unparalleled environment for interactive browser-based terminals, coding tutorials, and test playgrounds—fully insulated from host system vulnerabilities.
+## 🛠 Architecture
 
-## Key Features
+The project follows a clean, modular architecture:
+- `cmd/go-bash-wasm`: Minimal entry point for the simulator.
+- `internal/app`: Central application bootstrap and lifecycle management.
+- `internal/shell`: REPL and command execution logic with abstracted line reading.
+- `internal/commands`: Registry and high-parity implementation of core utilities (starting with `ls`).
 
-- **Strict Upstream Parity**
-  - Accurately models the behavioral logic of **GNU Bash** (tracking tag: `bash-5.3`).
-  - Implements the primary utilities of **GNU Coreutils** (tracking tag: `v9.10`).
-- **In-Memory Filesystem (VFS)**
-  - Operates completely memory-bound. Interactions with files, paths, and streams interact with a virtual hierarchy rather than the hardware, enforcing a strict "no physical disk I/O" policy.
-- **Total Host Isolation**
-  - Completely detached from the host operating system's filesystem, environment variables, or process tables, guaranteeing a safely walled sandbox execution limits.
-- **WebAssembly Native**
-  - Highly optimized to compile seamlessly to WASM targets, permitting simple embedding in web applications, Node routines, and modern WASM runtimes.
+## ⚙️ Building and Running
 
-## Getting Started
+### Prerequisites
+- **Go 1.25+**
+- (Optional) **Docker** for containerized WASM builds.
+- (Optional) **Wasmtime** for running the compiled WASM binary.
 
-*(Instructions for building, running, and integrating the module will be provided here as the project matures.)*
+### Run Locally (Native)
+To start the interactive shell locally on your host machine:
+```bash
+go run ./cmd/go-bash-wasm/
+```
+
+### Build for WebAssembly
+To compile the project to a WASM binary compatible with WASI Preview 1:
+```bash
+GOOS=wasip1 GOARCH=wasm go build -o main.wasm ./cmd/go-bash-wasm/
+```
+
+### Build via Docker
+A multi-stage `build.Dockerfile` is provided for automated WASM compilation and verification:
+```bash
+docker build -t go-bash-wasm -f build.Dockerfile .
+```
+
+## 🧪 Testing
+
+The project follows TDD (Test-Driven Development) to ensure 100% behavioral parity with upstream tools.
+```bash
+go test -v ./...
+```
+
+---
+*Developed by the go-bash-wasm team. Aiming for 100% functional parity with GNU tools.*

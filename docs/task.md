@@ -780,9 +780,9 @@ Status codes:
 - [ ] Upstream: `third_party/bash/builtins/exit.def`
 - [ ] Basic operation: Missing implementation
 
-### `ls`
+#### `ls`
 
-- [ ] Basic listing: Missing implementation
+- [x] Basic listing: `internal/commands/ls/ls.go`
 - [ ] Color output (`--color`): `third_party/coreutils/src/ls.c:L215`
 - [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L157`
 - [ ] Flag `--block-size`: `third_party/coreutils/src/ls.c:L165`
@@ -803,11 +803,11 @@ Status codes:
 - [ ] Flag `--time-style`: `third_party/coreutils/src/ls.c:L397`
 - [ ] Flag `--zero`: `third_party/coreutils/src/ls.c:L435` (mapped to ZERO_OPTION)
 - [ ] Flag `-1`: `third_party/coreutils/src/ls.c:L443`
-- [ ] Flag `-A`: `third_party/coreutils/src/ls.c:L45`
+- [x] Flag `-A`: `internal/commands/ls/ls.go` (almost-all)
 - [ ] Flag `-B`: `third_party/coreutils/src/ls.c:L170`
 - [ ] Flag `-C`: `third_party/coreutils/src/ls.c:L181`
 - [ ] Flag `-D`: `third_party/coreutils/src/ls.c:L224`
-- [ ] Flag `-F`: `third_party/coreutils/src/ls.c:L232`
+- [x] Flag `-F`: `internal/commands/ls/ls.go` (classify)
 - [ ] Flag `-G`: `third_party/coreutils/src/ls.c:L258`
 - [ ] Flag `-H`: `third_party/coreutils/src/ls.c:L270`
 - [ ] Flag `-I`: `third_party/coreutils/src/ls.c:L309`
@@ -815,29 +815,29 @@ Status codes:
 - [ ] Flag `-N`: `third_party/coreutils/src/ls.c:L329`
 - [ ] Flag `-Q`: `third_party/coreutils/src/ls.c:L349`
 - [ ] Flag `-R`: `third_party/coreutils/src/ls.c:L361`
-- [ ] Flag `-S`: `third_party/coreutils/src/ls.c:L369`
+- [x] Flag `-S`: `internal/commands/ls/ls.go` (sort-size)
 - [ ] Flag `-T`: `third_party/coreutils/src/ls.c:L411`
 - [ ] Flag `-U`: `third_party/coreutils/src/ls.c:L419`
 - [ ] Flag `-X`: `third_party/coreutils/src/ls.c:L435`
 - [ ] Flag `-Z`: `third_party/coreutils/src/ls.c:L439`
-- [ ] Flag `-a`: `third_party/coreutils/src/ls.c:L41`
+- [x] Flag `-a`: `internal/commands/ls/ls.go` (all)
 - [ ] Flag `-b`: `third_party/coreutils/src/ls.c:L161`
 - [ ] Flag `-c`: `third_party/coreutils/src/ls.c:L174`
-- [ ] Flag `-d`: `third_party/coreutils/src/ls.c:L220`
+- [x] Flag `-d`: `internal/commands/ls/ls.go` (partial via target arg)
 - [ ] Flag `-f`: `third_party/coreutils/src/ls.c:L228`
 - [ ] Flag `-g`: `third_party/coreutils/src/ls.c:L250`
-- [ ] Flag `-h`: `third_party/coreutils/src/ls.c:L262`
+- [x] Flag `-h`: `internal/commands/ls/ls.go` (human-readable)
 - [ ] Flag `-i`: `third_party/coreutils/src/ls.c:L305`
 - [ ] Flag `-k`: `third_party/coreutils/src/ls.c:L313`
-- [ ] Flag `-l`: `third_party/coreutils/src/ls.c`
+- [x] Flag `-l`: `internal/commands/ls/ls.go` (long)
 - [ ] Flag `-m`: `third_party/coreutils/src/ls.c:L321`
 - [ ] Flag `-n`: `third_party/coreutils/src/ls.c:L325`
 - [ ] Flag `-o`: `third_party/coreutils/src/ls.c:L333`
 - [ ] Flag `-p`: `third_party/coreutils/src/ls.c:L337`
 - [ ] Flag `-q`: `third_party/coreutils/src/ls.c:L341`
-- [ ] Flag `-r`: `third_party/coreutils/src/ls.c:L357`
+- [x] Flag `-r`: `internal/commands/ls/ls.go` (reverse)
 - [ ] Flag `-s`: `third_party/coreutils/src/ls.c:L365`
-- [ ] Flag `-t`: `third_party/coreutils/src/ls.c:L384`
+- [x] Flag `-t`: `internal/commands/ls/ls.go` (sort-time)
 - [ ] Flag `-u`: `third_party/coreutils/src/ls.c:L415`
 - [ ] Flag `-v`: `third_party/coreutils/src/ls.c:L423`
 - [ ] Flag `-w`: `third_party/coreutils/src/ls.c:L427`

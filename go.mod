@@ -1,6 +1,6 @@
 module github.com/yarencheng/go-bash-wasm
 
-go 1.25.9
+go 1.26.2
 
 require (
 	github.com/chzyer/readline v1.5.1

@@ -1212,3 +1212,49 @@ Status codes:
 - [ ] Audit `history` (history list)
     - Upstream: `third_party/bash/builtins/history.def`
     - Flags: `-c`, `-d offset`, `-a`, `-n`, `-r`, `-w`, `-p`, `-s`
+### Batch 33: Coreutils (Final Final Batch)
+- [ ] Audit `chroot` (change root)
+    - Upstream: `third_party/coreutils/src/chroot.c`
+    - Flags: `--groups=G_LIST`, `--userspec=USER:GROUP`, `--skip-chdir`
+- [ ] Audit `cut` (cut lines)
+    - Upstream: `third_party/coreutils/src/cut.c`
+    - Flags: `-b`, `--bytes`, `-c`, `--characters`, `-d`, `--delimiter`, `-f`, `--fields`, `-n`, `--complement`, `-s`, `--output-delimiter`, `-z`
+- [ ] Audit `date` (date/time)
+    - Upstream: `third_party/coreutils/src/date.c`
+    - Flags: `-d`, `--date`, `--debug`, `-f`, `--file`, `-I`, `--iso-8601`, `--resolution`, `-R`, `--rfc-email`, `--rfc-3339`, `-r`, `--reference`, `-s`, `--set`, `-u`, `--utc`
+- [ ] Audit `df` (disk usage)
+    - Upstream: `third_party/coreutils/src/df.c`
+    - Flags: `-a`, `--all`, `-B`, `--block-size`, `-h`, `--human-readable`, `-H`, `--si`, `-i`, `--inodes`, `-k`, `-l`, `--local`, `--no-sync`, `--output`, `-P`, `--portability`, `--sync`, `--total`, `-t`, `--type`, `-T`, `--print-type`, `-x`, `--exclude-type`
+- [ ] Audit `du` (disk usage)
+    - Upstream: `third_party/coreutils/src/du.c`
+    - Flags: `-0`, `-a`, `-A`, `-B`, `-b`, `-c`, `-D`, `-d`, `--files0-from`, `-H`, `-h`, `--inodes`, `-k`, `-L`, `-l`, `-m`, `-P`, `-S`, `--si`, `-s`, `-t`, `--time`, `--time-style`, `-X`, `--exclude`, `-x`
+- [ ] Audit `install` (install files)
+    - Upstream: `third_party/coreutils/src/install.c`
+    - Flags: `--backup`, `-b`, `-c`, `-C`, `-d`, `-D`, `--debug`, `-g`, `-m`, `-o`, `-p`, `-s`, `--strip-program`, `-S`, `-t`, `-T`, `-v`, `--preserve-context`, `-Z`
+- [ ] Audit `mktemp` (temp file)
+    - Upstream: `third_party/coreutils/src/mktemp.c`
+    - Flags: `-d`, `-u`, `-q`, `--suffix`, `-p`, `-t`
+- [ ] Audit `rm` (remove)
+    - Upstream: `third_party/coreutils/src/rm.c`
+    - Flags: `-f`, `-i`, `-I`, `--interactive`, `--one-file-system`, `--no-preserve-root`, `--preserve-root`, `-r`, `-d`, `-v`
+- [ ] Audit `rmdir` (remove dir)
+    - Upstream: `third_party/coreutils/src/rmdir.c`
+    - Flags: `--ignore-fail-on-non-empty`, `-p`, `-v`
+- [ ] Audit `sleep` (sleep)
+    - Upstream: `third_party/coreutils/src/sleep.c`
+    - Flags: None specific
+- [ ] Audit `sort` (sort lines)
+    - Upstream: `third_party/coreutils/src/sort.c`
+    - Flags: `-b`, `-d`, `-f`, `-g`, `-i`, `-M`, `-h`, `-n`, `-R`, `--random-source`, `-r`, `--sort`, `-V`, `--batch-size`, `-c`, `-C`, `--compress-program`, `--debug`, `--files0-from`, `-k`, `-m`, `-o`, `-s`, `-S`, `-t`, `-T`, `--parallel`, `-u`, `-z`
+- [ ] Audit `stat` (file status)
+    - Upstream: `third_party/coreutils/src/stat.c`
+    - Flags: `-L`, `-f`, `--cached`, `-c`, `--printf`, `-t`
+- [ ] Audit `stty` (terminal settings)
+    - Upstream: `third_party/coreutils/src/stty.c`
+    - Flags: `-a`, `-g`, `-F`
+- [ ] Audit `sync` (sync disks)
+    - Upstream: `third_party/coreutils/src/sync.c`
+    - Flags: `-d`, `-f`
+- [ ] Audit `uname` (system info)
+    - Upstream: `third_party/coreutils/src/uname.c`
+    - Flags: `-a`, `-s`, `-n`, `-r`, `-v`, `-m`, `-p`, `-i`, `-o`

@@ -295,6 +295,77 @@ Status codes:
 
 - [ ] Basic operation: Missing implementation
 
+### `stat`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-L` (dereference): `third_party/coreutils/src/stat.c:L1927` (main)
+- [ ] Flag `-f` (file system): `third_party/coreutils/src/stat.c:L1932`
+- [ ] Flag `-c` (format): `third_party/coreutils/src/stat.c:L1921`
+- [ ] Flag `-t` (terse): `third_party/coreutils/src/stat.c:L1936`
+
+### `dd`
+
+- [ ] Basic copy: Missing implementation
+- [ ] Operand `if=FILE`: `third_party/coreutils/src/dd.c:L552` (usage)
+- [ ] Operand `of=FILE`: `third_party/coreutils/src/dd.c:L561`
+- [ ] Operand `bs=BYTES`: `third_party/coreutils/src/dd.c:L536`
+- [ ] Operand `count=N`: `third_party/coreutils/src/dd.c:L546`
+- [ ] Operand `conv=CONVS`: `third_party/coreutils/src/dd.c:L543`
+
+### `expr`
+
+- [ ] Arithmetic (+, -, *, /, %): Missing implementation
+- [ ] Comparison (=, !=, <, <=, >, >=): Missing implementation
+- [ ] Logical (| , &): Missing implementation
+- [ ] String ops (match, substr, index, length): Missing implementation
+
+### `readlink`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-f` (canonicalize): `third_party/coreutils/src/readlink.c:L135`
+- [ ] Flag `-n` (no newline): `third_party/coreutils/src/readlink.c:L141`
+
+### `realpath`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-e` (existing): `third_party/coreutils/src/realpath.c:L220`
+- [ ] Flag `-m` (missing): `third_party/coreutils/src/realpath.c:L224`
+- [ ] Flag `--relative-to`: `third_party/coreutils/src/realpath.c:L246`
+
+### `kill`
+
+- [ ] Basic signaling: Missing implementation
+- [ ] Flag `-s SIGNAL`: `third_party/coreutils/src/kill.c:L262` / `third_party/bash/builtins/kill.def:L129`
+- [ ] Flag `-l` (list): `third_party/coreutils/src/kill.c:L277` / `third_party/bash/builtins/kill.def:L114`
+
+### `timeout`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-k` (kill-after): `third_party/coreutils/src/timeout.c:L531`
+- [ ] Flag `-s` (signal): `third_party/coreutils/src/timeout.c:L539`
+
+### `exec` (builtin)
+
+- [ ] Basic execution: Missing implementation
+- [ ] Flag `-a name`: `third_party/bash/builtins/exec.def:L120`
+- [ ] Flag `-c` (clean env): `third_party/bash/builtins/exec.def:L114`
+
+### `eval` (builtin)
+
+- [ ] Basic execution: Missing implementation
+
+### `declare` / `typeset` / `local` / `export` / `readonly` (builtins)
+
+- [ ] Attribute management (-i, -r, -x, -a, -A): Missing implementation
+- [ ] Flag `-p` (print): `third_party/bash/builtins/declare.def:L306`
+- [ ] Flag `-g` (global): `third_party/bash/builtins/declare.def:L320`
+
+### `set` / `unset` (builtins)
+
+- [ ] Option management (-e, -u, -x, -o): Missing implementation
+- [ ] Positional parameters: `third_party/bash/builtins/set.def:L784`
+- [ ] Flag `-f` (functions): `third_party/bash/builtins/set.def:L799` (unset)
+
 <!-- Add new audits below this line -->
 
 

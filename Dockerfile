@@ -1,4 +1,22 @@
-# Stage 1: Build
+# Stage 1: Build the Go WASM binary
+FROM golang:1.26-alpine AS go-builder
+
+# Install git to clone the repository
+RUN apk add --no-cache git
+
+WORKDIR /src
+
+# Clone the go-bash-wasm repository
+RUN git clone https://github.com/yarencheng/go-bash-wasm.git .
+
+# Build the WASM binary using the native Go build tool
+# Targeting js/wasm for browser execution
+RUN GOOS=js GOARCH=wasm go build -o main.wasm ./cmd/go-bash-wasm/
+
+# Find the wasm_exec.js file and copy it to the build directory
+RUN find / -name wasm_exec.js -exec cp {} . \;
+
+# Stage 2: Build the Svelte application
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -18,11 +36,15 @@ RUN npm run test
 # Build the application
 RUN npm run build
 
-# Stage 2: Serve with Nginx
+# Stage 3: Serve with Nginx
 FROM nginx:stable-alpine
 
 # Copy the build output from the builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
+
+# Copy the WASM artifacts from the go-builder stage
+COPY --from=go-builder /src/main.wasm /usr/share/nginx/html/
+COPY --from=go-builder /src/wasm_exec.js /usr/share/nginx/html/
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
@@ -30,3 +52,4 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+

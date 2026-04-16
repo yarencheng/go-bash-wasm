@@ -13,6 +13,16 @@ Status codes:
 
 ## Parity Matrix
 
+### `# functional parity tracking`
+
+- [x] : Fully implemented and verified.
+- [ ] : Missing or incomplete.
+- [-] : Deliberately skipped.
+
+### `:`
+
+- [ ] Upstream: `third_party/bash/builtins/colon.def`
+- [ ] Basic operation: Missing implementation
 
 ### `alias`
 
@@ -21,6 +31,11 @@ Status codes:
 - [ ] Define/Display aliases: Missing implementation
 - [ ] Flag `-a`: `third_party/bash/builtins/alias.def:L181`
 - [ ] Flag `-p`: `third_party/bash/builtins/alias.def:L36`
+
+### `arch`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-arch.c`
+- [ ] Inherits flags from `uname`
 
 ### `base32`
 
@@ -49,6 +64,11 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/basenc.c`
 - [ ] Flags to implement: -d, -i, -w
+
+### `bg`
+
+- [ ] Upstream: `third_party/bash/builtins/fg_bg.def`
+- [ ] Basic job management: Missing implementation
 
 ### `bind`
 
@@ -81,9 +101,9 @@ Status codes:
 - [ ] Upstream: `third_party/bash/builtins/cd.def`
 - [ ] Basic change directory: Missing implementation
 - [ ] CDPATH support: `third_party/bash/builtins/cd.def:L84`
+- [ ] Flags to implement: -e
 - [ ] Flag `-L`: `third_party/bash/builtins/cd.def:L94`
 - [ ] Flag `-P`: `third_party/bash/builtins/cd.def:L96`
-- [ ] Flags to implement: -e
 
 ### `chcon`
 
@@ -149,10 +169,10 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/command.def`
 - [ ] Basic execution: Missing implementation
+- [ ] Flags to implement: -pVv
 - [ ] Flag `-V`: `third_party/bash/builtins/command.def:L37`
 - [ ] Flag `-p`: `third_party/bash/builtins/command.def:L33`
 - [ ] Flag `-v`: `third_party/bash/builtins/command.def:L35`
-- [ ] Flags to implement: -pVv
 
 ### `complete`
 
@@ -182,39 +202,39 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/cut.c`
 - [ ] Basic selection: Missing implementation
+- [ ] Flags to implement: -n, -s, -z
 - [ ] Flag `-b`: `third_party/coreutils/src/cut.c:L143`
 - [ ] Flag `-c`: `third_party/coreutils/src/cut.c:L147`
 - [ ] Flag `-d`: `third_party/coreutils/src/cut.c:L151`
 - [ ] Flag `-f`: `third_party/coreutils/src/cut.c:L155`
-- [ ] Flags to implement: -n, -s, -z
 
 ### `date`
 
 - [ ] Upstream: `third_party/coreutils/src/date.c`
 - [ ] Basic output: Missing implementation
 - [ ] Custom format `+FORMAT`: `third_party/coreutils/src/date.c:L607`
+- [ ] Flags to implement: -I, -R, -f, -r, -s
 - [ ] Flag `-d`: `third_party/coreutils/src/date.c:L501`
 - [ ] Flag `-u`: `third_party/coreutils/src/date.c:L561`
-- [ ] Flags to implement: -I, -R, -f, -r, -s
 
 ### `dd`
 
 - [ ] Upstream: `third_party/coreutils/src/dd.c`
 - [ ] Basic copy: Missing implementation
+- [ ] Flags to implement: bs, cbs, conv, count, ibs, if, iflag, obs, of, oflag, seek, skip, status
 - [ ] Flag `bs=BYTES`: `third_party/coreutils/src/dd.c:L536`
 - [ ] Flag `conv=CONVS`: `third_party/coreutils/src/dd.c:L543`
 - [ ] Flag `count=N`: `third_party/coreutils/src/dd.c:L546`
 - [ ] Flag `if=FILE`: `third_party/coreutils/src/dd.c:L552` (usage)
 - [ ] Flag `of=FILE`: `third_party/coreutils/src/dd.c:L561`
-- [ ] Flags to implement: bs, cbs, conv, count, ibs, if, iflag, obs, of, oflag, seek, skip, status
 
 ### `declare`
 
 - [ ] Upstream: `third_party/bash/builtins/declare.def`
 - [ ] Attribute management (-i, -r, -x, -a, -A): Missing implementation
+- [ ] Flags to implement: -A, -F, -I, -a, -f, -i, -l, -n, -r, -t, -u, -x
 - [ ] Flag `-g`: `third_party/bash/builtins/declare.def:L320`
 - [ ] Flag `-p`: `third_party/bash/builtins/declare.def:L306`
-- [ ] Flags to implement: -A, -F, -I, -a, -f, -i, -l, -n, -r, -t, -u, -x
 
 ### `df`
 
@@ -236,6 +256,11 @@ Status codes:
 - [ ] Flag `-l`: `third_party/coreutils/src/df.c:L261`
 - [ ] Flag `-t`: `third_party/coreutils/src/df.c:L268`
 - [ ] Flag `-x`: `third_party/coreutils/src/df.c:L269`
+
+### `dir`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-dir.c`
+- [ ] Inherits flags from `ls`
 
 ### `dircolors`
 
@@ -316,9 +341,9 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/exec.def`
 - [ ] Basic execution: Missing implementation
+- [ ] Flags to implement: -a, -cl
 - [ ] Flag `-a name`: `third_party/bash/builtins/exec.def:L120`
 - [ ] Flag `-c`: `third_party/bash/builtins/exec.def:L114`
-- [ ] Flags to implement: -a, -cl
 
 ### `exit`
 
@@ -352,16 +377,21 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/factor.c`
 - [ ] Flags to implement: -h
 
+### `false`
+
+- [ ] Upstream: `third_party/bash/builtins/colon.def`, `third_party/coreutils/src/false.c`
+- [ ] Basic operation: Missing implementation
+
 ### `fc`
 
 - [ ] Upstream: `third_party/bash/builtins/fc.def`
 - [ ] Basic editing/re-execution: Missing implementation
+- [ ] Flags to implement: -e
 - [ ] Flag `-e ENAME`: `third_party/bash/builtins/fc.def:L232`
 - [ ] Flag `-l`: `third_party/bash/builtins/fc.def:L220`
 - [ ] Flag `-n`: `third_party/bash/builtins/fc.def:L216`
 - [ ] Flag `-r`: `third_party/bash/builtins/fc.def:L224`
 - [ ] Flag `-s`: `third_party/bash/builtins/fc.def:L228`
-- [ ] Flags to implement: -e
 
 ### `fg`
 
@@ -371,6 +401,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/fmt.c`
 - [ ] Basic formatting: Missing implementation
+- [ ] Flags to implement: -WIDTH
 - [ ] Flag `-c`: `third_party/coreutils/src/fmt.c:L278`
 - [ ] Flag `-g`: `third_party/coreutils/src/fmt.c:L305`
 - [ ] Flag `-p`: `third_party/coreutils/src/fmt.c:L282`
@@ -378,7 +409,6 @@ Status codes:
 - [ ] Flag `-t`: `third_party/coreutils/src/fmt.c:L291`
 - [ ] Flag `-u`: `third_party/coreutils/src/fmt.c:L295`
 - [ ] Flag `-w`: `third_party/coreutils/src/fmt.c:L299`
-- [ ] Flags to implement: -WIDTH
 
 ### `fold`
 
@@ -410,12 +440,12 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/hash.def`
 - [ ] Basic hashing: Missing implementation
+- [ ] Flags to implement: -dt, -lr, -p
 - [ ] Flag `-d`: `third_party/bash/builtins/hash.def:L32`
 - [ ] Flag `-l`: `third_party/bash/builtins/hash.def:L33`
 - [ ] Flag `-p pathname`: `third_party/bash/builtins/hash.def:L34`
 - [ ] Flag `-r`: `third_party/bash/builtins/hash.def:L35`
 - [ ] Flag `-t`: `third_party/bash/builtins/hash.def:L36`
-- [ ] Flags to implement: -dt, -lr, -p
 
 ### `head`
 
@@ -428,15 +458,16 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/help.def`
 - [ ] Basic discovery: Missing implementation
+- [ ] Flags to implement: -dms
 - [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105`
 - [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108`
 - [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111`
-- [ ] Flags to implement: -dms
 
 ### `history`
 
 - [ ] Upstream: `third_party/bash/builtins/history.def`
 - [ ] Basic management: Missing implementation
+- [ ] Flags to implement: -d, offset
 - [ ] Flag `-a`: `third_party/bash/builtins/history.def:L126`
 - [ ] Flag `-c`: `third_party/bash/builtins/history.def:L129`
 - [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145`
@@ -445,7 +476,6 @@ Status codes:
 - [ ] Flag `-r`: `third_party/bash/builtins/history.def:L135`
 - [ ] Flag `-s`: `third_party/bash/builtins/history.def:L141`
 - [ ] Flag `-w`: `third_party/bash/builtins/history.def:L138`
-- [ ] Flags to implement: -d, offset
 
 ### `hostid`
 
@@ -486,6 +516,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/join.c`
 - [ ] Basic join: Missing implementation
+- [ ] Flags to implement: -1, -2, -a, -e, -j, -o, -t, -v, CHAR, FIELD, FILENUM, FORMAT, STRING
 - [ ] Flag `--check-order`: `third_party/coreutils/src/join.c:L248`
 - [ ] Flag `--header`: `third_party/coreutils/src/join.c:L257`
 - [ ] Flag `--nocheck-order`: `third_party/coreutils/src/join.c:L253`
@@ -499,15 +530,14 @@ Status codes:
 - [ ] Flag `-t CHAR`: `third_party/coreutils/src/join.c:L232`
 - [ ] Flag `-v FILENUM`: `third_party/coreutils/src/join.c:L236`
 - [ ] Flag `-z`: `third_party/coreutils/src/join.c:L262`
-- [ ] Flags to implement: -1, -2, -a, -e, -j, -o, -t, -v, CHAR, FIELD, FILENUM, FORMAT, STRING
 
 ### `kill`
 
 - [ ] Upstream: `third_party/bash/builtins/kill.def`
 - [ ] Basic signaling: Missing implementation
+- [ ] Flags to implement: -n, -s
 - [ ] Flag `-l`: `third_party/coreutils/src/kill.c:L277` / `third_party/bash/builtins/kill.def:L114`
 - [ ] Flag `-s SIGNAL`: `third_party/coreutils/src/kill.c:L262` / `third_party/bash/builtins/kill.def:L129`
-- [ ] Flags to implement: -n, -s
 
 ### `let`
 
@@ -539,10 +569,61 @@ Status codes:
 
 - [ ] Basic listing: Missing implementation
 - [ ] Color output (`--color`): `third_party/coreutils/src/ls.c`
-- [ ] Flag `-R`: `third_party/coreutils/src/ls.c`
+- [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L157`
+- [ ] Flag `--block-size`: `third_party/coreutils/src/ls.c:L165`
+- [ ] Flag `--color`: `third_party/coreutils/src/ls.c:L215`
+- [ ] Flag `--file-type`: `third_party/coreutils/src/ls.c:L237`
+- [ ] Flag `--format`: `third_party/coreutils/src/ls.c:L241`
+- [ ] Flag `--full-time`: `third_party/coreutils/src/ls.c:L246`
+- [ ] Flag `--group-directories-first`: `third_party/coreutils/src/ls.c:L254`
+- [ ] Flag `--hide`: `third_party/coreutils/src/ls.c:L285`
+- [ ] Flag `--indicator-style`: `third_party/coreutils/src/ls.c:L289`
+- [ ] Flag `--quoting-style`: `third_party/coreutils/src/ls.c:L353`
+- [ ] Flag `--show-control-chars`: `third_party/coreutils/src/ls.c:L345`
+- [ ] Flag `--si`: `third_party/coreutils/src/ls.c:L266`
+- [ ] Flag `--sort`: `third_party/coreutils/src/ls.c:L373`
+- [ ] Flag `--time`: `third_party/coreutils/src/ls.c:L388`
+- [ ] Flag `--time-style`: `third_party/coreutils/src/ls.c:L397`
+- [ ] Flag `-1`: `third_party/coreutils/src/ls.c:L443`
+- [ ] Flag `-A`: `third_party/coreutils/src/ls.c:L45`
+- [ ] Flag `-B`: `third_party/coreutils/src/ls.c:L170`
+- [ ] Flag `-C`: `third_party/coreutils/src/ls.c:L181`
+- [ ] Flag `-D`: `third_party/coreutils/src/ls.c:L224`
+- [ ] Flag `-F`: `third_party/coreutils/src/ls.c:L232`
+- [ ] Flag `-G`: `third_party/coreutils/src/ls.c:L258`
+- [ ] Flag `-H`: `third_party/coreutils/src/ls.c:L270`
+- [ ] Flag `-I`: `third_party/coreutils/src/ls.c:L309`
+- [ ] Flag `-L`: `third_party/coreutils/src/ls.c:L317`
+- [ ] Flag `-N`: `third_party/coreutils/src/ls.c:L329`
+- [ ] Flag `-Q`: `third_party/coreutils/src/ls.c:L349`
+- [ ] Flag `-R`: `third_party/coreutils/src/ls.c:L361`
+- [ ] Flag `-S`: `third_party/coreutils/src/ls.c:L369`
+- [ ] Flag `-T`: `third_party/coreutils/src/ls.c:L411`
+- [ ] Flag `-U`: `third_party/coreutils/src/ls.c:L419`
+- [ ] Flag `-X`: `third_party/coreutils/src/ls.c:L435`
+- [ ] Flag `-Z`: `third_party/coreutils/src/ls.c:L439`
 - [ ] Flag `-a`: `third_party/coreutils/src/ls.c:L41`
-- [ ] Flag `-h`: `third_party/coreutils/src/ls.c:L47`
+- [ ] Flag `-b`: `third_party/coreutils/src/ls.c:L161`
+- [ ] Flag `-c`: `third_party/coreutils/src/ls.c:L174`
+- [ ] Flag `-d`: `third_party/coreutils/src/ls.c:L220`
+- [ ] Flag `-f`: `third_party/coreutils/src/ls.c:L228`
+- [ ] Flag `-g`: `third_party/coreutils/src/ls.c:L250`
+- [ ] Flag `-h`: `third_party/coreutils/src/ls.c:L262`
+- [ ] Flag `-i`: `third_party/coreutils/src/ls.c:L305`
+- [ ] Flag `-k`: `third_party/coreutils/src/ls.c:L313`
 - [ ] Flag `-l`: `third_party/coreutils/src/ls.c`
+- [ ] Flag `-m`: `third_party/coreutils/src/ls.c:L321`
+- [ ] Flag `-n`: `third_party/coreutils/src/ls.c:L325`
+- [ ] Flag `-o`: `third_party/coreutils/src/ls.c:L333`
+- [ ] Flag `-p`: `third_party/coreutils/src/ls.c:L337`
+- [ ] Flag `-q`: `third_party/coreutils/src/ls.c:L341`
+- [ ] Flag `-r`: `third_party/coreutils/src/ls.c:L357`
+- [ ] Flag `-s`: `third_party/coreutils/src/ls.c:L365`
+- [ ] Flag `-t`: `third_party/coreutils/src/ls.c:L384`
+- [ ] Flag `-u`: `third_party/coreutils/src/ls.c:L415`
+- [ ] Flag `-v`: `third_party/coreutils/src/ls.c:L423`
+- [ ] Flag `-w`: `third_party/coreutils/src/ls.c:L427`
+- [ ] Flag `-x`: `third_party/coreutils/src/ls.c:L431`
 
 ### `mapfile`
 
@@ -598,6 +679,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/nl.c`
 - [ ] Basic numbering: Missing implementation
+- [ ] Flags to implement: CC, FORMAT, NUMBER, STRING, STYLE
 - [ ] Flag `-b`: `third_party/coreutils/src/nl.c:L153`
 - [ ] Flag `-d`: `third_party/coreutils/src/nl.c:L162`
 - [ ] Flag `-f`: `third_party/coreutils/src/nl.c:L154`
@@ -609,7 +691,6 @@ Status codes:
 - [ ] Flag `-s`: `third_party/coreutils/src/nl.c:L159`
 - [ ] Flag `-v`: `third_party/coreutils/src/nl.c:L155`
 - [ ] Flag `-w`: `third_party/coreutils/src/nl.c:L160`
-- [ ] Flags to implement: CC, FORMAT, NUMBER, STRING, STYLE
 
 ### `nohup`
 
@@ -688,18 +769,18 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/read.def`
 - [ ] Basic input: Missing implementation
+- [ ] Flags to implement: -N, -d, -ers, -i, -n, -t, -u
 - [ ] Flag `-a`: `third_party/bash/builtins/read.def:L39`
 - [ ] Flag `-p`: `third_party/bash/builtins/read.def:L53`
 - [ ] Flag `-r`: `third_party/bash/builtins/read.def:L55`
-- [ ] Flags to implement: -N, -d, -ers, -i, -n, -t, -u
 
 ### `readlink`
 
 - [ ] Upstream: `third_party/coreutils/src/readlink.c`
 - [ ] Basic output: Missing implementation
+- [ ] Flags to implement: -e, -m, -q, -s, -v, -z
 - [ ] Flag `-f`: `third_party/coreutils/src/readlink.c:L135`
 - [ ] Flag `-n`: `third_party/coreutils/src/readlink.c:L141`
-- [ ] Flags to implement: -e, -m, -q, -s, -v, -z
 
 ### `readonly`
 
@@ -710,10 +791,10 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/realpath.c`
 - [ ] Basic output: Missing implementation
+- [ ] Flags to implement: -E, -L, -P, -q, -s, -z
 - [ ] Flag `--relative-to`: `third_party/coreutils/src/realpath.c:L246`
 - [ ] Flag `-e`: `third_party/coreutils/src/realpath.c:L220`
 - [ ] Flag `-m`: `third_party/coreutils/src/realpath.c:L224`
-- [ ] Flags to implement: -E, -L, -P, -q, -s, -z
 
 ### `return`
 
@@ -725,10 +806,10 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/rm.c`
 - [ ] Basic removal: Missing implementation
+- [ ] Flags to implement: -I, -d, -v
 - [ ] Flag `-f`: `third_party/coreutils/src/rm.c:L137`
 - [ ] Flag `-i`: `third_party/coreutils/src/rm.c:L142`
 - [ ] Flag `-r`: `third_party/coreutils/src/rm.c:L172`
-- [ ] Flags to implement: -I, -d, -v
 
 ### `rmdir`
 
@@ -748,17 +829,42 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/seq.c`
 - [ ] Basic sequence: Missing implementation
+- [ ] Flags to implement: -f
 - [ ] Flag `-s`: `third_party/coreutils/src/seq.c:L596`
 - [ ] Flag `-w`: `third_party/coreutils/src/seq.c:L600`
-- [ ] Flags to implement: -f
 
 ### `set`
 
 - [ ] Upstream: `third_party/bash/builtins/set.def`
 - [ ] Option management (-e, -u, -x, -o): Missing implementation
 - [ ] Positional parameters: `third_party/bash/builtins/set.def:L784`
-- [ ] Flag `-f`: `third_party/bash/builtins/set.def:L799` (unset)
 - [ ] Flags to implement: -abefhkmnptuvxBCEHPT, -n, -o, -v
+- [ ] Flag `-f`: `third_party/bash/builtins/set.def:L799` (unset)
+
+### `sha1sum`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-sha1sum.c`
+- [ ] Inherits flags from `cksum`
+
+### `sha224sum`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-sha224sum.c`
+- [ ] Inherits flags from `cksum`
+
+### `sha256sum`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-sha256sum.c`
+- [ ] Inherits flags from `cksum`
+
+### `sha384sum`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-sha384sum.c`
+- [ ] Inherits flags from `cksum`
+
+### `sha512sum`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-sha512sum.c`
+- [ ] Inherits flags from `cksum`
 
 ### `shift`
 
@@ -807,6 +913,7 @@ Status codes:
 - [ ] Basic sorting: Missing implementation
 - [ ] Basic sort: Missing implementation
 - [ ] Ordering flags (`-b`, `-i`, `-d`, `-f`, `-g`, `-h`, `-n`, `-M`, `-R`, `-V`, `-r`): `third_party/coreutils/src/sort.c:L437-490`
+- [ ] Flags to implement: -C, -M, -R, -V, -b, -d, -f, -g, -h, -i, -s
 - [ ] Flag `--parallel`: `third_party/coreutils/src/sort.c:L553`
 - [ ] Flag `-S`: `third_party/coreutils/src/sort.c:L540`
 - [ ] Flag `-T`: `third_party/coreutils/src/sort.c:L548`
@@ -819,12 +926,12 @@ Status codes:
 - [ ] Flag `-t`: `third_party/coreutils/src/sort.c:L544`
 - [ ] Flag `-u`: `third_party/coreutils/src/sort.c:L557`
 - [ ] Flag `-z`: `third_party/coreutils/src/sort.c:L562`
-- [ ] Flags to implement: -C, -M, -R, -V, -b, -d, -f, -g, -h, -i, -s
 
 ### `source`
 
 - [ ] Upstream: `third_party/bash/builtins/source.def`
 - [ ] Basic sourcing: Missing implementation
+- [ ] Aliases: `.`
 - [ ] Flag `-p path`: `third_party/bash/builtins/source.def:L126`
 
 ### `split`
@@ -904,14 +1011,15 @@ Status codes:
 - [ ] String operators (=, !=, -z, -n): Missing implementation
 - [ ] Numeric operators (-eq, -ne, etc.): Missing implementation
 - [ ] Logical operators (!, -a, -o): Missing implementation
+- [ ] Aliases: `[`
 
 ### `timeout`
 
 - [ ] Upstream: `third_party/coreutils/src/timeout.c`
 - [ ] Basic output: Missing implementation
+- [ ] Flags to implement: -f, -p, -v
 - [ ] Flag `-k`: `third_party/coreutils/src/timeout.c:L531`
 - [ ] Flag `-s`: `third_party/coreutils/src/timeout.c:L539`
-- [ ] Flags to implement: -f, -p, -v
 
 ### `times`
 
@@ -923,6 +1031,7 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/touch.c`
 - [ ] Basic touch: Missing implementation
 - [ ] Basic timestamp update: Missing implementation
+- [ ] Flags to implement: -f, -t
 - [ ] Flag `-a`: `third_party/coreutils/src/touch.c:L230`
 - [ ] Flag `-c`: `third_party/coreutils/src/touch.c:L234`
 - [ ] Flag `-d`: `third_party/coreutils/src/touch.c:L238`
@@ -930,17 +1039,16 @@ Status codes:
 - [ ] Flag `-m`: `third_party/coreutils/src/touch.c:L251`
 - [ ] Flag `-r`: `third_party/coreutils/src/touch.c:L255`
 - [ ] Flag `-t [[CC]YY]MMDDhhmm[.ss]`: `third_party/coreutils/src/touch.c:L259`
-- [ ] Flags to implement: -f, -t
 
 ### `tr`
 
 - [ ] Upstream: `third_party/coreutils/src/tr.c`
 - [ ] Basic translation: Missing implementation
+- [ ] Flags to implement: -C
 - [ ] Flag `-c`: `third_party/coreutils/src/tr.c:L296`
 - [ ] Flag `-d`: `third_party/coreutils/src/tr.c:L300`
 - [ ] Flag `-s`: `third_party/coreutils/src/tr.c:L304`
 - [ ] Flag `-t`: `third_party/coreutils/src/tr.c:L310`
-- [ ] Flags to implement: -C
 
 ### `trap`
 
@@ -1063,10 +1171,10 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/wait.def`
 - [ ] Basic waiting: Missing implementation
+- [ ] Flags to implement: -p, var
 - [ ] Flag `-f`: `third_party/bash/builtins/wait.def:L134`
 - [ ] Flag `-n`: `third_party/bash/builtins/wait.def:L131`
 - [ ] Flag `-p var`: `third_party/bash/builtins/wait.def:L137`
-- [ ] Flags to implement: -p, var
 
 ### `wc`
 

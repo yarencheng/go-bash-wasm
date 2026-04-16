@@ -1,38 +1,22 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
-	"github.com/spf13/afero"
-	"github.com/yarencheng/go-bash-wasm/internal/commands"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
-	"github.com/yarencheng/go-bash-wasm/internal/shell"
+	"github.com/yarencheng/go-bash-wasm/internal/app"
 )
 
 func main() {
-	fmt.Println("go-bash-wasm initialized")
+	ctx := context.Background()
 
-	// Setup environment
-	fs := afero.NewMemMapFs()
-	// Mock some files
-	_ = afero.WriteFile(fs, "/demo.txt", []byte("hello"), 0644)
-	_ = fs.Mkdir("/configs", 0755)
+	// Initialize the application with standard output and error.
+	a := app.New(os.Stdout, os.Stderr)
 
-	registry := commands.New()
-	lsCmd := ls.New()
-	_ = registry.Register(lsCmd)
-
-	env := &commands.Environment{
-		FS:     fs,
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-		Cwd:    "/",
-	}
-
-	shellObj := shell.New(registry, env)
-	if err := shellObj.RunInteractive(); err != nil {
-		fmt.Fprintf(os.Stderr, "shell error: %v\n", err)
+	// Run the interactive shell.
+	if err := a.Run(ctx); err != nil {
+		fmt.Fprintf(os.Stderr, "bash simulator failed: %v\n", err)
 		os.Exit(1)
 	}
 }

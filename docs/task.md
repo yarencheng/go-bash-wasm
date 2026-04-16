@@ -577,3 +577,78 @@ Status codes:
 - [ ] Flag `-P` (force path): `third_party/bash/builtins/type.def:L36`
 - [ ] Flag `-t` (type): `third_party/bash/builtins/type.def:L41`
 
+
+### `printenv`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-0` (`--null`): `third_party/coreutils/src/printenv.c:L70`
+
+### `whoami`
+
+- [ ] Basic output: Missing implementation
+
+### `groups`
+
+- [ ] Basic listing: Missing implementation
+- [ ] Multiple users support: `third_party/coreutils/src/groups.c:L120`
+
+### `id`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-a` (ignored): `third_party/coreutils/src/id.c:L101`
+- [ ] Flag `-Z` (`--context`): `third_party/coreutils/src/id.c:L105`
+- [ ] Flag `-g` (`--group`): `third_party/coreutils/src/id.c:L109`
+- [ ] Flag `-G` (`--groups`): `third_party/coreutils/src/id.c:L113`
+- [ ] Flag `-n` (`--name`): `third_party/coreutils/src/id.c:L117`
+- [ ] Flag `-r` (`--real`): `third_party/coreutils/src/id.c:L121`
+- [ ] Flag `-u` (`--user`): `third_party/coreutils/src/id.c:L125`
+- [ ] Flag `-z` (`--zero`): `third_party/coreutils/src/id.c:L129`
+
+### `tty`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-s` (`--silent`): `third_party/coreutils/src/tty.c:L71`
+
+### `uname`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-a` (`--all`): `third_party/coreutils/src/uname.c:L123`
+- [ ] Flag `-s` (`--kernel-name`): `third_party/coreutils/src/uname.c:L127`
+- [ ] Flag `-n` (`--nodename`): `third_party/coreutils/src/uname.c:L130`
+- [ ] Flag `-r` (`--kernel-release`): `third_party/coreutils/src/uname.c:L133`
+- [ ] Flag `-v` (`--kernel-version`): `third_party/coreutils/src/uname.c:L136`
+- [ ] Flag `-m` (`--machine`): `third_party/coreutils/src/uname.c:L139`
+- [ ] Flag `-p` (`--processor`): `third_party/coreutils/src/uname.c:L142`
+- [ ] Flag `-i` (`--hardware-platform`): `third_party/coreutils/src/uname.c:L145`
+- [ ] Flag `-o` (`--operating-system`): `third_party/coreutils/src/uname.c:L148`
+
+### `hostname`
+
+- [ ] Basic output: Missing implementation
+- [ ] Set hostname support: `third_party/coreutils/src/hostname.c:L95`
+
+### `getopts` (builtin)
+
+- [ ] Basic parsing: Missing implementation
+- [ ] Silent mode support (`:`): `third_party/bash/builtins/getopts.def:L180`
+
+### `hash` (builtin)
+
+- [ ] Basic hashing: Missing implementation
+- [ ] Flag `-d` (forget): `third_party/bash/builtins/hash.def:L32`
+- [ ] Flag `-l` (reusable format): `third_party/bash/builtins/hash.def:L33`
+- [ ] Flag `-p pathname` (set path): `third_party/bash/builtins/hash.def:L34`
+- [ ] Flag `-r` (forget all): `third_party/bash/builtins/hash.def:L35`
+- [ ] Flag `-t` (print location): `third_party/bash/builtins/hash.def:L36`
+
+### `times` (builtin)
+
+- [ ] Basic output: Missing implementation
+
+### `wait` (builtin)
+
+- [ ] Basic waiting: Missing implementation
+- [ ] Flag `-n` (wait for any): `third_party/bash/builtins/wait.def:L131`
+- [ ] Flag `-f` (force): `third_party/bash/builtins/wait.def:L134`
+- [ ] Flag `-p var` (set pid var): `third_party/bash/builtins/wait.def:L137`
+

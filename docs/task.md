@@ -267,7 +267,36 @@ Status codes:
 - [ ] Flag `-t` (type): `third_party/bash/builtins/type.def:L160`
 - [ ] Flag `-P` (force path): `third_party/bash/builtins/type.def:L164`
 
+### `date`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-d` (date string): `third_party/coreutils/src/date.c:L501`
+- [ ] Flag `-u` (UTC): `third_party/coreutils/src/date.c:L561`
+- [ ] Custom format `+FORMAT`: `third_party/coreutils/src/date.c:L607`
+
+### `seq`
+
+- [ ] Basic sequence: Missing implementation
+- [ ] Flag `-s` (separator): `third_party/coreutils/src/seq.c:L596`
+- [ ] Flag `-w` (equal width): `third_party/coreutils/src/seq.c:L600`
+
+### `tr`
+
+- [ ] Basic translation: Missing implementation
+- [ ] Flag `-d` (delete): `third_party/coreutils/src/tr.c:L300`
+- [ ] Flag `-s` (squeeze): `third_party/coreutils/src/tr.c:L304`
+- [ ] Flag `-c` (complement): `third_party/coreutils/src/tr.c:L296`
+
+### `yes`
+
+- [ ] Basic operation: Missing implementation
+
+### `true` / `false`
+
+- [ ] Basic operation: Missing implementation
+
 <!-- Add new audits below this line -->
+
 
 
 

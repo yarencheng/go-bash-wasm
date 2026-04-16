@@ -253,7 +253,22 @@ Status codes:
 - [ ] Flag `-a` (append): `third_party/coreutils/src/tee.c:L93`
 - [ ] Flag `-i` (ignore interrupts): `third_party/coreutils/src/tee.c:L97`
 
+### `alias` / `unalias`
+
+- [ ] Basic management: Missing implementation
+- [ ] Flag `-p` (alias): `third_party/bash/builtins/alias.def:L79`
+- [ ] Flag `-a` (unalias): `third_party/bash/builtins/alias.def:L181`
+
+### `type`
+
+- [ ] Basic lookup: Missing implementation
+- [ ] Flag `-a` (all): `third_party/bash/builtins/type.def:L150`
+- [ ] Flag `-p` (path): `third_party/bash/builtins/type.def:L156`
+- [ ] Flag `-t` (type): `third_party/bash/builtins/type.def:L160`
+- [ ] Flag `-P` (force path): `third_party/bash/builtins/type.def:L164`
+
 <!-- Add new audits below this line -->
+
 
 
 

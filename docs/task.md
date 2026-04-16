@@ -28,9 +28,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/alias.def`
 - [ ] Basic management: Missing implementation
-- [ ] Define/Display aliases: Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/alias.def:L181`
-- [ ] Flag `-p`: `third_party/bash/builtins/alias.def:L36`
+- [ ] Flag `-p`: `third_party/bash/builtins/alias.def:L79` (print)
 
 ### `arch`
 
@@ -73,7 +71,21 @@ Status codes:
 ### `bind`
 
 - [ ] Upstream: `third_party/bash/builtins/bind.def`
-- [ ] Flags to implement: -P, -S, -V, -X, -f, -l, -lpvsPVS, -m, -p, -q, -r, -s, -u, -v, -x
+- [ ] Keybinding management: Missing implementation
+- [ ] Flag `-l`: `third_party/bash/builtins/bind.def:L139` (list)
+- [ ] Flag `-v`: `third_party/bash/builtins/bind.def:L139` (list functions)
+- [ ] Flag `-p`: `third_party/bash/builtins/bind.def:L139` (print status)
+- [ ] Flag `-V`: `third_party/bash/builtins/bind.def:L139` (list variables)
+- [ ] Flag `-P`: `third_party/bash/builtins/bind.def:L139` (print functions)
+- [ ] Flag `-s`: `third_party/bash/builtins/bind.def:L139` (list macros)
+- [ ] Flag `-S`: `third_party/bash/builtins/bind.def:L139` (print macros)
+- [ ] Flag `-X`: `third_party/bash/builtins/bind.def:L139` (list keyseq bindings)
+- [ ] Flag `-f=FILE`: `third_party/bash/builtins/bind.def:L139` (read from file)
+- [ ] Flag `-q=FUNC`: `third_party/bash/builtins/bind.def:L139` (query keys for func)
+- [ ] Flag `-u=FUNC`: `third_party/bash/builtins/bind.def:L139` (unbind func)
+- [ ] Flag `-m=KEYMAP`: `third_party/bash/builtins/bind.def:L139` (keymap)
+- [ ] Flag `-r=KEYSEQ`: `third_party/bash/builtins/bind.def:L139` (remove seq)
+- [ ] Flag `-x=KEYSEQ:SHELLCMD`: `third_party/bash/builtins/bind.def:L139` (exec cmd)
 
 ### `break`
 
@@ -179,11 +191,10 @@ Status codes:
 ### `command`
 
 - [ ] Upstream: `third_party/bash/builtins/command.def`
-- [ ] Basic execution: Missing implementation
-- [ ] Flags to implement: -pVv
-- [ ] Flag `-V`: `third_party/bash/builtins/command.def:L37`
-- [ ] Flag `-p`: `third_party/bash/builtins/command.def:L33`
-- [ ] Flag `-v`: `third_party/bash/builtins/command.def:L35`
+- [ ] Execution override: Missing implementation
+- [ ] Flag `-p`: `third_party/bash/builtins/command.def:L75` (default PATH)
+- [ ] Flag `-v`: `third_party/bash/builtins/command.def:L75` (identify command)
+- [ ] Flag `-V`: `third_party/bash/builtins/command.def:L75` (verbose identify)
 
 ### `compgen`
 
@@ -193,7 +204,33 @@ Status codes:
 ### `complete`
 
 - [ ] Upstream: `third_party/bash/builtins/complete.def`
-- [ ] Flags to implement: -A, -C, -D, -DEI, -E, -F, -G, -I, -P, -S, -V, -W, -X, -abcdefgjksuv, -abcdefgjkvu, -o, -p, -pr, -r
+- [ ] Completion management: Missing implementation
+- [ ] Flag `-a`: `third_party/bash/builtins/complete.def:L205` (alias)
+- [ ] Flag `-b`: `third_party/bash/builtins/complete.def:L205` (builtin)
+- [ ] Flag `-c`: `third_party/bash/builtins/complete.def:L205` (command)
+- [ ] Flag `-d`: `third_party/bash/builtins/complete.def:L205` (directory)
+- [ ] Flag `-e`: `third_party/bash/builtins/complete.def:L205` (export)
+- [ ] Flag `-f`: `third_party/bash/builtins/complete.def:L204` (file)
+- [ ] Flag `-g`: `third_party/bash/builtins/complete.def:L205` (group)
+- [ ] Flag `-j`: `third_party/bash/builtins/complete.def:L205` (job)
+- [ ] Flag `-k`: `third_party/bash/builtins/complete.def:L205` (keyword)
+- [ ] Flag `-p`: `third_party/bash/builtins/complete.def:L205` (print)
+- [ ] Flag `-r`: `third_party/bash/builtins/complete.def:L205` (remove)
+- [ ] Flag `-s`: `third_party/bash/builtins/complete.def:L205` (service)
+- [ ] Flag `-u`: `third_party/bash/builtins/complete.def:L205` (user)
+- [ ] Flag `-v`: `third_party/bash/builtins/complete.def:L205` (variable)
+- [ ] Flag `-o=OPT`: `third_party/bash/builtins/complete.def:L205` (option)
+- [ ] Flag `-A=ACTION`: `third_party/bash/builtins/complete.def:L205` (action)
+- [ ] Flag `-G=GLOB`: `third_party/bash/builtins/complete.def:L205` (glob)
+- [ ] Flag `-W=WORDLIST`: `third_party/bash/builtins/complete.def:L205` (wordlist)
+- [ ] Flag `-P=PREFIX`: `third_party/bash/builtins/complete.def:L205` (prefix)
+- [ ] Flag `-S=SUFFIX`: `third_party/bash/builtins/complete.def:L205` (suffix)
+- [ ] Flag `-X=FILTER`: `third_party/bash/builtins/complete.def:L205` (filter)
+- [ ] Flag `-F=FUNC`: `third_party/bash/builtins/complete.def:L205` (function)
+- [ ] Flag `-C=CMD`: `third_party/bash/builtins/complete.def:L205` (command)
+- [ ] Flag `-E`: `third_party/bash/builtins/complete.def:L205` (empty)
+- [ ] Flag `-I`: `third_party/bash/builtins/complete.def:L205` (initial)
+- [ ] Flag `-D`: `third_party/bash/builtins/complete.def:L205` (default)
 
 ### `compopt`
 
@@ -278,13 +315,20 @@ Status codes:
 ### `dd`
 
 - [ ] Upstream: `third_party/coreutils/src/dd.c`
-- [ ] Basic copy: Missing implementation
-- [ ] Flags to implement: bs, cbs, conv, count, ibs, if, iflag, obs, of, oflag, seek, skip, status
-- [ ] Flag `bs=BYTES`: `third_party/coreutils/src/dd.c:L536`
-- [ ] Flag `conv=CONVS`: `third_party/coreutils/src/dd.c:L543`
-- [ ] Flag `count=N`: `third_party/coreutils/src/dd.c:L546`
-- [ ] Flag `if=FILE`: `third_party/coreutils/src/dd.c:L552` (usage)
-- [ ] Flag `of=FILE`: `third_party/coreutils/src/dd.c:L561`
+- [ ] Data copy: Missing implementation
+- [ ] Operand `bs=BYTES`: `third_party/coreutils/src/dd.c:L536`
+- [ ] Operand `cbs=BYTES`: `third_party/coreutils/src/dd.c:L539`
+- [ ] Operand `conv=CONVS`: `third_party/coreutils/src/dd.c:L543`
+- [ ] Operand `count=N`: `third_party/coreutils/src/dd.c:L546`
+- [ ] Operand `ibs=BYTES`: `third_party/coreutils/src/dd.c:L549`
+- [ ] Operand `if=FILE`: `third_party/coreutils/src/dd.c:L552`
+- [ ] Operand `iflag=FLAGS`: `third_party/coreutils/src/dd.c:L555`
+- [ ] Operand `obs=BYTES`: `third_party/coreutils/src/dd.c:L558`
+- [ ] Operand `of=FILE`: `third_party/coreutils/src/dd.c:L561`
+- [ ] Operand `oflag=FLAGS`: `third_party/coreutils/src/dd.c:L564`
+- [ ] Operand `seek=N`: `third_party/coreutils/src/dd.c:L567`
+- [ ] Operand `skip=N`: `third_party/coreutils/src/dd.c:L570`
+- [ ] Operand `status=LEVEL`: `third_party/coreutils/src/dd.c:L573`
 
 ### `declare`
 

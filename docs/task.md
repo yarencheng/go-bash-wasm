@@ -820,6 +820,14 @@ Status codes:
 ### `mapfile`
 
 - [ ] Upstream: `third_party/bash/builtins/mapfile.def`
+- [ ] Array population: Missing implementation
+- [ ] Flag `-d`: `third_party/bash/builtins/mapfile.def:L238` (delimiter)
+- [ ] Flag `-n`: `third_party/bash/builtins/mapfile.def:L238` (count)
+- [ ] Flag `-O`: `third_party/bash/builtins/mapfile.def:L238` (origin)
+- [ ] Flag `-t`: `third_party/bash/builtins/mapfile.def:L238` (strip newline)
+- [ ] Flag `-u`: `third_party/bash/builtins/mapfile.def:L238` (fd)
+- [ ] Flag `-C`: `third_party/bash/builtins/mapfile.def:L238` (callback)
+- [ ] Flag `-c`: `third_party/bash/builtins/mapfile.def:L238` (quantum)
 - [ ] Flags to implement: -C, -O, -c, -d, -n, -s, -t, -u
 - [ ] Aliases: `readarray`
 
@@ -912,7 +920,14 @@ Status codes:
 ### `od`
 
 - [ ] Upstream: `third_party/coreutils/src/od.c`
-- [ ] Flags to implement: -A, -N, -S, -a, -b, -c, -d, -f, -i, -j, -l, -o, -s, -t, -v, -w, -x
+- [ ] Format output: Missing implementation
+- [ ] Flag `-A rad`: `third_party/coreutils/src/od.c:L316` (address radix)
+- [ ] Flag `-j bytes`: `third_party/coreutils/src/od.c:L315` (skip bytes)
+- [ ] Flag `-N bytes`: `third_party/coreutils/src/od.c:L317` (read bytes)
+- [ ] Flag `-t type`: `third_party/coreutils/src/od.c:L318` (format spec)
+- [ ] Flag `-v`: `third_party/coreutils/src/od.c:L319` (output duplicates)
+- [ ] Flag `-w`: `third_party/coreutils/src/od.c:L322` (width)
+- [ ] Flag `-S`: `third_party/coreutils/src/od.c:L320` (strings)
 
 ### `paste`
 
@@ -940,7 +955,15 @@ Status codes:
 ### `pr`
 
 - [ ] Upstream: `third_party/coreutils/src/pr.c`
-- [ ] Flags to implement: -COLS, -D, -F, -J, -N, -S, -T, -W, -a, -c, -d, -e, -f, -h, -i, -l, -m, -n, -o, -r, -s, -t, -v, -w
+- [ ] Print formatting: Missing implementation
+- [ ] Flag `-a`: `third_party/coreutils/src/pr.c:L316` (across)
+- [ ] Flag `-d`: `third_party/coreutils/src/pr.c:L318` (double space)
+- [ ] Flag `-h`: `third_party/coreutils/src/pr.c:L322` (header)
+- [ ] Flag `-l`: `third_party/coreutils/src/pr.c:L325` (length)
+- [ ] Flag `-m`: `third_party/coreutils/src/pr.c:L326` (merge)
+- [ ] Flag `-n`: `third_party/coreutils/src/pr.c:L327` (number)
+- [ ] Flag `-t`: `third_party/coreutils/src/pr.c:L333` (omit header)
+- [ ] Flag `-w`: `third_party/coreutils/src/pr.c:L336` (width)
 
 ### `printenv`
 
@@ -1000,7 +1023,11 @@ Status codes:
 ### `readonly`
 
 - [ ] Upstream: `third_party/bash/builtins/setattr.def`
-- [ ] Flags to implement: -A, -a, -f, -p
+- [ ] Attribute management: Missing implementation
+- [ ] Flag `-a`: `third_party/bash/builtins/setattr.def:L181` (indexed array)
+- [ ] Flag `-A`: `third_party/bash/builtins/setattr.def:L181` (associative array)
+- [ ] Flag `-p`: `third_party/bash/builtins/setattr.def:L181` (print)
+- [ ] Flag `-f`: `third_party/bash/builtins/setattr.def:L181` (functions)
 
 ### `realpath`
 
@@ -1123,7 +1150,14 @@ Status codes:
 ### `shred`
 
 - [ ] Upstream: `third_party/coreutils/src/shred.c`
-- [ ] Flags to implement: -f, -n, -s, -u, -v, -x, -z
+- [ ] Data erasure: Missing implementation
+- [ ] Flag `-f`, `--force`: `third_party/coreutils/src/shred.c:L157`
+- [ ] Flag `-n`, `--iterations=N`: `third_party/coreutils/src/shred.c:L158`
+- [ ] Flag `-s`, `--size=N`: `third_party/coreutils/src/shred.c:L159`
+- [ ] Flag `-u`, `--remove`: `third_party/coreutils/src/shred.c:L160`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/shred.c:L161`
+- [ ] Flag `-x`, `--exact`: `third_party/coreutils/src/shred.c:L162`
+- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/shred.c:L163`
 
 ### `shuf`
 
@@ -1232,7 +1266,9 @@ Status codes:
 ### `sync`
 
 - [ ] Upstream: `third_party/coreutils/src/sync.c`
-- [ ] Flags to implement: -d, -f
+- [ ] Flush buffers: Missing implementation
+- [ ] Flag `-d`, `--data`: `third_party/coreutils/src/sync.c:L129`
+- [ ] Flag `-f`, `--file-system`: `third_party/coreutils/src/sync.c:L132`
 
 ### `tac`
 
@@ -1342,8 +1378,8 @@ Status codes:
 ### `tty`
 
 - [ ] Upstream: `third_party/coreutils/src/tty.c`
-- [ ] Basic output: Missing implementation
-- [ ] Flag `-s`: `third_party/coreutils/src/tty.c:L71`
+- [ ] TTY reporting: Missing implementation
+- [ ] Flag `-s`, `--silent`, `--quiet`: `third_party/coreutils/src/tty.c:L71`
 
 ### `type`
 
@@ -1358,7 +1394,16 @@ Status codes:
 ### `ulimit`
 
 - [ ] Upstream: `third_party/bash/builtins/ulimit.def`
-- [ ] Flags to implement: -H, -P, -R, -S, -SHabcdefiklmnpqrstuvxPRT, -T, -a, -b, -c, -d, -e, -f, -i, -k, -l, -m, -n, -p, -q, -r, -s, -t, -u, -v, -x
+- [ ] Resource management: Missing implementation
+- [ ] Flag `-a`: `third_party/bash/builtins/ulimit.def:L35` (all)
+- [ ] Flag `-c`: `third_party/bash/builtins/ulimit.def:L37` (core)
+- [ ] Flag `-d`: `third_party/bash/builtins/ulimit.def:L38` (data)
+- [ ] Flag `-e`: `third_party/bash/builtins/ulimit.def:L39` (priority)
+- [ ] Flag `-f`: `third_party/bash/builtins/ulimit.def:L40` (file size)
+- [ ] Flag `-n`: `third_party/bash/builtins/ulimit.def:L45` (opened files)
+- [ ] Flag `-u`: `third_party/bash/builtins/ulimit.def:L51` (user processes)
+- [ ] Flag `-S`: `third_party/bash/builtins/ulimit.def:L33` (soft)
+- [ ] Flag `-H`: `third_party/bash/builtins/ulimit.def:L34` (hard)
 
 ### `umask`
 

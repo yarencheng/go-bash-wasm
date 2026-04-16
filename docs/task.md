@@ -1019,3 +1019,22 @@ Status codes:
 - [ ] Audit `pwd` (working directory)
     - Upstream: `third_party/bash/builtins/cd.def`
     - Flags: `-L`, `-P`
+### Batch 23: Coreutils (basenc, checksums, env, etc.)
+- [ ] Audit `basenc` (encoding)
+    - Upstream: `third_party/coreutils/src/basenc.c`
+    - Flags: `--base64`, `--base64url`, `--base58`, `--base32`, `--base32hex`, `--base16`, `--base2msbf`, `--base2lsbf`, `-d`, `--decode`, `-i`, `--ignore-garbage`, `-w`, `--wrap=COLS`, `--z85`
+- [ ] Audit `cksum` (checksums)
+    - Upstream: `third_party/coreutils/src/cksum.c`
+    - Flags: `-r`, `-s`, `--sysv`, `-a`, `--algorithm=TYPE`, `--base64`, `-b`, `--binary`, `-c`, `--check`, `-l`, `--length=BITS`, `--raw`, `--tag`, `--untagged`, `-t`, `--text`, `-z`, `--zero`, `--ignore-missing`, `--quiet`, `--status`, `--strict`, `-w`, `--warn`, `--debug`
+- [ ] Audit `comm` (comparison)
+    - Upstream: `third_party/coreutils/src/comm.c`
+    - Flags: `-1`, `-2`, `-3`, `--check-order`, `--nocheck-order`, `--output-delimiter=STR`, `--total`, `-z`, `--zero-terminated`
+- [ ] Audit `csplit` (split by pattern)
+    - Upstream: `third_party/coreutils/src/csplit.c`
+    - Flags: `-b`, `--suffix-format=FORMAT`, `-f`, `--prefix=PREFIX`, `-k`, `--keep-files`, `--suppress-matched`, `-n`, `--digits=DIGITS`, `-s`, `--quiet`, `--silent`, `-z`, `--elide-empty-files`
+- [ ] Audit `env` (environment)
+    - Upstream: `third_party/coreutils/src/env.c`
+    - Flags: `-a`, `--argv0=ARG`, `-i`, `--ignore-environment`, `-0`, `--null`, `-u`, `--unset=NAME`, `-C`, `--chdir=DIR`, `-S`, `--split-string=S`, `--block-signal[=SIG]`, `--default-signal[=SIG]`, `--ignore-signal[=SIG]`, `--list-signal-handling`, `-v`, `--debug`, `-`
+- [ ] Audit `expand` (tabs to spaces)
+    - Upstream: `third_party/coreutils/src/expand.c`
+    - Flags: `-i`, `--initial`, `-t`, `--tabs=N`

@@ -949,3 +949,19 @@ Status codes:
 - [ ] Audit `ptx` (permuted index)
     - Upstream: `third_party/coreutils/src/ptx.c`
     - Flags: `-A`, `-G`, `-F`, `-M`, `-O`, `-R`, `-S`, `-T`, `-W`, `-b`, `-f`, `-g`, `-i`, `-o`, `-r`, `-t`, `-w`
+### Batch 18: System & Environment (stty, install, dircolors, sync, getlimits)
+- [ ] Audit `stty` (terminal settings)
+    - Upstream: `third_party/coreutils/src/stty.c`
+    - Flags: `-a`, `-g`, `-F`
+- [ ] Audit `install` (ginstall)
+    - Upstream: `third_party/coreutils/src/install.c`
+    - Flags: `--backup`, `-b`, `-c`, `-C`, `-d`, `-D`, `--debug`, `-g`, `-m`, `-o`, `-p`, `-s`, `--strip-program`, `-S`, `-t`, `-T`, `-v`, `--preserve-context`, `-Z`
+- [ ] Audit `dircolors` (LS_COLORS setup)
+    - Upstream: `third_party/coreutils/src/dircolors.c`
+    - Flags: `-b`, `-c`, `-p`, `--print-ls-colors`
+- [ ] Audit `sync` (sync disks)
+    - Upstream: `third_party/coreutils/src/sync.c`
+    - Flags: `-d`, `-f`
+- [ ] Audit `getlimits` (platform limits)
+    - Upstream: `third_party/coreutils/src/getlimits.c`
+    - Flags: None specific.

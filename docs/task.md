@@ -91,10 +91,16 @@ Status codes:
 ### `cat`
 
 - [ ] Basic output: Missing implementation
-- [ ] Flag `-b`: `third_party/coreutils/src/cat.c:L103`
-- [ ] Flag `-n`: `third_party/coreutils/src/cat.c:L112`
-- [ ] Flag `-s`: `third_party/coreutils/src/cat.c:L115`
-- [ ] Flag `-v`: `third_party/coreutils/src/cat.c:L127`
+- [ ] Flag `-A`, `--show-all`: `third_party/coreutils/src/cat.c:L100`
+- [ ] Flag `-b`, `--number-nonblank`: `third_party/coreutils/src/cat.c:L103`
+- [ ] Flag `-e`: `third_party/coreutils/src/cat.c:L105` (implies -vE)
+- [ ] Flag `-E`, `--show-ends`: `third_party/coreutils/src/cat.c:L108`
+- [ ] Flag `-n`, `--number`: `third_party/coreutils/src/cat.c:L112`
+- [ ] Flag `-s`, `--squeeze-blank`: `third_party/coreutils/src/cat.c:L115`
+- [ ] Flag `-t`: `third_party/coreutils/src/cat.c:L118` (implies -vT)
+- [ ] Flag `-T`, `--show-tabs`: `third_party/coreutils/src/cat.c:L121`
+- [ ] Flag `-u`: `third_party/coreutils/src/cat.c:L124` (ignored)
+- [ ] Flag `-v`, `--show-nonprinting`: `third_party/coreutils/src/cat.c:L127`
 
 ### `cd`
 
@@ -202,9 +208,32 @@ Status codes:
 ### `cp`
 
 - [ ] Basic copy: Missing implementation
-- [ ] Flag `-a`: `third_party/coreutils/src/cp.c:L173`
-- [ ] Flag `-p`: `third_party/coreutils/src/cp.c:L234`
-- [ ] Flag `-r`: `third_party/coreutils/src/cp.c:L250`
+- [ ] Flag `-a`, `--archive`: `third_party/coreutils/src/cp.c:L173`
+- [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/cp.c:L181`
+- [ ] Flag `-d`: `third_party/coreutils/src/cp.c:L185` (implies -P --preserve=links)
+- [ ] Flag `-f`, `--force`: `third_party/coreutils/src/cp.c:L193`
+- [ ] Flag `-H`: `third_party/coreutils/src/cp.c:L201`
+- [ ] Flag `-i`, `--interactive`: `third_party/coreutils/src/cp.c:L205`
+- [ ] Flag `-l`, `--link`: `third_party/coreutils/src/cp.c:L209`
+- [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/cp.c:L213`
+- [ ] Flag `-n`, `--no-clobber`: `third_party/coreutils/src/cp.c:L217`
+- [ ] Flag `-p`: `third_party/coreutils/src/cp.c:L234` (same as --preserve=mode,ownership,timestamps)
+- [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/cp.c:L230`
+- [ ] Flag `-r`, `-R`, `--recursive`: `third_party/coreutils/src/cp.c:L250`
+- [ ] Flag `-s`, `--symbolic-link`: `third_party/coreutils/src/cp.c:L258`
+- [ ] Flag `-t`, `--target-directory`: `third_party/coreutils/src/cp.c:L262`
+- [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/cp.c:L266`
+- [ ] Flag `-u`, `--update`: `third_party/coreutils/src/cp.c:L270`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/cp.c:L274`
+- [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/cp.c:L278`
+- [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/cp.c:L282`
+- [ ] Flag `--attributes-only`: `third_party/coreutils/src/cp.c:L177`
+- [ ] Flag `--preserve[=ATTR_LIST]`: `third_party/coreutils/src/cp.c:L242`
+- [ ] Flag `--no-preserve=ATTR_LIST`: `third_party/coreutils/src/cp.c:L226`
+- [ ] Flag `--parents`: `third_party/coreutils/src/cp.c:L238`
+- [ ] Flag `--reflink[=WHEN]`: `third_party/coreutils/src/cp.c:L246`
+- [ ] Flag `--sparse=WHEN`: `third_party/coreutils/src/cp.c:L254`
+- [ ] Flag `--strip-trailing-slashes`: `third_party/coreutils/src/cp.c:L262`
 
 ### `csplit`
 
@@ -481,9 +510,11 @@ Status codes:
 ### `head`
 
 - [ ] Basic output: Missing implementation
-- [ ] Flag `-c`: `third_party/coreutils/src/head.c:L121`
-- [ ] Flag `-n`: `third_party/coreutils/src/head.c:L126`
-- [ ] Flag `-q`: `third_party/coreutils/src/head.c:L131`
+- [ ] Flag `-c`, `--bytes`: `third_party/coreutils/src/head.c:L121`
+- [ ] Flag `-n`, `--lines`: `third_party/coreutils/src/head.c:L126`
+- [ ] Flag `-q`, `--quiet`, `--silent`: `third_party/coreutils/src/head.c:L131`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/head.c:L135`
+- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/head.c:L139`
 
 ### `help`
 
@@ -604,15 +635,17 @@ Status codes:
 ### `ls`
 
 - [ ] Basic listing: Missing implementation
-- [ ] Color output (`--color`): `third_party/coreutils/src/ls.c`
+- [ ] Color output (`--color`): `third_party/coreutils/src/ls.c:L215`
 - [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L157`
 - [ ] Flag `--block-size`: `third_party/coreutils/src/ls.c:L165`
 - [ ] Flag `--color`: `third_party/coreutils/src/ls.c:L215`
+- [ ] Flag `--dereference-command-line-symlink-to-dir`: `third_party/coreutils/src/ls.c:L274`
 - [ ] Flag `--file-type`: `third_party/coreutils/src/ls.c:L237`
 - [ ] Flag `--format`: `third_party/coreutils/src/ls.c:L241`
 - [ ] Flag `--full-time`: `third_party/coreutils/src/ls.c:L246`
 - [ ] Flag `--group-directories-first`: `third_party/coreutils/src/ls.c:L254`
 - [ ] Flag `--hide`: `third_party/coreutils/src/ls.c:L285`
+- [ ] Flag `--hyperlink`: `third_party/coreutils/src/ls.c:L289` (note: usage lists it)
 - [ ] Flag `--indicator-style`: `third_party/coreutils/src/ls.c:L289`
 - [ ] Flag `--quoting-style`: `third_party/coreutils/src/ls.c:L353`
 - [ ] Flag `--show-control-chars`: `third_party/coreutils/src/ls.c:L345`
@@ -620,6 +653,7 @@ Status codes:
 - [ ] Flag `--sort`: `third_party/coreutils/src/ls.c:L373`
 - [ ] Flag `--time`: `third_party/coreutils/src/ls.c:L388`
 - [ ] Flag `--time-style`: `third_party/coreutils/src/ls.c:L397`
+- [ ] Flag `--zero`: `third_party/coreutils/src/ls.c:L435` (mapped to ZERO_OPTION)
 - [ ] Flag `-1`: `third_party/coreutils/src/ls.c:L443`
 - [ ] Flag `-A`: `third_party/coreutils/src/ls.c:L45`
 - [ ] Flag `-B`: `third_party/coreutils/src/ls.c:L170`
@@ -675,9 +709,10 @@ Status codes:
 ### `mkdir`
 
 - [ ] Basic creation: Missing implementation
-- [ ] Flag `-m`: `third_party/coreutils/src/mkdir.c:L65`
-- [ ] Flag `-p`: `third_party/coreutils/src/mkdir.c:L69`
-- [ ] Flag `-v`: `third_party/coreutils/src/mkdir.c:L74`
+- [ ] Flag `-m`, `--mode`: `third_party/coreutils/src/mkdir.c:L65`
+- [ ] Flag `-p`, `--parents`: `third_party/coreutils/src/mkdir.c:L69`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/mkdir.c:L74`
+- [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/mkdir.c:L78`
 
 ### `mkfifo`
 
@@ -703,9 +738,17 @@ Status codes:
 ### `mv`
 
 - [ ] Basic move/rename: Missing implementation
-- [ ] Flag `-f`: `third_party/coreutils/src/mv.c:L282`
-- [ ] Flag `-i`: `third_party/coreutils/src/mv.c:L286`
-- [ ] Flag `-n`: `third_party/coreutils/src/mv.c:L290`
+- [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/mv.c:L278`
+- [ ] Flag `-f`, `--force`: `third_party/coreutils/src/mv.c:L282`
+- [ ] Flag `-i`, `--interactive`: `third_party/coreutils/src/mv.c:L286`
+- [ ] Flag `-n`, `--no-clobber`: `third_party/coreutils/src/mv.c:L290`
+- [ ] Flag `-t`, `--target-directory`: `third_party/coreutils/src/mv.c:L294`
+- [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/mv.c:L298`
+- [ ] Flag `-u`, `--update`: `third_party/coreutils/src/mv.c:L302`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/mv.c:L306`
+- [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/mv.c:L310`
+- [ ] Flag `--exchange`: `third_party/coreutils/src/mv.c:L314`
+- [ ] Flag `--no-copy`: `third_party/coreutils/src/mv.c:L318`
 
 ### `nice`
 
@@ -1042,15 +1085,24 @@ Status codes:
 ### `tail`
 
 - [ ] Basic output: Missing implementation
-- [ ] Flag `-c`: `third_party/coreutils/src/tail.c:L296`
-- [ ] Flag `-f`: `third_party/coreutils/src/tail.c:L305`
-- [ ] Flag `-n`: `third_party/coreutils/src/tail.c:L314`
+- [ ] Flag `-c`, `--bytes`: `third_party/coreutils/src/tail.c:L296`
+- [ ] Flag `-f`, `--follow[={name|descriptor}]`: `third_party/coreutils/src/tail.c:L305`
+- [ ] Flag `-F`: `third_party/coreutils/src/tail.c:L309` (implies --follow=name --retry)
+- [ ] Flag `-n`, `--lines`: `third_party/coreutils/src/tail.c:L314`
+- [ ] Flag `-q`, `--quiet`, `--silent`: `third_party/coreutils/src/tail.c:L318`
+- [ ] Flag `-s`, `--sleep-interval`: `third_party/coreutils/src/tail.c:L322`
+- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/tail.c:L326`
+- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/tail.c:L330`
+- [ ] Flag `--pid`: `third_party/coreutils/src/tail.c:L334`
+- [ ] Flag `--retry`: `third_party/coreutils/src/tail.c:L338`
+- [ ] Flag `--max-unchanged-stats`: `third_party/coreutils/src/tail.c:L342`
 
 ### `tee`
 
 - [ ] Basic copy: Missing implementation
-- [ ] Flag `-a`: `third_party/coreutils/src/tee.c:L93`
-- [ ] Flag `-i`: `third_party/coreutils/src/tee.c:L97`
+- [ ] Flag `-a`, `--append`: `third_party/coreutils/src/tee.c:L93`
+- [ ] Flag `-i`, `--ignore-interrupts`: `third_party/coreutils/src/tee.c:L97`
+- [ ] Flag `-p`, `--output-error[=MODE]`: `third_party/coreutils/src/tee.c:L101`
 
 ### `test`
 
@@ -1236,10 +1288,13 @@ Status codes:
 ### `wc`
 
 - [ ] Basic counts: Missing implementation
-- [ ] Flag `-c`: `third_party/coreutils/src/wc.c:L188`
-- [ ] Flag `-l`: `third_party/coreutils/src/wc.c:L196`
-- [ ] Flag `-m`: `third_party/coreutils/src/wc.c:L192`
-- [ ] Flag `-w`: `third_party/coreutils/src/wc.c:L214`
+- [ ] Flag `-c`, `--bytes`: `third_party/coreutils/src/wc.c:L188`
+- [ ] Flag `-m`, `--chars`: `third_party/coreutils/src/wc.c:L192`
+- [ ] Flag `-l`, `--lines`: `third_party/coreutils/src/wc.c:L196`
+- [ ] Flag `-w`, `--words`: `third_party/coreutils/src/wc.c:L214`
+- [ ] Flag `-L`, `--max-line-length`: `third_party/coreutils/src/wc.c:L218`
+- [ ] Flag `--files0-from=F`: `third_party/coreutils/src/wc.c:L222`
+- [ ] Flag `--total={auto,always,only,never}`: `third_party/coreutils/src/wc.c:L226`
 
 ### `who`
 

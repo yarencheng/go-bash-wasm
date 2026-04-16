@@ -178,7 +178,52 @@ Status codes:
 - [ ] Multiple arguments (sum): `third_party/coreutils/src/sleep.c:L135`
 - [ ] Suffixes (s, m, h, d): `third_party/coreutils/src/sleep.c:L65`
 
+### `basename`
+
+- [ ] Basic operation: Missing implementation
+- [ ] Flag `-a` (multiple args): `third_party/coreutils/src/basename.c:L155`
+- [ ] Flag `-s` (suffix): `third_party/coreutils/src/basename.c:L150`
+- [ ] Flag `-z` (zero-terminated): `third_party/coreutils/src/basename.c:L159`
+
+### `dirname`
+
+- [ ] Basic operation: Missing implementation
+- [ ] Flag `-z` (zero-terminated): `third_party/coreutils/src/dirname.c:L99`
+
+### `env`
+
+- [ ] Basic execution: Missing implementation
+- [ ] Flag `-i` (ignore env): `third_party/coreutils/src/env.c:L790`
+- [ ] Flag `-u` (unset): `third_party/coreutils/src/env.c:L793`
+- [ ] Flag `-C` (chdir): `third_party/coreutils/src/env.c:L811`
+- [ ] Flag `-S` (split-string): `third_party/coreutils/src/env.c:L814`
+
+### `printenv`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-0` (null-terminated): `third_party/coreutils/src/printenv.c:L100`
+
+### `uname`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-a` (all): `third_party/coreutils/src/uname.c:L233`
+- [ ] Flag `-s` (kernel name): `third_party/coreutils/src/uname.c:L237`
+- [ ] Flag `-m` (machine): `third_party/coreutils/src/uname.c:L253`
+
+### `id`
+
+- [ ] Basic output: Missing implementation
+- [ ] Flag `-u` (user): `third_party/coreutils/src/id.c:L191`
+- [ ] Flag `-g` (group): `third_party/coreutils/src/id.c:L182`
+- [ ] Flag `-G` (groups): `third_party/coreutils/src/id.c:L197`
+- [ ] Flag `-n` (name): `third_party/coreutils/src/id.c:L185`
+
+### `whoami`
+
+- [ ] Basic output: Missing implementation
+
 <!-- Add new audits below this line -->
+
 
 
 

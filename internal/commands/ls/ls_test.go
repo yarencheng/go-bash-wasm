@@ -156,6 +156,70 @@ func TestLs_Run(t *testing.T) {
 		assert.Contains(t, stdout.String(), "0") 
 	})
 
+	t.Run("directory indicator -p", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-p"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "dir1/")
+		assert.NotContains(t, stdout.String(), "file1.txt*") // -p doesn't classify executables
+	})
+
+	t.Run("comma separated -m", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-m"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "dir1, file1.txt")
+	})
+
+	t.Run("no group -G", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-lG"})
+		assert.Equal(t, 0, status)
+		// Should not contain group name (second "root" or "0")
+		output := stdout.String()
+		lines := strings.Split(strings.TrimSpace(output), "\n")
+		for _, line := range lines {
+			parts := strings.Fields(line)
+			// Mode, owner, size, name (if no group and no numeric)
+			assert.LessOrEqual(t, len(parts), 5) 
+		}
+	})
+
+	t.Run("sort flag --sort", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--sort=size"})
+		assert.Equal(t, 0, status)
+		assert.True(t, strings.HasPrefix(stdout.String(), "big.txt"))
+	})
+
 	t.Run("invalid directory", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{

@@ -23,18 +23,24 @@ func (l *Ls) Name() string {
 }
 
 type lsFlags struct {
-	all       *bool
-	almostAll *bool
-	long      *bool
-	human     *bool
-	classify  *bool
-	sortSize  *bool
-	sortTime  *bool
-	reverse   *bool
-	inode     *bool
-	recursive *bool
-	oneLine   *bool
-	numeric   *bool
+	all          *bool
+	almostAll    *bool
+	long         *bool
+	human        *bool
+	classify     *bool
+	sortSize     *bool
+	sortTime     *bool
+	reverse      *bool
+	inode        *bool
+	recursive    *bool
+	oneLine      *bool
+	numeric      *bool
+	dirIndicator *bool
+	comma        *bool
+	ctime        *bool
+	atime        *bool
+	noGroup      *bool
+	sortOpt      *string
 }
 
 func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) int {
@@ -42,18 +48,24 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 	flagsSet.SetOutput(env.Stderr)
 
 	f := lsFlags{
-		all:       flagsSet.BoolP("all", "a", false, "do not ignore entries starting with ."),
-		almostAll: flagsSet.BoolP("almost-all", "A", false, "do not list implied . and .."),
-		long:      flagsSet.BoolP("long", "l", false, "use a long listing format"),
-		human:     flagsSet.BoolP("human-readable", "h", false, "with -l, print sizes like 1K 234M 2G etc."),
-		classify:  flagsSet.BoolP("classify", "F", false, "append indicator (one of */=>@|) to entries"),
-		sortSize:  flagsSet.BoolP("sort-size", "S", false, "sort by file size, largest first"),
-		sortTime:  flagsSet.BoolP("sort-time", "t", false, "sort by modification time, newest first"),
-		reverse:   flagsSet.BoolP("reverse", "r", false, "reverse order while sorting"),
-		inode:     flagsSet.BoolP("inode", "i", false, "print the index number of each file"),
-		recursive: flagsSet.BoolP("recursive", "R", false, "list subdirectories recursively"),
-		oneLine:   flagsSet.BoolP("format-1", "1", false, "list one file per line"),
-		numeric:   flagsSet.BoolP("numeric-uid-gid", "n", false, "list numeric user and group IDs"),
+		all:          flagsSet.BoolP("all", "a", false, "do not ignore entries starting with ."),
+		almostAll:    flagsSet.BoolP("almost-all", "A", false, "do not list implied . and .."),
+		long:         flagsSet.BoolP("long", "l", false, "use a long listing format"),
+		human:        flagsSet.BoolP("human-readable", "h", false, "with -l, print sizes like 1K 234M 2G etc."),
+		classify:     flagsSet.BoolP("classify", "F", false, "append indicator (one of */=>@|) to entries"),
+		sortSize:     flagsSet.BoolP("sort-size", "S", false, "sort by file size, largest first"),
+		sortTime:     flagsSet.BoolP("sort-time", "t", false, "sort by modification time, newest first"),
+		reverse:      flagsSet.BoolP("reverse", "r", false, "reverse order while sorting"),
+		inode:        flagsSet.BoolP("inode", "i", false, "print the index number of each file"),
+		recursive:    flagsSet.BoolP("recursive", "R", false, "list subdirectories recursively"),
+		oneLine:      flagsSet.BoolP("format-1", "1", false, "list one file per line"),
+		numeric:      flagsSet.BoolP("numeric-uid-gid", "n", false, "list numeric user and group IDs"),
+		dirIndicator: flagsSet.BoolP("directory-indicator", "p", false, "append / indicator to directories"),
+		comma:        flagsSet.BoolP("comma", "m", false, "fill width with a comma separated list of entries"),
+		ctime:        flagsSet.BoolP("ctime", "c", false, "with -lt: sort by, and show, ctime; with -l: show ctime and sort by name"),
+		atime:        flagsSet.BoolP("atime", "u", false, "with -lt: sort by, and show, atime; with -l: show atime and sort by name"),
+		noGroup:      flagsSet.BoolP("no-group", "G", false, "in a long listing, don't print group names"),
+		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
 	if err := flagsSet.Parse(args); err != nil {
@@ -89,18 +101,36 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 		return 2
 	}
 
+	// Determine sort mode
+	sortMode := "name"
+	if *f.sortSize || *f.sortOpt == "size" {
+		sortMode = "size"
+	} else if *f.sortTime || *f.sortOpt == "time" {
+		sortMode = "time"
+	} else if *f.ctime || *f.sortOpt == "ctime" {
+		sortMode = "ctime"
+	} else if *f.atime || *f.sortOpt == "atime" {
+		sortMode = "atime"
+	} else if *f.sortOpt == "none" {
+		sortMode = "none"
+	}
+
 	// Sort entries
-	if *f.sortSize {
+	if sortMode != "none" {
 		sort.Slice(entries, func(i, j int) bool {
-			return entries[i].Size() > entries[j].Size()
-		})
-	} else if *f.sortTime {
-		sort.Slice(entries, func(i, j int) bool {
-			return entries[i].ModTime().After(entries[j].ModTime())
-		})
-	} else {
-		sort.Slice(entries, func(i, j int) bool {
-			return entries[i].Name() < entries[j].Name()
+			var cmp bool
+			switch sortMode {
+			case "size":
+				cmp = entries[i].Size() > entries[j].Size()
+			case "time":
+				cmp = entries[i].ModTime().After(entries[j].ModTime())
+			case "ctime", "atime":
+				// Afero MemMapFs doesn't distinguish well, so we use ModTime for now but extensible
+				cmp = entries[i].ModTime().After(entries[j].ModTime())
+			default:
+				cmp = entries[i].Name() < entries[j].Name()
+			}
+			return cmp
 		})
 	}
 
@@ -132,10 +162,17 @@ func (l *Ls) listDir(ctx context.Context, env *commands.Environment, target stri
 	sep := "  "
 	if *f.oneLine || *f.long || *f.numeric {
 		sep = "\n"
+	} else if *f.comma {
+		sep = ", "
 	}
 
 	if len(results) > 0 {
-		fmt.Fprintln(env.Stdout, strings.Join(results, sep))
+		fmt.Fprint(env.Stdout, strings.Join(results, sep))
+		if !*f.comma || *f.long || *f.oneLine {
+			fmt.Fprintln(env.Stdout)
+		} else {
+			fmt.Fprintln(env.Stdout)
+		}
 	}
 
 	if *f.recursive {
@@ -164,11 +201,12 @@ func (l *Ls) formatEntry(entry os.FileInfo, target string, f *lsFlags) string {
 		} else if entry.Mode()&0111 != 0 {
 			name += "*"
 		}
+	} else if *f.dirIndicator && entry.IsDir() {
+		name += "/"
 	}
 
 	prefix := ""
 	if *f.inode {
-		// Mock inode for memory FS
 		prefix = "0 "
 	}
 
@@ -178,12 +216,15 @@ func (l *Ls) formatEntry(entry os.FileInfo, target string, f *lsFlags) string {
 			sizeStr = fmt.Sprintf("%10s", formatHuman(entry.Size()))
 		}
 		owner := "root"
-		group := "root"
+		group := "  root"
 		if *f.numeric {
 			owner = "0"
-			group = "0"
+			group = "  0"
 		}
-		return fmt.Sprintf("%s%s  %s  %s  %s  %s", prefix, entry.Mode().String(), owner, group, sizeStr, name)
+		if *f.noGroup {
+			group = ""
+		}
+		return fmt.Sprintf("%s%s  %s%s  %s  %s", prefix, entry.Mode().String(), owner, group, sizeStr, name)
 	}
 
 	return prefix + name

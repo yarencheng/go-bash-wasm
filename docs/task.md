@@ -110,6 +110,11 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/chcon.c`
 - [ ] Flags to implement: -H, -L, -P, -R, -h, -l, -r, -t, -u, -v
 
+### `chgrp`
+
+- [ ] Upstream: `third_party/coreutils/src/coreutils-chgrp.c`
+- [ ] Inherits flags from `chown`
+
 ### `chmod`
 
 - [ ] Basic mode change: Missing implementation
@@ -174,10 +179,25 @@ Status codes:
 - [ ] Flag `-p`: `third_party/bash/builtins/command.def:L33`
 - [ ] Flag `-v`: `third_party/bash/builtins/command.def:L35`
 
+### `compgen`
+
+- [ ] Upstream: `third_party/bash/builtins/complete.def`
+- [ ] Flags to implement: -V, -abcdefgjksuv, -o, -A, -G, -W, -F, -C, -X, -P, -S
+
 ### `complete`
 
 - [ ] Upstream: `third_party/bash/builtins/complete.def`
 - [ ] Flags to implement: -A, -C, -D, -DEI, -E, -F, -G, -I, -P, -S, -V, -W, -X, -abcdefgjksuv, -abcdefgjkvu, -o, -p, -pr, -r
+
+### `compopt`
+
+- [ ] Upstream: `third_party/bash/builtins/complete.def`
+- [ ] Flags to implement: -o, -D, -E
+
+### `continue`
+
+- [ ] Upstream: `third_party/bash/builtins/break.def`
+- [ ] Basic operation: Missing implementation
 
 ### `cp`
 
@@ -233,6 +253,7 @@ Status codes:
 - [ ] Upstream: `third_party/bash/builtins/declare.def`
 - [ ] Attribute management (-i, -r, -x, -a, -A): Missing implementation
 - [ ] Flags to implement: -A, -F, -I, -a, -f, -i, -l, -n, -r, -t, -u, -x
+- [ ] Aliases: `typeset`
 - [ ] Flag `-g`: `third_party/bash/builtins/declare.def:L320`
 - [ ] Flag `-p`: `third_party/bash/builtins/declare.def:L306`
 
@@ -271,6 +292,16 @@ Status codes:
 
 - [ ] Basic operation: Missing implementation
 - [ ] Flag `-z`: `third_party/coreutils/src/dirname.c:L99`
+
+### `dirs`
+
+- [ ] Upstream: `third_party/bash/builtins/pushd.def`
+- [ ] Flags to implement: -c, -l, -p, -v
+
+### `disown`
+
+- [ ] Upstream: `third_party/bash/builtins/jobs.def`
+- [ ] Flags to implement: -a, -h, -r
 
 ### `du`
 
@@ -565,6 +596,11 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/logname.c`
 - [ ] Flags to implement: specific
 
+### `logout`
+
+- [ ] Upstream: `third_party/bash/builtins/exit.def`
+- [ ] Basic operation: Missing implementation
+
 ### `ls`
 
 - [ ] Basic listing: Missing implementation
@@ -629,6 +665,7 @@ Status codes:
 
 - [ ] Upstream: `third_party/bash/builtins/mapfile.def`
 - [ ] Flags to implement: -C, -O, -c, -d, -n, -s, -t, -u
+- [ ] Aliases: `readarray`
 
 ### `md5sum`
 
@@ -729,6 +766,11 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/pinky.c`
 - [ ] Flags to implement: -b, -f, -h, -i, -l, -p, -q, -s, -w
 
+### `popd`
+
+- [ ] Upstream: `third_party/bash/builtins/pushd.def`
+- [ ] Flags to implement: -n
+
 ### `pr`
 
 - [ ] Upstream: `third_party/coreutils/src/pr.c`
@@ -824,6 +866,11 @@ Status codes:
 
 - [ ] Upstream: `third_party/coreutils/src/runcon.c`
 - [ ] Flags to implement: -c, -l, -r, -t, -u
+
+### `select`
+
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Basic operation: Missing implementation
 
 ### `seq`
 
@@ -1013,6 +1060,11 @@ Status codes:
 - [ ] Logical operators (!, -a, -o): Missing implementation
 - [ ] Aliases: `[`
 
+### `time`
+
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Basic operation: Missing implementation
+
 ### `timeout`
 
 - [ ] Upstream: `third_party/coreutils/src/timeout.c`
@@ -1152,6 +1204,11 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/unlink.c`
 - [ ] Basic removal: Missing implementation (exactly 1 arg required)
 - [ ] Flags to implement: specific
+
+### `unset`
+
+- [ ] Upstream: `third_party/bash/builtins/set.def`
+- [ ] Flags to implement: -f, -v, -n
 
 ### `uptime`
 

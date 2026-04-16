@@ -1627,3 +1627,55 @@ Status codes:
 - [ ] Flag `--help`: `third_party/coreutils/src/yes.c:L48`
 - [ ] Flag `--version`: `third_party/coreutils/src/yes.c:L48`
 
+
+## Shell Keywords & Grammar
+
+### `!`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Pipeline negation: Missing implementation
+
+### `[[`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Conditional expressions: Missing implementation
+- [ ] Pattern matching (`==`, `!=`): Missing implementation
+- [ ] Regex matching (`=~`): Missing implementation
+- [ ] Aliases: `]]`
+
+### `((`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Arithmetic evaluation: Missing implementation
+- [ ] Aliases: `))`
+
+### `{`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Command grouping: Missing implementation
+- [ ] Aliases: `}`
+
+### `case`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Pattern-based branching: Missing implementation
+
+### `coproc`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Asynchronous coprocesses: Missing implementation
+
+### `for`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] List-based iteration: Missing implementation
+- [ ] C-style arithmetic iteration (`for ((`): Missing implementation
+
+### `function`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Shell function definition: Missing implementation
+
+### `if`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Conditional branching (if/then/elif/else/fi): Missing implementation
+
+### `until`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Negative condition looping: Missing implementation
+
+### `while`
+- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [ ] Positive condition looping: Missing implementation

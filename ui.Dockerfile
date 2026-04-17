@@ -87,6 +87,9 @@ COPY ui/ .
 # Run unit tests
 RUN npm run test
 
+# Update sitemap.xml lastmod with current date
+RUN sed -i "s|<lastmod>.*</lastmod>|<lastmod>$(date +%Y-%m-%d)</lastmod>|g" static/sitemap.xml
+
 # Build the application
 RUN npm run build
 

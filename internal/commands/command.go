@@ -24,6 +24,7 @@ type Environment struct {
 	ExitCode      int
 	EnvVars       map[string]string
 	Arrays        map[string][]string
+	DirStack      []string
 	Aliases       map[string]string
 	Hash          map[string]string
 	History       []string

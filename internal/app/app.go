@@ -58,6 +58,9 @@ import (
 	nproccmd "github.com/yarencheng/go-bash-wasm/internal/commands/nproc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/kill"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pushd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/popd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/dirs"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pathchk"
@@ -168,6 +171,9 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		helpcmd.New(),
 		historycmd.New(),
 		logname.New(),
+		pushd.New(),
+		popd.New(),
+		dirs.New(),
 		base32cmd.New(),
 		base64cmd.New(),
 		basenc.New(),
@@ -226,6 +232,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		},
 		Aliases: make(map[string]string),
 		Arrays:  make(map[string][]string),
+		DirStack: make([]string, 0),
 		Hash:    make(map[string]string),
 		Registry: registry,
 	}

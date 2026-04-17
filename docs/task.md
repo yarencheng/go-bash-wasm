@@ -426,7 +426,8 @@ Status codes:
 
 ### `dirs`
 
-- [ ] Upstream: `third_party/bash/builtins/pushd.def`
+- [x] Upstream: `third_party/bash/builtins/pushd.def`
+- [x] Basic listing: Implemented in `internal/commands/dirs/dirs.go`
 - [ ] Flag `-c`: `third_party/bash/builtins/pushd.def:L377` (clear stack)
 - [ ] Flag `-l`: `third_party/bash/builtins/pushd.def:L380` (long listing)
 - [ ] Flag `-p`: `third_party/bash/builtins/pushd.def:L387` (print with one line per entry)
@@ -1004,7 +1005,8 @@ Status codes:
 
 ### `popd`
 
-- [ ] Upstream: `third_party/bash/builtins/pushd.def`
+- [x] Upstream: `third_party/bash/builtins/pushd.def`
+- [x] Basic popping: Implemented in `internal/commands/popd/popd.go`
 - [ ] Flag `-n`: `third_party/bash/builtins/pushd.def:L165` (don't rotate)
 
 ### `pr`
@@ -1029,8 +1031,8 @@ Status codes:
 ### `printf`
 
 - [x] Basic formatting: Implemented in `internal/commands/printf/printf.go`
-- [ ] Flag `%b`: `third_party/bash/builtins/printf.def:L558`
-- [ ] Flag `%q`: `third_party/bash/builtins/printf.def:L672`
+- [x] Flag `%b`: `internal/commands/printf/printf.go`
+- [x] Flag `%q`: `internal/commands/printf/printf.go`
 - [ ] Flag `-v VAR`: `third_party/bash/builtins/printf.def:L301`
 
 ### `ptx`
@@ -1056,7 +1058,8 @@ Status codes:
 
 ### `pushd`
 
-- [ ] Upstream: `third_party/bash/builtins/pushd.def`
+- [x] Upstream: `third_party/bash/builtins/pushd.def`
+- [x] Basic pushing: Implemented in `internal/commands/pushd/pushd.go`
 - [ ] Flag `-n`: `third_party/bash/builtins/pushd.def:L129` (don't change directory)
 
 ### `pwd`

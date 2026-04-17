@@ -20,43 +20,86 @@
 ## 🛠 Architecture
 
 The project follows a clean, modular architecture:
-- `cmd/go-bash-wasm/main.go`: Entry point for native execution.
-- `cmd/go-bash-wasm/main_js.go`: Entry point for JS/WASM execution (browser).
-- `index.html`: Browser frontend using xterm.js.
-- `internal/shell`: REPL and command execution logic with abstracted line reading.
-- `internal/commands`: Registry and high-parity implementation of core utilities.
+- `cmd/go-bash-wasm/`: Entry points for execution.
+  - `main.go`: Native Go CLI entry point.
+  - `main_js.go`: WebAssembly entry point using `syscall/js`.
+- `internal/`: Core shell and command implementations.
+  - `internal/shell`: REPL and command execution logic.
+  - `internal/commands`: High-parity utilities (ls, cat, grep, etc.).
+- `ui/`: Modern Svelte 5 frontend with xterm.js integration.
+- `ui.Dockerfile`: Production-ready multi-stage build for the browser environment (includes `wasm-opt`).
+- `Dockerfile`: CLI-focused environment using the `wasip1/wasm` target and Wasmtime.
 
 ## ⚙️ Building and Running
 
 ### Prerequisites
 - **Go 1.25+**
-- **Docker** (Recommended) for containerized builds and web hosting.
+- **Node.js 20+** (for local UI development)
+- **Docker** (Recommended) for clean, isolated builds.
 
-### Run Locally (Native)
-To start the interactive shell locally on your host machine:
+### 🏠 Local Development
+
+#### 1. Native CLI Shell
+Run the simulator directly on your host machine using the native Go runtime:
 ```bash
 go run ./cmd/go-bash-wasm/
 ```
 
-### Build for WebAssembly (Browser)
-To compile the project to a WASM binary for browser usage:
-```bash
-GOOS=js GOARCH=wasm go build -o main.wasm ./cmd/go-bash-wasm/
-```
+#### 2. Browser UI (Svelte + WASM)
+To develop the frontend locally:
+1. **Compile WASM**:
+   ```bash
+   GOOS=js GOARCH=wasm go build -o ui/static/main.wasm ./cmd/go-bash-wasm/
+   cp $(go env GOROOT)/lib/wasm/wasm_exec.js ui/static/
+   ```
+2. **Run Svelte App**:
+   ```bash
+   cd ui
+   npm install
+   npm run dev
+   ```
+Access at `http://localhost:5173`.
 
-### Build & Run via Docker (Nginx)
-To build the WASM binary and host it with an interactive terminal via Nginx:
+### 🐳 Docker Deployment
+
+#### 1. Browser Terminal (Svelte + Nginx)
+Built for the web, including WASM optimizations via `binaryen`.
 ```bash
-docker build -t go-bash-wasm .
-docker run -it --rm -p 8080:80 go-bash-wasm
+# Build and run (mapped to port 8080)
+docker build -t go-bash-ui -f ui.Dockerfile .
+docker run -it --rm -p 8080:80 go-bash-ui
 ```
-Access the terminal at `http://localhost:8080`.
+*Supports `OPTIMIZE=fast` (default) or `OPTIMIZE=small` build args.*
+
+#### 2. Native CLI (Wasmtime)
+Runs the shell in a secure `wasip1` container.
+```bash
+docker build -t go-bash-cli -f Dockerfile .
+docker run -it --rm go-bash-cli
+```
 
 ## 🧪 Testing
 
-The project follows TDD (Test-Driven Development) to ensure 100% behavioral parity with upstream tools.
+We ensure 100% behavioral parity through rigorous testing in both backend and frontend.
+
+### 1. Go Backend Tests
+Runs all unit tests for the shell and coreutils implementations:
 ```bash
 go test -v ./...
+```
+
+### 2. UI Frontend Tests
+Runs Svelte component and logic tests:
+```bash
+cd ui
+npm run test
+```
+
+### 3. Full Docker Validation
+You can run a full build/test cycle inside Docker to verify environment parity:
+```bash
+# This triggers both go tests and npm tests as part of the build
+docker build -f ui.Dockerfile .
 ```
 
 ---

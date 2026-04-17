@@ -47,12 +47,16 @@ import (
 	join "github.com/yarencheng/go-bash-wasm/internal/commands/join"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ln"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/mapfile"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/logout"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/logname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mkdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mktemp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/nice"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nohup"
 	nproccmd "github.com/yarencheng/go-bash-wasm/internal/commands/nproc"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/kill"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
@@ -137,6 +141,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		stat.New(),
 		id.New(),
 		install.New(),
+		ln.New(),
 		link.New(),
 		whoami.New(),
 		uname.New(),
@@ -145,7 +150,11 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		uptime.New(),
 		hostname.New(),
 		nohup.New(),
+		nice.New(),
+		kill.New(),
 		exit.New(),
+		logout.New(),
+		mapfile.New(),
 		grep.New(),
 		find.New(),
 		env.New(),
@@ -216,6 +225,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 			"PWD":  "/",
 		},
 		Aliases: make(map[string]string),
+		Arrays:  make(map[string][]string),
 		Hash:    make(map[string]string),
 		Registry: registry,
 	}

@@ -23,6 +23,7 @@ type Environment struct {
 	ExitRequested bool
 	ExitCode      int
 	EnvVars       map[string]string
+	Arrays        map[string][]string
 	Aliases       map[string]string
 	Hash          map[string]string
 	History       []string

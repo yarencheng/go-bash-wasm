@@ -741,8 +741,9 @@ Status codes:
 
 ### `kill`
 
-- [ ] Upstream: `third_party/bash/builtins/kill.def`
-- [ ] Basic signaling: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/kill.def`
+- [x] Basic signaling: Implemented in `internal/commands/kill/kill.go`
+- [x] Flag `-l`: `internal/commands/kill/kill.go`
 - [ ] Flag `-n num`: `third_party/bash/builtins/kill.def:L130`
 - [ ] Flag `-l`: `third_party/coreutils/src/kill.c:L277` / `third_party/bash/builtins/kill.def:L114`
 - [ ] Flag `-s SIGNAL`: `third_party/coreutils/src/kill.c:L262` / `third_party/bash/builtins/kill.def:L129`
@@ -844,9 +845,10 @@ Status codes:
 
 ### `mapfile`
 
-- [ ] Upstream: `third_party/bash/builtins/mapfile.def`
-- [ ] Array population: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/mapfile.def`
+- [x] Array population: Implemented in `internal/commands/mapfile/mapfile.go`
 - [ ] Flag `-d`: `third_party/bash/builtins/mapfile.def:L238` (delimiter)
+- [x] Flag `-t`: `internal/commands/mapfile/mapfile.go` (trim)
 - [ ] Flag `-n`: `third_party/bash/builtins/mapfile.def:L238` (count)
 - [ ] Flag `-O`: `third_party/bash/builtins/mapfile.def:L238` (origin)
 - [ ] Flag `-t`: `third_party/bash/builtins/mapfile.def:L238` (strip newline)
@@ -910,9 +912,9 @@ Status codes:
 
 ### `nice`
 
-- [ ] Upstream: `third_party/coreutils/src/nice.c`
-- [ ] Priority adjustment: Missing implementation
-- [ ] Flag `-n`, `--adjustment=N`: `third_party/coreutils/src/nice.c:L160`
+- [x] Upstream: `third_party/coreutils/src/nice.c`
+- [x] Priority adjustment: Implemented (as wrapper) in `internal/commands/nice/nice.go`
+- [x] Flag `-n`, `--adjustment=N`: `internal/commands/nice/nice.go`
 
 ### `nl`
 

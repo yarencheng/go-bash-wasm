@@ -27,10 +27,30 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 	number := flags.BoolP("number", "n", false, "number all output lines")
 	numberNonBlank := flags.BoolP("number-nonblank", "b", false, "number nonempty output lines, overrides -n")
 	squeezeBlank := flags.BoolP("squeeze-blank", "s", false, "suppress repeated empty output lines")
+	showAll := flags.BoolP("show-all", "A", false, "equivalent to -vET")
+	showEnds := flags.BoolP("show-ends", "E", false, "display $ at end of each line")
+	showTabs := flags.BoolP("show-tabs", "T", false, "display TAB characters as ^I")
+	showNonPrinting := flags.BoolP("show-nonprinting", "v", false, "use ^ and M- notation, except for LFD and TAB")
+	eFlag := flags.BoolP("e", "e", false, "equivalent to -vE")
+	tFlag := flags.BoolP("t", "t", false, "equivalent to -vT")
 	
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "cat: %v\n", err)
 		return 1
+	}
+
+	if *showAll {
+		*showNonPrinting = true
+		*showEnds = true
+		*showTabs = true
+	}
+	if *eFlag {
+		*showNonPrinting = true
+		*showEnds = true
+	}
+	if *tFlag {
+		*showNonPrinting = true
+		*showTabs = true
 	}
 
 	targets := flags.Args()
@@ -58,7 +78,7 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 			reader = file
 		}
 
-		if !*number && !*numberNonBlank && !*squeezeBlank {
+		if !*number && !*numberNonBlank && !*squeezeBlank && !*showEnds && !*showTabs && !*showNonPrinting {
 			_, err := io.Copy(env.Stdout, reader)
 			if err != nil {
 				fmt.Fprintf(env.Stderr, "cat: %s: %v\n", target, err)
@@ -68,12 +88,28 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 		}
 
 		// Handle flags using line-by-line processing
-		scanner := bufio.NewScanner(reader)
+		readerComp := bufio.NewReader(reader)
 		lineNumber := 1
 		lastLineEmpty := false
-		for scanner.Scan() {
-			line := scanner.Text()
-			isEmpty := len(line) == 0
+		atEOF := false
+		for !atEOF {
+			line, err := readerComp.ReadString('\n')
+			if err != nil {
+				if err == io.EOF {
+					if line == "" {
+						break
+					}
+					atEOF = true
+				} else {
+					fmt.Fprintf(env.Stderr, "cat: %s: %v\n", target, err)
+					exitCode = 1
+					break
+				}
+			}
+
+			hasNewline := strings.HasSuffix(line, "\n")
+			cleanLine := strings.TrimSuffix(line, "\n")
+			isEmpty := len(cleanLine) == 0
 
 			if *squeezeBlank && isEmpty && lastLineEmpty {
 				continue
@@ -81,27 +117,67 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 
 			if *numberNonBlank {
 				if !isEmpty {
-					fmt.Fprintf(env.Stdout, "%6d\t%s\n", lineNumber, line)
+					fmt.Fprintf(env.Stdout, "%6d\t", lineNumber)
 					lineNumber++
-				} else {
-					fmt.Fprintln(env.Stdout)
 				}
 			} else if *number {
-				fmt.Fprintf(env.Stdout, "%6d\t%s\n", lineNumber, line)
+				fmt.Fprintf(env.Stdout, "%6d\t", lineNumber)
 				lineNumber++
-			} else {
-				fmt.Fprintln(env.Stdout, line)
+			}
+
+			processed := cleanLine
+			if *showTabs {
+				processed = strings.ReplaceAll(processed, "\t", "^I")
+			}
+			if *showNonPrinting {
+				processed = toNonPrinting(processed)
+			}
+			
+			fmt.Fprint(env.Stdout, processed)
+			
+			if *showEnds && hasNewline {
+				fmt.Fprint(env.Stdout, "$")
+			}
+			if hasNewline {
+				fmt.Fprint(env.Stdout, "\n")
 			}
 			
 			lastLineEmpty = isEmpty
 		}
-
-		if err := scanner.Err(); err != nil {
-			fmt.Fprintf(env.Stderr, "cat: %s: %v\n", target, err)
-			exitCode = 1
-		}
 	}
 
 	return exitCode
+}
+
+func toNonPrinting(s string) string {
+	var b strings.Builder
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if c < 32 {
+			if c == 9 || c == 10 { // TAB and LF
+				b.WriteByte(c)
+			} else {
+				b.WriteByte('^')
+				b.WriteByte(c + 64)
+			}
+		} else if c == 127 {
+			b.WriteString("^?")
+		} else if c >= 128 {
+			b.WriteString("M-")
+			if c >= 128+32 {
+				if c == 255 {
+					b.WriteString("^?")
+				} else {
+					b.WriteByte(c - 128)
+				}
+			} else {
+				b.WriteByte('^')
+				b.WriteByte(c - 128 + 64)
+			}
+		} else {
+			b.WriteByte(c)
+		}
+	}
+	return b.String()
 }
 

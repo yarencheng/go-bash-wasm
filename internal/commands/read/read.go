@@ -23,7 +23,11 @@ func (r *Read) Name() string {
 func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("read", pflag.ContinueOnError)
 	prompt := flags.StringP("prompt", "p", "", "display PROMPT without a trailing newline, before attempting to read")
-	// -s is tricky in WASM/browser, skipped for now but defined
+	raw := flags.BoolP("raw", "r", false, "do not allow backslashes to escape any characters")
+	delim := flags.StringP("delimiter", "d", "\n", "terminate after reading DELIM, rather than newline")
+	nchars := flags.IntP("nchars", "n", -1, "return after reading NCHARS characters")
+	ncharsExact := flags.IntP("nchars-exact", "N", -1, "return only after reading exactly NCHARS characters")
+	array := flags.StringP("array", "a", "", "assign the words read to sequential indices of the array variable ARRAY")
 	_ = flags.BoolP("silent", "s", false, "do not echo input coming from a terminal")
 
 	if err := flags.Parse(args); err != nil {
@@ -36,28 +40,77 @@ func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string
 	}
 
 	reader := bufio.NewReader(env.Stdin)
-	line, err := reader.ReadString('\n')
-	if err != nil && err != fmt.Errorf("EOF") && line == "" {
-		return 1
+	var line strings.Builder
+	var lastChar rune
+	count := 0
+	limit := *nchars
+	if *ncharsExact != -1 {
+		limit = *ncharsExact
 	}
 
-	line = strings.TrimSuffix(line, "\n")
-	line = strings.TrimSuffix(line, "\r")
+	d := '\n'
+	if len(*delim) > 0 {
+		d = rune((*delim)[0])
+	}
 
+	for {
+		if limit != -1 && count >= limit {
+			break
+		}
+
+		char, _, err := reader.ReadRune()
+		if err != nil {
+			break
+		}
+
+		if !*raw && lastChar == '\\' {
+			// Backslash at end of line (continuation) is handled by Bash but we'll simplified and just keep it if it's not delimiter
+			line.WriteRune(char)
+			lastChar = 0
+			count++
+			continue
+		}
+
+		if char == d {
+			break
+		}
+
+		if !*raw && char == '\\' {
+			lastChar = '\\'
+			continue
+		}
+
+		line.WriteRune(char)
+		lastChar = char
+		count++
+	}
+
+	content := line.String()
 	fields := flags.Args()
-	if len(fields) == 0 {
-		env.EnvVars["REPLY"] = line
+
+	if *array != "" {
+		words := strings.Fields(content)
+		if env.Arrays == nil {
+			env.Arrays = make(map[string][]string)
+		}
+		env.Arrays[*array] = words
 		return 0
 	}
 
-	words := strings.Fields(line)
+	if len(fields) == 0 {
+		env.EnvVars["REPLY"] = content
+		return 0
+	}
+
+	words := strings.Fields(content)
 	for i, field := range fields {
 		if i < len(words) {
 			if i == len(fields)-1 {
-				// Last field gets the rest of the line
-				// Find start index of this word in original line
-				// This is a bit simplified, but close enough for now
-				env.EnvVars[field] = strings.Join(words[i:], " ")
+				// Last field gets the rest of the line including spaces
+				// We need to find the actual start of this word in the content
+				// This is simplified:
+				remaining := strings.Join(words[i:], " ")
+				env.EnvVars[field] = remaining
 			} else {
 				env.EnvVars[field] = words[i]
 			}

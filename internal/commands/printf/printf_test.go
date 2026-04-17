@@ -37,3 +37,17 @@ func TestPrintf_Complex(t *testing.T) {
 	assert.Equal(t, 0, status)
 	assert.Equal(t, "<a><b><c>", stdout.String())
 }
+func TestPrintf_Var(t *testing.T) {
+	var stdout bytes.Buffer
+	env := &commands.Environment{
+		Stdout:  &stdout,
+		Stderr:  io.Discard,
+		EnvVars: make(map[string]string),
+	}
+
+	p := New()
+	status := p.Run(context.Background(), env, []string{"-v", "MYVAR", "hello %s", "world"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "hello world", env.EnvVars["MYVAR"])
+	assert.Equal(t, "", stdout.String())
+}

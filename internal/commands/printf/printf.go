@@ -19,74 +19,102 @@ func (p *Printf) Name() string {
 }
 
 func (p *Printf) Run(ctx context.Context, env *commands.Environment, args []string) int {
-	if len(args) == 0 {
-		return 0
-	}
-
-	format := args[0]
-	format = expandEscapes(format)
-	args = args[1:]
-
-	if len(args) == 0 {
-		fmt.Fprint(env.Stdout, format)
-		return 0
-	}
-
-	// Bash printf reuses the format string until all arguments are exhausted
-	for len(args) > 0 {
-		// We need to parse the format string to handle %b and %q manually
-		// because Go's fmt doesn't know about them.
-		
-		processedFormat := ""
-		currentArgs := []interface{}{}
-		argIdx := 0
-		
-		for i := 0; i < len(format); i++ {
-			if format[i] == '%' && i+1 < len(format) {
-				spec := format[i+1]
-				if spec == '%' {
-					processedFormat += "%%"
-					i++
-					continue
-				}
-				
-				if argIdx >= len(args) {
-					// Out of args for this spec, standard printf behavior defaults vary
-					// but usually we just append the rest.
-					break
-				}
-				
-				arg := args[argIdx]
-				argIdx++
-				
-				switch spec {
-				case 'b':
-					processedFormat += "%s"
-					currentArgs = append(currentArgs, expandEscapes(arg))
-					i++
-				case 'q':
-					processedFormat += "%s"
-					currentArgs = append(currentArgs, shellQuote(arg))
-					i++
-				default:
-					// Standard conversion
-					// We'll just pass it to fmt for now, but need to find the full spec (e.g. %.2f)
-					// For simplicity we'll just take the next char if it's a standard one.
-					processedFormat += "%" + string(spec)
-					currentArgs = append(currentArgs, arg)
-					i++
-				}
-			} else {
-				processedFormat += string(format[i])
-			}
-		}
-		
-		fmt.Fprintf(env.Stdout, processedFormat, currentArgs...)
-		
-		if argIdx == 0 { // avoid infinite loop if no specifiers
+	var varName string
+	
+	// Printf flags must come before the format string
+	i := 0
+	for ; i < len(args); i++ {
+		if args[i] == "-v" && i+1 < len(args) {
+			varName = args[i+1]
+			i++
+		} else if strings.HasPrefix(args[i], "-v") && len(args[i]) > 2 {
+			varName = args[i][2:]
+		} else if args[i] == "--" {
+			i++
+			break
+		} else if strings.HasPrefix(args[i], "-") {
+			// ignore unknown flags or handle them if needed
+		} else {
 			break
 		}
-		args = args[argIdx:]
+	}
+
+	if i >= len(args) {
+		return 0
+	}
+
+	format := args[i]
+	format = expandEscapes(format)
+	remainingArgs := args[i+1:]
+
+	var output strings.Builder
+	writer := env.Stdout
+	if varName != "" {
+		writer = &output
+	}
+
+	if len(remainingArgs) == 0 {
+		fmt.Fprint(writer, format)
+	} else {
+		// Bash printf reuses the format string until all arguments are exhausted
+		for len(remainingArgs) > 0 {
+			processedFormat := ""
+			currentArgs := []interface{}{}
+			argIdx := 0
+			
+			for j := 0; j < len(format); j++ {
+				if format[j] == '%' && j+1 < len(format) {
+					spec := format[j+1]
+					if spec == '%' {
+						processedFormat += "%%"
+						j++
+						continue
+					}
+					
+					if argIdx >= len(remainingArgs) {
+						// Out of args for this spec
+						// Bash usually prints nothing or default for the type
+						// We'll just stop processing format
+						break
+					}
+					
+					arg := remainingArgs[argIdx]
+					argIdx++
+					
+					switch spec {
+					case 'b':
+						processedFormat += "%s"
+						currentArgs = append(currentArgs, expandEscapes(arg))
+						j++
+					case 'q':
+						processedFormat += "%s"
+						currentArgs = append(currentArgs, shellQuote(arg))
+						j++
+					default:
+						// Standard conversion
+						processedFormat += "%" + string(spec)
+						currentArgs = append(currentArgs, arg)
+						j++
+					}
+				} else {
+					processedFormat += string(format[j])
+				}
+			}
+			
+			fmt.Fprintf(writer, processedFormat, currentArgs...)
+			
+			if argIdx == 0 { // avoid infinite loop if no specifiers
+				break
+			}
+			remainingArgs = remainingArgs[argIdx:]
+		}
+	}
+
+	if varName != "" {
+		if env.EnvVars == nil {
+			env.EnvVars = make(map[string]string)
+		}
+		env.EnvVars[varName] = output.String()
 	}
 
 	return 0

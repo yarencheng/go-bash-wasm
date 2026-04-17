@@ -56,6 +56,10 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mktemp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nice"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/nl"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/od"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/paste"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pr"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nohup"
 	nproccmd "github.com/yarencheng/go-bash-wasm/internal/commands/nproc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/kill"
@@ -71,10 +75,17 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/shuf"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sleep"
 	sort "github.com/yarencheng/go-bash-wasm/internal/commands/sort"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/stat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sum"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tac"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/timeout"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/truncate"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tsort"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/unexpand"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tee"
 	test "github.com/yarencheng/go-bash-wasm/internal/commands/test"
@@ -92,6 +103,10 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/whoami"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/yes"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/arch"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chmod"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chown"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/realpath"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/unlink"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
 	builtincmd "github.com/yarencheng/go-bash-wasm/internal/commands/builtin"
 )
@@ -134,6 +149,10 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		cat.New(),
 		cksumcmd.New(),
 		cd.New(),
+		nl.New(),
+		od.New(),
+		paste.New(),
+		pr.New(),
 		basename.New(),
 		dirname.New(),
 		mkdir.New(),
@@ -185,8 +204,17 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		basenc.New(),
 		sum.New("md5sum"),
 		sum.New("sha1sum"),
+		sum.New("sha224sum"),
 		sum.New("sha256sum"),
+		sum.New("sha384sum"),
 		sum.New("sha512sum"),
+		shuf.New(),
+		split.New(),
+		tac.New(),
+		timeout.New(),
+		truncate.New(),
+		tsort.New(),
+		unexpand.New(),
 		yes.New(),
 		sleep.New(),
 		printenv.New(),
@@ -209,6 +237,11 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		date.New(),
 		who.New(),
 		arch.New(),
+		chmod.New(),
+		chown.New(),
+		chown.NewChgrp(),
+		unlink.New(),
+		realpath.New(),
 	}
 
 	for _, cmd := range cmds {

@@ -2,17 +2,13 @@ package sum
 
 import (
 	"context"
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"crypto/sha512"
 	"fmt"
-	"hash"
-	"io"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/cksum"
 )
 
 type Sum struct {
@@ -30,26 +26,32 @@ func (s *Sum) Name() string {
 func (s *Sum) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet(s.name, pflag.ContinueOnError)
 	check := flags.BoolP("check", "c", false, "read checksums from the FILEs and check them")
+	zero := flags.BoolP("zero", "z", false, "end each output line with NUL, not newline")
+	quiet := flags.Bool("quiet", false, "don't print OK for each successfully verified file")
+	status := flags.Bool("status", false, "don't output anything, status code shows success")
+	strict := flags.Bool("strict", false, "exit non-zero for improperly formatted checksum lines")
+	warn := flags.BoolP("warn", "w", false, "warn about improperly formatted checksum lines")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "%s: %v\n", s.name, err)
 		return 1
 	}
 
-	if *check {
-		fmt.Fprintf(env.Stderr, "%s: --check not supported yet\n", s.name)
-		return 1
+	algo := strings.TrimSuffix(s.name, "sum")
+	opts := cksum.CksumOptions{
+		Algorithm: algo,
+		Check:     *check,
+		Zero:      *zero,
+		Quiet:     *quiet,
+		Status:    *status,
+		Strict:    *strict,
+		Warn:      *warn,
 	}
 
+	c := cksum.New()
 	targets := flags.Args()
 	if len(targets) == 0 {
-		h := s.getHash()
-		if _, err := io.Copy(h, env.Stdin); err != nil {
-			fmt.Fprintf(env.Stderr, "%s: %v\n", s.name, err)
-			return 1
-		}
-		fmt.Fprintf(env.Stdout, "%x  -\n", h.Sum(nil))
-		return 0
+		return c.Process(env, env.Stdin, "", opts)
 	}
 
 	exitCode := 0
@@ -61,36 +63,18 @@ func (s *Sum) Run(ctx context.Context, env *commands.Environment, args []string)
 
 		f, err := env.FS.Open(fullPath)
 		if err != nil {
-			fmt.Fprintf(env.Stderr, "%s: %s: %v\n", s.name, target, err)
+			if !opts.Status {
+				fmt.Fprintf(env.Stderr, "%s: %s: %v\n", s.name, target, err)
+			}
 			exitCode = 1
 			continue
 		}
 
-		h := s.getHash()
-		if _, err := io.Copy(h, f); err != nil {
-			fmt.Fprintf(env.Stderr, "%s: %s: %v\n", s.name, target, err)
-			f.Close()
-			exitCode = 1
-			continue
+		if res := c.Process(env, f, target, opts); res != 0 {
+			exitCode = res
 		}
 		f.Close()
-		fmt.Fprintf(env.Stdout, "%x  %s\n", h.Sum(nil), target)
 	}
 
 	return exitCode
-}
-
-func (s *Sum) getHash() hash.Hash {
-	switch s.name {
-	case "md5sum":
-		return md5.New()
-	case "sha1sum":
-		return sha1.New()
-	case "sha256sum":
-		return sha256.New()
-	case "sha512sum":
-		return sha512.New()
-	default:
-		return sha256.New()
-	}
 }

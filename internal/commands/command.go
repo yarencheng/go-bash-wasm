@@ -24,6 +24,7 @@ type Environment struct {
 	ExitCode      int
 	EnvVars       map[string]string
 	Aliases       map[string]string
+	Registry      *Registry
 }
 
 // Command is the interface that all shell commands must implement.

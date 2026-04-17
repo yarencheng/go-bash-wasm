@@ -884,14 +884,14 @@ Status codes:
 
 ### `mktemp`
 
-- [ ] Upstream: `third_party/coreutils/src/mktemp.c`
-- [ ] Basic creation: Missing implementation
-- [ ] Flag `--suffix`: `third_party/coreutils/src/mktemp.c:L88`
-- [ ] Flag `-d`: `third_party/coreutils/src/mktemp.c:L76`
-- [ ] Flag `-p`: `third_party/coreutils/src/mktemp.c:L93`
-- [ ] Flag `-q`: `third_party/coreutils/src/mktemp.c:L84`
-- [ ] Flag `-t`: `third_party/coreutils/src/mktemp.c:101`
-- [ ] Flag `-u`: `third_party/coreutils/src/mktemp.c:L80`
+- [x] Upstream: `third_party/coreutils/src/mktemp.c`
+- [x] Basic creation: Implemented in `internal/commands/mktemp/mktemp.go`
+- [x] Flag `--suffix`: `internal/commands/mktemp/mktemp.go` (partial via TEMPLATE)
+- [x] Flag `-d`: `internal/commands/mktemp/mktemp.go`
+- [x] Flag `-p`: `internal/commands/mktemp/mktemp.go` (via --tmpdir)
+- [x] Flag `-q`: `internal/commands/mktemp/mktemp.go` (ignored)
+- [x] Flag `-t`: `internal/commands/mktemp/mktemp.go`
+- [x] Flag `-u`: `internal/commands/mktemp/mktemp.go`
 
 ### `mv`
 
@@ -943,13 +943,16 @@ Status codes:
 
 ### `nohup`
 
-- [ ] Upstream: `third_party/coreutils/src/nohup.c`
-- [ ] Flag `--help`: `third_party/coreutils/src/nohup.c:L59`
-- [ ] Flag `--version`: `third_party/coreutils/src/nohup.c:L59`
+- [x] Upstream: `third_party/coreutils/src/nohup.c`
+- [x] Flag `--help`: `internal/commands/nohup/nohup.go`
+- [x] Flag `--version`: `internal/commands/nohup/nohup.go`
 
 ### `nproc`
 
-- [ ] Upstream: `third_party/coreutils/src/nproc.c`
+- [x] Upstream: `third_party/coreutils/src/nproc.c`
+- [x] Basic nproc: Implemented in `internal/commands/nproc/nproc.go`
+- [x] Flag `--all`: `internal/commands/nproc/nproc.go`
+- [x] Flag `--ignore`: `internal/commands/nproc/nproc.go`
 
 ### `numfmt`
 
@@ -979,9 +982,10 @@ Status codes:
 
 ### `pathchk`
 
-- [ ] Upstream: `third_party/coreutils/src/pathchk.c`
-- [ ] Flag `-p`: `third_party/coreutils/src/pathchk.c:L360`
-- [ ] Flag `-P`: `third_party/coreutils/src/pathchk.c:L363`
+- [x] Upstream: `third_party/coreutils/src/pathchk.c`
+- [x] Basic operation: Implemented in `internal/commands/pathchk/pathchk.go`
+- [x] Flag `-p`: `internal/commands/pathchk/pathchk.go`
+- [x] Flag `-P`: `internal/commands/pathchk/pathchk.go`
 
 ### `pinky`
 
@@ -1466,9 +1470,9 @@ Status codes:
 
 ### `tty`
 
-- [ ] Upstream: `third_party/coreutils/src/tty.c`
-- [ ] TTY reporting: Missing implementation
-- [ ] Flag `-s`, `--silent`, `--quiet`: `third_party/coreutils/src/tty.c:L71`
+- [x] Upstream: `third_party/coreutils/src/tty.c`
+- [x] TTY reporting: Implemented in `internal/commands/tty/tty.go`
+- [x] Flag `-s`, `--silent`, `--quiet`: `internal/commands/tty/tty.go`
 
 ### `type`
 
@@ -1568,9 +1572,10 @@ Status codes:
 
 ### `users`
 
-- [ ] Upstream: `third_party/coreutils/src/users.c`
-- [ ] Flag `--help`: `third_party/coreutils/src/users.c:L44`
-- [ ] Flag `--version`: `third_party/coreutils/src/users.c:L44`
+- [x] Upstream: `third_party/coreutils/src/users.c`
+- [x] Basic output: Implemented in `internal/commands/users/users.go`
+- [x] Flag `--help`: `internal/commands/users/users.go`
+- [x] Flag `--version`: `internal/commands/users/users.go`
 
 ### `vdir`
 
@@ -1617,15 +1622,15 @@ Status codes:
 
 ### `whoami`
 
-- [ ] Upstream: `third_party/coreutils/src/whoami.c`
-- [ ] Basic output: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/whoami.c`
+- [x] Basic output: Implemented in `internal/commands/whoami/whoami.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/whoami.c:L44`
 - [ ] Flag `--version`: `third_party/coreutils/src/whoami.c:L44`
 
 ### `yes`
 
-- [ ] Upstream: `third_party/coreutils/src/yes.c`
-- [ ] Basic operation: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/yes.c`
+- [x] Basic operation: Implemented in `internal/commands/yes/yes.go`
 - [ ] Basic repetition: Missing implementation
 - [ ] Flag `--help`: `third_party/coreutils/src/yes.c:L48`
 - [ ] Flag `--version`: `third_party/coreutils/src/yes.c:L48`

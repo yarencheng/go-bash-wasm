@@ -46,10 +46,14 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/logname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mkdir"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/mktemp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/nohup"
+	nproccmd "github.com/yarencheng/go-bash-wasm/internal/commands/nproc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pathchk"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/read"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/readlink"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
@@ -63,10 +67,12 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tee"
 	test "github.com/yarencheng/go-bash-wasm/internal/commands/test"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/touch"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tty"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tr"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/uname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unalias"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/uniq"
+	userscmd "github.com/yarencheng/go-bash-wasm/internal/commands/users"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unset"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/uptime"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/wc"
@@ -107,6 +113,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		boolcmd.NewFalse(),
 		echo.New(),
 		pwd.New(),
+		pathchk.New(),
 		read.New(),
 		readlink.New(),
 		cat.New(),
@@ -114,6 +121,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		basename.New(),
 		dirname.New(),
 		mkdir.New(),
+		mktemp.New(),
 		rmdir.New(),
 		rm.New(),
 		cp.New(),
@@ -121,6 +129,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		head.New(),
 		tail.New(),
 		wc.New(),
+		tty.New(),
 		touch.New(),
 		stat.New(),
 		id.New(),
@@ -128,8 +137,11 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		link.New(),
 		whoami.New(),
 		uname.New(),
+		userscmd.New(),
+		nproccmd.New(),
 		uptime.New(),
 		hostname.New(),
+		nohup.New(),
 		exit.New(),
 		grep.New(),
 		find.New(),
@@ -198,6 +210,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 			"PWD":  "/",
 		},
 		Aliases: make(map[string]string),
+		Registry: registry,
 	}
 
 	return &App{

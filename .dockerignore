@@ -1,0 +1,23 @@
+# Source Control
+.git
+.gitmodules
+
+# Build Tools and Configs
+.agents
+.vscode
+.idea
+
+# Local Binaries and Folders
+bin/
+out/
+dist/
+go-bash-wasm
+
+# Testing and Coverage
+*.test
+*.out
+coverage.txt
+
+# OS metadata
+.DS_Store
+Thumbs.db

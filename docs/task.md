@@ -102,8 +102,8 @@ Status codes:
 
 ### `builtin`
 
-- [ ] Upstream: `third_party/bash/builtins/builtin.def`
-- [ ] Basic execution: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/builtin.def`
+- [x] Basic execution: Implemented in `internal/commands/builtin/builtin.go`
 
 ### `caller`
 
@@ -191,8 +191,8 @@ Status codes:
 
 ### `cksum`
 
-- [ ] Upstream: `third_party/coreutils/src/cksum.c`
-- [ ] Basic CRC-32: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/cksum.c`
+- [x] Basic CRC-32: Implemented in `internal/commands/cksum/cksum.go`
 - [ ] Flag `-a`, `--algorithm=ALGO`: `third_party/coreutils/src/cksum.c:L186`
 - [ ] Flag `-c`, `--check`: `third_party/coreutils/src/cksum.c:L148`
 - [ ] Flag `-l`, `--length=BITS`: `third_party/coreutils/src/cksum.c:L181`
@@ -206,7 +206,11 @@ Status codes:
 - [ ] Flag `--status`: `third_party/coreutils/src/cksum.c:L151`
 - [ ] Flag `--strict`: `third_party/coreutils/src/cksum.c:L154`
 - [ ] Flag `-w`, `--warn`: `third_party/coreutils/src/cksum.c:L153`
+ 
+### `clear`
 
+- [x] Basic operation: Implemented in `internal/commands/clear/clear.go`
+ 
 ### `comm`
 
 - [x] Upstream: `third_party/coreutils/src/comm.c`
@@ -222,8 +226,8 @@ Status codes:
 
 ### `command`
 
-- [ ] Upstream: `third_party/bash/builtins/command.def`
-- [ ] Execution override: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/command.def`
+- [x] Execution override: Implemented in `internal/commands/command/command.go`
 - [ ] Flag `-p`: `third_party/bash/builtins/command.def:L75` (default PATH)
 - [ ] Flag `-v`: `third_party/bash/builtins/command.def:L75` (identify command)
 - [ ] Flag `-V`: `third_party/bash/builtins/command.def:L75` (verbose identify)

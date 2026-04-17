@@ -18,8 +18,10 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cd"
+	cksumcmd "github.com/yarencheng/go-bash-wasm/internal/commands/cksum"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/clear"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/colon"
+	commandcmd "github.com/yarencheng/go-bash-wasm/internal/commands/command"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/comm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cut"
@@ -91,6 +93,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/yes"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/arch"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
+	builtincmd "github.com/yarencheng/go-bash-wasm/internal/commands/builtin"
 )
 
 // App encapsulates the bash simulator application.
@@ -117,8 +120,10 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 	
 	// Register commands
 	cmds := []commands.Command{
+		builtincmd.New(),
 		ls.New(),
 		colon.New(),
+		commandcmd.New(),
 		boolcmd.NewTrue(),
 		boolcmd.NewFalse(),
 		echo.New(),
@@ -127,6 +132,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		read.New(),
 		readlink.New(),
 		cat.New(),
+		cksumcmd.New(),
 		cd.New(),
 		basename.New(),
 		dirname.New(),

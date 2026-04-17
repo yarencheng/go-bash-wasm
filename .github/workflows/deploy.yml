@@ -34,9 +34,13 @@ jobs:
           cache: true
 
       - name: Install binaryen
+        env:
+          BINARYEN_VERSION: 123
         run: |
-          sudo apt-get update
-          sudo apt-get install -y binaryen
+          BINARYEN_ARCH=$(uname -m | sed 's/arm64/aarch64/')
+          curl -L "https://github.com/WebAssembly/binaryen/releases/download/version_${BINARYEN_VERSION}/binaryen-version_${BINARYEN_VERSION}-${BINARYEN_ARCH}-linux.tar.gz" | tar -xz
+          sudo mv binaryen-version_${BINARYEN_VERSION}/bin/wasm-opt /usr/local/bin/
+          rm -rf binaryen-version_${BINARYEN_VERSION}
 
       - name: Run Go tests
         run: go test -v ./...

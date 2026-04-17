@@ -2,7 +2,13 @@
 FROM golang:1.26-alpine AS go-builder
 
 # Install binaryen (for wasm-opt)
-RUN apk add --no-cache binaryen
+ARG BINARYEN_VERSION=123
+RUN apk add --no-cache curl tar ca-certificates libstdc++ \
+    && BINARYEN_ARCH=$(uname -m | sed 's/arm64/aarch64/') \
+    && curl -L "https://github.com/WebAssembly/binaryen/releases/download/version_${BINARYEN_VERSION}/binaryen-version_${BINARYEN_VERSION}-${BINARYEN_ARCH}-linux.tar.gz" | tar -xz \
+    && mv binaryen-version_${BINARYEN_VERSION}/bin/wasm-opt /usr/local/bin/ \
+    && rm -rf binaryen-version_${BINARYEN_VERSION} \
+    && apk del curl tar
 
 WORKDIR /src
 

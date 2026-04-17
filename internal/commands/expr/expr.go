@@ -25,6 +25,20 @@ func (e *Expr) Run(ctx context.Context, env *commands.Environment, args []string
 		return 2
 	}
 
+	if len(args) == 1 {
+		if args[0] == "--help" {
+			fmt.Fprintln(env.Stdout, "Usage: expr EXPRESSION")
+			fmt.Fprintln(env.Stdout, "  or:  expr OPTION")
+			fmt.Fprintln(env.Stdout, "")
+			fmt.Fprintln(env.Stdout, "Print the value of EXPRESSION to standard output.")
+			return 0
+		}
+		if args[0] == "--version" {
+			fmt.Fprintln(env.Stdout, "expr (GNU coreutils) 9.10")
+			return 0
+		}
+	}
+
 	// Handle string operators first
 	if args[0] == "length" && len(args) == 2 {
 		fmt.Fprintln(env.Stdout, len(args[1]))

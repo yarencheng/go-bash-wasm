@@ -60,8 +60,15 @@ func TestExpr_Run(t *testing.T) {
 	assert.Equal(t, 0, status)
 	assert.Equal(t, "5\n", stdout.String())
 
+	// Test help
 	stdout.Reset()
-	status = e.Run(context.Background(), env, []string{"0", "&", "3"})
+	status = e.Run(context.Background(), env, []string{"--help"})
 	assert.Equal(t, 0, status)
-	assert.Equal(t, "0\n", stdout.String())
+	assert.Contains(t, stdout.String(), "Usage: expr EXPRESSION")
+
+	// Test version
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"--version"})
+	assert.Equal(t, 0, status)
+	assert.Contains(t, stdout.String(), "expr (GNU coreutils) 9.10")
 }

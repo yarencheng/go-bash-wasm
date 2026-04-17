@@ -19,12 +19,32 @@ func TestCut_Run(t *testing.T) {
 	env := &commands.Environment{
 		FS:     fs,
 		Cwd:    "/",
-		Stdout: &bytes.Buffer{},
+		Stdout: nil,
 		Stderr: io.Discard,
 	}
 
 	c := New()
-	status := c.Run(context.Background(), env, []string{"-d", ",", "-f", "2", "/test.txt"})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "b\n2\n", env.Stdout.(*bytes.Buffer).String())
+	t.Run("cut fields", func(t *testing.T) {
+		var stdout bytes.Buffer
+		env.Stdout = &stdout
+		status := c.Run(context.Background(), env, []string{"-d", ",", "-f", "2", "/test.txt"})
+		assert.Equal(t, 0, status)
+		assert.Equal(t, "b\n2\n", stdout.String())
+	})
+
+	t.Run("complement", func(t *testing.T) {
+		var stdout bytes.Buffer
+		env.Stdout = &stdout
+		status := c.Run(context.Background(), env, []string{"-d", ",", "-f", "2", "--complement", "/test.txt"})
+		assert.Equal(t, 0, status)
+		assert.Equal(t, "a,c\n1,3\n", stdout.String())
+	})
+
+	t.Run("output delimiter", func(t *testing.T) {
+		var stdout bytes.Buffer
+		env.Stdout = &stdout
+		status := c.Run(context.Background(), env, []string{"-d", ",", "-f", "1,3", "--output-delimiter", "|", "/test.txt"})
+		assert.Equal(t, 0, status)
+		assert.Equal(t, "a|c\n1|3\n", stdout.String())
+	})
 }

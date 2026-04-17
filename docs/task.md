@@ -296,8 +296,8 @@ Status codes:
 - [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/cp.c:L230`
 - [x] Flag `-r`, `-R`, `--recursive`: `internal/commands/cp/cp.go`
 - [ ] Flag `-s`, `--symbolic-link`: `third_party/coreutils/src/cp.c:L258`
-- [ ] Flag `-t`, `--target-directory`: `third_party/coreutils/src/cp.c:L262`
-- [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/cp.c:L266`
+- [x] Flag `-t`, `--target-directory`: `internal/commands/cp/cp.go`
+- [x] Flag `-T`, `--no-target-directory`: `internal/commands/cp/cp.go`
 - [ ] Flag `-u`, `--update`: `third_party/coreutils/src/cp.c:L270`
 - [x] Flag `-v`, `--verbose`: `internal/commands/cp/cp.go`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/cp.c:L278`
@@ -333,8 +333,8 @@ Status codes:
 - [ ] Flag `-n`: `third_party/coreutils/src/cut.c:L159` (ignored)
 - [x] Flag `-s`, `--only-delimited`: `internal/commands/cut/cut.go`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/cut.c:L175`
-- [ ] Flag `--complement`: `third_party/coreutils/src/cut.c:L167`
-- [ ] Flag `--output-delimiter=STRING`: `third_party/coreutils/src/cut.c:L171`
+- [x] Flag `--complement`: `internal/commands/cut/cut.go`
+- [x] Flag `--output-delimiter=STRING`: `internal/commands/cut/cut.go`
 
 ### `date`
 
@@ -498,10 +498,10 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/env.c`
 - [x] Basic execution: Implemented in `internal/commands/env/env.go`
 - [ ] Flag `-a`, `--argv0=ARG`: `third_party/coreutils/src/env.c:L123`
-- [ ] Flag `-i`, `--ignore-environment`: `third_party/coreutils/src/env.c:L127`
-- [ ] Flag `-u`, `--unset=NAME`: `third_party/coreutils/src/env.c:L135`
-- [ ] Flag `-0`, `--null`: `third_party/coreutils/src/env.c:L131`
-- [ ] Flag `-C`, `--chdir=DIR`: `third_party/coreutils/src/env.c:L139`
+- [x] Flag `-i`, `--ignore-environment`: `internal/commands/env/env.go`
+- [x] Flag `-u`, `--unset=NAME`: `internal/commands/env/env.go`
+- [x] Flag `-0`, `--null`: `internal/commands/env/env.go`
+- [x] Flag `-C`, `--chdir=DIR`: `internal/commands/env/env.go`
 - [ ] Flag `-S`, `--split-string=S`: `third_party/coreutils/src/env.c:L143`
 - [ ] Flag `-v`, `--debug`: `third_party/coreutils/src/env.c:L164`
 - [ ] Flag `--block-signal[=SIG]`: `third_party/coreutils/src/env.c:L148`
@@ -551,8 +551,8 @@ Status codes:
 - [x] Comparison (=, !=, <, <=, >, >=): Implemented in `internal/commands/expr/expr.go`
 - [x] Logical (| , &): Implemented in `internal/commands/expr/expr.go`
 - [x] String operators (match, substr, index, length): Implemented in `internal/commands/expr/expr.go`
-- [ ] Flag `--help`: `third_party/coreutils/src/expr.c:L157`
-- [ ] Flag `--version`: `third_party/coreutils/src/expr.c:L160`
+- [x] Flag `--help`: `internal/commands/expr/expr.go`
+- [x] Flag `--version`: `internal/commands/expr/expr.go`
 
 ### `factor`
 

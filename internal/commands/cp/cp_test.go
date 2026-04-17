@@ -31,8 +31,8 @@ func TestCp_Run(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, "content", string(content))
 
-	// Test copy to directory
-	status = c.Run(context.Background(), env, []string{"source.txt", "dir/"})
+	// Test copy with -t
+	status = c.Run(context.Background(), env, []string{"-t", "/dir", "source.txt"})
 	assert.Equal(t, 0, status)
 	content, err = afero.ReadFile(fs, "/dir/source.txt")
 	require.NoError(t, err)

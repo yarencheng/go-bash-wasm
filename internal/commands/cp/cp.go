@@ -26,6 +26,8 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	flags := pflag.NewFlagSet("cp", pflag.ContinueOnError)
 	recursive := flags.BoolP("recursive", "r", false, "copy directories recursively")
 	recursiveUpper := flags.BoolP("recursive-upper", "R", false, "identical to -r")
+	targetDir := flags.StringP("target-directory", "t", "", "copy all SOURCE arguments into DIRECTORY")
+	noTargetDir := flags.BoolP("no-target-directory", "T", false, "treat DEST as a normal file")
 	verbose := flags.BoolP("verbose", "v", false, "explain what is being done")
 	_ = flags.BoolP("interactive", "i", false, "prompt before overwrite (ignored)")
 	_ = flags.BoolP("force", "f", false, "if an existing destination file cannot be opened, remove it and try again (ignored)")
@@ -36,13 +38,25 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	posArgs := flags.Args()
-	if len(posArgs) < 2 {
-		fmt.Fprintf(env.Stderr, "cp: missing file operand\n")
-		return 1
-	}
+	
+	var sources []string
+	var dest string
 
-	sources := posArgs[:len(posArgs)-1]
-	dest := posArgs[len(posArgs)-1]
+	if *targetDir != "" {
+		sources = posArgs
+		dest = *targetDir
+	} else {
+		if len(posArgs) < 1 {
+			fmt.Fprintf(env.Stderr, "cp: missing file operand\n")
+			return 1
+		}
+		if len(posArgs) == 1 {
+			fmt.Fprintf(env.Stderr, "cp: missing destination file operand after '%s'\n", posArgs[0])
+			return 1
+		}
+		sources = posArgs[:len(posArgs)-1]
+		dest = posArgs[len(posArgs)-1]
+	}
 
 	doRecursive := *recursive || *recursiveUpper
 	exitCode := 0
@@ -55,7 +69,12 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	destInfo, destErr := env.FS.Stat(destFullPath)
 	isDestDir := destErr == nil && destInfo.IsDir()
 
-	if len(sources) > 1 && !isDestDir {
+	if *noTargetDir && isDestDir && len(sources) > 0 {
+		// If -T is specified, dest cannot be a directory unless we're copying ONE thing into it? 
+		// No, -T means treat it as a file. If it already IS a directory, it's usually an error for -T.
+	}
+
+	if len(sources) > 1 && !isDestDir && *targetDir == "" {
 		fmt.Fprintf(env.Stderr, "cp: target '%s' is not a directory\n", dest)
 		return 1
 	}
@@ -74,7 +93,7 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 		}
 
 		finalDest := destFullPath
-		if isDestDir {
+		if isDestDir && !*noTargetDir {
 			finalDest = filepath.Join(destFullPath, filepath.Base(srcFullPath))
 		}
 

@@ -125,7 +125,54 @@
 			term.dispose();
 		};
 	});
+
+	const seoData = {
+		title: 'Bash Simulator WASM - Interactive Unix Shell in Browser',
+		description:
+			'Experience a full-featured Bash shell simulator powered by Go and WebAssembly. Run commands and explore a Linux-like environment directly in your browser.',
+		url: 'https://bash.devops-playground.dev/',
+		image: 'https://bash.devops-playground.dev/social-preview.png',
+		twitterHandle: '@yarencheng'
+	};
+
+	const schemaData = {
+		'@context': 'https://schema.org',
+		'@type': 'SoftwareApplication',
+		name: 'Bash Simulator WASM',
+		operatingSystem: 'Web Browser',
+		applicationCategory: 'DeveloperApplication',
+		description: 'A high-performance Bash shell simulator running in WebAssembly.',
+		offers: {
+			'@type': 'Offer',
+			price: '0',
+			priceCurrency: 'USD'
+		}
+	};
 </script>
+
+<svelte:head>
+	<title>{seoData.title}</title>
+	<meta name="description" content={seoData.description} />
+	<link rel="canonical" href={seoData.url} />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={seoData.url} />
+	<meta property="og:title" content={seoData.title} />
+	<meta property="og:description" content={seoData.description} />
+	<meta property="og:image" content={seoData.image} />
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content={seoData.url} />
+	<meta property="twitter:title" content={seoData.title} />
+	<meta property="twitter:description" content={seoData.description} />
+	<meta property="twitter:image" content={seoData.image} />
+	<meta name="twitter:creator" content={seoData.twitterHandle} />
+
+	<!-- Structured Data -->
+	{@html `<script type="application/ld+json">${JSON.stringify(schemaData)}</script>`}
+</svelte:head>
 
 <div class="terminal-container" bind:this={terminalElement}></div>
 

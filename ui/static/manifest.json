@@ -1,0 +1,16 @@
+{
+  "name": "Bash Simulator WASM",
+  "short_name": "BashWASM",
+  "description": "A high-performance Bash shell simulator running in WebAssembly.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

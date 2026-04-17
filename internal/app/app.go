@@ -86,6 +86,10 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/truncate"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tsort"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unexpand"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/expand"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/fmt"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/fold"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/numfmt"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tee"
 	test "github.com/yarencheng/go-bash-wasm/internal/commands/test"
@@ -215,6 +219,10 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		truncate.New(),
 		tsort.New(),
 		unexpand.New(),
+		expand.New(),
+		fmt.New(),
+		fold.New(),
+		numfmt.New(),
 		yes.New(),
 		sleep.New(),
 		printenv.New(),

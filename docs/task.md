@@ -529,10 +529,10 @@ Status codes:
 
 ### `expand`
 
-- [ ] Upstream: `third_party/coreutils/src/expand.c`
-- [ ] Basic conversion: Missing implementation
-- [ ] Flag `-i`, `--initial`: `third_party/coreutils/src/expand.c:L78`
-- [ ] Flag `-t`, `--tabs=LIST`: `third_party/coreutils/src/expand.c:L82`
+- [x] Upstream: `third_party/coreutils/src/expand.c`
+- [x] Basic conversion: Implemented in `internal/commands/expand/expand.go`
+- [x] Flag `-i`, `--initial`: `internal/commands/expand/expand.go`
+- [x] Flag `-t`, `--tabs=LIST`: `internal/commands/expand/expand.go`
 
 ### `export`
 
@@ -580,25 +580,25 @@ Status codes:
 
 ### `fmt`
 
-- [ ] Upstream: `third_party/coreutils/src/fmt.c`
-- [ ] Paragraph formatting: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/fmt.c`
+- [x] Paragraph formatting: Implemented in `internal/commands/fmt/fmt.go`
 - [ ] Flag `-c`, `--crown-margin`: `third_party/coreutils/src/fmt.c:L185`
 - [ ] Flag `-p`, `--prefix=STRING`: `third_party/coreutils/src/fmt.c:L189`
-- [ ] Flag `-s`, `--split-only`: `third_party/coreutils/src/fmt.c:L194`
+- [x] Flag `-s`, `--split-only`: `internal/commands/fmt/fmt.go`
 - [ ] Flag `-t`, `--tagged-paragraph`: `third_party/coreutils/src/fmt.c:L198`
 - [ ] Flag `-u`, `--uniform-spacing`: `third_party/coreutils/src/fmt.c:L202`
-- [ ] Flag `-w`, `--width=WIDTH`: `third_party/coreutils/src/fmt.c:L206`
+- [x] Flag `-w`, `--width=WIDTH`: `internal/commands/fmt/fmt.go`
 - [ ] Flag `-g`, `--goal=WIDTH`: `third_party/coreutils/src/fmt.c:L212`
 - [ ] Flag `-WIDTH`: `third_party/coreutils/src/fmt.c:L178`
 
 ### `fold`
 
-- [ ] Upstream: `third_party/coreutils/src/fold.c`
-- [ ] Line wrapping: Missing implementation
-- [ ] Flag `-b`, `--bytes`: `third_party/coreutils/src/fold.c:72`
+- [x] Upstream: `third_party/coreutils/src/fold.c`
+- [x] Line wrapping: Implemented in `internal/commands/fold/fold.go`
+- [x] Flag `-b`, `--bytes`: `internal/commands/fold/fold.go`
 - [ ] Flag `-c`, `--characters`: `third_party/coreutils/src/fold.c:76`
-- [ ] Flag `-s`, `--spaces`: `third_party/coreutils/src/fold.c:80`
-- [ ] Flag `-w`, `--width=WIDTH`: `third_party/coreutils/src/fold.c:84`
+- [x] Flag `-s`, `--spaces`: `internal/commands/fold/fold.go`
+- [x] Flag `-w`, `--width=WIDTH`: `internal/commands/fold/fold.go`
 - [ ] Flag `-s`: `third_party/coreutils/src/fold.c:L96`
 - [ ] Flag `-w`: `third_party/coreutils/src/fold.c:L100`
 
@@ -963,9 +963,13 @@ Status codes:
 
 ### `numfmt`
 
-- [ ] Upstream: `third_party/coreutils/src/numfmt.c`
+- [x] Upstream: `third_party/coreutils/src/numfmt.c`
+- [x] Conversion: Implemented in `internal/commands/numfmt/numfmt.go`
 - [ ] Flag `-d`, `--delimiter=X`: `third_party/coreutils/src/numfmt.c:L1022`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/numfmt.c:L1053`
+- [x] Flag `--to`: `internal/commands/numfmt/numfmt.go`
+- [x] Flag `--from`: `internal/commands/numfmt/numfmt.go`
+- [x] Flag `--header`: `internal/commands/numfmt/numfmt.go`
 
 ### `od`
 

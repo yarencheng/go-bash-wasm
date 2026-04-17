@@ -1741,6 +1741,12 @@ Status codes:
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] Output format for `time` reserved word: Missing implementation
 
+## Interactive Shell Features
+
+- [ ] Interactive history navigation (Up/Down arrow keys)
+- [ ] Command line editing (Backspace, Ctrl+L, etc.)
+- [ ] Tab completion: Missing implementation
+
 ## Shell Expansions
 
 ### Parameter Expansion

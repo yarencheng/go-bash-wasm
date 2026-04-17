@@ -28,7 +28,7 @@ func main() {
 		if len(args) == 0 {
 			return nil
 		}
-		data := args[0].String() + "\n"
+		data := args[0].String()
 		// Write in a goroutine so we don't block the JS callback.
 		go func() {
 			if _, err := pw.Write([]byte(data)); err != nil {

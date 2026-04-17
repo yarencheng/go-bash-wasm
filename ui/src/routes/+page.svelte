@@ -7,7 +7,6 @@
 	let term: Terminal;
 	let fitAddon: FitAddon;
 	let wasmReady = $state(false);
-	let lineBuffer = '';
 
 	$effect(() => {
 		if (typeof window === 'undefined' || !terminalElement) return;
@@ -110,45 +109,11 @@
 
 		initWasm();
 
-		// 4. Wire Terminal Data to WASM Stdin
+		// 4. Wire Terminal Data to WASM Stdin (Raw Mode)
 		term.onData((data) => {
 			if (!wasmReady) return;
-
-			for (let i = 0; i < data.length; i++) {
-				const char = data[i];
-				const code = data.charCodeAt(i);
-
-				switch (code) {
-					case 13: // Enter
-						term.write('\r\n');
-						if (typeof (window as any).writeStdin === 'function') {
-							(window as any).writeStdin(lineBuffer);
-						}
-						lineBuffer = '';
-						break;
-					case 127: // Backspace
-					case 8:
-						if (lineBuffer.length > 0) {
-							lineBuffer = lineBuffer.slice(0, -1);
-							term.write('\b \b');
-						}
-						break;
-					case 4: // Ctrl+D
-						if (typeof (window as any).closeStdin === 'function') {
-							(window as any).closeStdin();
-						}
-						break;
-					case 3: // Ctrl+C
-						term.write('^C\r\n');
-						lineBuffer = '';
-						break;
-					default:
-						if (code >= 32) {
-							lineBuffer += char;
-							term.write(char);
-						}
-						break;
-				}
+			if (typeof (window as any).writeStdin === 'function') {
+				(window as any).writeStdin(data);
 			}
 		});
 

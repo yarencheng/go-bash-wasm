@@ -1,16 +1,19 @@
 {
-  "name": "Bash Simulator WASM",
+  "name": "Bash Simulator WASM (Golang)",
   "short_name": "BashWASM",
-  "description": "A high-performance Bash shell simulator running in WebAssembly.",
+  "description": "A high-performance Bash shell simulator running in WebAssembly. Developed with Go.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#0d1117",
+  "orientation": "any",
+  "categories": ["utilities", "developer", "education"],
   "icons": [
     {
       "src": "favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

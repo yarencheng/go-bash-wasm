@@ -127,32 +127,74 @@
 	});
 
 	const seoData = {
-		title: 'Bash Simulator WASM - Interactive Unix Shell in Browser',
+		title: 'Bash Simulator WASM (Golang) - Interactive Unix Shell',
 		description:
-			'Experience a full-featured Bash shell simulator powered by Go and WebAssembly. Run commands and explore a Linux-like environment directly in your browser.',
+			'A high-performance Bash shell simulator powered by Go and WebAssembly. Run interactive Linux commands directly in your browser with our WASM-based terminal.',
 		url: 'https://bash.devops-playground.dev/',
 		image: 'https://bash.devops-playground.dev/social-preview.png',
-		twitterHandle: '@yarencheng'
+		twitterHandle: '@yarencheng',
+		siteName: 'Bash Simulator WASM',
+		keywords: 'Bash, WASM, Golang, WebAssembly, Terminal, Shell Simulator, Linux Online, DevOps'
 	};
 
 	const schemaData = {
 		'@context': 'https://schema.org',
 		'@type': 'SoftwareApplication',
 		name: 'Bash Simulator WASM',
-		operatingSystem: 'Web Browser',
+		alternateName: 'Bash WASM(Golang)',
+		operatingSystem: 'Any browser with WebAssembly support',
 		applicationCategory: 'DeveloperApplication',
-		description: 'A high-performance Bash shell simulator running in WebAssembly.',
+		description: 'A robust, interactive Bash shell simulator built with Go and compiled to WebAssembly. Features include coreutils parity, filesystem simulation, and interactive command execution.',
 		offers: {
 			'@type': 'Offer',
 			price: '0',
 			priceCurrency: 'USD'
-		}
+		},
+		author: {
+			'@type': 'Person',
+			name: 'aren',
+			url: 'https://github.com/yarencheng'
+		},
+		softwareVersion: '1.0.0',
+		keywords: seoData.keywords
+	};
+
+	const faqData = {
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: [
+			{
+				'@type': 'Question',
+				name: 'What is Bash Simulator WASM?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text: 'It is a full-featured Bash shell simulator developed in Go and running entirely in the browser using WebAssembly (WASM).'
+				}
+			},
+			{
+				'@type': 'Question',
+				name: 'How do I use this Bash shell?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text: 'Simply open the website and start typing standard Unix commands like ls, cd, mkdir, and echo. The environment is persistent within your browser session.'
+				}
+			},
+			{
+				'@type': 'Question',
+				name: 'Is this a real Linux kernel?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text: 'No, it is a high-fidelity simulation of the Bash shell and Coreutils running on a virtual filesystem in WebAssembly, not a full Linux kernel.'
+				}
+			}
+		]
 	};
 </script>
 
 <svelte:head>
 	<title>{seoData.title}</title>
 	<meta name="description" content={seoData.description} />
+	<meta name="keywords" content={seoData.keywords} />
 	<link rel="canonical" href={seoData.url} />
 
 	<!-- Open Graph / Facebook -->
@@ -161,6 +203,8 @@
 	<meta property="og:title" content={seoData.title} />
 	<meta property="og:description" content={seoData.description} />
 	<meta property="og:image" content={seoData.image} />
+	<meta property="og:site_name" content={seoData.siteName} />
+	<meta property="og:locale" content="en_US" />
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
@@ -169,10 +213,37 @@
 	<meta property="twitter:description" content={seoData.description} />
 	<meta property="twitter:image" content={seoData.image} />
 	<meta name="twitter:creator" content={seoData.twitterHandle} />
+	<meta name="twitter:site" content={seoData.twitterHandle} />
 
 	<!-- Structured Data -->
 	{@html `<script type="application/ld+json">${JSON.stringify(schemaData)}</script>`}
+	{@html `<script type="application/ld+json">${JSON.stringify(faqData)}</script>`}
 </svelte:head>
+
+<!-- Visually hidden semantic content for SEO and AEO -->
+<div class="sr-only">
+	<h1>{seoData.title}</h1>
+	<p>{seoData.description}</p>
+	<section>
+		<h2>Key Features of Bash WASM(Golang)</h2>
+		<ul>
+			<li>Full interactive Bash shell simulation</li>
+			<li>Powered by Go and WebAssembly</li>
+			<li>Virtual filesystem within the browser</li>
+			<li>GNU Coreutils parity (ls, cd, cp, mv, etc.)</li>
+			<li>Fast and lightweight execution</li>
+		</ul>
+	</section>
+	<section>
+		<h2>Frequently Asked Questions</h2>
+		{#each faqData.mainEntity as faq}
+			<article>
+				<h3>{faq.name}</h3>
+				<p>{faq.acceptedAnswer.text}</p>
+			</article>
+		{/each}
+	</section>
+</div>
 
 <div class="terminal-container" bind:this={terminalElement}></div>
 
@@ -183,6 +254,18 @@
 		background-color: #0a0a0a;
 		padding: 1rem;
 		box-sizing: border-box;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
 	}
 
 	:global(.xterm) {

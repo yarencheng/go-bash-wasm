@@ -48,10 +48,6 @@ func (s *Shell) RunInteractive() error {
 			continue
 		}
 
-		if line == "exit" {
-			break
-		}
-
 		// Parse simple command
 		args := strings.Fields(line)
 		if len(args) == 0 {
@@ -62,10 +58,13 @@ func (s *Shell) RunInteractive() error {
 		cmdArgs := args[1:]
 
 		if cmd, ok := s.Registry.Get(cmdName); ok {
-			// In a real shell, we might wrap these or use readline's writers.
 			_ = cmd.Run(context.Background(), s.Env, cmdArgs)
 		} else {
 			fmt.Fprintf(s.Env.Stderr, "%s: command not found\n", cmdName)
+		}
+
+		if s.Env.ExitRequested {
+			break
 		}
 	}
 	return nil

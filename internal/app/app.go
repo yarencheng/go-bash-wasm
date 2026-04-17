@@ -4,12 +4,69 @@ import (
 	"context"
 	"io"
 	"os"
+	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/alias"
+	base64 "github.com/yarencheng/go-bash-wasm/internal/commands/base64"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/basename"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/cd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/clear"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/colon"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/comm"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/cp"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/cut"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/date"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/declare"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/df"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/dirname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/du"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/echo"
+	env "github.com/yarencheng/go-bash-wasm/internal/commands/env"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/exit"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/export"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/expr"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/find"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/grep"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/groups"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/hostname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/id"
+	join "github.com/yarencheng/go-bash-wasm/internal/commands/join"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/ln"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/logname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/mkdir"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/sleep"
+	sort "github.com/yarencheng/go-bash-wasm/internal/commands/sort"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/stat"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/sum"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tee"
+	test "github.com/yarencheng/go-bash-wasm/internal/commands/test"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/touch"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tr"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/uname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/unalias"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/uniq"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/unset"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/uptime"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/wc"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/who"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/whoami"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/yes"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
 )
 
@@ -34,10 +91,79 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 
 	// Setup command registry
 	registry := commands.New()
-	lsCmd := ls.New()
-	if err := registry.Register(lsCmd); err != nil {
-		logger.Error().Err(err).Msg("failed to register ls command")
+	
+	// Register commands
+	cmds := []commands.Command{
+		ls.New(),
+		colon.New(),
+		boolcmd.NewTrue(),
+		boolcmd.NewFalse(),
+		echo.New(),
+		pwd.New(),
+		cat.New(),
+		cd.New(),
+		basename.New(),
+		dirname.New(),
+		mkdir.New(),
+		rmdir.New(),
+		rm.New(),
+		cp.New(),
+		mv.New(),
+		head.New(),
+		tail.New(),
+		wc.New(),
+		touch.New(),
+		stat.New(),
+		id.New(),
+		whoami.New(),
+		uname.New(),
+		uptime.New(),
+		hostname.New(),
+		exit.New(),
+		grep.New(),
+		find.New(),
+		env.New(),
+		export.New(),
+		unset.New(),
+		alias.New(),
+		unalias.New(),
+		declare.New(),
+		groups.New(),
+		logname.New(),
+		base64.New(),
+		sum.New("md5sum"),
+		sum.New("sha1sum"),
+		sum.New("sha256sum"),
+		sum.New("sha512sum"),
+		yes.New(),
+		sleep.New(),
+		printenv.New(),
+		tr.New(),
+		uniq.New(),
+		sort.New(),
+		cut.New(),
+		join.New(),
+		comm.New(),
+		seq.New(),
+		expr.New(),
+		printf.New(),
+		clear.New(),
+		test.New("test"),
+		test.New("["),
+		tee.New(),
+		du.New(),
+		df.New(),
+		ln.New(),
+		date.New(),
+		who.New(),
 	}
+
+	for _, cmd := range cmds {
+		if err := registry.Register(cmd); err != nil {
+			logger.Error().Err(err).Str("command", cmd.Name()).Msg("failed to register command")
+		}
+	}
+
 
 	// Setup environment
 	env := &commands.Environment{
@@ -46,6 +172,18 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		Stdout: stdout,
 		Stderr: stderr,
 		Cwd:    "/",
+		User:   "wasm",
+		Uid:    1000,
+		Gid:       1000,
+		Groups:    []int{1000},
+		StartTime: time.Now(),
+		EnvVars: map[string]string{
+			"PATH": "/usr/local/bin:/usr/bin:/bin",
+			"USER": "wasm",
+			"HOME": "/home/wasm",
+			"PWD":  "/",
+		},
+		Aliases: make(map[string]string),
 	}
 
 	return &App{

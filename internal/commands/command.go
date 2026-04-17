@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"io"
+	"time"
 
 	"github.com/spf13/afero"
 )
@@ -14,6 +15,15 @@ type Environment struct {
 	Stdout io.Writer
 	Stderr io.Writer
 	Cwd    string
+	User   string
+	Uid    int
+	Gid    int
+	Groups        []int
+	StartTime     time.Time
+	ExitRequested bool
+	ExitCode      int
+	EnvVars       map[string]string
+	Aliases       map[string]string
 }
 
 // Command is the interface that all shell commands must implement.

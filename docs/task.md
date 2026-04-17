@@ -21,13 +21,12 @@ Status codes:
 
 ### `:`
 
-- [ ] Upstream: `third_party/bash/builtins/colon.def`
-- [ ] Basic operation: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/colon.def`
+- [x] Basic operation: Implemented in `internal/commands/colon/colon.go`
 
 ### `alias`
 
-- [ ] Upstream: `third_party/bash/builtins/alias.def`
-- [ ] Basic management: Missing implementation
+- [x] Basic management: Implemented in `internal/commands/alias/alias.go`
 - [ ] Flag `-p`: `third_party/bash/builtins/alias.def:L79` (print)
 
 ### `arch`
@@ -53,10 +52,10 @@ Status codes:
 
 ### `basename`
 
-- [ ] Basic operation: Missing implementation
-- [ ] Flag `-a`, `--multiple`: `third_party/coreutils/src/basename.c:L155`
-- [ ] Flag `-s`, `--suffix=SUFFIX`: `third_party/coreutils/src/basename.c:L150`
-- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/basename.c:L159`
+- [x] Basic operation: Implemented in `internal/commands/basename/basename.go`
+- [x] Flag `-a`, `--multiple`: `internal/commands/basename/basename.go`
+- [x] Flag `-s`, `--suffix=SUFFIX`: `internal/commands/basename/basename.go`
+- [x] Flag `-z`, `--zero`: `internal/commands/basename/basename.go`
 
 ### `basenc`
 
@@ -112,13 +111,13 @@ Status codes:
 
 ### `cat`
 
-- [ ] Basic output: Missing implementation
+- [x] Basic output: Implemented in `internal/commands/cat/cat.go`
 - [ ] Flag `-A`, `--show-all`: `third_party/coreutils/src/cat.c:L100`
-- [ ] Flag `-b`, `--number-nonblank`: `third_party/coreutils/src/cat.c:L103`
+- [x] Flag `-b`, `--number-nonblank`: `internal/commands/cat/cat.go`
 - [ ] Flag `-e`: `third_party/coreutils/src/cat.c:L105` (implies -vE)
 - [ ] Flag `-E`, `--show-ends`: `third_party/coreutils/src/cat.c:L108`
-- [ ] Flag `-n`, `--number`: `third_party/coreutils/src/cat.c:L112`
-- [ ] Flag `-s`, `--squeeze-blank`: `third_party/coreutils/src/cat.c:L115`
+- [x] Flag `-n`, `--number`: `internal/commands/cat/cat.go`
+- [x] Flag `-s`, `--squeeze-blank`: `internal/commands/cat/cat.go`
 - [ ] Flag `-t`: `third_party/coreutils/src/cat.c:L118` (implies -vT)
 - [ ] Flag `-T`, `--show-tabs`: `third_party/coreutils/src/cat.c:L121`
 - [ ] Flag `-u`: `third_party/coreutils/src/cat.c:L124` (ignored)
@@ -126,8 +125,8 @@ Status codes:
 
 ### `cd`
 
-- [ ] Upstream: `third_party/bash/builtins/cd.def`
-- [ ] Basic change directory: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/cd.def`
+- [x] Basic change directory: Implemented in `internal/commands/cd/cd.go`
 - [ ] CDPATH support: `third_party/bash/builtins/cd.def:L84`
 - [ ] Flag `-e`: `third_party/bash/builtins/cd.def:L98` (exit status if -P cannot be satisfied)
 - [ ] Flag `-L`: `third_party/bash/builtins/cd.def:L94`
@@ -210,15 +209,15 @@ Status codes:
 
 ### `comm`
 
-- [ ] Upstream: `third_party/coreutils/src/comm.c`
-- [ ] Basic comparison: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/comm.c`
+- [x] Basic comparison: Implemented in `internal/commands/comm/comm.go`
 - [ ] Flag `--check-order`: `third_party/coreutils/src/comm.c:L473`
 - [ ] Flag `--nocheck-order`: `third_party/coreutils/src/comm.c:L474`
 - [ ] Flag `--output-delimiter`: `third_party/coreutils/src/comm.c:L477`
 - [ ] Flag `--total`: `third_party/coreutils/src/comm.c:L478`
-- [ ] Flag `-1`: `third_party/coreutils/src/comm.c:L467`
-- [ ] Flag `-2`: `third_party/coreutils/src/comm.c:L468`
-- [ ] Flag `-3`: `third_party/coreutils/src/comm.c:L469`
+- [x] Flag `-1`: `internal/commands/comm/comm.go`
+- [x] Flag `-2`: `internal/commands/comm/comm.go`
+- [x] Flag `-3`: `internal/commands/comm/comm.go`
 - [ ] Flag `-z`: `third_party/coreutils/src/comm.c:L480`
 
 ### `command`
@@ -279,24 +278,24 @@ Status codes:
 
 ### `cp`
 
-- [ ] Basic copy: Missing implementation
+- [x] Basic copy: Implemented in `internal/commands/cp/cp.go`
 - [ ] Flag `-a`, `--archive`: `third_party/coreutils/src/cp.c:L173`
 - [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/cp.c:L181`
 - [ ] Flag `-d`: `third_party/coreutils/src/cp.c:L185` (implies -P --preserve=links)
-- [ ] Flag `-f`, `--force`: `third_party/coreutils/src/cp.c:L193`
+- [x] Flag `-f`, `--force`: `internal/commands/cp/cp.go` (ignored)
 - [ ] Flag `-H`: `third_party/coreutils/src/cp.c:L201`
-- [ ] Flag `-i`, `--interactive`: `third_party/coreutils/src/cp.c:L205`
+- [x] Flag `-i`, `--interactive`: `internal/commands/cp/cp.go` (ignored)
 - [ ] Flag `-l`, `--link`: `third_party/coreutils/src/cp.c:L209`
 - [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/cp.c:L213`
 - [ ] Flag `-n`, `--no-clobber`: `third_party/coreutils/src/cp.c:L217`
 - [ ] Flag `-p`: `third_party/coreutils/src/cp.c:L234` (same as --preserve=mode,ownership,timestamps)
 - [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/cp.c:L230`
-- [ ] Flag `-r`, `-R`, `--recursive`: `third_party/coreutils/src/cp.c:L250`
+- [x] Flag `-r`, `-R`, `--recursive`: `internal/commands/cp/cp.go`
 - [ ] Flag `-s`, `--symbolic-link`: `third_party/coreutils/src/cp.c:L258`
 - [ ] Flag `-t`, `--target-directory`: `third_party/coreutils/src/cp.c:L262`
 - [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/cp.c:L266`
 - [ ] Flag `-u`, `--update`: `third_party/coreutils/src/cp.c:L270`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/cp.c:L274`
+- [x] Flag `-v`, `--verbose`: `internal/commands/cp/cp.go`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/cp.c:L278`
 - [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/cp.c:L282`
 - [ ] Flag `--attributes-only`: `third_party/coreutils/src/cp.c:L177`
@@ -305,7 +304,7 @@ Status codes:
 - [ ] Flag `--parents`: `third_party/coreutils/src/cp.c:L238`
 - [ ] Flag `--reflink[=WHEN]`: `third_party/coreutils/src/cp.c:L246`
 - [ ] Flag `--sparse=WHEN`: `third_party/coreutils/src/cp.c:L254`
-- [ ] Flag `--strip-trailing-slashes`: `third_party/coreutils/src/cp.c:L262`
+- [ ] Flag `--strip-trailing-slashes`: `third_party/coreutils/src/cat.c:L262`
 
 ### `csplit`
 
@@ -321,23 +320,23 @@ Status codes:
 
 ### `cut`
 
-- [ ] Upstream: `third_party/coreutils/src/cut.c`
-- [ ] Basic selection: Missing implementation
-- [ ] Flag `-b`, `--bytes=LIST`: `third_party/coreutils/src/cut.c:L143`
-- [ ] Flag `-c`, `--characters=LIST`: `third_party/coreutils/src/cut.c:L147`
-- [ ] Flag `-d`, `--delimiter=DELIM`: `third_party/coreutils/src/cut.c:L151`
-- [ ] Flag `-f`, `--fields=LIST`: `third_party/coreutils/src/cut.c:L155`
+- [x] Upstream: `third_party/coreutils/src/cut.c`
+- [x] Basic selection: Implemented in `internal/commands/cut/cut.go`
+- [x] Flag `-b`, `--bytes=LIST`: `internal/commands/cut/cut.go`
+- [x] Flag `-c`, `--characters=LIST`: `internal/commands/cut/cut.go`
+- [x] Flag `-d`, `--delimiter=DELIM`: `internal/commands/cut/cut.go`
+- [x] Flag `-f`, `--fields=LIST`: `internal/commands/cut/cut.go`
 - [ ] Flag `-n`: `third_party/coreutils/src/cut.c:L159` (ignored)
-- [ ] Flag `-s`, `--only-delimited`: `third_party/coreutils/src/cut.c:L163`
+- [x] Flag `-s`, `--only-delimited`: `internal/commands/cut/cut.go`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/cut.c:L175`
 - [ ] Flag `--complement`: `third_party/coreutils/src/cut.c:L167`
 - [ ] Flag `--output-delimiter=STRING`: `third_party/coreutils/src/cut.c:L171`
 
 ### `date`
 
-- [ ] Upstream: `third_party/coreutils/src/date.c`
-- [ ] Basic output: Missing implementation
-- [ ] Custom format `+FORMAT`: `third_party/coreutils/src/date.c:L607`
+- [x] Upstream: `third_party/coreutils/src/date.c`
+- [x] Basic output: Implemented in `internal/commands/date/date.go`
+- [x] Custom format `+FORMAT`: `internal/commands/date/date.go`
 - [ ] Flag `-d`, `--date=STRING`: `third_party/coreutils/src/date.c:L501`
 - [ ] Flag `-f`, `--file=DATEFILE`: `third_party/coreutils/src/date.c:L508`
 - [ ] Flag `-I[FMT]`, `--iso-8601[=FMT]`: `third_party/coreutils/src/date.c:L513`
@@ -367,13 +366,12 @@ Status codes:
 
 ### `declare`
 
-- [ ] Upstream: `third_party/bash/builtins/declare.def`
-- [ ] Attribute management (-i, -r, -x, -a, -A): Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/declare.def:L282` (indexed array)
-- [ ] Flag `-A`: `third_party/bash/builtins/declare.def:L294` (associative array)
-- [ ] Flag `-i`: `third_party/bash/builtins/declare.def:L324` (integer)
-- [ ] Flag `-r`: `third_party/bash/builtins/declare.def:L330` (readonly)
-- [ ] Flag `-x`: `third_party/bash/builtins/declare.def:L336` (export)
+- [x] Attribute management (-i, -r, -x, -a, -A): Implemented in `internal/commands/declare/declare.go`
+- [x] Flag `-a`: `internal/commands/declare/declare.go`
+- [x] Flag `-A`: `internal/commands/declare/declare.go`
+- [x] Flag `-i`: `internal/commands/declare/declare.go`
+- [x] Flag `-r`: `internal/commands/declare/declare.go`
+- [x] Flag `-x`: `internal/commands/declare/declare.go`
 - [ ] Flag `-l`: `third_party/bash/builtins/declare.def:L348` (lowercase)
 - [ ] Flag `-u`: `third_party/bash/builtins/declare.def:L353` (uppercase)
 - [ ] Flag `-n`: `third_party/bash/builtins/declare.def:L327` (nameref)
@@ -381,15 +379,15 @@ Status codes:
 - [ ] Flag `-f`: `third_party/bash/builtins/declare.def:L313` (function)
 - [ ] Flag `-F`: `third_party/bash/builtins/declare.def:L309` (function name only)
 - [ ] Flag `-g`: `third_party/bash/builtins/declare.def:L320` (global)
-- [ ] Flag `-p`: `third_party/bash/builtins/declare.def:L306` (print)
+- [x] Flag `-p`: `internal/commands/declare/declare.go`
 - [ ] Flag `-I`: `third_party/bash/builtins/declare.def:L359` (inherit attributes)
-- [ ] Aliases: `typeset`
+- [x] Aliases: `typeset`
 
 ### `df`
 
-- [ ] Upstream: `third_party/coreutils/src/df.c`
-- [ ] Basic df: Missing implementation
-- [ ] Basic output: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/df.c`
+- [x] Basic df: Implemented in `internal/commands/df/df.go`
+- [x] Basic output: Implemented in `internal/commands/df/df.go`
 - [ ] Flag `--no-sync`: `third_party/coreutils/src/df.c:L266`
 - [ ] Flag `--output[=FIELD_LIST]`: `third_party/coreutils/src/df.c:L262`
 - [ ] Flag `--sync`: `third_party/coreutils/src/df.c:L265`
@@ -399,7 +397,7 @@ Status codes:
 - [ ] Flag `-P`: `third_party/coreutils/src/df.c:L263`
 - [ ] Flag `-T`: `third_party/coreutils/src/df.c:L264`
 - [ ] Flag `-a`: `third_party/coreutils/src/df.c:L256`
-- [ ] Flag `-h`: `third_party/coreutils/src/df.c:L259`
+- [x] Flag `-h`: `internal/commands/df/df.go`
 - [ ] Flag `-i`: `third_party/coreutils/src/df.c:L258`
 - [ ] Flag `-k`: `third_party/coreutils/src/df.c:L1307`
 - [ ] Flag `-l`: `third_party/coreutils/src/df.c:L261`
@@ -422,9 +420,9 @@ Status codes:
 
 ### `dirname`
 
-- [ ] Upstream: `third_party/coreutils/src/dirname.c`
-- [ ] Basic operation: Missing implementation
-- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/dirname.c:L76`
+- [x] Upstream: `third_party/coreutils/src/dirname.c`
+- [x] Basic operation: Implemented in `internal/commands/dirname/dirname.go`
+- [x] Flag `-z`, `--zero`: `internal/commands/dirname/dirname.go`
 
 ### `dirs`
 
@@ -443,23 +441,23 @@ Status codes:
 
 ### `du`
 
-- [ ] Upstream: `third_party/coreutils/src/du.c`
-- [ ] Basic du: Missing implementation
-- [ ] Basic usage summary: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/du.c`
+- [x] Basic du: Implemented in `internal/commands/du/du.go`
+- [x] Basic usage summary: Implemented in `internal/commands/du/du.go`
 - [ ] Flag `-a`, `--all`: `third_party/coreutils/src/du.c:L294`
 - [ ] Flag `-A`, `--apparent-size`: `third_party/coreutils/src/du.c:L298`
 - [ ] Flag `-b`, `--bytes`: `third_party/coreutils/src/du.c:L310`
 - [ ] Flag `-c`, `--total`: `third_party/coreutils/src/du.c:L314`
 - [ ] Flag `-d`, `--max-depth=N`: `third_party/coreutils/src/du.c:L322`
 - [ ] Flag `-D`, `--dereference-args`: `third_party/coreutils/src/du.c:L318`
-- [ ] Flag `-h`, `--human-readable`: `third_party/coreutils/src/du.c:L337`
+- [x] Flag `-h`, `--human-readable`: `internal/commands/du/du.go`
 - [ ] Flag `-H`: `third_party/coreutils/src/du.c:L333` (same as --dereference-args)
 - [ ] Flag `-k`: `third_party/coreutils/src/du.c:L345` (1K blocks)
 - [ ] Flag `-l`, `--count-links`: `third_party/coreutils/src/du.c:L353`
 - [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/du.c:L349`
 - [ ] Flag `-m`: `third_party/coreutils/src/du.c:L357` (1M blocks)
 - [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/du.c:L361`
-- [ ] Flag `-s`, `--summarize`: `third_party/coreutils/src/du.c:L373`
+- [x] Flag `-s`, `--summarize`: `internal/commands/du/du.go`
 - [ ] Flag `-S`, `--separate-dirs`: `third_party/coreutils/src/du.c:L365`
 - [ ] Flag `-t`, `--threshold=SIZE`: `third_party/coreutils/src/du.c:L377`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/du.c:L402`
@@ -474,10 +472,10 @@ Status codes:
 
 ### `echo`
 
-- [ ] Basic output: Missing implementation
-- [ ] Flag `-E`: `third_party/bash/builtins/echo.def:L152`
-- [ ] Flag `-e`: `third_party/bash/builtins/echo.def:L149`
-- [ ] Flag `-n`: `third_party/bash/builtins/echo.def:L146`
+- [x] Basic output: Implemented in `internal/commands/echo/echo.go`
+- [x] Flag `-E`: `internal/commands/echo/echo.go`
+- [x] Flag `-e`: `internal/commands/echo/echo.go`
+- [x] Flag `-n`: `internal/commands/echo/echo.go`
 
 ### `enable`
 
@@ -491,8 +489,8 @@ Status codes:
 
 ### `env`
 
-- [ ] Upstream: `third_party/coreutils/src/env.c`
-- [ ] Basic execution: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/env.c`
+- [x] Basic execution: Implemented in `internal/commands/env/env.go`
 - [ ] Flag `-a`, `--argv0=ARG`: `third_party/coreutils/src/env.c:L123`
 - [ ] Flag `-i`, `--ignore-environment`: `third_party/coreutils/src/env.c:L127`
 - [ ] Flag `-u`, `--unset=NAME`: `third_party/coreutils/src/env.c:L135`
@@ -520,9 +518,9 @@ Status codes:
 
 ### `exit`
 
-- [ ] Upstream: `third_party/bash/builtins/exit.def`
-- [ ] Basic exit: Missing implementation
-- [ ] Exit status parameter: `third_party/bash/builtins/exit.def:L25`
+- [x] Upstream: `third_party/bash/builtins/exit.def`
+- [x] Basic exit: Implemented in `internal/commands/exit/exit.go`
+- [x] Exit status parameter: `internal/commands/exit/exit.go`
 
 ### `expand`
 
@@ -533,17 +531,18 @@ Status codes:
 
 ### `export`
 
-- [ ] Upstream: `third_party/bash/builtins/setattr.def`
+- [x] Upstream: `third_party/bash/builtins/setattr.def`
+- [x] Basic operation: Implemented in `internal/commands/export/export.go`
 - [ ] Flag `-f`: `third_party/bash/builtins/setattr.def:L142` (functions)
 - [ ] Flag `-n`: `third_party/bash/builtins/setattr.def:L142` (remove export attribute)
-- [ ] Flag `-p`: `third_party/bash/builtins/setattr.def:L142` (print)
+- [x] Flag `-p`: `internal/commands/export/export.go`
 
 ### `expr`
 
-- [ ] Upstream: `third_party/coreutils/src/expr.c`
-- [ ] Expression evaluation: Missing implementation
-- [ ] Arithmetic (+, -, *, /, %): Missing implementation
-- [ ] Comparison (=, !=, <, <=, >, >=): Missing implementation
+- [x] Upstream: `third_party/coreutils/src/expr.c`
+- [x] Expression evaluation: Implemented in `internal/commands/expr/expr.go`
+- [x] Arithmetic (+, -, *, /, %): Implemented in `internal/commands/expr/expr.go`
+- [x] Comparison (=, !=, <, <=, >, >=): Implemented in `internal/commands/expr/expr.go`
 - [ ] Logical (| , &): Missing implementation
 - [ ] String operators (match, substr, index, length): `third_party/coreutils/src/expr.c:L186`
 - [ ] Flag `--help`: `third_party/coreutils/src/expr.c:L157`
@@ -557,8 +556,8 @@ Status codes:
 
 ### `false`
 
-- [ ] Upstream: `third_party/bash/builtins/colon.def`, `third_party/coreutils/src/false.c`
-- [ ] Basic operation: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/colon.def`, `third_party/coreutils/src/false.c`
+- [x] Basic operation: Implemented in `internal/commands/boolcmd/bool.go`
 
 ### `fc`
 
@@ -611,8 +610,8 @@ Status codes:
 
 ### `groups`
 
-- [ ] Upstream: `third_party/coreutils/src/groups.c`
-- [ ] Basic listing: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/groups.c`
+- [x] Basic listing: Implemented in `internal/commands/groups/groups.go`
 - [ ] Multiple users support: `third_party/coreutils/src/groups.c:L120`
 
 ### `hash`
@@ -627,11 +626,11 @@ Status codes:
 
 ### `head`
 
-- [ ] Basic output: Missing implementation
-- [ ] Flag `-c`, `--bytes`: `third_party/coreutils/src/head.c:L121`
-- [ ] Flag `-n`, `--lines`: `third_party/coreutils/src/head.c:L126`
-- [ ] Flag `-q`, `--quiet`, `--silent`: `third_party/coreutils/src/head.c:L131`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/head.c:L135`
+- [x] Basic output: Implemented in `internal/commands/head/head.go`
+- [x] Flag `-c`, `--bytes`: `internal/commands/head/head.go`
+- [x] Flag `-n`, `--lines`: `internal/commands/head/head.go`
+- [x] Flag `-q`, `--quiet`, `--silent`: `internal/commands/head/head.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/head/head.go`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/head.c:L139`
 
 ### `help`
@@ -671,15 +670,15 @@ Status codes:
 
 ### `id`
 
-- [ ] Upstream: `third_party/coreutils/src/id.c`
-- [ ] Basic output: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/id.c`
+- [x] Basic output: Implemented in `internal/commands/id/id.go`
 - [ ] Flag `-G`: `third_party/coreutils/src/id.c:L113`
 - [ ] Flag `-Z`: `third_party/coreutils/src/id.c:L105`
 - [ ] Flag `-a`: `third_party/coreutils/src/id.c:L101`
-- [ ] Flag `-g`: `third_party/coreutils/src/id.c:L109`
-- [ ] Flag `-n`: `third_party/coreutils/src/id.c:L117`
+- [x] Flag `-g`: `internal/commands/id/id.go`
+- [x] Flag `-n`: `internal/commands/id/id.go`
 - [ ] Flag `-r`: `third_party/coreutils/src/id.c:L121`
-- [ ] Flag `-u`: `third_party/coreutils/src/id.c:L125`
+- [x] Flag `-u`: `internal/commands/id/id.go`
 - [ ] Flag `-z`: `third_party/coreutils/src/id.c:L129`
 
 ### `install`
@@ -711,8 +710,8 @@ Status codes:
 
 ### `join`
 
-- [ ] Upstream: `third_party/coreutils/src/join.c`
-- [ ] Basic join: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/join.c`
+- [x] Basic join: Implemented in `internal/commands/join/join.go`
 - [ ] Flag `-1 FIELD`: `third_party/coreutils/src/join.c:L186`
 - [ ] Flag `-2 FIELD`: `third_party/coreutils/src/join.c:L187`
 - [ ] Flag `-a FILENUM`: `third_party/coreutils/src/join.c:L188`
@@ -759,9 +758,9 @@ Status codes:
 
 ### `ln`
 
-- [ ] Basic link creation: Missing implementation
+- [x] Basic link creation: Implemented in `internal/commands/ln/ln.go`
 - [ ] Flag `-f`: `third_party/coreutils/src/ln.c:L553`
-- [ ] Flag `-s`: `third_party/coreutils/src/ln.c:L574`
+- [x] Flag `-s`: `internal/commands/ln/ln.go`
 - [ ] Flag `-v`: `third_party/coreutils/src/ln.c:L595`
 
 ### `local`
@@ -771,7 +770,8 @@ Status codes:
 
 ### `logname`
 
-- [ ] Upstream: `third_party/coreutils/src/logname.c`
+- [x] Upstream: `third_party/coreutils/src/logname.c`
+- [x] Basic operation: Implemented in `internal/commands/logname/logname.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/logname.c:L44`
 - [ ] Flag `--version`: `third_party/coreutils/src/logname.c:L44`
 
@@ -863,10 +863,11 @@ Status codes:
 
 ### `mkdir`
 
-- [ ] Upstream: `third_party/coreutils/src/mkdir.c`
+- [x] Upstream: `third_party/coreutils/src/mkdir.c`
+- [x] Basic operation: Implemented in `internal/commands/mkdir/mkdir.go`
 - [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mkdir.c:L65`
-- [ ] Flag `-p`, `--parents`: `third_party/coreutils/src/mkdir.c:L69`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/mkdir.c:L74`
+- [x] Flag `-p`, `--parents`: `internal/commands/mkdir/mkdir.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/mkdir/mkdir.go`
 - [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mkdir.c:L78`
 
 ### `mkfifo`
@@ -894,15 +895,15 @@ Status codes:
 
 ### `mv`
 
-- [ ] Basic move/rename: Missing implementation
+- [x] Basic move/rename: Implemented in `internal/commands/mv/mv.go`
 - [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/mv.c:L278`
-- [ ] Flag `-f`, `--force`: `third_party/coreutils/src/mv.c:L282`
-- [ ] Flag `-i`, `--interactive`: `third_party/coreutils/src/mv.c:L286`
+- [x] Flag `-f`, `--force`: `internal/commands/mv/mv.go` (ignored)
+- [x] Flag `-i`, `--interactive`: `internal/commands/mv/mv.go` (ignored)
 - [ ] Flag `-n`, `--no-clobber`: `third_party/coreutils/src/mv.c:L290`
 - [ ] Flag `-t`, `--target-directory`: `third_party/coreutils/src/mv.c:L294`
 - [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/mv.c:L298`
 - [ ] Flag `-u`, `--update`: `third_party/coreutils/src/mv.c:L302`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/mv.c:L306`
+- [x] Flag `-v`, `--verbose`: `internal/commands/mv/mv.go`
 - [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/mv.c:L310`
 - [ ] Flag `--exchange`: `third_party/coreutils/src/mv.c:L314`
 - [ ] Flag `--no-copy`: `third_party/coreutils/src/mv.c:L318`
@@ -1015,13 +1016,13 @@ Status codes:
 
 ### `printenv`
 
-- [ ] Upstream: `third_party/coreutils/src/printenv.c`
-- [ ] Basic output: Missing implementation
-- [ ] Flag `-0`: `third_party/coreutils/src/printenv.c:L70`
+- [x] Upstream: `third_party/coreutils/src/printenv.c`
+- [x] Basic output: Implemented in `internal/commands/printenv/printenv.go`
+- [x] Flag `-0`: `internal/commands/printenv/printenv.go`
 
 ### `printf`
 
-- [ ] Basic formatting: Missing implementation
+- [x] Basic formatting: Implemented in `internal/commands/printf/printf.go`
 - [ ] Flag `%b`: `third_party/bash/builtins/printf.def:L558`
 - [ ] Flag `%q`: `third_party/bash/builtins/printf.def:L672`
 - [ ] Flag `-v VAR`: `third_party/bash/builtins/printf.def:L301`
@@ -1054,8 +1055,8 @@ Status codes:
 
 ### `pwd`
 
-- [ ] Upstream: `third_party/bash/builtins/cd.def`
-- [ ] Basic path reporting: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/cd.def`
+- [x] Basic path reporting: Implemented in `internal/commands/pwd/pwd.go`
 - [-] Flag `--help`: Handled by the shell's global help dispatcher.
 - [ ] Flag `-L`: `third_party/bash/builtins/cd.def:L435-513` / `third_party/coreutils/src/pwd.c:L291-316`
 - [ ] Flag `-P`: `third_party/bash/builtins/cd.def:L435-513` / `third_party/coreutils/src/pwd.c:L371-383`
@@ -1120,23 +1121,23 @@ Status codes:
 
 ### `rm`
 
-- [ ] Upstream: `third_party/coreutils/src/rm.c`
-- [ ] Basic removal: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/rm.c`
+- [x] Basic removal: Implemented in `internal/commands/rm/rm.go`
 - [ ] Flag `-I`: `third_party/coreutils/src/rm.c:L157` (prompt once)
-- [ ] Flag `-d`, `--dir`: `third_party/coreutils/src/rm.c:L162` (remove empty directories)
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/rm.c:L167`
-- [ ] Flag `-f`: `third_party/coreutils/src/rm.c:L137`
-- [ ] Flag `-i`: `third_party/coreutils/src/rm.c:L142`
-- [ ] Flag `-r`: `third_party/coreutils/src/rm.c:L172`
+- [x] Flag `-d`, `--dir`: `internal/commands/rm/rm.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/rm/rm.go`
+- [x] Flag `-f`: `internal/commands/rm/rm.go`
+- [x] Flag `-i`: `internal/commands/rm/rm.go`
+- [x] Flag `-r`: `internal/commands/rm/rm.go`
 
 ### `rmdir`
 
-- [ ] Upstream: `third_party/coreutils/src/rmdir.c`
-- [ ] Basic rmdir: Missing implementation
-- [ ] Basic removal: Missing implementation
-- [ ] Flag `--ignore-fail-on-non-empty`: `third_party/coreutils/src/rmdir.c:L178`
-- [ ] Flag `-p`: `third_party/coreutils/src/rmdir.c:L182`
-- [ ] Flag `-v`: `third_party/coreutils/src/rmdir.c:L187`
+- [x] Upstream: `third_party/coreutils/src/rmdir.c`
+- [x] Basic rmdir: Implemented in `internal/commands/rmdir/rmdir.go`
+- [x] Basic removal: Implemented in `internal/commands/rmdir/rmdir.go`
+- [x] Flag `--ignore-fail-on-non-empty`: `internal/commands/rmdir/rmdir.go`
+- [x] Flag `-p`: `internal/commands/rmdir/rmdir.go`
+- [x] Flag `-v`: `internal/commands/rmdir/rmdir.go`
 
 ### `runcon`
 
@@ -1154,13 +1155,11 @@ Status codes:
 
 ### `seq`
 
-- [ ] Upstream: `third_party/coreutils/src/seq.c`
-- [ ] Basic sequence: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/seq.c`
+- [x] Basic sequence: Implemented in `internal/commands/seq/seq.go`
 - [ ] Flag `-f`, `--format=FORMAT`: `third_party/coreutils/src/seq.c:L592`
-- [ ] Flag `-s`, `--separator=STRING`: `third_party/coreutils/src/seq.c:L596`
-- [ ] Flag `-w`, `--equal-width`: `third_party/coreutils/src/seq.c:L600`
-- [ ] Flag `-s`: `third_party/coreutils/src/seq.c:L596`
-- [ ] Flag `-w`: `third_party/coreutils/src/seq.c:L600`
+- [x] Flag `-s`, `--separator=STRING`: `internal/commands/seq/seq.go`
+- [x] Flag `-w`, `--equal-width`: `internal/commands/seq/seq.go`
 
 ### `set`
 
@@ -1255,40 +1254,40 @@ Status codes:
 
 ### `sleep`
 
-- [ ] Upstream: `third_party/coreutils/src/sleep.c`
-- [ ] Basic sleep: Missing implementation
-- [ ] Multiple arguments (sum): `third_party/coreutils/src/sleep.c:L135`
-- [ ] Suffixes (s, m, h, d): `third_party/coreutils/src/sleep.c:L65`
+- [x] Upstream: `third_party/coreutils/src/sleep.c`
+- [x] Basic sleep: Implemented in `internal/commands/sleep/sleep.go`
+- [x] Multiple arguments (sum): `internal/commands/sleep/sleep.go`
+- [x] Suffixes (s, m, h, d): `internal/commands/sleep/sleep.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/sleep.c:L44`
 - [ ] Flag `--version`: `third_party/coreutils/src/sleep.c:L44`
 
 ### `sort`
 
-- [ ] Upstream: `third_party/coreutils/src/sort.c`
-- [ ] Basic sorting: Missing implementation
-- [ ] Ordering flags (`-b`, `-i`, `-d`, `-f`, `-g`, `-h`, `-n`, `-M`, `-R`, `-V`, `-r`): `third_party/coreutils/src/sort.c:L437-490`
-- [ ] Flag `-b`, `--ignore-leading-blanks`: `third_party/coreutils/src/sort.c:L437`
+- [x] Upstream: `third_party/coreutils/src/sort.c`
+- [x] Basic sorting: Implemented in `internal/commands/sort/sort.go`
+- [x] Ordering flags (`-b`, `-i`, `-d`, `-f`, `-g`, `-h`, `-n`, `-M`, `-R`, `-V`, `-r`): Implemented in `internal/commands/sort/sort.go`
+- [x] Flag `-b`, `--ignore-leading-blanks`: `internal/commands/sort/sort.go`
 - [ ] Flag `-c`, `-C`, `--check`: `third_party/coreutils/src/sort.c:L441`
-- [ ] Flag `-d`, `--dictionary-order`: `third_party/coreutils/src/sort.c:L451`
-- [ ] Flag `-f`, `--ignore-case`: `third_party/coreutils/src/sort.c:L455`
-- [ ] Flag `-g`, `--general-numeric-sort`: `third_party/coreutils/src/sort.c:L459`
-- [ ] Flag `-h`, `--human-numeric-sort`: `third_party/coreutils/src/sort.c:L463`
-- [ ] Flag `-i`, `--ignore-nonprinting`: `third_party/coreutils/src/sort.c:L467`
+- [x] Flag `-d`, `--dictionary-order`: `internal/commands/sort/sort.go`
+- [x] Flag `-f`, `--ignore-case`: `internal/commands/sort/sort.go`
+- [x] Flag `-g`, `--general-numeric-sort`: `internal/commands/sort/sort.go`
+- [x] Flag `-h`, `--human-numeric-sort`: `internal/commands/sort/sort.go`
+- [x] Flag `-i`, `--ignore-nonprinting`: `internal/commands/sort/sort.go`
 - [ ] Flag `-k`, `--key=KEYDEF`: `third_party/coreutils/src/sort.c:L473`
 - [ ] Flag `-m`, `--merge`: `third_party/coreutils/src/sort.c:L477`
-- [ ] Flag `-M`, `--month-sort`: `third_party/coreutils/src/sort.c:L481`
-- [ ] Flag `-n`, `--numeric-sort`: `third_party/coreutils/src/sort.c:L485`
+- [x] Flag `-M`, `--month-sort`: `internal/commands/sort/sort.go`
+- [x] Flag `-n`, `--numeric-sort`: `internal/commands/sort/sort.go`
 - [ ] Flag `-o`, `--output=FILE`: `third_party/coreutils/src/sort.c:L489`
-- [ ] Flag `-r`, `--reverse`: `third_party/coreutils/src/sort.c:L493`
+- [x] Flag `-r`, `--reverse`: `internal/commands/sort/sort.go`
 - [ ] Flag `-s`, `--stable`: `third_party/coreutils/src/sort.c:L497`
 - [ ] Flag `-S`, `--buffer-size=SIZE`: `third_party/coreutils/src/sort.c:L501`
 - [ ] Flag `-t`, `--field-separator=SEP`: `third_party/coreutils/src/sort.c:L505`
 - [ ] Flag `-T`, `--temporary-directory=DIR`: `third_party/coreutils/src/sort.c:L509`
-- [ ] Flag `-u`, `--unique`: `third_party/coreutils/src/sort.c:L513`
-- [ ] Flag `-V`, `--version-sort`: `third_party/coreutils/src/sort.c:L517`
+- [x] Flag `-u`, `--unique`: `internal/commands/sort/sort.go`
+- [x] Flag `-V`, `--version-sort`: `internal/commands/sort/sort.go`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/sort.c:L521`
 - [ ] Flag `--parallel=N`: `third_party/coreutils/src/sort.c:L525`
-- [ ] Flag `--random-sort` (`-R`): `third_party/coreutils/src/sort.c:L529`
+- [x] Flag `--random-sort` (`-R`): `internal/commands/sort/sort.go`
 - [ ] Flag `--debug`: `third_party/coreutils/src/sort.c:L533`
 - [ ] Flag `--files0-from=F`: `third_party/coreutils/src/sort.c:L537`
 
@@ -1317,14 +1316,14 @@ Status codes:
 
 ### `stat`
 
-- [ ] Upstream: `third_party/coreutils/src/stat.c`
-- [ ] Basic output: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/stat.c`
+- [x] Basic output: Implemented in `internal/commands/stat/stat.go`
 - [ ] Flag `-c`, `--format=FORMAT`: `third_party/coreutils/src/stat.c:L1921`
-- [ ] Flag `-f`, `--file-system`: `third_party/coreutils/src/stat.c:L1932`
-- [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/stat.c:L1927`
-- [ ] Flag `-t`, `--terse`: `third_party/coreutils/src/stat.c:L1936`
-- [ ] Flag `--printf=FORMAT`: `third_party/coreutils/src/stat.c:L1924`
-- [ ] Flag `--cached={always,never,default}`: `third_party/coreutils/src/stat.c:L1917`
+- [ ] Flag `-f`, `--file-system`: `third_party/coreutils/src/stat.c:1932`
+- [x] Flag `-L`, `--dereference`: `internal/commands/stat/stat.go`
+- [ ] Flag `-t`, `--terse`: `third_party/coreutils/src/stat.c:1936`
+- [ ] Flag `--printf=FORMAT`: `third_party/coreutils/src/stat.c:1924`
+- [ ] Flag `--cached={always,never,default}`: `third_party/coreutils/src/stat.c:1917`
 
 ### `stdbuf`
 
@@ -1368,14 +1367,14 @@ Status codes:
 
 ### `tail`
 
-- [ ] Basic output: Missing implementation
-- [ ] Flag `-c`, `--bytes`: `third_party/coreutils/src/tail.c:L296`
+- [x] Basic output: Implemented in `internal/commands/tail/tail.go`
+- [x] Flag `-c`, `--bytes`: `internal/commands/tail/tail.go`
 - [ ] Flag `-f`, `--follow[={name|descriptor}]`: `third_party/coreutils/src/tail.c:L305`
 - [ ] Flag `-F`: `third_party/coreutils/src/tail.c:L309` (implies --follow=name --retry)
-- [ ] Flag `-n`, `--lines`: `third_party/coreutils/src/tail.c:L314`
-- [ ] Flag `-q`, `--quiet`, `--silent`: `third_party/coreutils/src/tail.c:L318`
+- [x] Flag `-n`, `--lines`: `internal/commands/tail/tail.go`
+- [x] Flag `-q`, `--quiet`, `--silent`: `internal/commands/tail/tail.go`
 - [ ] Flag `-s`, `--sleep-interval`: `third_party/coreutils/src/tail.c:L322`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/tail.c:L326`
+- [x] Flag `-v`, `--verbose`: `internal/commands/tail/tail.go`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/tail.c:L330`
 - [ ] Flag `--pid`: `third_party/coreutils/src/tail.c:L334`
 - [ ] Flag `--retry`: `third_party/coreutils/src/tail.c:L338`
@@ -1383,18 +1382,18 @@ Status codes:
 
 ### `tee`
 
-- [ ] Basic copy: Missing implementation
-- [ ] Flag `-a`, `--append`: `third_party/coreutils/src/tee.c:L93`
+- [x] Basic copy: Implemented in `internal/commands/tee/tee.go`
+- [x] Flag `-a`, `--append`: `internal/commands/tee/tee.go`
 - [ ] Flag `-i`, `--ignore-interrupts`: `third_party/coreutils/src/tee.c:L97`
 - [ ] Flag `-p`, `--output-error[=MODE]`: `third_party/coreutils/src/tee.c:L101`
 
 ### `test`
 
-- [ ] Unary operators (-e, -f, -d, etc.): Missing implementation
-- [ ] String operators (=, !=, -z, -n): Missing implementation
+- [x] Unary operators (-e, -f, -d, etc.): Implemented in `internal/commands/test/test.go`
+- [x] String operators (=, !=, -z, -n): Implemented in `internal/commands/test/test.go`
 - [ ] Numeric operators (-eq, -ne, etc.): Missing implementation
 - [ ] Logical operators (!, -a, -o): Missing implementation
-- [ ] Aliases: `[`
+- [x] Aliases: `[`
 
 ### `time`
 
@@ -1417,25 +1416,25 @@ Status codes:
 
 ### `touch`
 
-- [ ] Upstream: `third_party/coreutils/src/touch.c`
-- [ ] Basic touch: Missing implementation
-- [ ] Basic timestamp update: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/touch.c`
+- [x] Basic touch: Implemented in `internal/commands/touch/touch.go`
+- [x] Basic timestamp update: Implemented in `internal/commands/touch/touch.go`
 - [ ] Flag `-t STAMP`: `third_party/coreutils/src/touch.c:L259` (explicit timestamp)
-- [ ] Flag `-a`: `third_party/coreutils/src/touch.c:L230`
-- [ ] Flag `-c`: `third_party/coreutils/src/touch.c:L234`
-- [ ] Flag `-d`: `third_party/coreutils/src/touch.c:L238`
-- [ ] Flag `-h`: `third_party/coreutils/src/touch.c:L246`
-- [ ] Flag `-m`: `third_party/coreutils/src/touch.c:L251`
-- [ ] Flag `-r`: `third_party/coreutils/src/touch.c:L255`
+- [x] Flag `-a`: `internal/commands/touch/touch.go`
+- [x] Flag `-c`: `internal/commands/touch/touch.go`
+- [x] Flag `-d`: `internal/commands/touch/touch.go`
+- [x] Flag `-h`: `internal/commands/touch/touch.go`
+- [x] Flag `-m`: `internal/commands/touch/touch.go`
+- [x] Flag `-r`: `internal/commands/touch/touch.go`
 - [ ] Flag `-t [[CC]YY]MMDDhhmm[.ss]`: `third_party/coreutils/src/touch.c:L259`
 
 ### `tr`
 
-- [ ] Upstream: `third_party/coreutils/src/tr.c`
-- [ ] Basic translation: Missing implementation
-- [ ] Flag `-c`, `-C`, `--complement`: `third_party/coreutils/src/tr.c:L296`
-- [ ] Flag `-d`, `--delete`: `third_party/coreutils/src/tr.c:L300`
-- [ ] Flag `-s`, `--squeeze-repeats`: `third_party/coreutils/src/tr.c:L304`
+- [x] Upstream: `third_party/coreutils/src/tr.c`
+- [x] Basic translation: Implemented in `internal/commands/tr/tr.go`
+- [x] Flag `-c`, `-C`, `--complement`: `internal/commands/tr/tr.go`
+- [x] Flag `-d`, `--delete`: `internal/commands/tr/tr.go`
+- [x] Flag `-s`, `--squeeze-repeats`: `internal/commands/tr/tr.go`
 - [ ] Flag `-t`, `--truncate-set1`: `third_party/coreutils/src/tr.c:L310`
 
 ### `trap`
@@ -1448,7 +1447,7 @@ Status codes:
 
 ### `true`
 
-- [ ] Basic operation: Missing implementation
+- [x] Basic operation: Implemented in `internal/commands/boolcmd/bool.go`
 
 ### `truncate`
 
@@ -1504,23 +1503,23 @@ Status codes:
 
 ### `unalias`
 
-- [ ] Upstream: `third_party/bash/builtins/alias.def`
-- [ ] Remove aliases: Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/unalias.def:L165`
+- [x] Upstream: `third_party/bash/builtins/alias.def`
+- [x] Remove aliases: Implemented in `internal/commands/alias/alias.go`
+- [x] Flag `-a`: `internal/commands/alias/alias.go`
 
 ### `uname`
 
-- [ ] Upstream: `third_party/coreutils/src/uname.c`
-- [ ] Basic output: Missing implementation
-- [ ] Flag `-a`: `third_party/coreutils/src/uname.c:L123`
-- [ ] Flag `-i`: `third_party/coreutils/src/uname.c:L145`
-- [ ] Flag `-m`: `third_party/coreutils/src/uname.c:L139`
-- [ ] Flag `-n`: `third_party/coreutils/src/uname.c:L130`
-- [ ] Flag `-o`: `third_party/coreutils/src/uname.c:L148`
-- [ ] Flag `-p`: `third_party/coreutils/src/uname.c:L142`
-- [ ] Flag `-r`: `third_party/coreutils/src/uname.c:L133`
-- [ ] Flag `-s`: `third_party/coreutils/src/uname.c:L127`
-- [ ] Flag `-v`: `third_party/coreutils/src/uname.c:L136`
+- [x] Upstream: `third_party/coreutils/src/uname.c`
+- [x] Basic output: Implemented in `internal/commands/uname/uname.go`
+- [x] Flag `-a`: `internal/commands/uname/uname.go`
+- [x] Flag `-i`: `internal/commands/uname/uname.go`
+- [x] Flag `-m`: `internal/commands/uname/uname.go`
+- [x] Flag `-n`: `internal/commands/uname/uname.go`
+- [x] Flag `-o`: `internal/commands/uname/uname.go`
+- [x] Flag `-p`: `internal/commands/uname/uname.go`
+- [x] Flag `-r`: `internal/commands/uname/uname.go`
+- [x] Flag `-s`: `internal/commands/uname/uname.go`
+- [x] Flag `-v`: `internal/commands/uname/uname.go`
 
 ### `unexpand`
 
@@ -1532,15 +1531,15 @@ Status codes:
 
 ### `uniq`
 
-- [ ] Upstream: `third_party/coreutils/src/uniq.c`
-- [ ] Basic filtering: Missing implementation
-- [ ] Flag `-c`, `--count`: `third_party/coreutils/src/uniq.c:L172`
-- [ ] Flag `-d`, `--repeated`: `third_party/coreutils/src/uniq.c:L176`
+- [x] Upstream: `third_party/coreutils/src/uniq.c`
+- [x] Basic filtering: Implemented in `internal/commands/uniq/uniq.go`
+- [x] Flag `-c`, `--count`: `internal/commands/uniq/uniq.go`
+- [x] Flag `-d`, `--repeated`: `internal/commands/uniq/uniq.go`
 - [ ] Flag `-D`, `--all-repeated[=METHOD]`: `third_party/coreutils/src/uniq.c:180`
 - [ ] Flag `-f`, `--skip-fields=N`: `third_party/coreutils/src/uniq.c:189`
-- [ ] Flag `-i`, `--ignore-case`: `third_party/coreutils/src/uniq.c:198`
+- [x] Flag `-i`, `--ignore-case`: `internal/commands/uniq/uniq.go`
 - [ ] Flag `-s`, `--skip-chars=N`: `third_party/coreutils/src/uniq.c:202`
-- [ ] Flag `-u`, `--unique`: `third_party/coreutils/src/uniq.c:206`
+- [x] Flag `-u`, `--unique`: `internal/commands/uniq/uniq.go`
 - [ ] Flag `-w`, `--check-chars=N`: `third_party/coreutils/src/uniq.c:214`
 - [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/uniq.c:210`
 - [ ] Flag `--group[=METHOD]`: `third_party/coreutils/src/uniq.c:184`
@@ -1554,16 +1553,18 @@ Status codes:
 
 ### `unset`
 
-- [ ] Upstream: `third_party/bash/builtins/set.def`
+- [x] Upstream: `third_party/bash/builtins/set.def`
+- [x] Attribute management: Implemented in `internal/commands/unset/unset.go`
 - [ ] Flag `-f`: `third_party/bash/builtins/set.def:L643` (functions)
-- [ ] Flag `-v`: `third_party/bash/builtins/set.def:L637` (variables)
+- [x] Flag `-v`: `internal/commands/unset/unset.go` (variables)
 - [ ] Flag `-n`: `third_party/bash/builtins/set.def:L640` (nameref)
 
 ### `uptime`
 
-- [ ] Upstream: `third_party/coreutils/src/uptime.c`
-- [ ] Flag `-p`, `--pretty`: `third_party/coreutils/src/uptime.c:L130`
-- [ ] Flag `-s`, `--since`: `third_party/coreutils/src/uptime.c:L135`
+- [x] Upstream: `third_party/coreutils/src/uptime.c`
+- [x] Basic output: Implemented in `internal/commands/uptime/uptime.go`
+- [x] Flag `-p`, `--pretty`: `internal/commands/uptime/uptime.go`
+- [x] Flag `-s`, `--since`: `internal/commands/uptime/uptime.go`
 
 ### `users`
 
@@ -1586,16 +1587,19 @@ Status codes:
 
 ### `wc`
 
-- [ ] Basic counts: Missing implementation
-- [ ] Flag `-c`, `--bytes`: `third_party/coreutils/src/wc.c:L188`
-- [ ] Flag `-m`, `--chars`: `third_party/coreutils/src/wc.c:L192`
-- [ ] Flag `-l`, `--lines`: `third_party/coreutils/src/wc.c:L196`
-- [ ] Flag `-w`, `--words`: `third_party/coreutils/src/wc.c:L214`
-- [ ] Flag `-L`, `--max-line-length`: `third_party/coreutils/src/wc.c:L218`
+- [x] Basic counts: Implemented in `internal/commands/wc/wc.go`
+- [x] Flag `-c`, `--bytes`: `internal/commands/wc/wc.go`
+- [x] Flag `-m`, `--chars`: `internal/commands/wc/wc.go`
+- [x] Flag `-l`, `--lines`: `internal/commands/wc/wc.go`
+- [x] Flag `-w`, `--words`: `internal/commands/wc/wc.go`
+- [x] Flag `-L`, `--max-line-length`: `internal/commands/wc/wc.go`
 - [ ] Flag `--files0-from=F`: `third_party/coreutils/src/wc.c:L222`
 - [ ] Flag `--total={auto,always,only,never}`: `third_party/coreutils/src/wc.c:L226`
 
 ### `who`
+
+- [x] Upstream: `third_party/coreutils/src/who.c`
+- [x] Basic output: Implemented in `internal/commands/who/who.go`
 
 - [ ] Upstream: `third_party/coreutils/src/who.c`
 - [ ] Flag `-H`, `--heading`: `third_party/coreutils/src/who.c:L592`

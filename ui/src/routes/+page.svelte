@@ -92,6 +92,8 @@
 				const go = new Go();
 				const result = await WebAssembly.instantiateStreaming(fetch('/main.wasm'), go.importObject);
 
+				term.writeln('\x1b[32mReady! Type a command and press Enter.\x1b[0m');
+
 				// go.run() returns a promise but we do NOT await it here.
 				go.run(result.instance);
 
@@ -99,7 +101,6 @@
 				await new Promise((r) => setTimeout(r, 150));
 
 				wasmReady = true;
-				term.writeln('\x1b[32mReady! Type a command and press Enter.\x1b[0m\r\n');
 				term.focus();
 			} catch (err) {
 				term.writeln(`\x1b[31mFailed to load WASM: ${err}\x1b[0m`);

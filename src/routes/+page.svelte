@@ -6,71 +6,159 @@
 	let terminalElement: HTMLDivElement;
 	let term: Terminal;
 	let fitAddon: FitAddon;
+	let wasmReady = $state(false);
+	let lineBuffer = '';
 
 	$effect(() => {
-		if (typeof window !== 'undefined' && terminalElement) {
-			term = new Terminal({
-				cursorBlink: true,
-				theme: {
-					background: '#0a0a0a',
-					foreground: '#f0f0f0',
-					cursor: '#f0f0f0',
-					selectionBackground: 'rgba(255, 255, 255, 0.3)',
-					black: '#000000',
-					red: '#ff5555',
-					green: '#50fa7b',
-					yellow: '#f1fa8c',
-					blue: '#bd93f9',
-					magenta: '#ff79c6',
-					cyan: '#8be9fd',
-					white: '#bfbfbf',
-					brightBlack: '#4d4d4d',
-					brightRed: '#ff6e67',
-					brightGreen: '#5af78e',
-					brightYellow: '#f4f99d',
-					brightBlue: '#caa9fa',
-					brightMagenta: '#ff92d0',
-					brightCyan: '#9aedfe',
-					brightWhite: '#e6e6e6'
-				},
-				fontFamily: 'Menlo, Monaco, "Courier New", monospace',
-				fontSize: 14,
-				lineHeight: 1.2
-			});
+		if (typeof window === 'undefined' || !terminalElement) return;
 
-			fitAddon = new FitAddon();
-			term.loadAddon(fitAddon);
-			term.open(terminalElement);
-			fitAddon.fit();
+		// 1. Initialize Terminal with a premium theme
+		term = new Terminal({
+			cursorBlink: true,
+			convertEol: true,
+			scrollback: 5000,
+			theme: {
+				background: '#0d1117',
+				foreground: '#c9d1d9',
+				cursor: '#58a6ff',
+				cursorAccent: '#0d1117',
+				selectionBackground: 'rgba(88,166,255,0.25)',
+				black: '#484f58',
+				red: '#ff7b72',
+				green: '#3fb950',
+				yellow: '#d29922',
+				blue: '#58a6ff',
+				magenta: '#bc8cff',
+				cyan: '#39c5cf',
+				white: '#b1bac4',
+				brightBlack: '#6e7681',
+				brightRed: '#ffa198',
+				brightGreen: '#56d364',
+				brightYellow: '#e3b341',
+				brightBlue: '#79c0ff',
+				brightMagenta: '#d2a8ff',
+				brightCyan: '#56d4dd',
+				brightWhite: '#f0f6fc'
+			},
+			fontFamily: '"Fira Code", "Cascadia Code", Menlo, Monaco, "Courier New", monospace',
+			fontSize: 14,
+			lineHeight: 1.5
+		});
 
-			term.writeln('\x1b[32mWelcome to Go-Bash-WASM Terminal!\x1b[0m');
-			term.writeln('Type something to begin...');
-			term.write('\r\n$ ');
+		fitAddon = new FitAddon();
+		term.loadAddon(fitAddon);
+		term.open(terminalElement);
+		fitAddon.fit();
 
-			term.onData((data) => {
-				const code = data.charCodeAt(0);
-				if (code === 13) {
-					// Carriage return
-					term.write('\r\n$ ');
-				} else if (code < 32) {
-					// Control characters
-					return;
-				} else {
-					term.write(data);
+		term.writeln('\x1b[33mLoading main.wasm...\x1b[0m');
+
+		// 2. Intercept Go stdout/stderr BEFORE go.run()
+		const decoder = new TextDecoder();
+		const fs = (globalThis as any).fs;
+		if (fs) {
+			const origWriteSync = fs.writeSync.bind(fs);
+			fs.writeSync = function (fd: number, buf: Uint8Array) {
+				if (fd === 1 || fd === 2) {
+					term.write(decoder.decode(buf));
+					return buf.length;
 				}
-			});
-
-			const handleResize = () => {
-				fitAddon.fit();
+				return origWriteSync(fd, buf);
 			};
 
-			window.addEventListener('resize', handleResize);
-
-			return () => {
-				window.removeEventListener('resize', handleResize);
-				term.dispose();
+			const origWrite = fs.write.bind(fs);
+			fs.write = function (
+				fd: number,
+				buf: Uint8Array,
+				offset: number,
+				length: number,
+				position: number,
+				callback: (err: Error | null, n: number) => void
+			) {
+				if (fd === 1 || fd === 2) {
+					const n = fs.writeSync(fd, buf.subarray(offset, offset + length));
+					callback(null, n);
+					return;
+				}
+				return origWrite(fd, buf, offset, length, position, callback);
 			};
 		}
+
+		// 3. Load & run WASM
+		const initWasm = async () => {
+			try {
+				const Go = (globalThis as any).Go;
+				if (!Go) {
+					throw new Error('Go constructor not found. Is wasm_exec.js loaded?');
+				}
+				const go = new Go();
+				const result = await WebAssembly.instantiateStreaming(fetch('/main.wasm'), go.importObject);
+
+				// go.run() returns a promise but we do NOT await it here.
+				go.run(result.instance);
+
+				// Give the Go runtime a tick to initialise and register writeStdin.
+				await new Promise((r) => setTimeout(r, 150));
+
+				wasmReady = true;
+				term.writeln('\x1b[32mReady! Type a command and press Enter.\x1b[0m\r\n');
+				term.focus();
+			} catch (err) {
+				term.writeln(`\x1b[31mFailed to load WASM: ${err}\x1b[0m`);
+				console.error(err);
+			}
+		};
+
+		initWasm();
+
+		// 4. Wire Terminal Data to WASM Stdin
+		term.onData((data) => {
+			if (!wasmReady) return;
+
+			for (let i = 0; i < data.length; i++) {
+				const char = data[i];
+				const code = data.charCodeAt(i);
+
+				switch (code) {
+					case 13: // Enter
+						term.write('\r\n');
+						if (typeof (window as any).writeStdin === 'function') {
+							(window as any).writeStdin(lineBuffer);
+						}
+						lineBuffer = '';
+						break;
+					case 127: // Backspace
+					case 8:
+						if (lineBuffer.length > 0) {
+							lineBuffer = lineBuffer.slice(0, -1);
+							term.write('\b \b');
+						}
+						break;
+					case 4: // Ctrl+D
+						if (typeof (window as any).closeStdin === 'function') {
+							(window as any).closeStdin();
+						}
+						break;
+					case 3: // Ctrl+C
+						term.write('^C\r\n');
+						lineBuffer = '';
+						break;
+					default:
+						if (code >= 32) {
+							lineBuffer += char;
+							term.write(char);
+						}
+						break;
+				}
+			}
+		});
+
+		const handleResize = () => fitAddon.fit();
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			term.dispose();
+		};
 	});
 </script>
 

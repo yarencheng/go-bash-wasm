@@ -14,19 +14,19 @@ RUN git clone --depth 1 https://github.com/yarencheng/go-bash-wasm.git .
 RUN GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o main.wasm ./cmd/go-bash-wasm/
 
 # Optimize the WASM binary, TODO: add --minify-imports-and-exports
-# RUN wasm-opt -O3 \
-#     --enable-bulk-memory \
-#     --enable-nontrapping-float-to-int \
-#     --enable-sign-ext \
-#     --strip-producers \
-#     --strip \
-#     --strip-producers \
-#     --flatten \
-#     --coalesce-locals \
-#     --simplify-locals-notee \
-#     --inlining-optimizing \
-#     main.wasm -o main_fast.wasm \
-#     && mv main_fast.wasm main.wasm
+RUN wasm-opt -O3 \
+    --enable-bulk-memory \
+    --enable-nontrapping-float-to-int \
+    --enable-sign-ext \
+    --strip-producers \
+    --strip \
+    --strip-producers \
+    --flatten \
+    --coalesce-locals \
+    --simplify-locals-notee \
+    --inlining-optimizing \
+    main.wasm -o main_fast.wasm \
+    && mv main_fast.wasm main.wasm
 
 # Stage 2: Build the Svelte application
 FROM node:20-alpine AS builder

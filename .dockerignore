@@ -21,3 +21,6 @@ coverage.txt
 # OS metadata
 .DS_Store
 Thumbs.db
+
+Dockerfile
+ui.Dockerfile

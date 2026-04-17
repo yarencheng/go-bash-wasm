@@ -14,18 +14,31 @@ COPY . .
 RUN go test -v ./...
 
 # 2. Build web assembly output
-# Change from wasip1/wasm to js/wasm
-RUN GOOS=js GOARCH=wasm go build -o /out/main.wasm ./cmd/go-bash-wasm/
-RUN cp $(go env GOROOT)/lib/wasm/wasm_exec.js /out/wasm_exec.js
-COPY index.html /out/index.html
+# Using wasip1/wasm is the modern standard for executing Go with Wasmtime
+RUN GOOS=wasip1 GOARCH=wasm go build -o /out/main.wasm ./cmd/go-bash-wasm/
 
-# Stage 2: Nginx Runner
-FROM nginx:alpine
+# Stage 2: Wasmtime Runner
+FROM debian:bullseye-slim
+
+# Install Wasmtime, clear apt caches immediately to optimize layer
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl xz-utils ca-certificates && \
+    curl https://wasmtime.dev/install.sh -sSf | bash && \
+    mv /root/.wasmtime/bin/wasmtime /usr/local/bin/wasmtime && \
+    apt-get remove -y curl xz-utils && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /root/.wasmtime
+
+# Security Principle from docker-development skill: Non-Root Execution
+RUN useradd -m -u 1001 appuser
+USER appuser
+
+WORKDIR /app
 
 # Copy built artifacts from the builder stage
-COPY --from=builder /out/main.wasm /usr/share/nginx/html/main.wasm
-COPY --from=builder /out/wasm_exec.js /usr/share/nginx/html/wasm_exec.js
-COPY --from=builder /out/index.html /usr/share/nginx/html/index.html
+COPY --from=builder /out/main.wasm ./main.wasm
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# 3. Run web assembly with Wasmtime
+# Note: we use "run" explicitly rather than relying purely on the executable flag
+CMD ["wasmtime", "run", "main.wasm"]

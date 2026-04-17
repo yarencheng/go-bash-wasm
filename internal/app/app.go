@@ -255,7 +255,6 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		tee.New(),
 		du.New(),
 		df.New(),
-		ln.New(),
 		date.New(),
 		who.New(),
 		arch.New(),

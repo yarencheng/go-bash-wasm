@@ -48,6 +48,8 @@ func (s *Shell) RunInteractive() error {
 			continue
 		}
 
+		s.Env.History = append(s.Env.History, line)
+
 		// Parse simple command
 		args := strings.Fields(line)
 		if len(args) == 0 {

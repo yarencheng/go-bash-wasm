@@ -612,13 +612,13 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/groups.c`
 - [x] Basic listing: Implemented in `internal/commands/groups/groups.go`
-- [ ] Multiple users support: `third_party/coreutils/src/groups.c:L120`
+- [x] Multiple users support: `internal/commands/groups/groups.go`
 
 ### `hash`
 
-- [ ] Upstream: `third_party/bash/builtins/hash.def`
-- [ ] Command hashing: Missing implementation
-- [ ] Flag `-r`: `third_party/bash/builtins/hash.def:L124` (forget all)
+- [x] Upstream: `third_party/bash/builtins/hash.def`
+- [x] Command hashing: Implemented in `internal/commands/hash/hash.go`
+- [x] Flag `-r`: `internal/commands/hash/hash.go`
 - [ ] Flag `-d`: `third_party/bash/builtins/hash.def:L125` (forget name)
 - [ ] Flag `-p`: `third_party/bash/builtins/hash.def:L126` (use path)
 - [ ] Flag `-t`: `third_party/bash/builtins/hash.def:L127` (list name)
@@ -635,19 +635,19 @@ Status codes:
 
 ### `help`
 
-- [ ] Upstream: `third_party/bash/builtins/help.def`
-- [ ] Basic discovery: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/help.def`
+- [x] Help system: Implemented in `internal/commands/help/help.go`
 - [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105` (short description)
 - [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108` (man-page format)
 - [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111` (syntax only)
 
 ### `history`
 
-- [ ] Upstream: `third_party/bash/builtins/history.def`
-- [ ] Basic management: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/history.def`
+- [x] History management: Implemented in `internal/commands/history/history.go`
 - [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145` (delete entry)
 - [ ] Flag `-a`: `third_party/bash/builtins/history.def:L126` (append)
-- [ ] Flag `-c`: `third_party/bash/builtins/history.def:L129` (clear)
+- [x] Flag `-c`: `internal/commands/history/history.go` (clear)
 - [ ] Flag `-n`: `third_party/bash/builtins/history.def:L132` (read non-recorded)
 - [ ] Flag `-p`: `third_party/bash/builtins/history.def:L148` (print/expand)
 - [ ] Flag `-r`: `third_party/bash/builtins/history.def:L135` (read file)

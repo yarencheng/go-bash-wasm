@@ -42,3 +42,15 @@ func (r *Registry) Get(name string) (Command, bool) {
 	cmd, exists := r.commands[name]
 	return cmd, exists
 }
+
+// List returns all registered command names.
+func (r *Registry) List() []string {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	names := make([]string, 0, len(r.commands))
+	for name := range r.commands {
+		names = append(names, name)
+	}
+	return names
+}

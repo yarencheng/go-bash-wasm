@@ -36,6 +36,9 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/find"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/grep"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/groups"
+	hashcmd "github.com/yarencheng/go-bash-wasm/internal/commands/hash"
+	helpcmd "github.com/yarencheng/go-bash-wasm/internal/commands/help"
+	historycmd "github.com/yarencheng/go-bash-wasm/internal/commands/history"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/hostname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/id"
@@ -152,6 +155,9 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		unalias.New(),
 		declare.New(),
 		groups.New(),
+		hashcmd.New(),
+		helpcmd.New(),
+		historycmd.New(),
 		logname.New(),
 		base32cmd.New(),
 		base64cmd.New(),
@@ -210,6 +216,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 			"PWD":  "/",
 		},
 		Aliases: make(map[string]string),
+		Hash:    make(map[string]string),
 		Registry: registry,
 	}
 

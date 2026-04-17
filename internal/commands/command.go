@@ -25,11 +25,13 @@ type Environment struct {
 	User   string
 	Uid    int
 	Gid    int
+	Umask  uint32
 	Groups        []int
 	StartTime     time.Time
 	ExitRequested bool
 	ExitCode      int
 	EnvVars       map[string]string
+	PositionalArgs []string
 	Arrays        map[string][]string
 	DirStack      []string
 	Aliases       map[string]string
@@ -37,6 +39,12 @@ type Environment struct {
 	History       []string
 	Jobs          []*Job
 	Registry      *Registry
+	Executor      Executor
+}
+
+// Executor defines the interface for executing shell commands.
+type Executor interface {
+	Execute(ctx context.Context, line string) int
 }
 
 // Command is the interface that all shell commands must implement.

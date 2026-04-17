@@ -117,6 +117,9 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chmod"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chown"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/realpath"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/umask"
+	timecmd "github.com/yarencheng/go-bash-wasm/internal/commands/time"
+	typecmd "github.com/yarencheng/go-bash-wasm/internal/commands/type"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unlink"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
 	builtincmd "github.com/yarencheng/go-bash-wasm/internal/commands/builtin"
@@ -124,6 +127,8 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/exec"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chroot"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/jobs"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/source"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
 )
 
 // App encapsulates the bash simulator application.
@@ -267,10 +272,16 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		chown.NewChgrp(),
 		unlink.New(),
 		realpath.New(),
+		typecmd.New(),
+		timecmd.New(),
+		umask.New(),
 		eval.New(),
 		exec.New(),
 		chroot.New(),
 		jobs.New(),
+		source.New(),
+		source.NewDot(),
+		shift.New(),
 	}
 
 	for _, cmd := range cmds {
@@ -290,6 +301,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		User:   "wasm",
 		Uid:    1000,
 		Gid:       1000,
+		Umask:     022,
 		Groups:    []int{1000},
 		StartTime: time.Now(),
 		EnvVars: map[string]string{

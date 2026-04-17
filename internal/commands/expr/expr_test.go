@@ -29,4 +29,39 @@ func TestExpr_Run(t *testing.T) {
 	status = e.Run(context.Background(), env, []string{"5", ">", "3"})
 	assert.Equal(t, 0, status)
 	assert.Equal(t, "1\n", stdout.String())
+
+	// Test length
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"length", "hello"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "5\n", stdout.String())
+
+	// Test index
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"index", "hello", "e"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "2\n", stdout.String())
+
+	// Test substr
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"substr", "hello", "2", "3"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "ell\n", stdout.String())
+
+	// Test logical |
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"0", "|", "5"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "5\n", stdout.String())
+
+	// Test logical &
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"5", "&", "3"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "5\n", stdout.String())
+
+	stdout.Reset()
+	status = e.Run(context.Background(), env, []string{"0", "&", "3"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "0\n", stdout.String())
 }

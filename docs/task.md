@@ -312,8 +312,8 @@ Status codes:
 
 ### `csplit`
 
-- [ ] Upstream: `third_party/coreutils/src/csplit.c`
-- [ ] Basic split: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/csplit.c`
+- [x] Basic split: Implemented in `internal/commands/csplit/csplit.go`
 - [ ] Flag `--suppress-matched`: `third_party/coreutils/src/csplit.c:1435`
 - [ ] Flag `-b`: `third_party/coreutils/src/csplit.c:1423`
 - [ ] Flag `-f`: `third_party/coreutils/src/csplit.c:1427`
@@ -352,21 +352,22 @@ Status codes:
 
 ### `dd`
 
-- [ ] Upstream: `third_party/coreutils/src/dd.c`
-- [ ] Data copy: Missing implementation
-- [ ] Operand `bs=BYTES`: `third_party/coreutils/src/dd.c:L536`
+- [x] Upstream: `third_party/coreutils/src/dd.c`
+- [x] Data copy: Implemented in `internal/commands/dd/dd.go`
+- [x] Operand `bs=BYTES`: `internal/commands/dd/dd.go`
 - [ ] Operand `cbs=BYTES`: `third_party/coreutils/src/dd.c:L539`
 - [ ] Operand `conv=CONVS`: `third_party/coreutils/src/dd.c:L543`
-- [ ] Operand `count=N`: `third_party/coreutils/src/dd.c:L546`
+- [x] Operand `count=N`: `internal/commands/dd/dd.go`
 - [ ] Operand `ibs=BYTES`: `third_party/coreutils/src/dd.c:L549`
-- [ ] Operand `if=FILE`: `third_party/coreutils/src/dd.c:L552`
+- [x] Operand `if=FILE`: `internal/commands/dd/dd.go`
 - [ ] Operand `iflag=FLAGS`: `third_party/coreutils/src/dd.c:L555`
 - [ ] Operand `obs=BYTES`: `third_party/coreutils/src/dd.c:L558`
-- [ ] Operand `of=FILE`: `third_party/coreutils/src/dd.c:L561`
+- [x] Operand `of=FILE`: `internal/commands/dd/dd.go`
 - [ ] Operand `oflag=FLAGS`: `third_party/coreutils/src/dd.c:L564`
-- [ ] Operand `seek=N`: `third_party/coreutils/src/dd.c:L567`
-- [ ] Operand `skip=N`: `third_party/coreutils/src/dd.c:L570`
+- [x] Operand `seek=N`: `internal/commands/dd/dd.go`
+- [x] Operand `skip=N`: `internal/commands/dd/dd.go`
 - [ ] Operand `status=LEVEL`: `third_party/coreutils/src/dd.c:L573`
+- [x] Operand `conv=notrunc`: `internal/commands/dd/dd.go`
 
 ### `declare`
 
@@ -432,10 +433,10 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/pushd.def`
 - [x] Basic listing: Implemented in `internal/commands/dirs/dirs.go`
-- [ ] Flag `-c`: `third_party/bash/builtins/pushd.def:L377` (clear stack)
+- [x] Flag `-c`: `internal/commands/dirs/dirs.go` (clear stack)
 - [ ] Flag `-l`: `third_party/bash/builtins/pushd.def:L380` (long listing)
-- [ ] Flag `-p`: `third_party/bash/builtins/pushd.def:L387` (print with one line per entry)
-- [ ] Flag `-v`: `third_party/bash/builtins/pushd.def:L390` (verbose)
+- [x] Flag `-p`: `internal/commands/dirs/dirs.go` (print with one line per entry)
+- [x] Flag `-v`: `internal/commands/dirs/dirs.go` (verbose)
 
 ### `disown`
 
@@ -548,16 +549,15 @@ Status codes:
 - [x] Expression evaluation: Implemented in `internal/commands/expr/expr.go`
 - [x] Arithmetic (+, -, *, /, %): Implemented in `internal/commands/expr/expr.go`
 - [x] Comparison (=, !=, <, <=, >, >=): Implemented in `internal/commands/expr/expr.go`
-- [ ] Logical (| , &): Missing implementation
-- [ ] String operators (match, substr, index, length): `third_party/coreutils/src/expr.c:L186`
+- [x] Logical (| , &): Implemented in `internal/commands/expr/expr.go`
+- [x] String operators (match, substr, index, length): Implemented in `internal/commands/expr/expr.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/expr.c:L157`
 - [ ] Flag `--version`: `third_party/coreutils/src/expr.c:L160`
 
 ### `factor`
 
-- [ ] Upstream: `third_party/coreutils/src/factor.c`
-- [ ] Prime factorization: Missing implementation
-- [ ] Flag `-h`, `--exponents`: `third_party/coreutils/src/factor.c:L2480`
+- [x] Upstream: `third_party/coreutils/src/factor.c`
+- [x] Prime factorization: Implemented in `internal/commands/factor/factor.go`
 
 ### `false`
 
@@ -610,8 +610,8 @@ Status codes:
 
 ### `getopts`
 
-- [ ] Basic parsing: Missing implementation
-- [ ] Silent mode support (`:`): `third_party/bash/builtins/getopts.def:L180`
+- [x] Basic parsing: Implemented in `internal/commands/getopts/getopts.go`
+- [x] Silent mode support (`:`): `internal/commands/getopts/getopts.go`
 
 ### `groups`
 
@@ -661,15 +661,14 @@ Status codes:
 
 ### `hostid`
 
-- [ ] Upstream: `third_party/coreutils/src/hostid.c`
-- [ ] Flag `--help`: `third_party/coreutils/src/hostid.c:L52`
-- [ ] Flag `--version`: `third_party/coreutils/src/hostid.c:L52`
+- [x] Upstream: `third_party/coreutils/src/hostid.c`
+- [x] Basic operation: Implemented in `internal/commands/hostid/hostid.go`
 
 ### `hostname`
 
-- [ ] Upstream: `third_party/coreutils/src/hostname.c`
-- [ ] Basic output: Missing implementation
-- [ ] Set hostname support: `third_party/coreutils/src/hostname.c:L95`
+- [x] Upstream: `third_party/coreutils/src/hostname.c`
+- [x] Basic output: Implemented in `internal/commands/hostname/hostname.go`
+- [x] Set hostname support: `internal/commands/hostname/hostname.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/hostname.c:L65`
 - [ ] Flag `--version`: `third_party/coreutils/src/hostname.c:L65`
 
@@ -755,8 +754,8 @@ Status codes:
 
 ### `let`
 
-- [ ] Upstream: `third_party/bash/builtins/let.def`
-- [ ] Flag `--help`: `third_party/bash/builtins/let.def:L52` (hypothetical, usually handled as builtin)
+- [x] Upstream: `third_party/bash/builtins/let.def`
+- [x] Basic arithmetic: Implemented in `internal/commands/letcmd/let.go`
 
 ### `link`
 
@@ -783,8 +782,8 @@ Status codes:
 
 ### `logout`
 
-- [ ] Upstream: `third_party/bash/builtins/exit.def`
-- [ ] Basic operation: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/exit.def`
+- [x] Basic operation: Implemented in `internal/commands/logout/logout.go`
 
 #### `ls`
 
@@ -925,28 +924,17 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/nl.c`
 - [x] Basic numbering: Implemented in `internal/commands/nl/nl.go`
-- [x] Flag `-b STYLE`: `internal/commands/nl/nl.go`
-- [ ] Flag `-d CC`: `third_party/coreutils/src/nl.c:L132`
-- [ ] Flag `-f STYLE`: `third_party/coreutils/src/nl.c:L135`
-- [ ] Flag `-h STYLE`: `third_party/coreutils/src/nl.c:L138`
-- [x] Flag `-i NUMBER`: `internal/commands/nl/nl.go`
-- [ ] Flag `-l NUMBER`: `third_party/coreutils/src/nl.c:L144`
-- [x] Flag `-n FORMAT`: `internal/commands/nl/nl.go`
-- [ ] Flag `-p`: `third_party/coreutils/src/nl.c:L150`
-- [x] Flag `-s STRING`: `internal/commands/nl/nl.go`
-- [x] Flag `-v NUMBER`: `internal/commands/nl/nl.go`
-- [x] Flag `-w NUMBER`: `internal/commands/nl/nl.go`
-- [ ] Flag `-b`: `third_party/coreutils/src/nl.c:L153`
-- [ ] Flag `-d`: `third_party/coreutils/src/nl.c:L162`
-- [ ] Flag `-f`: `third_party/coreutils/src/nl.c:L154`
-- [ ] Flag `-h`: `third_party/coreutils/src/nl.c:L152`
-- [ ] Flag `-i`: `third_party/coreutils/src/nl.c:L156`
-- [ ] Flag `-l`: `third_party/coreutils/src/nl.c:L158`
-- [ ] Flag `-n`: `third_party/coreutils/src/nl.c:L161`
-- [ ] Flag `-p`: `third_party/coreutils/src/nl.c:L157`
-- [ ] Flag `-s`: `third_party/coreutils/src/nl.c:L159`
-- [ ] Flag `-v`: `third_party/coreutils/src/nl.c:L155`
-- [ ] Flag `-w`: `third_party/coreutils/src/nl.c:L160`
+- [x] Flag `-b`, `--body-numbering`: `internal/commands/nl/nl.go`
+- [ ] Flag `-d`, `--section-delimiter`: `third_party/coreutils/src/nl.c:L132`
+- [x] Flag `-f`, `--footer-numbering`: `internal/commands/nl/nl.go`
+- [x] Flag `-h`, `--header-numbering`: `internal/commands/nl/nl.go`
+- [x] Flag `-i`, `--line-increment`: `internal/commands/nl/nl.go`
+- [ ] Flag `-l`, `--join-blank-lines`: `third_party/coreutils/src/nl.c:L144`
+- [x] Flag `-n`, `--number-format`: `internal/commands/nl/nl.go`
+- [ ] Flag `-p`, `--no-renumber`: `third_party/coreutils/src/nl.c:L150`
+- [x] Flag `-s`, `--number-separator`: `internal/commands/nl/nl.go`
+- [x] Flag `-v`, `--starting-line-number`: `internal/commands/nl/nl.go`
+- [x] Flag `-w`, `--number-width`: `internal/commands/nl/nl.go`
 
 ### `nohup`
 
@@ -1090,7 +1078,7 @@ Status codes:
 - [x] Flag `-N`, `--Nchars`: Implemented in `internal/commands/read/read.go`
 - [x] Flag `-p`, `--prompt`: `internal/commands/read/read.go`
 - [x] Flag `-r`: Implemented in `internal/commands/read/read.go` (raw mode)
-- [x] Flag `-s`, `--silent`: `internal/commands/read/read.go` (ignored)
+- [x] Flag `-s`, `--silent`: `internal/commands/read/read.go`
 - [ ] Flag `-t`, `--timeout`: `third_party/bash/builtins/read.def:L57`
 - [ ] Flag `-u`, `--fd`: `third_party/bash/builtins/read.def:L61`
 
@@ -1359,8 +1347,8 @@ Status codes:
 
 ### `sync`
 
-- [ ] Upstream: `third_party/coreutils/src/sync.c`
-- [ ] Flush buffers: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/sync.c`
+- [x] Basic operation: Implemented in `internal/commands/sync/sync.go`
 - [ ] Flag `-d`, `--data`: `third_party/coreutils/src/sync.c:L129`
 - [ ] Flag `-f`, `--file-system`: `third_party/coreutils/src/sync.c:L132`
 
@@ -1398,8 +1386,8 @@ Status codes:
 
 - [x] Unary operators (-e, -f, -d, etc.): Implemented in `internal/commands/test/test.go`
 - [x] String operators (=, !=, -z, -n): Implemented in `internal/commands/test/test.go`
-- [ ] Numeric operators (-eq, -ne, etc.): Missing implementation
-- [ ] Logical operators (!, -a, -o): Missing implementation
+- [x] Numeric operators (-eq, -ne, etc.): Implemented in `internal/commands/test/test.go`
+- [x] Logical operators (!, -a, -o): Implemented in `internal/commands/test/test.go`
 - [x] Aliases: `[`
 
 ### `time`

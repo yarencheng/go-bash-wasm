@@ -17,6 +17,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/basename"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/csplit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cd"
 	cksumcmd "github.com/yarencheng/go-bash-wasm/internal/commands/cksum"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/clear"
@@ -26,7 +27,9 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cut"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/date"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/dd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/declare"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/getopts"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/df"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dirname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/du"
@@ -34,6 +37,7 @@ import (
 	env "github.com/yarencheng/go-bash-wasm/internal/commands/env"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/exit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/export"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/factor"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/expr"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/find"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/grep"
@@ -43,6 +47,7 @@ import (
 	historycmd "github.com/yarencheng/go-bash-wasm/internal/commands/history"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/hostname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/hostid"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/id"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/install"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/link"
@@ -52,6 +57,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mapfile"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/logout"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/logname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/letcmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mkdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mktemp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
@@ -81,6 +87,7 @@ import (
 	sort "github.com/yarencheng/go-bash-wasm/internal/commands/sort"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/stat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sum"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/sync"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tac"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/timeout"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/truncate"
@@ -165,6 +172,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		rm.New(),
 		cp.New(),
 		mv.New(),
+		csplit.New(),
 		head.New(),
 		tail.New(),
 		wc.New(),
@@ -180,15 +188,18 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		userscmd.New(),
 		nproccmd.New(),
 		uptime.New(),
+		hostid.New(),
 		hostname.New(),
 		nohup.New(),
 		nice.New(),
 		kill.New(),
+		letcmd.New(),
 		exit.New(),
 		logout.New(),
 		mapfile.New(),
 		grep.New(),
 		find.New(),
+		getopts.New(),
 		env.New(),
 		export.New(),
 		unset.New(),
@@ -215,6 +226,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		shuf.New(),
 		split.New(),
 		tac.New(),
+		sync.New(),
 		timeout.New(),
 		truncate.New(),
 		tsort.New(),
@@ -234,8 +246,10 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		comm.New(),
 		seq.New(),
 		expr.New(),
+		factor.New(),
 		printf.New(),
 		clear.New(),
+		dd.New("dd"),
 		test.New("test"),
 		test.New("["),
 		tee.New(),

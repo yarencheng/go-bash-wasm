@@ -27,28 +27,28 @@ Status codes:
 ### `alias`
 
 - [x] Basic management: Implemented in `internal/commands/alias/alias.go`
-- [ ] Flag `-p`: `third_party/bash/builtins/alias.def:L79` (print)
+- [x] Flag `-p`: `third_party/bash/builtins/alias.def:L79` (print)
 
 ### `arch`
 
-- [ ] Upstream: `third_party/coreutils/src/coreutils-arch.c`
-- [ ] Inherits flags from `uname`
+- [x] Upstream: `third_party/coreutils/src/coreutils-arch.c`
+- [x] Inherits flags from `uname`
 
 ### `base32`
 
-- [ ] Basic encoding/decoding: Missing implementation
+- [x] Basic encoding/decoding: Implemented in `internal/commands/base32/base32.go`
 - [ ] Flag `--base16`: `third_party/coreutils/src/basenc.c:L86`
 - [ ] Flag `--base2lsbf`: `third_party/coreutils/src/basenc.c:L88`
 - [ ] Flag `--base2msbf`: `third_party/coreutils/src/basenc.c:L87`
-- [ ] Flag `--base32`: `third_party/coreutils/src/basenc.c:L84`
+- [x] Flag `--base32`: `internal/commands/base32/base32.go`
 - [ ] Flag `--base32hex`: `third_party/coreutils/src/basenc.c:L85`
 - [ ] Flag `--base58`: `third_party/coreutils/src/basenc.c:L83`
-- [ ] Flag `--base64`: `third_party/coreutils/src/basenc.c:L81`
+- [x] Flag `--base64`: `internal/commands/base64/base64.go`
 - [ ] Flag `--base64url`: `third_party/coreutils/src/basenc.c:L82`
 - [ ] Flag `--z85`: `third_party/coreutils/src/basenc.c:L89`
-- [ ] Flag `-d`: `third_party/coreutils/src/basenc.c:L77`
-- [ ] Flag `-i`: `third_party/coreutils/src/basenc.c:L79`
-- [ ] Flag `-w`: `third_party/coreutils/src/basenc.c:L78`
+- [x] Flag `-d`: `internal/commands/base32/base32.go`
+- [x] Flag `-i`: `internal/commands/base32/base32.go`
+- [x] Flag `-w`: `internal/commands/base32/base32.go`
 
 ### `basename`
 
@@ -59,16 +59,16 @@ Status codes:
 
 ### `basenc`
 
-- [ ] Upstream: `third_party/coreutils/src/basenc.c`
-- [ ] Basic encoding/decoding: Missing implementation
-- [ ] Flag `-d`, `--decode`: `third_party/coreutils/src/basenc.c:L125`
-- [ ] Flag `-i`, `--ignore-garbage`: `third_party/coreutils/src/basenc.c:L129`
-- [ ] Flag `-w`, `--wrap=COLS`: `third_party/coreutils/src/basenc.c:L133`
-- [ ] Flag `--base16`: `third_party/coreutils/src/basenc.c:L142`
-- [ ] Flag `--base32`: `third_party/coreutils/src/basenc.c:L141`
-- [ ] Flag `--base32hex`: `third_party/coreutils/src/basenc.c:L143`
-- [ ] Flag `--base64`: `third_party/coreutils/src/basenc.c:L141`
-- [ ] Flag `--base64url`: `third_party/coreutils/src/basenc.c:L141`
+- [x] Upstream: `third_party/coreutils/src/basenc.c`
+- [x] Basic encoding/decoding: Implemented in `internal/commands/basenc/basenc.go`
+- [x] Flag `-d`, `--decode`: `internal/commands/basenc/basenc.go`
+- [x] Flag `-i`, `--ignore-garbage`: `internal/commands/basenc/basenc.go`
+- [x] Flag `-w`, `--wrap=COLS`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base16`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base32`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base32hex`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base64`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base64url`: `internal/commands/basenc/basenc.go`
 - [ ] Flag `--z85`: `third_party/coreutils/src/basenc.c:L145`
 
 ### `bg`
@@ -672,30 +672,30 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/id.c`
 - [x] Basic output: Implemented in `internal/commands/id/id.go`
-- [ ] Flag `-G`: `third_party/coreutils/src/id.c:L113`
+- [x] Flag `-G`: `internal/commands/id/id.go`
 - [ ] Flag `-Z`: `third_party/coreutils/src/id.c:L105`
 - [ ] Flag `-a`: `third_party/coreutils/src/id.c:L101`
 - [x] Flag `-g`: `internal/commands/id/id.go`
 - [x] Flag `-n`: `internal/commands/id/id.go`
 - [ ] Flag `-r`: `third_party/coreutils/src/id.c:L121`
 - [x] Flag `-u`: `internal/commands/id/id.go`
-- [ ] Flag `-z`: `third_party/coreutils/src/id.c:L129`
+- [x] Flag `-z`: `internal/commands/id/id.go`
 
 ### `install`
 
-- [ ] Upstream: `third_party/coreutils/src/install.c`
-- [ ] Flag `-c`: `third_party/coreutils/src/install.c:L129` (ignored)
-- [ ] Flag `-d`, `--directory`: `third_party/coreutils/src/install.c:L132`
+- [x] Upstream: `third_party/coreutils/src/install.c`
+- [x] Flag `-c`: `internal/commands/install/install.go` (ignored)
+- [x] Flag `-d`, `--directory`: `internal/commands/install/install.go`
 - [ ] Flag `-D`: `third_party/coreutils/src/install.c:L135`
-- [ ] Flag `-g`, `--group=GROUP`: `third_party/coreutils/src/install.c:L138`
+- [x] Flag `-g`, `--group=GROUP`: `internal/commands/install/install.go`
 - [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/install.c:L141`
-- [ ] Flag `-o`, `--owner=OWNER`: `third_party/coreutils/src/install.c:L144`
+- [x] Flag `-o`, `--owner=OWNER`: `internal/commands/install/install.go`
 - [ ] Flag `-p`, `--preserve-timestamps`: `third_party/coreutils/src/install.c:L147`
 - [ ] Flag `-s`, `--strip`: `third_party/coreutils/src/install.c:L150`
 - [ ] Flag `-S`, `--suffix=SUFFIX`: `third_party/coreutils/src/install.c:L153`
 - [ ] Flag `-t`, `--target-directory=DIR`: `third_party/coreutils/src/install.c:L156`
 - [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/install.c:L159`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/install.c:L162`
+- [x] Flag `-v`, `--verbose`: `internal/commands/install/install.go`
 - [ ] Flag `-C`, `--compare`: `third_party/coreutils/src/install.c:L165`
 
 ### `jobs`
@@ -754,7 +754,7 @@ Status codes:
 
 ### `link`
 
-- [ ] Basic hard link: Missing implementation (exactly 2 args required)
+- [x] Basic hard link: Implemented in `internal/commands/link/link.go`
 
 ### `ln`
 
@@ -772,8 +772,8 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/logname.c`
 - [x] Basic operation: Implemented in `internal/commands/logname/logname.go`
-- [ ] Flag `--help`: `third_party/coreutils/src/logname.c:L44`
-- [ ] Flag `--version`: `third_party/coreutils/src/logname.c:L44`
+- [x] Flag `--help`: `internal/commands/logname/logname.go`
+- [x] Flag `--version`: `internal/commands/logname/logname.go`
 
 ### `logout`
 
@@ -1063,24 +1063,24 @@ Status codes:
 
 ### `read`
 
-- [ ] Upstream: `third_party/bash/builtins/read.def`
-- [ ] Basic input: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/read.def`
+- [x] Basic input: Implemented in `internal/commands/read/read.go`
 - [ ] Flag `-a`, `--array`: `third_party/bash/builtins/read.def:L39`
 - [ ] Flag `-d`, `--delimiter`: `third_party/bash/builtins/read.def:L41`
 - [ ] Flag `-e`: `third_party/bash/builtins/read.def:L43` (use Readline)
 - [ ] Flag `-i`, `--initial-text`: `third_party/bash/builtins/read.def:L49`
 - [ ] Flag `-n`, `--nchars`: `third_party/bash/builtins/read.def:L50`
 - [ ] Flag `-N`, `--Nchars`: `third_party/bash/builtins/read.def:L51`
-- [ ] Flag `-p`, `--prompt`: `third_party/bash/builtins/read.def:L53`
+- [x] Flag `-p`, `--prompt`: `internal/commands/read/read.go`
 - [ ] Flag `-r`: `third_party/bash/builtins/read.def:L55` (raw mode)
-- [ ] Flag `-s`, `--silent`: `third_party/bash/builtins/read.def:L56`
+- [x] Flag `-s`, `--silent`: `internal/commands/read/read.go` (ignored)
 - [ ] Flag `-t`, `--timeout`: `third_party/bash/builtins/read.def:L57`
 - [ ] Flag `-u`, `--fd`: `third_party/bash/builtins/read.def:L61`
 
 ### `readlink`
 
-- [ ] Upstream: `third_party/coreutils/src/readlink.c`
-- [ ] Basic output: Missing implementation
+- [x] Upstream: `third_party/coreutils/src/readlink.c`
+- [x] Basic output: Implemented in `internal/commands/readlink/readlink.go`
 - [ ] Flag `-e`, `--canonicalize-existing`: `third_party/coreutils/src/readlink.c:L44`
 - [ ] Flag `-m`, `--canonicalize-missing`: `third_party/coreutils/src/readlink.c:L45`
 - [ ] Flag `-q`, `--quiet`: `third_party/coreutils/src/readlink.c:L46`
@@ -1088,7 +1088,7 @@ Status codes:
 - [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/readlink.c:L48`
 - [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/readlink.c:L49`
 - [ ] Flag `-f`: `third_party/coreutils/src/readlink.c:L135`
-- [ ] Flag `-n`: `third_party/coreutils/src/readlink.c:L141`
+- [x] Flag `-n`: `internal/commands/readlink/readlink.go`
 
 ### `readonly`
 
@@ -1258,8 +1258,8 @@ Status codes:
 - [x] Basic sleep: Implemented in `internal/commands/sleep/sleep.go`
 - [x] Multiple arguments (sum): `internal/commands/sleep/sleep.go`
 - [x] Suffixes (s, m, h, d): `internal/commands/sleep/sleep.go`
-- [ ] Flag `--help`: `third_party/coreutils/src/sleep.c:L44`
-- [ ] Flag `--version`: `third_party/coreutils/src/sleep.c:L44`
+- [x] Flag `--help`: `internal/commands/sleep/sleep.go`
+- [x] Flag `--version`: `internal/commands/sleep/sleep.go`
 
 ### `sort`
 

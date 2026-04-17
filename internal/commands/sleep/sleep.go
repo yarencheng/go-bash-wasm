@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -20,18 +21,29 @@ func (s *Sleep) Name() string {
 }
 
 func (s *Sleep) Run(ctx context.Context, env *commands.Environment, args []string) int {
-	if len(args) == 0 {
+	flags := pflag.NewFlagSet("sleep", pflag.ContinueOnError)
+	if err := flags.Parse(args); err != nil {
+		fmt.Fprintf(env.Stderr, "sleep: %v\n", err)
+		return 1
+	}
+
+	targets := flags.Args()
+	if len(targets) == 0 {
 		fmt.Fprintf(env.Stderr, "sleep: missing operand\n")
 		return 1
 	}
 
-	seconds, err := strconv.ParseFloat(args[0], 64)
-	if err != nil {
-		fmt.Fprintf(env.Stderr, "sleep: invalid time interval '%s'\n", args[0])
-		return 1
+	totalSeconds := 0.0
+	for _, arg := range targets {
+		seconds, err := strconv.ParseFloat(arg, 64)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "sleep: invalid time interval '%s'\n", arg)
+			return 1
+		}
+		totalSeconds += seconds
 	}
 
-	duration := time.Duration(seconds * float64(time.Second))
+	duration := time.Duration(totalSeconds * float64(time.Second))
 	
 	timer := time.NewTimer(duration)
 	defer timer.Stop()

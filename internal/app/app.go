@@ -11,7 +11,9 @@ import (
 	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/alias"
-	base64 "github.com/yarencheng/go-bash-wasm/internal/commands/base64"
+	base32cmd "github.com/yarencheng/go-bash-wasm/internal/commands/base32"
+	base64cmd "github.com/yarencheng/go-bash-wasm/internal/commands/base64"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/basenc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/basename"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
@@ -37,6 +39,8 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/hostname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/id"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/install"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/link"
 	join "github.com/yarencheng/go-bash-wasm/internal/commands/join"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ln"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
@@ -46,6 +50,8 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/read"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/readlink"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
@@ -67,6 +73,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/who"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/whoami"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/yes"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/arch"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
 )
 
@@ -100,6 +107,8 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		boolcmd.NewFalse(),
 		echo.New(),
 		pwd.New(),
+		read.New(),
+		readlink.New(),
 		cat.New(),
 		cd.New(),
 		basename.New(),
@@ -115,6 +124,8 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		touch.New(),
 		stat.New(),
 		id.New(),
+		install.New(),
+		link.New(),
 		whoami.New(),
 		uname.New(),
 		uptime.New(),
@@ -130,7 +141,9 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		declare.New(),
 		groups.New(),
 		logname.New(),
-		base64.New(),
+		base32cmd.New(),
+		base64cmd.New(),
+		basenc.New(),
 		sum.New("md5sum"),
 		sum.New("sha1sum"),
 		sum.New("sha256sum"),
@@ -156,6 +169,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		ln.New(),
 		date.New(),
 		who.New(),
+		arch.New(),
 	}
 
 	for _, cmd := range cmds {

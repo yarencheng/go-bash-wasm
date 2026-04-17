@@ -25,3 +25,35 @@ func TestId_Run(t *testing.T) {
 	assert.Contains(t, stdout.String(), "uid=1000(wasm)")
 	assert.Contains(t, stdout.String(), "gid=1000(wasm)")
 }
+
+func TestId_Groups(t *testing.T) {
+	var stdout bytes.Buffer
+	env := &commands.Environment{
+		Stdout: &stdout,
+		User:   "wasm",
+		Uid:    1000,
+		Gid:    1000,
+		Groups: []int{1000, 1001},
+	}
+
+	i := New()
+	status := i.Run(context.Background(), env, []string{"-G"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "1000 1001\n", stdout.String())
+}
+
+func TestId_Zero(t *testing.T) {
+	var stdout bytes.Buffer
+	env := &commands.Environment{
+		Stdout: &stdout,
+		User:   "wasm",
+		Uid:    1000,
+		Gid:    1000,
+		Groups: []int{1000, 1001},
+	}
+
+	i := New()
+	status := i.Run(context.Background(), env, []string{"-G", "-z"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "1000\x001001\x00", stdout.String())
+}

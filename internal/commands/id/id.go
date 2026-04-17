@@ -23,27 +23,62 @@ func (i *Id) Run(ctx context.Context, env *commands.Environment, args []string) 
 	flags := pflag.NewFlagSet("id", pflag.ContinueOnError)
 	userFlag := flags.BoolP("user", "u", false, "print only the effective user ID")
 	groupFlag := flags.BoolP("group", "g", false, "print only the effective group ID")
+	groupsFlag := flags.BoolP("groups", "G", false, "print all group IDs")
 	nameFlag := flags.BoolP("name", "n", false, "print a name instead of a number")
+	zeroFlag := flags.BoolP("zero", "z", false, "delimit entries with NUL characters, not whitespace")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "id: %v\n", err)
 		return 1
 	}
 
+	sep := " "
+	if *zeroFlag {
+		sep = "\x00"
+	}
+
 	if *userFlag {
 		if *nameFlag {
-			fmt.Fprintln(env.Stdout, env.User)
+			fmt.Fprint(env.Stdout, env.User)
 		} else {
-			fmt.Fprintln(env.Stdout, env.Uid)
+			fmt.Fprint(env.Stdout, env.Uid)
+		}
+		if !*zeroFlag {
+			fmt.Fprintln(env.Stdout)
+		} else {
+			fmt.Fprint(env.Stdout, "\x00")
 		}
 		return 0
 	}
 
 	if *groupFlag {
 		if *nameFlag {
-			fmt.Fprintln(env.Stdout, env.User) // Simplification: common name
+			fmt.Fprint(env.Stdout, env.User) // Simplification: common name
 		} else {
-			fmt.Fprintln(env.Stdout, env.Gid)
+			fmt.Fprint(env.Stdout, env.Gid)
+		}
+		if !*zeroFlag {
+			fmt.Fprintln(env.Stdout)
+		} else {
+			fmt.Fprint(env.Stdout, "\x00")
+		}
+		return 0
+	}
+
+	if *groupsFlag {
+		strs := []string{}
+		for _, g := range env.Groups {
+			if *nameFlag {
+				strs = append(strs, env.User)
+			} else {
+				strs = append(strs, fmt.Sprintf("%d", g))
+			}
+		}
+		fmt.Fprint(env.Stdout, strings.Join(strs, sep))
+		if !*zeroFlag {
+			fmt.Fprintln(env.Stdout)
+		} else {
+			fmt.Fprint(env.Stdout, "\x00")
 		}
 		return 0
 	}

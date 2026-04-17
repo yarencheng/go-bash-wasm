@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -20,7 +21,18 @@ func (a *Alias) Name() string {
 }
 
 func (a *Alias) Run(ctx context.Context, env *commands.Environment, args []string) int {
-	if len(args) == 0 {
+	flagsSet := pflag.NewFlagSet("alias", pflag.ContinueOnError)
+	flagsSet.SetOutput(env.Stderr)
+	pFlag := flagsSet.BoolP("p", "p", false, "print all defined aliases in a format that can be reused as input")
+
+	if err := flagsSet.Parse(args); err != nil {
+		fmt.Fprintf(env.Stderr, "alias: %v\n", err)
+		return 2
+	}
+
+	remainingArgs := flagsSet.Args()
+
+	if *pFlag || len(remainingArgs) == 0 {
 		keys := make([]string, 0, len(env.Aliases))
 		for k := range env.Aliases {
 			keys = append(keys, k)
@@ -30,10 +42,12 @@ func (a *Alias) Run(ctx context.Context, env *commands.Environment, args []strin
 		for _, k := range keys {
 			fmt.Fprintf(env.Stdout, "alias %s='%s'\n", k, env.Aliases[k])
 		}
-		return 0
+		if len(remainingArgs) == 0 {
+			return 0
+		}
 	}
 
-	for _, arg := range args {
+	for _, arg := range remainingArgs {
 		if strings.Contains(arg, "=") {
 			parts := strings.SplitN(arg, "=", 2)
 			env.Aliases[parts[0]] = parts[1]
@@ -42,6 +56,7 @@ func (a *Alias) Run(ctx context.Context, env *commands.Environment, args []strin
 				fmt.Fprintf(env.Stdout, "alias %s='%s'\n", arg, val)
 			} else {
 				fmt.Fprintf(env.Stderr, "alias: %s: not found\n", arg)
+				return 1
 			}
 		}
 	}

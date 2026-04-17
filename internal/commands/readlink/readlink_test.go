@@ -58,3 +58,43 @@ func TestReadlink_NoNewline(t *testing.T) {
 	assert.Equal(t, 0, status)
 	assert.Equal(t, "/target", out.String())
 }
+
+func TestReadlink_Zero(t *testing.T) {
+	fs := afero.NewMemMapFs()
+	linker, ok := fs.(afero.Symlinker)
+	if !ok {
+		t.Skip("FS does not support symlinks")
+	}
+	_ = linker.SymlinkIfPossible("/target", "/link")
+
+	out := &strings.Builder{}
+	env := &commands.Environment{
+		FS:     fs,
+		Stdout: out,
+		Cwd:    "/",
+	}
+
+	r := New()
+	status := r.Run(context.Background(), env, []string{"-z", "/link"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "/target\x00", out.String())
+}
+
+func TestReadlink_Quiet(t *testing.T) {
+	fs := afero.NewMemMapFs()
+
+	out := &strings.Builder{}
+	errOut := &strings.Builder{}
+	env := &commands.Environment{
+		FS:     fs,
+		Stdout: out,
+		Stderr: errOut,
+		Cwd:    "/",
+	}
+
+	r := New()
+	// No such file
+	status := r.Run(context.Background(), env, []string{"-q", "/nonexistent"})
+	assert.Equal(t, 1, status)
+	assert.Empty(t, errOut.String())
+}

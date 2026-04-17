@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
@@ -29,10 +30,19 @@ func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string
 	ncharsExact := flags.IntP("nchars-exact", "N", -1, "return only after reading exactly NCHARS characters")
 	array := flags.StringP("array", "a", "", "assign the words read to sequential indices of the array variable ARRAY")
 	_ = flags.BoolP("silent", "s", false, "do not echo input coming from a terminal")
+	timeout := flags.Float64P("timeout", "t", 0, "terminate after TIMEOUT seconds")
 
 	if err := flags.Parse(args); err != nil {
-		fmt.Fprintf(env.Stderr, "read: %v\n", err)
+		if env.Stderr != nil {
+			fmt.Fprintf(env.Stderr, "read: %v\n", err)
+		}
 		return 1
+	}
+
+	if *timeout > 0 {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, time.Duration(*timeout*float64(time.Second)))
+		defer cancel()
 	}
 
 	if *prompt != "" {
@@ -53,36 +63,53 @@ func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string
 		d = rune((*delim)[0])
 	}
 
-	for {
-		if limit != -1 && count >= limit {
-			break
-		}
+	readErr := make(chan error, 1)
+	readDone := make(chan struct{}, 1)
 
-		char, _, err := reader.ReadRune()
-		if err != nil {
-			break
-		}
+	go func() {
+		for {
+			if limit != -1 && count >= limit {
+				break
+			}
 
-		if !*raw && lastChar == '\\' {
-			// Backslash at end of line (continuation) is handled by Bash but we'll simplified and just keep it if it's not delimiter
+			char, _, err := reader.ReadRune()
+			if err != nil {
+				readErr <- err
+				return
+			}
+
+			if !*raw && lastChar == '\\' {
+				line.WriteRune(char)
+				lastChar = 0
+				count++
+				continue
+			}
+
+			if char == d {
+				break
+			}
+
+			if !*raw && char == '\\' {
+				lastChar = '\\'
+				continue
+			}
+
 			line.WriteRune(char)
-			lastChar = 0
+			lastChar = char
 			count++
-			continue
 		}
+		readDone <- struct{}{}
+	}()
 
-		if char == d {
-			break
+	select {
+	case <-ctx.Done():
+		if ctx.Err() == context.DeadlineExceeded {
+			return 142 // Common bash timeout exit code (128 + 14)
 		}
-
-		if !*raw && char == '\\' {
-			lastChar = '\\'
-			continue
-		}
-
-		line.WriteRune(char)
-		lastChar = char
-		count++
+		return 1
+	case <-readErr:
+		// EOF or other error
+	case <-readDone:
 	}
 
 	content := line.String()

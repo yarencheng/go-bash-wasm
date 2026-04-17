@@ -57,3 +57,55 @@ func TestId_Zero(t *testing.T) {
 	assert.Equal(t, 0, status)
 	assert.Equal(t, "1000\x001001\x00", stdout.String())
 }
+
+func TestId_Real(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	env := &commands.Environment{
+		Stdout: &stdout,
+		Stderr: &stderr,
+		User:   "wasm",
+		Uid:    1000,
+		Gid:    1000,
+		Groups: []int{1000},
+	}
+
+	i := New()
+	status := i.Run(context.Background(), env, []string{"-ur"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "1000\n", stdout.String())
+}
+
+func TestId_Context(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	env := &commands.Environment{
+		Stdout: &stdout,
+		Stderr: &stderr,
+		User:   "wasm",
+		Uid:    1000,
+		Gid:    1000,
+		Groups: []int{1000},
+	}
+
+	i := New()
+	status := i.Run(context.Background(), env, []string{"-Z"})
+	assert.Equal(t, 1, status)
+	assert.Contains(t, stderr.String(), "id: context not supported")
+}
+
+func TestId_All(t *testing.T) {
+	var stdout bytes.Buffer
+	env := &commands.Environment{
+		Stdout: &stdout,
+		User:   "wasm",
+		Uid:    1000,
+		Gid:    1000,
+		Groups: []int{1000},
+	}
+
+	i := New()
+	status := i.Run(context.Background(), env, []string{"-a"})
+	assert.Equal(t, 0, status)
+	assert.Contains(t, stdout.String(), "uid=1000(wasm)")
+}

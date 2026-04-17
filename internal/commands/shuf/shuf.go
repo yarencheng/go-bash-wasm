@@ -31,9 +31,12 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 	count := flags.IntP("head-count", "n", -1, "output at most COUNT lines")
 	output := flags.StringP("output", "o", "", "write result to FILE instead of standard output")
 	repeat := flags.BoolP("repeat", "r", false, "output lines can be repeated")
+	zero := flags.BoolP("zero", "z", false, "end each output line with NUL, not newline")
 
 	if err := flags.Parse(args); err != nil {
-		fmt.Fprintf(env.Stderr, "shuf: %v\n", err)
+		if env.Stderr != nil {
+			fmt.Fprintf(env.Stderr, "shuf: %v\n", err)
+		}
 		return 1
 	}
 
@@ -45,13 +48,17 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 	} else if *inputRange != "" {
 		parts := strings.Split(*inputRange, "-")
 		if len(parts) != 2 {
-			fmt.Fprintf(env.Stderr, "shuf: invalid input range: %s\n", *inputRange)
+			if env.Stderr != nil {
+				fmt.Fprintf(env.Stderr, "shuf: invalid input range: %s\n", *inputRange)
+			}
 			return 1
 		}
 		lo, err1 := strconv.Atoi(parts[0])
 		hi, err2 := strconv.Atoi(parts[1])
 		if err1 != nil || err2 != nil || lo > hi {
-			fmt.Fprintf(env.Stderr, "shuf: invalid input range: %s\n", *inputRange)
+			if env.Stderr != nil {
+				fmt.Fprintf(env.Stderr, "shuf: invalid input range: %s\n", *inputRange)
+			}
 			return 1
 		}
 		for i := lo; i <= hi; i++ {
@@ -64,7 +71,9 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 		} else {
 			f, err := env.FS.Open(remaining[0])
 			if err != nil {
-				fmt.Fprintf(env.Stderr, "shuf: %s: %v\n", remaining[0], err)
+				if env.Stderr != nil {
+					fmt.Fprintf(env.Stderr, "shuf: %s: %v\n", remaining[0], err)
+				}
 				return 1
 			}
 			defer f.Close()
@@ -86,17 +95,24 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 	if *output != "" {
 		f, err := env.FS.Create(*output)
 		if err != nil {
-			fmt.Fprintf(env.Stderr, "shuf: %s: %v\n", *output, err)
+			if env.Stderr != nil {
+				fmt.Fprintf(env.Stderr, "shuf: %s: %v\n", *output, err)
+			}
 			return 1
 		}
 		defer f.Close()
 		out = f
 	}
 
+	term := "\n"
+	if *zero {
+		term = "\x00"
+	}
+
 	if *repeat {
 		limit := *count
 		for i := 0; limit < 0 || i < limit; i++ {
-			fmt.Fprintln(out, lines[randSource.Intn(len(lines))])
+			fmt.Fprintf(out, "%s%s", lines[randSource.Intn(len(lines))], term)
 		}
 	} else {
 		randSource.Shuffle(len(lines), func(i, j int) {
@@ -108,7 +124,7 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 			limit = *count
 		}
 		for i := 0; i < limit; i++ {
-			fmt.Fprintln(out, lines[i])
+			fmt.Fprintf(out, "%s%s", lines[i], term)
 		}
 	}
 

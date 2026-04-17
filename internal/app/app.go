@@ -120,6 +120,10 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unlink"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
 	builtincmd "github.com/yarencheng/go-bash-wasm/internal/commands/builtin"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/eval"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/exec"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chroot"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/jobs"
 )
 
 // App encapsulates the bash simulator application.
@@ -263,6 +267,10 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		chown.NewChgrp(),
 		unlink.New(),
 		realpath.New(),
+		eval.New(),
+		exec.New(),
+		chroot.New(),
+		jobs.New(),
 	}
 
 	for _, cmd := range cmds {
@@ -294,6 +302,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		Arrays:  make(map[string][]string),
 		DirStack: make([]string, 0),
 		Hash:    make(map[string]string),
+		Jobs:    make([]*commands.Job, 0),
 		Registry: registry,
 	}
 

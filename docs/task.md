@@ -187,7 +187,8 @@ Status codes:
 
 ### `chroot`
 
-- [ ] Upstream: `third_party/coreutils/src/chroot.c`
+- [x] Upstream: `third_party/coreutils/src/chroot.c`
+- [x] Basic operation: Implemented in `internal/commands/chroot/chroot.go`
 
 ### `cksum`
 
@@ -511,13 +512,13 @@ Status codes:
 
 ### `eval`
 
-- [ ] Upstream: `third_party/bash/builtins/eval.def`
-- [ ] Basic execution: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/eval.def`
+- [x] Basic execution: Implemented in `internal/commands/eval/eval.go`
 
 ### `exec`
 
-- [ ] Upstream: `third_party/bash/builtins/exec.def`
-- [ ] Basic execution: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/exec.def`
+- [x] Basic execution: Implemented in `internal/commands/exec/exec.go`
 - [ ] Flag `-l`: `third_party/bash/builtins/exec.def:L117` (login shell)
 - [ ] Flag `-a name`: `third_party/bash/builtins/exec.def:L120`
 - [ ] Flag `-c`: `third_party/bash/builtins/exec.def:L114`
@@ -704,12 +705,13 @@ Status codes:
 
 ### `jobs`
 
-- [ ] Upstream: `third_party/bash/builtins/jobs.def`
-- [ ] Flag `-l`: `third_party/bash/builtins/jobs.def:L94` (long format)
+- [x] Upstream: `third_party/bash/builtins/jobs.def`
+- [x] Basic listing: Implemented in `internal/commands/jobs/jobs.go`
+- [x] Flag `-l`: `internal/commands/jobs/jobs.go` (long format)
 - [ ] Flag `-n`: `third_party/bash/builtins/jobs.def:L97` (only jobs that changed)
-- [ ] Flag `-p`: `third_party/bash/builtins/jobs.def:L100` (only PIDs)
-- [ ] Flag `-r`: `third_party/bash/builtins/jobs.def:L103` (running only)
-- [ ] Flag `-s`: `third_party/bash/builtins/jobs.def:L106` (stopped only)
+- [x] Flag `-p`: `internal/commands/jobs/jobs.go` (only PIDs)
+- [x] Flag `-r`: `internal/commands/jobs/jobs.go` (running only)
+- [x] Flag `-s`: `internal/commands/jobs/jobs.go` (stopped only)
 - [ ] Flag `-x command`: `third_party/bash/builtins/jobs.def:L109` (execute command)
 
 ### `join`
@@ -871,7 +873,7 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/mkdir.c`
 - [x] Basic operation: Implemented in `internal/commands/mkdir/mkdir.go`
-- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mkdir.c:L65`
+- [x] Flag `-m`, `--mode=MODE`: `internal/commands/mkdir/mkdir.go` (octal)
 - [x] Flag `-p`, `--parents`: `internal/commands/mkdir/mkdir.go`
 - [x] Flag `-v`, `--verbose`: `internal/commands/mkdir/mkdir.go`
 - [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mkdir.c:L78`
@@ -905,10 +907,10 @@ Status codes:
 - [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/mv.c:L278`
 - [x] Flag `-f`, `--force`: `internal/commands/mv/mv.go` (ignored)
 - [x] Flag `-i`, `--interactive`: `internal/commands/mv/mv.go` (ignored)
-- [ ] Flag `-n`, `--no-clobber`: `third_party/coreutils/src/mv.c:L290`
-- [ ] Flag `-t`, `--target-directory`: `third_party/coreutils/src/mv.c:L294`
-- [ ] Flag `-T`, `--no-target-directory`: `third_party/coreutils/src/mv.c:L298`
-- [ ] Flag `-u`, `--update`: `third_party/coreutils/src/mv.c:L302`
+- [x] Flag `-n`, `--no-clobber`: `internal/commands/mv/mv.go`
+- [x] Flag `-t`, `--target-directory`: `internal/commands/mv/mv.go`
+- [x] Flag `-T`, `--no-target-directory`: `internal/commands/mv/mv.go`
+- [x] Flag `-u`, `--update`: `internal/commands/mv/mv.go`
 - [x] Flag `-v`, `--verbose`: `internal/commands/mv/mv.go`
 - [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/mv.c:L310`
 - [ ] Flag `--exchange`: `third_party/coreutils/src/mv.c:L314`
@@ -1003,7 +1005,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/pushd.def`
 - [x] Basic popping: Implemented in `internal/commands/popd/popd.go`
-- [ ] Flag `-n`: `third_party/bash/builtins/pushd.def:L165` (don't rotate)
+- [x] Flag `-n`: `internal/commands/popd/popd.go`
 
 ### `pr`
 
@@ -1056,7 +1058,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/pushd.def`
 - [x] Basic pushing: Implemented in `internal/commands/pushd/pushd.go`
-- [ ] Flag `-n`: `third_party/bash/builtins/pushd.def:L129` (don't change directory)
+- [x] Flag `-n`: `internal/commands/pushd/pushd.go`
 
 ### `pwd`
 
@@ -1079,20 +1081,20 @@ Status codes:
 - [x] Flag `-p`, `--prompt`: `internal/commands/read/read.go`
 - [x] Flag `-r`: Implemented in `internal/commands/read/read.go` (raw mode)
 - [x] Flag `-s`, `--silent`: `internal/commands/read/read.go`
-- [ ] Flag `-t`, `--timeout`: `third_party/bash/builtins/read.def:L57`
+- [x] Flag `-t`, `--timeout`: `internal/commands/read/read.go`
 - [ ] Flag `-u`, `--fd`: `third_party/bash/builtins/read.def:L61`
 
 ### `readlink`
 
 - [x] Upstream: `third_party/coreutils/src/readlink.c`
 - [x] Basic output: Implemented in `internal/commands/readlink/readlink.go`
-- [ ] Flag `-e`, `--canonicalize-existing`: `third_party/coreutils/src/readlink.c:L44`
-- [ ] Flag `-m`, `--canonicalize-missing`: `third_party/coreutils/src/readlink.c:L45`
-- [ ] Flag `-q`, `--quiet`: `third_party/coreutils/src/readlink.c:L46`
-- [ ] Flag `-s`, `--silent`: `third_party/coreutils/src/readlink.c:L47`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/readlink.c:L48`
-- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/readlink.c:L49`
-- [ ] Flag `-f`: `third_party/coreutils/src/readlink.c:L135`
+- [x] Flag `-e`, `--canonicalize-existing`: `internal/commands/readlink/readlink.go`
+- [x] Flag `-m`, `--canonicalize-missing`: `internal/commands/readlink/readlink.go`
+- [x] Flag `-q`, `--quiet`: `internal/commands/readlink/readlink.go`
+- [x] Flag `-s`, `--silent`: `internal/commands/readlink/readlink.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/readlink/readlink.go`
+- [x] Flag `-z`, `--zero`: `internal/commands/readlink/readlink.go`
+- [x] Flag `-f`: `internal/commands/readlink/readlink.go`
 - [x] Flag `-n`: `internal/commands/readlink/readlink.go`
 
 ### `readonly`
@@ -1245,7 +1247,7 @@ Status codes:
 - [x] Flag `-n`: `internal/commands/shuf/shuf.go`
 - [x] Flag `-o`: `internal/commands/shuf/shuf.go`
 - [x] Flag `-r`: `internal/commands/shuf/shuf.go`
-- [ ] Flag `-z`: `third_party/coreutils/src/shuf.c:L113`
+- [x] Flag `-z`: `internal/commands/shuf/shuf.go`
 
 ### `sleep`
 
@@ -1262,7 +1264,7 @@ Status codes:
 - [x] Basic sorting: Implemented in `internal/commands/sort/sort.go`
 - [x] Ordering flags (`-b`, `-i`, `-d`, `-f`, `-g`, `-h`, `-n`, `-M`, `-R`, `-V`, `-r`): Implemented in `internal/commands/sort/sort.go`
 - [x] Flag `-b`, `--ignore-leading-blanks`: `internal/commands/sort/sort.go`
-- [ ] Flag `-c`, `-C`, `--check`: `third_party/coreutils/src/sort.c:L441`
+- [x] Flag `-c`, `-C`, `--check`: `internal/commands/sort/sort.go`
 - [x] Flag `-d`, `--dictionary-order`: `internal/commands/sort/sort.go`
 - [x] Flag `-f`, `--ignore-case`: `internal/commands/sort/sort.go`
 - [x] Flag `-g`, `--general-numeric-sort`: `internal/commands/sort/sort.go`
@@ -1272,7 +1274,7 @@ Status codes:
 - [ ] Flag `-m`, `--merge`: `third_party/coreutils/src/sort.c:L477`
 - [x] Flag `-M`, `--month-sort`: `internal/commands/sort/sort.go`
 - [x] Flag `-n`, `--numeric-sort`: `internal/commands/sort/sort.go`
-- [ ] Flag `-o`, `--output=FILE`: `third_party/coreutils/src/sort.c:L489`
+- [x] Flag `-o`, `--output=FILE`: `internal/commands/sort/sort.go`
 - [x] Flag `-r`, `--reverse`: `internal/commands/sort/sort.go`
 - [ ] Flag `-s`, `--stable`: `third_party/coreutils/src/sort.c:L497`
 - [ ] Flag `-S`, `--buffer-size=SIZE`: `third_party/coreutils/src/sort.c:L501`
@@ -1280,7 +1282,7 @@ Status codes:
 - [ ] Flag `-T`, `--temporary-directory=DIR`: `third_party/coreutils/src/sort.c:L509`
 - [x] Flag `-u`, `--unique`: `internal/commands/sort/sort.go`
 - [x] Flag `-V`, `--version-sort`: `internal/commands/sort/sort.go`
-- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/sort.c:L521`
+- [x] Flag `-z`, `--zero-terminated`: `internal/commands/sort/sort.go`
 - [ ] Flag `--parallel=N`: `third_party/coreutils/src/sort.c:L525`
 - [x] Flag `--random-sort` (`-R`): `internal/commands/sort/sort.go`
 - [ ] Flag `--debug`: `third_party/coreutils/src/sort.c:L533`

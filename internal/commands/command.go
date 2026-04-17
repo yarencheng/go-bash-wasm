@@ -8,6 +8,13 @@ import (
 	"github.com/spf13/afero"
 )
 
+type Job struct {
+	ID      int
+	PID     int
+	Command string
+	Status  string // Running, Stopped, Done
+}
+
 // Environment defines the execution environment for a command.
 type Environment struct {
 	FS     afero.Fs
@@ -28,6 +35,7 @@ type Environment struct {
 	Aliases       map[string]string
 	Hash          map[string]string
 	History       []string
+	Jobs          []*Job
 	Registry      *Registry
 }
 

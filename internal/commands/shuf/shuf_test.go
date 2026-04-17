@@ -65,3 +65,17 @@ func TestShuf_Range(t *testing.T) {
 	assert.Contains(t, output, "2")
 	assert.Contains(t, output, "3")
 }
+
+func TestShuf_Zero(t *testing.T) {
+	env := &commands.Environment{
+		Stdout: &bytes.Buffer{},
+		Stderr: io.Discard,
+	}
+
+	cmd := New()
+	status := cmd.Run(context.Background(), env, []string{"-z", "-e", "a", "b"})
+	assert.Equal(t, 0, status)
+	
+	output := env.Stdout.(*bytes.Buffer).String()
+	assert.True(t, output == "a\x00b\x00" || output == "b\x00a\x00")
+}

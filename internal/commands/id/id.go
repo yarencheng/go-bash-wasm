@@ -25,10 +25,25 @@ func (i *Id) Run(ctx context.Context, env *commands.Environment, args []string) 
 	groupFlag := flags.BoolP("group", "g", false, "print only the effective group ID")
 	groupsFlag := flags.BoolP("groups", "G", false, "print all group IDs")
 	nameFlag := flags.BoolP("name", "n", false, "print a name instead of a number")
+	realFlag := flags.BoolP("real", "r", false, "print the real ID instead of the effective ID")
+	contextFlag := flags.BoolP("context", "Z", false, "print only the security context of the process")
+	_ = flags.BoolP("all", "a", false, "ignore, for backward compatibility")
 	zeroFlag := flags.BoolP("zero", "z", false, "delimit entries with NUL characters, not whitespace")
 
 	if err := flags.Parse(args); err != nil {
-		fmt.Fprintf(env.Stderr, "id: %v\n", err)
+		if env.Stderr != nil {
+			fmt.Fprintf(env.Stderr, "id: %v\n", err)
+		}
+		return 1
+	}
+
+	// Use realFlag to satisfy compiler; currently real == effective in this simulator
+	_ = *realFlag
+
+	if *contextFlag {
+		if env.Stderr != nil {
+			fmt.Fprintf(env.Stderr, "id: context not supported\n")
+		}
 		return 1
 	}
 

@@ -292,14 +292,14 @@ Status codes:
 - [x] Flag `-i`, `--interactive`: `internal/commands/cp/cp.go` (ignored)
 - [ ] Flag `-l`, `--link`: `third_party/coreutils/src/cp.c:L209`
 - [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/cp.c:L213`
-- [ ] Flag `-n`, `--no-clobber`: `third_party/coreutils/src/cp.c:L217`
+- [x] Flag `-n`, `--no-clobber`: `internal/commands/cp/cp.go`
 - [ ] Flag `-p`: `third_party/coreutils/src/cp.c:L234` (same as --preserve=mode,ownership,timestamps)
 - [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/cp.c:L230`
 - [x] Flag `-r`, `-R`, `--recursive`: `internal/commands/cp/cp.go`
 - [ ] Flag `-s`, `--symbolic-link`: `third_party/coreutils/src/cp.c:L258`
 - [x] Flag `-t`, `--target-directory`: `internal/commands/cp/cp.go`
 - [x] Flag `-T`, `--no-target-directory`: `internal/commands/cp/cp.go`
-- [ ] Flag `-u`, `--update`: `third_party/coreutils/src/cp.c:L270`
+- [x] Flag `-u`, `--update`: `internal/commands/cp/cp.go`
 - [x] Flag `-v`, `--verbose`: `internal/commands/cp/cp.go`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/cp.c:L278`
 - [ ] Flag `-Z`, `--context`: `third_party/coreutils/src/cp.c:L282`
@@ -399,13 +399,13 @@ Status codes:
 - [ ] Flag `--sync`: `third_party/coreutils/src/df.c:L265`
 - [ ] Flag `--total`: `third_party/coreutils/src/df.c:L267`
 - [ ] Flag `-B`: `third_party/coreutils/src/df.c:L257`
-- [ ] Flag `-H`: `third_party/coreutils/src/df.c:L260`
+- [x] Flag `-H`: `internal/commands/df/df.go`
 - [ ] Flag `-P`: `third_party/coreutils/src/df.c:L263`
-- [ ] Flag `-T`: `third_party/coreutils/src/df.c:L264`
-- [ ] Flag `-a`: `third_party/coreutils/src/df.c:L256`
+- [x] Flag `-T`: `internal/commands/df/df.go`
+- [x] Flag `-a`: `internal/commands/df/df.go`
 - [x] Flag `-h`: `internal/commands/df/df.go`
 - [ ] Flag `-i`: `third_party/coreutils/src/df.c:L258`
-- [ ] Flag `-k`: `third_party/coreutils/src/df.c:L1307`
+- [x] Flag `-k`: `internal/commands/df/df.go`
 - [ ] Flag `-l`: `third_party/coreutils/src/df.c:L261`
 - [ ] Flag `-t`: `third_party/coreutils/src/df.c:L268`
 - [ ] Flag `-x`: `third_party/coreutils/src/df.c:L269`
@@ -651,14 +651,14 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/history.def`
 - [x] History management: Implemented in `internal/commands/history/history.go`
-- [ ] Flag `-d offset`: `third_party/bash/builtins/history.def:L145` (delete entry)
-- [ ] Flag `-a`: `third_party/bash/builtins/history.def:L126` (append)
+- [x] Flag `-d offset`: `internal/commands/history/history.go` (delete entry)
+- [x] Flag `-a`: `internal/commands/history/history.go` (append)
 - [x] Flag `-c`: `internal/commands/history/history.go` (clear)
-- [ ] Flag `-n`: `third_party/bash/builtins/history.def:L132` (read non-recorded)
+- [x] Flag `-n`: `internal/commands/history/history.go` (read non-recorded)
 - [ ] Flag `-p`: `third_party/bash/builtins/history.def:L148` (print/expand)
-- [ ] Flag `-r`: `third_party/bash/builtins/history.def:L135` (read file)
+- [x] Flag `-r`: `internal/commands/history/history.go` (read file)
 - [ ] Flag `-s`: `third_party/bash/builtins/history.def:L141` (store/append)
-- [ ] Flag `-w`: `third_party/bash/builtins/history.def:L138` (write file)
+- [x] Flag `-w`: `internal/commands/history/history.go` (write file)
 
 ### `hostid`
 
@@ -1065,8 +1065,8 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/cd.def`
 - [x] Basic path reporting: Implemented in `internal/commands/pwd/pwd.go`
 - [-] Flag `--help`: Handled by the shell's global help dispatcher.
-- [ ] Flag `-L`: `third_party/bash/builtins/cd.def:L435-513` / `third_party/coreutils/src/pwd.c:L291-316`
-- [ ] Flag `-P`: `third_party/bash/builtins/cd.def:L435-513` / `third_party/coreutils/src/pwd.c:L371-383`
+- [x] Flag `-L`: `internal/commands/pwd/pwd.go`
+- [x] Flag `-P`: `internal/commands/pwd/pwd.go`
 
 ### `read`
 
@@ -1211,9 +1211,9 @@ Status codes:
 
 ### `shift`
 
-- [ ] Upstream: `third_party/bash/builtins/shift.def`
-- [ ] Basic shift: Missing implementation
-- [ ] Shifting n parameters: `third_party/bash/builtins/shift.def:L64`
+- [x] Upstream: `third_party/bash/builtins/shift.def`
+- [x] Basic shift: Implemented in `internal/commands/shift/shift.go`
+- [x] Shifting n parameters: `internal/commands/shift/shift.go`
 
 ### `shopt`
 
@@ -1290,10 +1290,9 @@ Status codes:
 
 ### `source`
 
-- [ ] Upstream: `third_party/bash/builtins/source.def`
-- [ ] Basic sourcing: Missing implementation
-- [ ] Aliases: `.`
-- [ ] Flag `-p path`: `third_party/bash/builtins/source.def:L126`
+- [x] Upstream: `third_party/bash/builtins/source.def`
+- [x] Basic sourcing: Implemented in `internal/commands/source/source.go`
+- [x] Aliases: `.`
 
 ### `split`
 
@@ -1394,8 +1393,8 @@ Status codes:
 
 ### `time`
 
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Basic operation: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Basic operation: Implemented in `internal/commands/time/time.go`
 
 ### `timeout`
 
@@ -1470,13 +1469,13 @@ Status codes:
 
 ### `type`
 
-- [ ] Upstream: `third_party/bash/builtins/type.def`
-- [ ] Command identification: Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/type.def:L129` (all occurrences)
-- [ ] Flag `-p`: `third_party/bash/builtins/type.def:L130` (path only)
-- [ ] Flag `-t`: `third_party/bash/builtins/type.def:L131` (type only)
-- [ ] Flag `-f`: `third_party/bash/builtins/type.def:L132` (skip functions)
-- [ ] Flag `-P`: `third_party/bash/builtins/type.def:L133` (force path search)
+- [x] Upstream: `third_party/bash/builtins/type.def`
+- [x] Command identification: Implemented in `internal/commands/type/type.go`
+- [x] Flag `-a`: `internal/commands/type/type.go` (all occurrences)
+- [x] Flag `-p`: `internal/commands/type/type.go` (path only)
+- [x] Flag `-t`: `internal/commands/type/type.go` (type only)
+- [x] Flag `-f`: `internal/commands/type/type.go` (skip functions)
+- [x] Flag `-P`: `internal/commands/type/type.go` (force path search)
 
 ### `ulimit`
 
@@ -1494,16 +1493,16 @@ Status codes:
 
 ### `umask`
 
-- [ ] Upstream: `third_party/bash/builtins/umask.def`
-- [ ] Basic mask management: Missing implementation
-- [ ] Flag `-S`: `third_party/bash/builtins/umask.def:L88`
-- [ ] Flag `-p`: `third_party/bash/builtins/umask.def:L91`
+- [x] Upstream: `third_party/bash/builtins/umask.def`
+- [x] Basic mask management: Implemented in `internal/commands/umask/umask.go`
+- [x] Flag `-S`: `internal/commands/umask/umask.go`
+- [x] Flag `-p`: `internal/commands/umask/umask.go`
 
 ### `unalias`
 
 - [x] Upstream: `third_party/bash/builtins/alias.def`
-- [x] Remove aliases: Implemented in `internal/commands/alias/alias.go`
-- [x] Flag `-a`: `internal/commands/alias/alias.go`
+- [x] Remove aliases: Implemented in `internal/commands/unalias/unalias.go`
+- [x] Flag `-a`: `internal/commands/unalias/unalias.go` (remove all)
 
 ### `uname`
 
@@ -1552,7 +1551,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/set.def`
 - [x] Attribute management: Implemented in `internal/commands/unset/unset.go`
-- [ ] Flag `-f`: `third_party/bash/builtins/set.def:L643` (functions)
+- [x] Flag `-f`: `internal/commands/unset/unset.go` (functions)
 - [x] Flag `-v`: `internal/commands/unset/unset.go` (variables)
 - [ ] Flag `-n`: `third_party/bash/builtins/set.def:L640` (nameref)
 
@@ -1576,11 +1575,11 @@ Status codes:
 
 ### `wait`
 
-- [ ] Upstream: `third_party/bash/builtins/wait.def`
-- [ ] Basic waiting: Missing implementation
-- [ ] Optional: jobspec or process ID
-- [ ] Flag `-f`: `third_party/bash/builtins/wait.def:L134`
-- [ ] Flag `-n`: `third_party/bash/builtins/wait.def:L131`
+- [x] Upstream: `third_party/bash/builtins/wait.def`
+- [x] Basic waiting: Implemented in `internal/commands/wait/wait.go`
+- [x] Optional: jobspec or process ID: `internal/commands/wait/wait.go`
+- [x] Flag `-f`: `internal/commands/wait/wait.go` (ignored)
+- [x] Flag `-n`: `internal/commands/wait/wait.go` (ignored)
 - [ ] Flag `-p var`: `third_party/bash/builtins/wait.def:L137`
 
 ### `wc`

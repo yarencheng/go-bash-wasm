@@ -117,6 +117,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chmod"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chown"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/realpath"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/wait"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/umask"
 	timecmd "github.com/yarencheng/go-bash-wasm/internal/commands/time"
 	typecmd "github.com/yarencheng/go-bash-wasm/internal/commands/type"
@@ -275,6 +276,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		typecmd.New(),
 		timecmd.New(),
 		umask.New(),
+		wait.New(),
 		eval.New(),
 		exec.New(),
 		chroot.New(),

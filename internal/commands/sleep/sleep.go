@@ -33,19 +33,39 @@ func (s *Sleep) Run(ctx context.Context, env *commands.Environment, args []strin
 		return 1
 	}
 
-	totalSeconds := 0.0
+	totalDuration := time.Duration(0)
 	for _, arg := range targets {
-		seconds, err := strconv.ParseFloat(arg, 64)
+		unit := time.Second
+		numPart := arg
+		if len(arg) > 0 {
+			last := arg[len(arg)-1]
+			switch last {
+			case 's':
+				unit = time.Second
+				numPart = arg[:len(arg)-1]
+			case 'm':
+				unit = time.Minute
+				numPart = arg[:len(arg)-1]
+			case 'h':
+				unit = time.Hour
+				numPart = arg[:len(arg)-1]
+			case 'd':
+				unit = time.Hour * 24
+				numPart = arg[:len(arg)-1]
+			}
+		}
+
+		val, err := strconv.ParseFloat(numPart, 64)
 		if err != nil {
-			fmt.Fprintf(env.Stderr, "sleep: invalid time interval '%s'\n", arg)
+			if env.Stderr != nil {
+				fmt.Fprintf(env.Stderr, "sleep: invalid time interval '%s'\n", arg)
+			}
 			return 1
 		}
-		totalSeconds += seconds
+		totalDuration += time.Duration(val * float64(unit))
 	}
 
-	duration := time.Duration(totalSeconds * float64(time.Second))
-	
-	timer := time.NewTimer(duration)
+	timer := time.NewTimer(totalDuration)
 	defer timer.Stop()
 
 	select {

@@ -35,6 +35,7 @@ type Environment struct {
 	Arrays        map[string][]string
 	DirStack      []string
 	Aliases       map[string]string
+	Functions     map[string]string
 	Hash          map[string]string
 	History       []string
 	Jobs          []*Job

@@ -29,11 +29,15 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	targetDir := flags.StringP("target-directory", "t", "", "copy all SOURCE arguments into DIRECTORY")
 	noTargetDir := flags.BoolP("no-target-directory", "T", false, "treat DEST as a normal file")
 	verbose := flags.BoolP("verbose", "v", false, "explain what is being done")
+	noClobber := flags.BoolP("no-clobber", "n", false, "do not overwrite an existing file")
+	update := flags.BoolP("update", "u", false, "copy only when the SOURCE file is newer than the destination file or when the destination file is missing")
 	_ = flags.BoolP("interactive", "i", false, "prompt before overwrite (ignored)")
 	_ = flags.BoolP("force", "f", false, "if an existing destination file cannot be opened, remove it and try again (ignored)")
 
 	if err := flags.Parse(args); err != nil {
-		fmt.Fprintf(env.Stderr, "cp: %v\n", err)
+		if env.Stderr != nil {
+			fmt.Fprintf(env.Stderr, "cp: %v\n", err)
+		}
 		return 1
 	}
 
@@ -103,9 +107,9 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 				exitCode = 1
 				continue
 			}
-			err = c.copyDir(env, srcFullPath, finalDest, *verbose)
+			err = c.copyDir(env, srcFullPath, finalDest, *verbose, *noClobber, *update)
 		} else {
-			err = c.copyFile(env, srcFullPath, finalDest, *verbose)
+			err = c.copyFile(env, srcFullPath, finalDest, *verbose, *noClobber, *update)
 		}
 
 		if err != nil {
@@ -117,14 +121,29 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	return exitCode
 }
 
-func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose bool) error {
+func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose, noClobber, update bool) error {
+	srcInfo, err := env.FS.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	destInfo, err := env.FS.Stat(dest)
+	if err == nil {
+		if noClobber {
+			return nil
+		}
+		if update && !srcInfo.ModTime().After(destInfo.ModTime()) {
+			return nil
+		}
+	}
+
 	in, err := env.FS.Open(src)
 	if err != nil {
 		return err
 	}
 	defer in.Close()
 
-	out, err := env.FS.OpenFile(dest, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	out, err := env.FS.OpenFile(dest, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, srcInfo.Mode())
 	if err != nil {
 		return err
 	}
@@ -141,7 +160,7 @@ func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose bool)
 	return nil
 }
 
-func (c *Cp) copyDir(env *commands.Environment, src, dest string, verbose bool) error {
+func (c *Cp) copyDir(env *commands.Environment, src, dest string, verbose, noClobber, update bool) error {
 	srcInfo, err := env.FS.Stat(src)
 	if err != nil {
 		return err
@@ -162,9 +181,9 @@ func (c *Cp) copyDir(env *commands.Environment, src, dest string, verbose bool) 
 		destPath := filepath.Join(dest, entry.Name())
 
 		if entry.IsDir() {
-			err = c.copyDir(env, srcPath, destPath, verbose)
+			err = c.copyDir(env, srcPath, destPath, verbose, noClobber, update)
 		} else {
-			err = c.copyFile(env, srcPath, destPath, verbose)
+			err = c.copyFile(env, srcPath, destPath, verbose, noClobber, update)
 		}
 		if err != nil {
 			return err

@@ -36,7 +36,7 @@ func (c *Command) Run(ctx context.Context, env *commands.Environment, args []str
 	name := remaining[0]
 
 	if *identify || *verboseIdentify {
-		cmd, ok := env.Registry.Get(name)
+		_, ok := env.Registry.Get(name)
 		if ok {
 			if *verboseIdentify {
 				fmt.Fprintf(env.Stdout, "%s is a builtin command\n", name)

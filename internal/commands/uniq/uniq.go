@@ -3,9 +3,11 @@ package uniq
 import (
 	"bufio"
 	"context"
+	"bytes"
 	"fmt"
 	"io"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
@@ -108,6 +110,19 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 	return 0
 }
 
+
+func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+	if i := bytes.IndexByte(data, '\x00'); i >= 0 {
+		return i + 1, data[0:i], nil
+	}
+	if atEOF {
+		return len(data), data, nil
+	}
+	return 0, nil, nil
+}
 
 func (u *Uniq) outputLine(w io.Writer, line string, count int, showCount, onlyRepeated, onlyUnique bool, terminator string) {
 	if onlyRepeated && count <= 1 {

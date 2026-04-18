@@ -3,7 +3,6 @@ package who
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"

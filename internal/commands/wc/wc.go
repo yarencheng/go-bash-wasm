@@ -9,6 +9,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/spf13/afero"
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )

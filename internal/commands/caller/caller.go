@@ -2,7 +2,6 @@ package caller
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )

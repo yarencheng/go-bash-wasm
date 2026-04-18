@@ -180,13 +180,24 @@ var (
 	EthAddress    = "0xfC689a03D0BF58b27f1928eed952CAbCF816fAE9"
 )
 
-const Banner = `
+const (
+	ansiReset     = "\x1b[0m"
+	ansiBold      = "\x1b[1m"
+	ansiUnderline = "\x1b[4m"
+	ansiDim       = "\x1b[2m"
+	ansiCyan      = "\x1b[36m"
+	ansiWhite     = "\x1b[37m"
+	ansiYellow    = "\x1b[33m"
+	ansiGray      = "\x1b[90m"
+)
+
+const Banner = ansiBold + ansiCyan + `
  ██████   ██████      ██████   █████   ██████  ██   ██     ██     ██   █████   ██████  ███    ███ 
 ██       ██    ██     ██   ██ ██   ██ ██       ██   ██     ██     ██  ██   ██ ██       ████  ████ 
 ██   ███ ██    ██     ██████  ███████  █████   ███████     ██  █  ██  ███████  █████   ██ ████ ██ 
 ██    ██ ██    ██     ██   ██ ██   ██      ██  ██   ██     ██ ███ ██  ██   ██      ██  ██  ██  ██ 
  ██████   ██████      ██████  ██   ██ ██████   ██   ██      ███ ███   ██   ██ ██████   ██      ██ 
-`
+` + ansiReset
 
 // App encapsulates the bash simulator application.
 type App struct {
@@ -473,6 +484,16 @@ func (a *App) Run(ctx context.Context) error {
 // ShowBanner prints the startup banner.
 func (a *App) ShowBanner() {
 	fmt.Fprint(a.Env.Stdout, Banner)
+
+	divider := ansiGray + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" + ansiReset + "\n"
+	fmt.Fprint(a.Env.Stdout, divider)
+
+	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"Version:"+ansiReset, ansiBold+ansiWhite+BashVersion+" ("+MachType+")"+ansiReset)
+	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"Website:"+ansiReset, ansiUnderline+ansiCyan+ProjectURL+ansiReset)
+	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"GitHub:"+ansiReset, ansiUnderline+ansiCyan+SourceURL+ansiReset)
+
+	fmt.Fprint(a.Env.Stdout, divider)
+	fmt.Fprintln(a.Env.Stdout, " "+ansiBold+ansiYellow+"Support the Project (Donations):"+ansiReset)
 	fmt.Fprint(a.Env.Stdout, "\n")
 
 	var btc strings.Builder
@@ -481,19 +502,23 @@ func (a *App) ShowBanner() {
 	qrterminal.GenerateHalfBlock(BtcAddress, qrterminal.M, &btc)
 	qrterminal.GenerateHalfBlock(EthAddress, qrterminal.M, &eth)
 
-	var merge string
-	btcLines := strings.Split(btc.String(), "\n")
-	ethLines := strings.Split(eth.String(), "\n")
+	btcLines := strings.Split(strings.TrimSpace(btc.String()), "\n")
+	ethLines := strings.Split(strings.TrimSpace(eth.String()), "\n")
 
 	for i := range btcLines {
-		if i == 10 {
-			merge += "BTC " + btcLines[i] + " ETH " + ethLines[i] + "\n"
-		} else {
-			merge += "    " + btcLines[i] + "     " + ethLines[i] + "\n"
+		prefix := "    "
+		middle := "      "
+		if i == len(btcLines)/2 {
+			prefix = ansiBold + ansiYellow + "BTC " + ansiReset
+			middle = "  " + ansiBold + ansiYellow + "ETH " + ansiReset
 		}
+		fmt.Fprintf(a.Env.Stdout, "%s%s%s%s\n", prefix, btcLines[i], middle, ethLines[i])
 	}
 
-	fmt.Fprint(a.Env.Stdout, merge)
+	fmt.Fprint(a.Env.Stdout, "\n")
+	fmt.Fprintf(a.Env.Stdout, " %s %s\n", ansiDim+"BTC Address:"+ansiReset, ansiBold+ansiWhite+BtcAddress+ansiReset)
+	fmt.Fprintf(a.Env.Stdout, " %s %s\n", ansiDim+"ETH Address:"+ansiReset, ansiBold+ansiWhite+EthAddress+ansiReset)
+	fmt.Fprint(a.Env.Stdout, divider)
 }
 
 // ShowVersion prints the version information of the bash simulator.

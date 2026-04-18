@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/afero"
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
@@ -56,6 +57,43 @@ func (c *Compgen) Run(ctx context.Context, env *commands.Environment, args []str
 		for _, name := range env.Registry.List() {
 			if strings.HasPrefix(name, word) {
 				matches = append(matches, name)
+			}
+		}
+	}
+
+	// File and directory matching
+	fFlag, _ := flags.GetBool("file")
+	dFlag, _ := flags.GetBool("directory")
+	if fFlag || dFlag {
+		dir := "."
+		base := word
+		if strings.Contains(word, "/") {
+			idx := strings.LastIndex(word, "/")
+			dir = word[:idx]
+			if dir == "" {
+				dir = "/"
+			}
+			base = word[idx+1:]
+		}
+
+		entries, err := afero.ReadDir(env.FS, dir)
+		if err == nil {
+			for _, entry := range entries {
+				if strings.HasPrefix(entry.Name(), base) {
+					if dFlag && !entry.IsDir() {
+						continue
+					}
+					match := entry.Name()
+					if dir != "." && dir != "/" {
+						match = dir + "/" + entry.Name()
+					} else if dir == "/" {
+						match = "/" + entry.Name()
+					}
+					if entry.IsDir() {
+						match += "/"
+					}
+					matches = append(matches, match)
+				}
 			}
 		}
 	}

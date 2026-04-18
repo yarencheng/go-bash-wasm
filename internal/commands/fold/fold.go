@@ -2,6 +2,7 @@ package fold
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -25,6 +26,7 @@ func (f *Fold) Name() string {
 func (f *Fold) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("fold", pflag.ContinueOnError)
 	bytesFlag := flags.BoolP("bytes", "b", false, "count bytes instead of columns")
+	charsFlag := flags.BoolP("characters", "c", false, "count characters instead of columns")
 	spaces := flags.BoolP("spaces", "s", false, "break at spaces")
 	width := flags.StringP("width", "w", "80", "maximum line width")
 
@@ -42,7 +44,7 @@ func (f *Fold) Run(ctx context.Context, env *commands.Environment, args []string
 
 	remaining := flags.Args()
 	if len(remaining) == 0 {
-		return f.process(env, env.Stdin, maxWidth, *bytesFlag, *spaces)
+		return f.process(env, env.Stdin, maxWidth, *bytesFlag || *charsFlag, *spaces)
 	}
 
 	exitCode := 0
@@ -53,7 +55,7 @@ func (f *Fold) Run(ctx context.Context, env *commands.Environment, args []string
 			exitCode = 1
 			continue
 		}
-		if status := f.process(env, file, maxWidth, *bytesFlag, *spaces); status != 0 {
+		if status := f.process(env, file, maxWidth, *bytesFlag || *charsFlag, *spaces); status != 0 {
 			exitCode = status
 		}
 		file.Close()
@@ -77,22 +79,51 @@ func (f *Fold) foldLine(env *commands.Environment, line string, maxWidth int, by
 		return
 	}
 
-	for len(line) > 0 {
-		if len(line) <= maxWidth {
-			fmt.Fprintln(env.Stdout, line)
-			return
-		}
-
-		// Find break point
-		breakIdx := maxWidth
-		if breakAtSpaces {
-			lastSpace := strings.LastIndex(line[:maxWidth+1], " ")
-			if lastSpace != -1 {
-				breakIdx = lastSpace + 1
+	if bytesMode {
+		data := []byte(line)
+		for len(data) > 0 {
+			if len(data) <= maxWidth {
+				env.Stdout.Write(data)
+				fmt.Fprintln(env.Stdout)
+				return
 			}
-		}
 
-		fmt.Fprintln(env.Stdout, line[:breakIdx])
-		line = line[breakIdx:]
+			breakIdx := maxWidth
+			if breakAtSpaces {
+				lastSpace := bytes.LastIndex(data[:maxWidth+1], []byte(" "))
+				if lastSpace != -1 {
+					breakIdx = lastSpace + 1
+				}
+			}
+
+			env.Stdout.Write(data[:breakIdx])
+			fmt.Fprintln(env.Stdout)
+			data = data[breakIdx:]
+		}
+	} else {
+		runes := []rune(line)
+		for len(runes) > 0 {
+			if len(runes) <= maxWidth {
+				fmt.Fprintln(env.Stdout, string(runes))
+				return
+			}
+
+			breakIdx := maxWidth
+			if breakAtSpaces {
+				lastSpace := -1
+				for i := 0; i <= maxWidth && i < len(runes); i++ {
+					if runes[i] == ' ' {
+						lastSpace = i
+					}
+				}
+				if lastSpace != -1 {
+					breakIdx = lastSpace + 1
+				}
+			}
+
+			fmt.Fprintln(env.Stdout, string(runes[:breakIdx]))
+			runes = runes[breakIdx:]
+		}
 	}
 }
+

@@ -26,6 +26,8 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 	count := flags.BoolP("count", "c", false, "prefix lines by the number of occurrences")
 	repeated := flags.BoolP("repeated", "d", false, "only print duplicate lines, one for each group")
 	unique := flags.BoolP("unique", "u", false, "only print unique lines")
+	ignoreCase := flags.BoolP("ignore-case", "i", false, "ignore differences in case when comparing")
+	zero := flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "uniq: %v\n", err)
@@ -56,9 +58,25 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 	}()
 
 	scanner := bufio.NewScanner(input)
+	if *zero {
+		scanner.Split(scanNull)
+	}
+
 	var prevLine string
 	var currentCount int
 	first := true
+
+	compare := func(a, b string) bool {
+		if *ignoreCase {
+			return strings.EqualFold(a, b)
+		}
+		return a == b
+	}
+
+	terminator := "\n"
+	if *zero {
+		terminator = "\x00"
+	}
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -69,17 +87,17 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 			continue
 		}
 
-		if line == prevLine {
+		if compare(line, prevLine) {
 			currentCount++
 		} else {
-			u.outputLine(env.Stdout, prevLine, currentCount, *count, *repeated, *unique)
+			u.outputLine(env.Stdout, prevLine, currentCount, *count, *repeated, *unique, terminator)
 			prevLine = line
 			currentCount = 1
 		}
 	}
 
 	if !first {
-		u.outputLine(env.Stdout, prevLine, currentCount, *count, *repeated, *unique)
+		u.outputLine(env.Stdout, prevLine, currentCount, *count, *repeated, *unique, terminator)
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -90,7 +108,8 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 	return 0
 }
 
-func (u *Uniq) outputLine(w io.Writer, line string, count int, showCount, onlyRepeated, onlyUnique bool) {
+
+func (u *Uniq) outputLine(w io.Writer, line string, count int, showCount, onlyRepeated, onlyUnique bool, terminator string) {
 	if onlyRepeated && count <= 1 {
 		return
 	}
@@ -99,8 +118,9 @@ func (u *Uniq) outputLine(w io.Writer, line string, count int, showCount, onlyRe
 	}
 
 	if showCount {
-		fmt.Fprintf(w, "%7d %s\n", count, line)
+		fmt.Fprintf(w, "%7d %s%s", count, line, terminator)
 	} else {
-		fmt.Fprintln(w, line)
+		fmt.Fprintf(w, "%s%s", line, terminator)
 	}
 }
+

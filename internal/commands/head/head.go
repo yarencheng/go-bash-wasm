@@ -27,6 +27,7 @@ func (h *Head) Run(ctx context.Context, env *commands.Environment, args []string
 	bytes := flags.IntP("bytes", "c", 0, "print the first K bytes of each file")
 	quiet := flags.BoolP("quiet", "q", false, "never print headers giving file names")
 	verbose := flags.BoolP("verbose", "v", false, "always print headers giving file names")
+	zero := flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "head: %v\n", err)
@@ -80,8 +81,15 @@ func (h *Head) Run(ctx context.Context, env *commands.Environment, args []string
 		} else {
 			count := *lines
 			scanner := bufio.NewScanner(reader)
+			if *zero {
+				scanner.Split(scanNull)
+			}
+			terminator := "\n"
+			if *zero {
+				terminator = "\x00"
+			}
 			for j := 0; j < count && scanner.Scan(); j++ {
-				fmt.Fprintln(env.Stdout, scanner.Text())
+				fmt.Fprintf(env.Stdout, "%s%s", scanner.Text(), terminator)
 			}
 			if err := scanner.Err(); err != nil {
 				fmt.Fprintf(env.Stderr, "head: error reading '%s': %v\n", target, err)
@@ -92,3 +100,19 @@ func (h *Head) Run(ctx context.Context, env *commands.Environment, args []string
 
 	return exitCode
 }
+
+func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+	for i := 0; i < len(data); i++ {
+		if data[i] == '\x00' {
+			return i + 1, data[0:i], nil
+		}
+	}
+	if atEOF {
+		return len(data), data, nil
+	}
+	return 0, nil, nil
+}
+

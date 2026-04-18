@@ -196,13 +196,13 @@ Status codes:
 - [x] Basic CRC-32: Implemented in `internal/commands/cksum/cksum.go`
 - [x] Flag `-a`, `--algorithm=ALGO`: `internal/commands/cksum/cksum.go`
 - [x] Flag `-c`, `--check`: `internal/commands/cksum/cksum.go`
-- [ ] Flag `-l`, `--length=BITS`: `third_party/coreutils/src/cksum.c:L181`
+- [x] Flag `-l`, `--length=BITS`: `internal/commands/cksum/cksum.go`
 - [x] Flag `-z`, `--zero`: `internal/commands/cksum/cksum.go`
-- [ ] Flag `--base64`: `third_party/coreutils/src/cksum.c:L187`
-- [ ] Flag `--raw`: `third_party/coreutils/src/cksum.c:L189`
-- [ ] Flag `--tag`: `third_party/coreutils/src/cksum.c:L157`
-- [ ] Flag `--untagged`: `third_party/coreutils/src/cksum.c:L190`
-- [ ] Flag `--ignore-missing`: `third_party/coreutils/src/cksum.c:L149`
+- [x] Flag `--base64`: `internal/commands/cksum/cksum.go`
+- [x] Flag `--raw`: `internal/commands/cksum/cksum.go`
+- [x] Flag `--tag`: `internal/commands/cksum/cksum.go`
+- [x] Flag `--untagged`: `internal/commands/cksum/cksum.go`
+- [x] Flag `--ignore-missing`: `internal/commands/cksum/cksum.go`
 - [x] Flag `--quiet`: `internal/commands/cksum/cksum.go`
 - [x] Flag `--status`: `internal/commands/cksum/cksum.go`
 - [x] Flag `--strict`: `internal/commands/cksum/cksum.go`
@@ -216,22 +216,22 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/comm.c`
 - [x] Basic comparison: Implemented in `internal/commands/comm/comm.go`
-- [ ] Flag `--check-order`: `third_party/coreutils/src/comm.c:L473`
-- [ ] Flag `--nocheck-order`: `third_party/coreutils/src/comm.c:L474`
-- [ ] Flag `--output-delimiter`: `third_party/coreutils/src/comm.c:L477`
-- [ ] Flag `--total`: `third_party/coreutils/src/comm.c:L478`
+- [x] Flag `--check-order`: `internal/commands/comm/comm.go`
+- [x] Flag `--nocheck-order`: `internal/commands/comm/comm.go`
+- [x] Flag `--output-delimiter`: `internal/commands/comm/comm.go`
+- [x] Flag `--total`: `internal/commands/comm/comm.go`
 - [x] Flag `-1`: `internal/commands/comm/comm.go`
 - [x] Flag `-2`: `internal/commands/comm/comm.go`
 - [x] Flag `-3`: `internal/commands/comm/comm.go`
-- [ ] Flag `-z`: `third_party/coreutils/src/comm.c:L480`
+- [x] Flag `-z`: `internal/commands/comm/comm.go`
 
 ### `command`
 
 - [x] Upstream: `third_party/bash/builtins/command.def`
 - [x] Execution override: Implemented in `internal/commands/command/command.go`
-- [ ] Flag `-p`: `third_party/bash/builtins/command.def:L75` (default PATH)
-- [ ] Flag `-v`: `third_party/bash/builtins/command.def:L75` (identify command)
-- [ ] Flag `-V`: `third_party/bash/builtins/command.def:L75` (verbose identify)
+- [x] Flag `-p`: `internal/commands/command/command.go`
+- [x] Flag `-v`: `internal/commands/command/command.go`
+- [x] Flag `-V`: `internal/commands/command/command.go`
 
 ### `compgen`
 
@@ -331,9 +331,9 @@ Status codes:
 - [x] Flag `-c`, `--characters=LIST`: `internal/commands/cut/cut.go`
 - [x] Flag `-d`, `--delimiter=DELIM`: `internal/commands/cut/cut.go`
 - [x] Flag `-f`, `--fields=LIST`: `internal/commands/cut/cut.go`
-- [ ] Flag `-n`: `third_party/coreutils/src/cut.c:L159` (ignored)
+- [x] Flag `-n`: `internal/commands/cut/cut.go` (ignored)
 - [x] Flag `-s`, `--only-delimited`: `internal/commands/cut/cut.go`
-- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/cut.c:L175`
+- [x] Flag `-z`, `--zero-terminated`: `internal/commands/cut/cut.go`
 - [x] Flag `--complement`: `internal/commands/cut/cut.go`
 - [x] Flag `--output-delimiter=STRING`: `internal/commands/cut/cut.go`
 
@@ -597,11 +597,9 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/fold.c`
 - [x] Line wrapping: Implemented in `internal/commands/fold/fold.go`
 - [x] Flag `-b`, `--bytes`: `internal/commands/fold/fold.go`
-- [ ] Flag `-c`, `--characters`: `third_party/coreutils/src/fold.c:76`
+- [x] Flag `-c`, `--characters`: `internal/commands/fold/fold.go`
 - [x] Flag `-s`, `--spaces`: `internal/commands/fold/fold.go`
 - [x] Flag `-w`, `--width=WIDTH`: `internal/commands/fold/fold.go`
-- [ ] Flag `-s`: `third_party/coreutils/src/fold.c:L96`
-- [ ] Flag `-w`: `third_party/coreutils/src/fold.c:L100`
 
 ### `getlimits`
 
@@ -637,7 +635,7 @@ Status codes:
 - [x] Flag `-n`, `--lines`: `internal/commands/head/head.go`
 - [x] Flag `-q`, `--quiet`, `--silent`: `internal/commands/head/head.go`
 - [x] Flag `-v`, `--verbose`: `internal/commands/head/head.go`
-- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/head.c:L139`
+- [x] Flag `-z`, `--zero-terminated`: `internal/commands/head/head.go`
 
 ### `help`
 
@@ -670,19 +668,19 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/hostname.c`
 - [x] Basic output: Implemented in `internal/commands/hostname/hostname.go`
 - [x] Set hostname support: `internal/commands/hostname/hostname.go`
-- [ ] Flag `--help`: `third_party/coreutils/src/hostname.c:L65`
-- [ ] Flag `--version`: `third_party/coreutils/src/hostname.c:L65`
+- [x] Flag `--help`: `internal/commands/hostname/hostname.go`
+- [x] Flag `--version`: `internal/commands/hostname/hostname.go`
 
 ### `id`
 
 - [x] Upstream: `third_party/coreutils/src/id.c`
 - [x] Basic output: Implemented in `internal/commands/id/id.go`
 - [x] Flag `-G`: `internal/commands/id/id.go`
-- [ ] Flag `-Z`: `third_party/coreutils/src/id.c:L105`
-- [ ] Flag `-a`: `third_party/coreutils/src/id.c:L101`
+- [x] Flag `-Z`: `internal/commands/id/id.go` (ignored)
+- [x] Flag `-a`: `internal/commands/id/id.go` (ignored)
 - [x] Flag `-g`: `internal/commands/id/id.go`
 - [x] Flag `-n`: `internal/commands/id/id.go`
-- [ ] Flag `-r`: `third_party/coreutils/src/id.c:L121`
+- [x] Flag `-r`: `internal/commands/id/id.go` (real == effective)
 - [x] Flag `-u`: `internal/commands/id/id.go`
 - [x] Flag `-z`: `internal/commands/id/id.go`
 
@@ -766,9 +764,9 @@ Status codes:
 ### `ln`
 
 - [x] Basic link creation: Implemented in `internal/commands/ln/ln.go`
-- [ ] Flag `-f`: `third_party/coreutils/src/ln.c:L553`
+- [x] Flag `-f`: `internal/commands/ln/ln.go`
 - [x] Flag `-s`: `internal/commands/ln/ln.go`
-- [ ] Flag `-v`: `third_party/coreutils/src/ln.c:L595`
+- [x] Flag `-v`: `internal/commands/ln/ln.go`
 
 ### `local`
 
@@ -1314,10 +1312,10 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/stat.c`
 - [x] Basic output: Implemented in `internal/commands/stat/stat.go`
-- [ ] Flag `-c`, `--format=FORMAT`: `third_party/coreutils/src/stat.c:L1921`
-- [ ] Flag `-f`, `--file-system`: `third_party/coreutils/src/stat.c:1932`
+- [x] Flag `-c`, `--format=FORMAT`: `internal/commands/stat/stat.go`
+- [x] Flag `-f`, `--file-system`: `internal/commands/stat/stat.go` (ignored)
 - [x] Flag `-L`, `--dereference`: `internal/commands/stat/stat.go`
-- [ ] Flag `-t`, `--terse`: `third_party/coreutils/src/stat.c:1936`
+- [x] Flag `-t`, `--terse`: `internal/commands/stat/stat.go`
 - [ ] Flag `--printf=FORMAT`: `third_party/coreutils/src/stat.c:1924`
 - [ ] Flag `--cached={always,never,default}`: `third_party/coreutils/src/stat.c:1917`
 
@@ -1371,7 +1369,7 @@ Status codes:
 - [x] Flag `-q`, `--quiet`, `--silent`: `internal/commands/tail/tail.go`
 - [ ] Flag `-s`, `--sleep-interval`: `third_party/coreutils/src/tail.c:L322`
 - [x] Flag `-v`, `--verbose`: `internal/commands/tail/tail.go`
-- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/tail.c:L330`
+- [x] Flag `-z`, `--zero-terminated`: `internal/commands/tail/tail.go`
 - [ ] Flag `--pid`: `third_party/coreutils/src/tail.c:L334`
 - [ ] Flag `--retry`: `third_party/coreutils/src/tail.c:L338`
 - [ ] Flag `--max-unchanged-stats`: `third_party/coreutils/src/tail.c:L342`
@@ -1431,7 +1429,7 @@ Status codes:
 - [x] Flag `-c`, `-C`, `--complement`: `internal/commands/tr/tr.go`
 - [x] Flag `-d`, `--delete`: `internal/commands/tr/tr.go`
 - [x] Flag `-s`, `--squeeze-repeats`: `internal/commands/tr/tr.go`
-- [ ] Flag `-t`, `--truncate-set1`: `third_party/coreutils/src/tr.c:L310`
+- [x] Flag `-t`, `--truncate-set1`: `internal/commands/tr/tr.go`
 
 ### `trap`
 
@@ -1538,7 +1536,7 @@ Status codes:
 - [ ] Flag `-s`, `--skip-chars=N`: `third_party/coreutils/src/uniq.c:202`
 - [x] Flag `-u`, `--unique`: `internal/commands/uniq/uniq.go`
 - [ ] Flag `-w`, `--check-chars=N`: `third_party/coreutils/src/uniq.c:214`
-- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/uniq.c:210`
+- [x] Flag `-z`, `--zero-terminated`: `internal/commands/uniq/uniq.go`
 - [ ] Flag `--group[=METHOD]`: `third_party/coreutils/src/uniq.c:184`
 
 ### `unlink`

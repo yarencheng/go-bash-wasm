@@ -27,6 +27,7 @@ type counts struct {
 	lines int
 	words int
 	bytes int
+	maxLineLen int
 }
 
 func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) int {
@@ -34,7 +35,8 @@ func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) 
 	l := flags.BoolP("lines", "l", false, "print the newline counts")
 	words := flags.BoolP("words", "w", false, "print the word counts")
 	bytes := flags.BoolP("bytes", "c", false, "print the byte counts")
-	m := flags.BoolP("chars", "m", false, "print the character counts")
+	chars := flags.BoolP("chars", "m", false, "print the character counts")
+	maxLineLen := flags.BoolP("max-line-length", "L", false, "print the maximum display width")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "wc: %v\n", err)
@@ -46,11 +48,8 @@ func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) 
 		targets = []string{"-"}
 	}
 
-	// Default behavior if no flags are specified
-	if !*l && !*words && !*bytes && !*m {
-		*l = true
-		*words = true
-		*bytes = true
+	if !*l && !*words && !*bytes && !*chars && !*maxLineLen {
+		*l, *words, *bytes = true, true, true
 	}
 
 	total := counts{}
@@ -82,14 +81,17 @@ func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) 
 			continue
 		}
 
-		w.printCounts(env, c, target, *l, *words, *bytes || *m)
+		w.printCounts(env, c, target, *l, *words, *bytes, *chars, *maxLineLen)
 		total.lines += c.lines
 		total.words += c.words
 		total.bytes += c.bytes
+		if c.maxLineLen > total.maxLineLen {
+			total.maxLineLen = c.maxLineLen
+		}
 	}
 
 	if len(targets) > 1 {
-		w.printCounts(env, total, "total", *l, *words, *bytes || *m)
+		w.printCounts(env, total, "total", *l, *words, *bytes, *chars, *maxLineLen)
 	}
 
 	return exitCode
@@ -99,7 +101,7 @@ func (w *Wc) count(r io.Reader) (counts, error) {
 	c := counts{}
 	reader := bufio.NewReader(r)
 	inWord := false
-
+	curr := 0
 	for {
 		r, size, err := reader.ReadRune()
 		if err != nil {
@@ -108,12 +110,16 @@ func (w *Wc) count(r io.Reader) (counts, error) {
 			}
 			return c, err
 		}
-
 		c.bytes += size
 		if r == '\n' {
 			c.lines++
+			if curr > c.maxLineLen {
+				c.maxLineLen = curr
+			}
+			curr = 0
+		} else {
+			curr++
 		}
-
 		if unicode.IsSpace(r) {
 			inWord = false
 		} else if !inWord {
@@ -121,25 +127,33 @@ func (w *Wc) count(r io.Reader) (counts, error) {
 			c.words++
 		}
 	}
-
+	if curr > c.maxLineLen {
+		c.maxLineLen = curr
+	}
 	return c, nil
 }
 
-func (w *Wc) printCounts(env *commands.Environment, c counts, name string, showLines, showWords, showBytes bool) {
-	var results []string
-	if showLines {
-		results = append(results, fmt.Sprintf("%d", c.lines))
+func (w *Wc) printCounts(env *commands.Environment, c counts, name string, showL, showW, showB, showC, showM bool) {
+	var res []string
+	if showL {
+		res = append(res, fmt.Sprintf("%d", c.lines))
 	}
-	if showWords {
-		results = append(results, fmt.Sprintf("%d", c.words))
+	if showW {
+		res = append(res, fmt.Sprintf("%d", c.words))
 	}
-	if showBytes {
-		results = append(results, fmt.Sprintf("%d", c.bytes))
+	if showC {
+		res = append(res, fmt.Sprintf("%d", c.bytes))
 	}
-
-	out := strings.Join(results, " ")
+	if showB {
+		res = append(res, fmt.Sprintf("%d", c.bytes))
+	}
+	if showM {
+		res = append(res, fmt.Sprintf("%d", c.maxLineLen))
+	}
+	out := strings.Join(res, " ")
 	if name != "-" {
 		out += " " + name
 	}
 	fmt.Fprintln(env.Stdout, out)
 }
+

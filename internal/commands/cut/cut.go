@@ -31,6 +31,8 @@ func (c *Cut) Run(ctx context.Context, env *commands.Environment, args []string)
 	bytes := flags.StringP("bytes", "b", "", "select only these bytes")
 	complement := flags.Bool("complement", false, "complement the set of selected bytes, characters or fields")
 	outputDelimiter := flags.String("output-delimiter", "", "use STRING as the output delimiter")
+	zero := flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline")
+	_ = flags.BoolP("ignored-n", "n", false, "ignored")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "cut: %v\n", err)
@@ -69,14 +71,22 @@ func (c *Cut) Run(ctx context.Context, env *commands.Environment, args []string)
 		}
 	}
 
+	terminator := "\n"
+	if *zero {
+		terminator = "\x00"
+	}
+
 	for _, input := range inputs {
 		scanner := bufio.NewScanner(input)
+		if *zero {
+			scanner.Split(scanNull)
+		}
 		for scanner.Scan() {
 			line := scanner.Text()
 			if *bytes != "" {
-				c.cutBytes(env.Stdout, line, *bytes, *complement)
+				c.cutBytes(env.Stdout, line, *bytes, *complement, terminator)
 			} else {
-				c.cutFields(env.Stdout, line, *fields, *delimiter, outDelim, *complement)
+				c.cutFields(env.Stdout, line, *fields, *delimiter, outDelim, *complement, terminator)
 			}
 		}
 		if input != env.Stdin {
@@ -87,7 +97,7 @@ func (c *Cut) Run(ctx context.Context, env *commands.Environment, args []string)
 	return 0
 }
 
-func (c *Cut) cutBytes(w io.Writer, line, ranges string, complement bool) {
+func (c *Cut) cutBytes(w io.Writer, line, ranges string, complement bool, terminator string) {
 	indices := c.parseRanges(ranges, len(line), complement)
 	var result strings.Builder
 	for _, i := range indices {
@@ -95,10 +105,10 @@ func (c *Cut) cutBytes(w io.Writer, line, ranges string, complement bool) {
 			result.WriteByte(line[i])
 		}
 	}
-	fmt.Fprintln(w, result.String())
+	fmt.Fprintf(w, "%s%s", result.String(), terminator)
 }
 
-func (c *Cut) cutFields(w io.Writer, line, ranges, delim, outDelim string, complement bool) {
+func (c *Cut) cutFields(w io.Writer, line, ranges, delim, outDelim string, complement bool, terminator string) {
 	parts := strings.Split(line, delim)
 	indices := c.parseRanges(ranges, len(parts), complement)
 	
@@ -108,8 +118,22 @@ func (c *Cut) cutFields(w io.Writer, line, ranges, delim, outDelim string, compl
 			result = append(result, parts[i])
 		}
 	}
-	fmt.Fprintln(w, strings.Join(result, outDelim))
+	fmt.Fprintf(w, "%s%s", strings.Join(result, outDelim), terminator)
 }
+
+func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+	if i := strings.IndexByte(string(data), '\x00'); i >= 0 {
+		return i + 1, data[0:i], nil
+	}
+	if atEOF {
+		return len(data), data, nil
+	}
+	return 0, nil, nil
+}
+
 
 func (c *Cut) parseRanges(ranges string, max int, complement bool) []int {
 	// Simple range parser for "1,2,5-8"

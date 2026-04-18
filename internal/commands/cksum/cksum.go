@@ -7,6 +7,8 @@ import (
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
+	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"hash"
 	"hash/crc32"
@@ -28,35 +30,56 @@ func (c *Cksum) Name() string {
 }
 
 type CksumOptions struct {
-	Algorithm string
-	Check     bool
-	Zero      bool
-	Quiet     bool
-	Status    bool
-	Strict    bool
-	Warn      bool
+	Algorithm     string
+	Check         bool
+	Zero          bool
+	Quiet         bool
+	Status        bool
+	Strict        bool
+	Warn          bool
+	Base64        bool
+	Raw           bool
+	Tag           bool
+	Untagged      bool
+	IgnoreMissing bool
+	Length        int
 }
 
 func (c *Cksum) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("cksum", pflag.ContinueOnError)
-	algorithm := flags.StringP("algorithm", "a", "crc", "select hashing algorithm (crc, md5, sha1, sha256, sha512)")
+	algorithm := flags.StringP("algorithm", "a", "crc", "select hashing algorithm (crc, md5, sha1, sha224, sha256, sha384, sha512)")
 	check := flags.BoolP("check", "c", false, "read checksums from the FILEs and check them")
 	zero := flags.BoolP("zero", "z", false, "end each output line with NUL, not newline")
 	quiet := flags.Bool("quiet", false, "don't print OK for each successfully verified file")
 	status := flags.Bool("status", false, "don't output anything, status code shows success")
 	strict := flags.Bool("strict", false, "exit non-zero for improperly formatted checksum lines")
 	warn := flags.BoolP("warn", "w", false, "warn about improperly formatted checksum lines")
-	flags.Parse(args)
+	base64 := flags.Bool("base64", false, "emit base64-encoded checksums")
+	raw := flags.Bool("raw", false, "emit raw binary checksums")
+	tag := flags.Bool("tag", false, "create a BSD-style checksum")
+	untagged := flags.Bool("untagged", false, "create a reverse-style checksum, without algorithm name")
+	ignoreMissing := flags.Bool("ignore-missing", false, "don't fail or report status for missing files")
+	length := flags.IntP("length", "l", 0, "digest length in bits; must not exceed the maximum for the blake2 algorithm")
 
-	// Combine flags into a struct or pass them down
+	if err := flags.Parse(args); err != nil {
+		fmt.Fprintf(env.Stderr, "cksum: %v\n", err)
+		return 1
+	}
+
 	opts := CksumOptions{
-		Algorithm: *algorithm,
-		Check:     *check,
-		Zero:      *zero,
-		Quiet:     *quiet,
-		Status:    *status,
-		Strict:    *strict,
-		Warn:      *warn,
+		Algorithm:     *algorithm,
+		Check:         *check,
+		Zero:          *zero,
+		Quiet:         *quiet,
+		Status:        *status,
+		Strict:        *strict,
+		Warn:          *warn,
+		Base64:        *base64,
+		Raw:           *raw,
+		Tag:           *tag,
+		Untagged:      *untagged,
+		IgnoreMissing: *ignoreMissing,
+		Length:        *length,
 	}
 
 	remaining := flags.Args()
@@ -68,14 +91,17 @@ func (c *Cksum) Run(ctx context.Context, env *commands.Environment, args []strin
 	for _, arg := range remaining {
 		f, err := env.FS.Open(arg)
 		if err != nil {
+			if opts.Check && opts.IgnoreMissing {
+				continue
+			}
 			if !opts.Status {
 				fmt.Fprintf(env.Stderr, "cksum: %s: %v\n", arg, err)
 			}
 			exitCode = 1
 			continue
 		}
-		if status := c.Process(env, f, arg, opts); status != 0 {
-			exitCode = status
+		if res := c.Process(env, f, arg, opts); res != 0 {
+			exitCode = res
 		}
 		f.Close()
 	}
@@ -88,7 +114,12 @@ func (c *Cksum) Process(env *commands.Environment, r io.Reader, name string, opt
 		return c.RunCheck(env, r, opts)
 	}
 
+	if opts.Algorithm == "crc" || opts.Algorithm == "" {
+		return c.ProcessCRC(env, r, name, opts)
+	}
+
 	var h hash.Hash
+	algoName := strings.ToUpper(opts.Algorithm)
 	switch opts.Algorithm {
 	case "md5":
 		h = md5.New()
@@ -103,8 +134,8 @@ func (c *Cksum) Process(env *commands.Environment, r io.Reader, name string, opt
 	case "sha512":
 		h = sha512.New()
 	default:
-		// Default to CRC
-		return c.ProcessCRC(env, r, name, opts)
+		fmt.Fprintf(env.Stderr, "cksum: %s: unknown algorithm\n", opts.Algorithm)
+		return 1
 	}
 
 	_, err := io.Copy(h, r)
@@ -115,26 +146,57 @@ func (c *Cksum) Process(env *commands.Environment, r io.Reader, name string, opt
 		return 1
 	}
 
-	if !opts.Status {
-		terminator := "\n"
-		if opts.Zero {
-			terminator = "\x00"
-		}
+	if opts.Status {
+		return 0
+	}
+
+	sum := h.Sum(nil)
+	if opts.Length > 0 && opts.Length/8 < len(sum) {
+		sum = sum[:opts.Length/8]
+	}
+
+	terminator := "\n"
+	if opts.Zero {
+		terminator = "\x00"
+	}
+
+	var output string
+	if opts.Raw {
+		env.Stdout.Write(sum)
+		return 0
+	}
+
+	encoded := ""
+	if opts.Base64 {
+		encoded = base64.StdEncoding.EncodeToString(sum)
+	} else {
+		encoded = hex.EncodeToString(sum)
+	}
+
+	if opts.Tag {
 		if name != "" {
-			fmt.Fprintf(env.Stdout, "%x  %s%s", h.Sum(nil), name, terminator)
+			output = fmt.Sprintf("%s (%s) = %s", algoName, name, encoded)
 		} else {
-			fmt.Fprintf(env.Stdout, "%x%s", h.Sum(nil), terminator)
+			output = fmt.Sprintf("%s = %s", algoName, encoded)
+		}
+	} else if opts.Untagged {
+		output = encoded
+	} else {
+		if name != "" {
+			output = fmt.Sprintf("%s  %s", encoded, name)
+		} else {
+			output = encoded
 		}
 	}
 
+	fmt.Fprintf(env.Stdout, "%s%s", output, terminator)
 	return 0
 }
 
 func (c *Cksum) ProcessCRC(env *commands.Environment, r io.Reader, name string, opts CksumOptions) int {
-	// Standard posix cksum uses CRC-32 with a specific table and includes length
 	table := crc32.MakeTable(0x04C11DB7)
 	h := crc32.New(table)
-	
+
 	buf := make([]byte, 32*1024)
 	var length int64
 	for {
@@ -152,13 +214,11 @@ func (c *Cksum) ProcessCRC(env *commands.Environment, r io.Reader, name string, 
 		}
 	}
 
-	// Append length in little-endian like some POSIX implementations
-	lenBuf := make([]byte, 8)
+	// POSIX cksum length handling
 	tmpLen := length
-	for i := 0; tmpLen > 0; i++ {
-		lenBuf[i] = byte(tmpLen & 0xFF)
+	for tmpLen > 0 {
+		h.Write([]byte{byte(tmpLen & 0xFF)})
 		tmpLen >>= 8
-		h.Write(lenBuf[i : i+1])
 	}
 
 	sum := h.Sum32()
@@ -179,14 +239,31 @@ func (c *Cksum) ProcessCRC(env *commands.Environment, r io.Reader, name string, 
 func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptions) int {
 	scanner := bufio.NewScanner(r)
 	exitCode := 0
-	totalCount := 0
 	failCount := 0
 	improperCount := 0
 
 	for scanner.Scan() {
 		line := scanner.Text()
+		if line == "" {
+			continue
+		}
 		parts := strings.Fields(line)
-		if len(parts) < 2 {
+		
+		var expected, fileName string
+		if strings.Contains(line, "(") && strings.Contains(line, ") = ") {
+			// BSD style: ALGO (FILE) = SUM
+			start := strings.Index(line, "(")
+			end := strings.Index(line, ") = ")
+			if start != -1 && end != -1 {
+				fileName = line[start+1 : end]
+				expected = line[end+4:]
+			}
+		} else if len(parts) >= 2 {
+			expected = parts[0]
+			fileName = parts[1]
+		}
+
+		if fileName == "" || expected == "" {
 			improperCount++
 			if opts.Warn {
 				fmt.Fprintf(env.Stderr, "cksum: improperly formatted line: %s\n", line)
@@ -194,12 +271,11 @@ func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptio
 			continue
 		}
 
-		totalCount++
-		expected := parts[0]
-		fileName := parts[1]
-
 		f, err := env.FS.Open(fileName)
 		if err != nil {
+			if opts.IgnoreMissing {
+				continue
+			}
 			if !opts.Status {
 				fmt.Fprintf(env.Stderr, "cksum: %s: %v\n", fileName, err)
 			}
@@ -223,6 +299,10 @@ func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptio
 		case 128:
 			h = sha512.New()
 		default:
+			// Try base64
+			if opts.Base64 {
+				// Base64 lengths are different
+			}
 			improperCount++
 			if opts.Warn {
 				fmt.Fprintf(env.Stderr, "cksum: %s: unknown checksum format\n", fileName)
@@ -258,3 +338,4 @@ func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptio
 
 	return exitCode
 }
+

@@ -27,6 +27,7 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 	bytes := flags.IntP("bytes", "c", 0, "output the last K bytes")
 	quiet := flags.BoolP("quiet", "q", false, "never output headers giving file names")
 	verbose := flags.BoolP("verbose", "v", false, "always output headers giving file names")
+	zero := flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "tail: %v\n", err)
@@ -86,6 +87,9 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 		} else {
 			var allLines []string
 			scanner := bufio.NewScanner(reader)
+			if *zero {
+				scanner.Split(scanNull)
+			}
 			for scanner.Scan() {
 				allLines = append(allLines, scanner.Text())
 			}
@@ -100,11 +104,32 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 			if start < 0 {
 				start = 0
 			}
+			
+			terminator := "\n"
+			if *zero {
+				terminator = "\x00"
+			}
 			for _, line := range allLines[start:] {
-				fmt.Fprintln(env.Stdout, line)
+				fmt.Fprintf(env.Stdout, "%s%s", line, terminator)
 			}
 		}
 	}
 
 	return exitCode
 }
+
+func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+	for i := 0; i < len(data); i++ {
+		if data[i] == '\x00' {
+			return i + 1, data[0:i], nil
+		}
+	}
+	if atEOF {
+		return len(data), data, nil
+	}
+	return 0, nil, nil
+}
+

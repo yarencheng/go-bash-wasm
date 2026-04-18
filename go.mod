@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de // indirect
 	golang.org/x/term v0.41.0 // indirect
 	rsc.io/qr v0.2.0 // indirect
 )

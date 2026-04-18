@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
@@ -45,22 +46,30 @@ func (w *Wait) Run(ctx context.Context, env *commands.Environment, args []string
 
 	lastStatus := 0
 	for _, target := range targets {
-		pid, err := strconv.Atoi(target)
-		if err != nil {
-			// Try job spec %n?
-			// For now, just integer PIDs
+		var jobID int
+		var pid int
+		isJobSpec := strings.HasPrefix(target, "%")
+		
+		if isJobSpec {
+			id, err := strconv.Atoi(target[1:])
+			if err == nil {
+				jobID = id
+			}
+		} else {
+			p, err := strconv.Atoi(target)
+			if err == nil {
+				pid = p
+			}
 		}
 		
 		found := false
 		for _, job := range env.Jobs {
-			if job.PID == pid {
+			if (isJobSpec && job.ID == jobID) || (!isJobSpec && job.PID == pid) {
 				found = true
 				if *pidVar != "" {
-					env.EnvVars[*pidVar] = strconv.Itoa(pid)
+					env.EnvVars[*pidVar] = strconv.Itoa(job.PID)
 				}
 				if job.Status == "Running" {
-					// We can't really wait in WASM easily without a scheduler,
-					// so we assume it completes immediately for this simulation.
 					job.Status = "Done"
 				}
 				break

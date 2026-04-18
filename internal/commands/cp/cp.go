@@ -31,6 +31,10 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	verbose := flags.BoolP("verbose", "v", false, "explain what is being done")
 	noClobber := flags.BoolP("no-clobber", "n", false, "do not overwrite an existing file")
 	update := flags.BoolP("update", "u", false, "copy only when the SOURCE file is newer than the destination file or when the destination file is missing")
+	archive := flags.BoolP("archive", "a", false, "copy directories recursively and preserve all attributes")
+	preserve := flags.BoolP("preserve", "p", false, "preserve timestamps and mode")
+	dereference := flags.BoolP("dereference", "L", false, "always follow symbolic links in SOURCE")
+	noDereference := flags.BoolP("no-dereference", "P", false, "never follow symbolic links in SOURCE")
 	_ = flags.BoolP("interactive", "i", false, "prompt before overwrite (ignored)")
 	_ = flags.BoolP("force", "f", false, "if an existing destination file cannot be opened, remove it and try again (ignored)")
 
@@ -62,7 +66,11 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 		dest = posArgs[len(posArgs)-1]
 	}
 
-	doRecursive := *recursive || *recursiveUpper
+	doRecursive := *recursive || *recursiveUpper || *archive
+	doPreserve := *preserve || *archive
+	// Simplistic symlink handling: default to following links unless -P or -a is set
+	followLinks := *dereference || (!*noDereference && !*archive)
+	
 	exitCode := 0
 
 	destFullPath := dest
@@ -89,7 +97,14 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 			srcFullPath = filepath.Join(env.Cwd, src)
 		}
 
-		srcInfo, err := env.FS.Stat(srcFullPath)
+		var srcInfo os.FileInfo
+		var err error
+		if followLinks {
+			srcInfo, err = env.FS.Stat(srcFullPath)
+		} else {
+			srcInfo, err = lstat(env.FS, srcFullPath)
+		}
+
 		if err != nil {
 			fmt.Fprintf(env.Stderr, "cp: cannot stat '%s': %v\n", src, err)
 			exitCode = 1
@@ -107,9 +122,9 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 				exitCode = 1
 				continue
 			}
-			err = c.copyDir(env, srcFullPath, finalDest, *verbose, *noClobber, *update)
+			err = c.copyDir(env, srcFullPath, finalDest, *verbose, *noClobber, *update, doPreserve, followLinks)
 		} else {
-			err = c.copyFile(env, srcFullPath, finalDest, *verbose, *noClobber, *update)
+			err = c.copyFile(env, srcFullPath, finalDest, *verbose, *noClobber, *update, doPreserve, followLinks)
 		}
 
 		if err != nil {
@@ -121,8 +136,14 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	return exitCode
 }
 
-func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose, noClobber, update bool) error {
-	srcInfo, err := env.FS.Stat(src)
+func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose, noClobber, update, preserve, followLinks bool) error {
+	var srcInfo os.FileInfo
+	var err error
+	if followLinks {
+		srcInfo, err = env.FS.Stat(src)
+	} else {
+		srcInfo, err = lstat(env.FS, src)
+	}
 	if err != nil {
 		return err
 	}
@@ -134,6 +155,18 @@ func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose, noCl
 		}
 		if update && !srcInfo.ModTime().After(destInfo.ModTime()) {
 			return nil
+		}
+	}
+
+	// Handle symlink copy if not following
+	if !followLinks && (srcInfo.Mode()&os.ModeSymlink != 0) {
+		// Afero limited symlink support
+		// For now, we skip or try to readlink
+		if linker, ok := env.FS.(afero.Linker); ok {
+			target, err := linker.ReadlinkIfPossible(src)
+			if err == nil {
+				return linker.SymlinkIfPossible(target, dest)
+			}
 		}
 	}
 
@@ -154,14 +187,25 @@ func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose, noCl
 		return err
 	}
 
+	if preserve {
+		_ = env.FS.Chtimes(dest, srcInfo.ModTime(), srcInfo.ModTime())
+		_ = env.FS.Chmod(dest, srcInfo.Mode())
+	}
+
 	if verbose {
 		fmt.Fprintf(env.Stdout, "'%s' -> '%s'\n", src, dest)
 	}
 	return nil
 }
 
-func (c *Cp) copyDir(env *commands.Environment, src, dest string, verbose, noClobber, update bool) error {
-	srcInfo, err := env.FS.Stat(src)
+func (c *Cp) copyDir(env *commands.Environment, src, dest string, verbose, noClobber, update, preserve, followLinks bool) error {
+	var srcInfo os.FileInfo
+	var err error
+	if followLinks {
+		srcInfo, err = env.FS.Stat(src)
+	} else {
+		srcInfo, err = lstat(env.FS, src)
+	}
 	if err != nil {
 		return err
 	}
@@ -181,14 +225,26 @@ func (c *Cp) copyDir(env *commands.Environment, src, dest string, verbose, noClo
 		destPath := filepath.Join(dest, entry.Name())
 
 		if entry.IsDir() {
-			err = c.copyDir(env, srcPath, destPath, verbose, noClobber, update)
+			err = c.copyDir(env, srcPath, destPath, verbose, noClobber, update, preserve, followLinks)
 		} else {
-			err = c.copyFile(env, srcPath, destPath, verbose, noClobber, update)
+			err = c.copyFile(env, srcPath, destPath, verbose, noClobber, update, preserve, followLinks)
 		}
 		if err != nil {
 			return err
 		}
 	}
 
+	if preserve {
+		_ = env.FS.Chtimes(dest, srcInfo.ModTime(), srcInfo.ModTime())
+	}
+
 	return nil
+}
+
+func lstat(fs afero.Fs, path string) (os.FileInfo, error) {
+	if lstater, ok := fs.(afero.Lstater); ok {
+		fi, _, err := lstater.LstatIfPossible(path)
+		return fi, err
+	}
+	return fs.Stat(path)
 }

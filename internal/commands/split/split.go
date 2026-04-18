@@ -29,6 +29,8 @@ func (s *Split) Run(ctx context.Context, env *commands.Environment, args []strin
 	suffixLen := flags.IntP("suffix-length", "a", 2, "use suffixes of length N (default 2)")
 	numericSuffix := flags.BoolP("numeric-suffixes", "d", false, "use numeric suffixes instead of alphabetic")
 	verbose := flags.Bool("verbose", false, "print a diagnostic just before each output file is opened")
+	numChunks := flags.StringP("number", "n", "", "generate CHUNKS output files")
+	separator := flags.StringP("separator", "t", "", "use SEP instead of newline as the record separator")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "split: %v\n", err)
@@ -72,17 +74,39 @@ func (s *Split) Run(ctx context.Context, env *commands.Environment, args []strin
 
 	
 	
+	if *numChunks != "" {
+		n, err := strconv.Atoi(*numChunks)
+		if err == nil && n > 0 {
+			// Find total size if possible
+			var size int64 = -1
+			if inputFile != "" && inputFile != "-" {
+				info, err := env.FS.Stat(inputFile)
+				if err == nil {
+					size = info.Size()
+				}
+			}
+			if size >= 0 {
+				byteLimit = (size + int64(n) - 1) / int64(n)
+			}
+		}
+	}
+
 	if byteLimit > 0 {
 		return s.splitBytes(env, r, prefix, byteLimit, *suffixLen, *numericSuffix, *verbose)
 	}
-	return s.splitLines(env, r, prefix, *lines, *suffixLen, *numericSuffix, *verbose)
+	return s.splitLines(env, r, prefix, *lines, *suffixLen, *numericSuffix, *verbose, *separator)
 }
 
-func (s *Split) splitLines(env *commands.Environment, r io.Reader, prefix string, lineLimit, suffixLen int, numeric, verbose bool) int {
+func (s *Split) splitLines(env *commands.Environment, r io.Reader, prefix string, lineLimit, suffixLen int, numeric, verbose bool, separator string) int {
 	scanner := bufio.NewScanner(r)
 	fileIndex := 0
 	lineCount := 0
 	var currentWriter io.WriteCloser
+
+	sep := "\n"
+	if separator != "" {
+		sep = separator
+	}
 
 	for scanner.Scan() {
 		if currentWriter == nil || lineCount >= lineLimit {
@@ -107,7 +131,7 @@ func (s *Split) splitLines(env *commands.Environment, r io.Reader, prefix string
 			fileIndex++
 			lineCount = 0
 		}
-		fmt.Fprintln(currentWriter, scanner.Text())
+		fmt.Fprint(currentWriter, scanner.Text()+sep)
 		lineCount++
 	}
 

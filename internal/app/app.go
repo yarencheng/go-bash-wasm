@@ -37,6 +37,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/compopt"
 	continuecmd "github.com/yarencheng/go-bash-wasm/internal/commands/continue"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/csplit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cut"
@@ -106,6 +107,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/readlink"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/readonly"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/realpath"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/returncmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
@@ -119,6 +121,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/stat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sum"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/sumlegacy"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sync"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tac"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
@@ -205,6 +208,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		bind.New(),
 		boolcmd.NewTrue(),
 		boolcmd.NewFalse(),
+		complete.New(),
 		enable.New(),
 		echo.New(),
 		pwd.New(),
@@ -276,6 +280,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		base32cmd.New(),
 		base64cmd.New(),
 		basenc.New(),
+		sumlegacy.New(),
 		sum.New("md5sum"),
 		sum.New("sha1sum"),
 		sum.New("sha224sum"),
@@ -324,6 +329,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		chown.NewChgrp(),
 		unlink.New(),
 		realpath.New(),
+		returncmd.New(),
 		typecmd.New(),
 		timecmd.New(),
 		umask.New(),
@@ -394,7 +400,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		DirStack:    make([]string, 0),
 		Hash:        make(map[string]string),
 		Jobs:        make([]*commands.Job, 0),
-		Completions: make(map[string]map[string]string),
+		Completions: make(map[string]*commands.CompSpec),
 		Shopts: map[string]bool{
 			"autocd":               false,
 			"cdspell":              false,

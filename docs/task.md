@@ -295,17 +295,17 @@ Status codes:
 ### `cp`
 
 - [x] Basic copy: Implemented in `internal/commands/cp/cp.go`
-- [ ] Flag `-a`, `--archive`: `third_party/coreutils/src/cp.c:L173`
+- [x] Flag `-a`, `--archive`: `internal/commands/cp/cp.go`
 - [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/cp.c:L181`
-- [ ] Flag `-d`: `third_party/coreutils/src/cp.c:L185` (implies -P --preserve=links)
+- [x] Flag `-d`: `internal/commands/cp/cp.go`
 - [x] Flag `-f`, `--force`: `internal/commands/cp/cp.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [ ] Flag `-H`: `third_party/coreutils/src/cp.c:L201`
 - [x] Flag `-i`, `--interactive`: `internal/commands/cp/cp.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [ ] Flag `-l`, `--link`: `third_party/coreutils/src/cp.c:L209`
-- [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/cp.c:L213`
+- [x] Flag `-L`, `--dereference`: `internal/commands/cp/cp.go`
 - [x] Flag `-n`, `--no-clobber`: `internal/commands/cp/cp.go`
-- [ ] Flag `-p`: `third_party/coreutils/src/cp.c:L234` (same as --preserve=mode,ownership,timestamps)
-- [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/cp.c:L230`
+- [x] Flag `-p`: `internal/commands/cp/cp.go`
+- [x] Flag `-P`, `--no-dereference`: `internal/commands/cp/cp.go`
 - [x] Flag `-r`, `-R`, `--recursive`: `internal/commands/cp/cp.go`
 - [ ] Flag `-s`, `--symbolic-link`: `third_party/coreutils/src/cp.c:L258`
 - [x] Flag `-t`, `--target-directory`: `internal/commands/cp/cp.go`
@@ -1121,9 +1121,9 @@ Status codes:
 
 ### `return`
 
-- [ ] Upstream: `third_party/bash/builtins/return.def`
-- [ ] Basic return: Missing implementation
-- [ ] Exit status parameter: `third_party/bash/builtins/return.def:L61`
+- [x] Upstream: `third_party/bash/builtins/return.def`
+- [x] Basic return: Implemented in `internal/commands/returncmd/return.go`
+- [x] Exit status parameter: `internal/commands/returncmd/return.go`
 
 ### `rm`
 
@@ -1305,8 +1305,8 @@ Status codes:
 - [x] Flag `-d`: `internal/commands/split/split.go`
 - [ ] Flag `-e`: `third_party/coreutils/src/split.c:L270`
 - [x] Flag `-l`: `internal/commands/split/split.go`
-- [ ] Flag `-n`: `third_party/coreutils/src/split.c:L282`
-- [ ] Flag `-t`: `third_party/coreutils/src/split.c:L286`
+- [x] Flag `-n`: `internal/commands/split/split.go`
+- [x] Flag `-t`: `internal/commands/split/split.go`
 - [ ] Flag `-u`: `third_party/coreutils/src/split.c:L291`
 - [ ] Flag `-x`: `third_party/coreutils/src/split.c:L262`
 
@@ -1337,9 +1337,10 @@ Status codes:
 
 ### `sum`
 
-- [ ] Upstream: `third_party/coreutils/src/sum.c`
-- [ ] Flag `-r`: `third_party/coreutils/src/sum.c:L142` (BSD algorithm)
-- [ ] Flag `-s`, `--sysv`: `third_party/coreutils/src/sum.c:L146` (System V algorithm)
+- [x] Upstream: `third_party/coreutils/src/sum.c`
+- [x] Basic checksum: Implemented in `internal/commands/sumlegacy/sum.go`
+- [x] Flag `-r`: `internal/commands/sumlegacy/sum.go` (BSD algorithm)
+- [x] Flag `-s`, `--sysv`: `internal/commands/sumlegacy/sum.go` (System V algorithm)
 
 ### `suspend`
 
@@ -1357,9 +1358,9 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/tac.c`
 - [x] Basic output: Implemented in `internal/commands/tac/tac.go`
-- [ ] Flag `-b`: `third_party/coreutils/src/tac.c:L103`
+- [x] Flag `-b`: `internal/commands/tac/tac.go`
 - [ ] Flag `-r`: `third_party/coreutils/src/tac.c:L104`
-- [ ] Flag `-s`: `third_party/coreutils/src/tac.c:L105`
+- [x] Flag `-s`: `internal/commands/tac/tac.go`
 
 ### `tail`
 
@@ -1415,14 +1416,14 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/touch.c`
 - [x] Basic touch: Implemented in `internal/commands/touch/touch.go`
 - [x] Basic timestamp update: Implemented in `internal/commands/touch/touch.go`
-- [ ] Flag `-t STAMP`: `third_party/coreutils/src/touch.c:L259` (explicit timestamp)
+- [x] Flag `-t STAMP`: `internal/commands/touch/touch.go` (explicit timestamp)
 - [x] Flag `-a`: `internal/commands/touch/touch.go`
 - [x] Flag `-c`: `internal/commands/touch/touch.go`
 - [x] Flag `-d`: `internal/commands/touch/touch.go`
 - [x] Flag `-h`: `internal/commands/touch/touch.go`
 - [x] Flag `-m`: `internal/commands/touch/touch.go`
 - [x] Flag `-r`: `internal/commands/touch/touch.go`
-- [ ] Flag `-t [[CC]YY]MMDDhhmm[.ss]`: `third_party/coreutils/src/touch.c:L259`
+- [x] Flag `-t [[CC]YY]MMDDhhmm[.ss]`: `internal/commands/touch/touch.go`
 
 ### `tr`
 

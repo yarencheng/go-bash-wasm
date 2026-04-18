@@ -41,7 +41,7 @@
 			},
 			fontFamily: '"Fira Code", "Cascadia Code", Menlo, Monaco, "Courier New", monospace',
 			fontSize: 14,
-			lineHeight: 1.5
+			lineHeight: 1.1
 		});
 
 		fitAddon = new FitAddon();
@@ -145,7 +145,8 @@
 		alternateName: 'Bash WASM(Golang)',
 		operatingSystem: 'Any browser with WebAssembly support',
 		applicationCategory: 'DeveloperApplication',
-		description: 'A robust, interactive Bash shell simulator built with Go and compiled to WebAssembly. Features include coreutils parity, filesystem simulation, and interactive command execution.',
+		description:
+			'A robust, interactive Bash shell simulator built with Go and compiled to WebAssembly. Features include coreutils parity, filesystem simulation, and interactive command execution.',
 		offers: {
 			'@type': 'Offer',
 			price: '0',

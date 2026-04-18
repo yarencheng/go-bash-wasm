@@ -3,11 +3,13 @@ package shell
 import (
 	"context"
 	"fmt"
+	"io"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
+	"mvdan.cc/sh/v3/syntax"
 )
 
 // LineReader defines the interface for reading lines from the terminal.
@@ -56,7 +58,7 @@ func (s *Shell) RunInteractive() error {
 	return nil
 }
 
-// Execute parses and runs a command line, supporting sequential commands and expansion.
+// Execute parses and runs a command line, supporting sequential commands, expansion, and pipelines.
 func (s *Shell) Execute(ctx context.Context, line string) int {
 	line = strings.TrimSpace(line)
 	if line == "" || strings.HasPrefix(line, "#") {
@@ -72,151 +74,18 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 	fmt.Sscanf(s.Env.EnvVars["LINENO"], "%d", &lineno)
 	s.Env.EnvVars["LINENO"] = fmt.Sprintf("%d", lineno+1)
 
-	// Support sequential commands separated by ;
-	commandsList := strings.Split(line, ";")
+	// Use mvdan.cc/sh/syntax to parse the command line
+	reader := strings.NewReader(line)
+	parser := syntax.NewParser()
+	f, err := parser.Parse(reader, "")
+	if err != nil {
+		fmt.Fprintf(s.Env.Stderr, "bash: syntax error: %v\n", err)
+		return 2
+	}
+
 	lastExitCode := 0
-
-	for _, cmdLine := range commandsList {
-		cmdLine = strings.TrimSpace(cmdLine)
-		if cmdLine == "" {
-			continue
-		}
-
-		// Expand variables
-		cmdLine = s.expand(cmdLine)
-
-		// Support pipeline negation !
-		negate := false
-		if strings.HasPrefix(cmdLine, "!") {
-			negate = true
-			cmdLine = strings.TrimSpace(cmdLine[1:])
-		}
-
-		// Support redirections (simple implementation)
-		args := strings.Fields(cmdLine)
-		var finalArgs []string
-
-		// Temporary redirects
-		var stdoutRedirect string
-		var stderrRedirect string
-		var stdinRedirect string
-		var appendStdout bool
-		var combinedRedirect bool
-
-		for i := 0; i < len(args); i++ {
-			arg := args[i]
-			if (arg == ">" || arg == "1>") && i+1 < len(args) {
-				stdoutRedirect = args[i+1]
-				i++
-			} else if arg == ">>" && i+1 < len(args) {
-				stdoutRedirect = args[i+1]
-				appendStdout = true
-				i++
-			} else if arg == "<" && i+1 < len(args) {
-				stdinRedirect = args[i+1]
-				i++
-			} else if arg == "2>" && i+1 < len(args) {
-				stderrRedirect = args[i+1]
-				i++
-			} else if arg == "&>" && i+1 < len(args) {
-				stdoutRedirect = args[i+1]
-				combinedRedirect = true
-				i++
-			} else if strings.HasPrefix(arg, ">") && len(arg) > 1 {
-				stdoutRedirect = arg[1:]
-			} else if strings.HasPrefix(arg, ">>") && len(arg) > 2 {
-				stdoutRedirect = arg[2:]
-				appendStdout = true
-			} else {
-				// Glob expansion
-				if strings.ContainsAny(arg, "*?") {
-					matches, err := filepath.Glob(s.resolvePath(arg))
-					if err == nil && len(matches) > 0 {
-						for _, m := range matches {
-							// Convert back to relative if needed or just use absolute
-							finalArgs = append(finalArgs, m)
-						}
-						continue
-					}
-				}
-				finalArgs = append(finalArgs, arg)
-			}
-		}
-
-		if len(finalArgs) == 0 {
-			continue
-		}
-
-		cmdName := finalArgs[0]
-		cmdArgs := finalArgs[1:]
-
-		// Apply redirections in a sub-environment if possible
-		// For simulator, we just temporarily swap Stdout/Stderr/Stdin in Env
-		oldStdout := s.Env.Stdout
-		oldStderr := s.Env.Stderr
-		oldStdin := s.Env.Stdin
-
-		if stdoutRedirect != "" {
-			path := s.resolvePath(stdoutRedirect)
-			if appendStdout {
-				// Afero doesn't have a direct Append flag in OpenFile that is consistent across types,
-				// but let's assume we can handle it or just overwrite for now in simulator.
-				_ = s.Env.FS.Remove(path) // Simplification for simulator
-			} else {
-				_ = s.Env.FS.Remove(path)
-			}
-			f, err := s.Env.FS.Create(path)
-			if err == nil {
-				s.Env.Stdout = f
-				if combinedRedirect {
-					s.Env.Stderr = f
-				}
-				defer f.Close()
-			}
-		}
-
-		if stderrRedirect != "" {
-			path := s.resolvePath(stderrRedirect)
-			_ = s.Env.FS.Remove(path)
-			f, err := s.Env.FS.Create(path)
-			if err == nil {
-				s.Env.Stderr = f
-				defer f.Close()
-			}
-		}
-
-		if stdinRedirect != "" {
-			path := s.resolvePath(stdinRedirect)
-			f, err := s.Env.FS.Open(path)
-			if err == nil {
-				s.Env.Stdin = f
-				defer f.Close()
-			}
-		}
-
-		exitCode := 0
-		if cmd, ok := s.Registry.Get(cmdName); ok {
-			exitCode = cmd.Run(ctx, s.Env, cmdArgs)
-		} else {
-			fmt.Fprintf(s.Env.Stderr, "%s: command not found\n", cmdName)
-			exitCode = 127
-		}
-
-		// Restore
-		s.Env.Stdout = oldStdout
-		s.Env.Stderr = oldStderr
-		s.Env.Stdin = oldStdin
-
-		if negate {
-			if exitCode == 0 {
-				lastExitCode = 1
-			} else {
-				lastExitCode = 0
-			}
-		} else {
-			lastExitCode = exitCode
-		}
-
+	for _, stmt := range f.Stmts {
+		lastExitCode = s.executeStmt(ctx, s.Env, stmt)
 		if s.Env.ExitRequested {
 			break
 		}
@@ -225,301 +94,380 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 	return lastExitCode
 }
 
-func (s *Shell) expand(line string) string {
-	// 1. Brace Expansion
-	line = s.expandBraces(line)
-
-	// 2. Tilde Expansion
-	line = s.expandTilde(line)
-
-	// 3. Simple variable expansion: $VAR or ${VAR} or ${VAR:-default}
-	result := line
-
-	// Handle ${VAR} and ${VAR:-default}
-	for strings.Contains(result, "${") {
-		start := strings.Index(result, "${")
-		end := strings.Index(result[start:], "}")
-		if end == -1 {
-			break
-		}
-		end += start
-		expr := result[start+2 : end]
-
-		val := s.resolveVariable(expr)
-		result = result[:start] + val + result[end+1:]
+func (s *Shell) executeStmt(ctx context.Context, env *commands.Environment, stmt *syntax.Stmt) int {
+	if stmt == nil {
+		return 0
 	}
 
-	// Simple $VAR expansion (non-greedy)
-	// This is a rough approximation
-	return result
+	// Handle background execution &
+	if stmt.Background {
+		// Basic stub for background execution in simulator
+		jobID := len(env.Jobs) + 1
+		job := &commands.Job{
+			ID:      jobID,
+			Command: s.stmtToString(stmt),
+			Status:  "Running",
+		}
+		env.Jobs = append(env.Jobs, job)
+		fmt.Fprintf(env.Stdout, "[%d] %d\n", job.ID, job.PID)
+	}
+
+	// Handle redirections
+	oldStdout := env.Stdout
+	oldStderr := env.Stderr
+	oldStdin := env.Stdin
+	var closers []io.Closer
+
+	for _, redir := range stmt.Redirs {
+		rExitCode := s.applyRedirection(env, redir, &closers)
+		if rExitCode != 0 {
+			s.cleanupClosers(closers)
+			return rExitCode
+		}
+	}
+
+	exitCode := 0
+	if stmt.Cmd != nil {
+		exitCode = s.executeCmd(ctx, env, stmt.Cmd)
+	}
+
+	// Cleanup redirections
+	s.cleanupClosers(closers)
+	env.Stdout = oldStdout
+	env.Stderr = oldStderr
+	env.Stdin = oldStdin
+
+	if stmt.Negated {
+		if exitCode == 0 {
+			exitCode = 1
+		} else {
+			exitCode = 0
+		}
+	}
+
+	return exitCode
 }
 
-func (s *Shell) resolveVariable(expr string) string {
-	if strings.HasPrefix(expr, "#") {
-		name := expr[1:]
-		val, _ := s.Env.EnvVars[name]
-		return fmt.Sprintf("%d", len(val))
+func (s *Shell) executeCmd(ctx context.Context, env *commands.Environment, cmd syntax.Command) int {
+	switch c := cmd.(type) {
+	case *syntax.CallExpr:
+		return s.executeCallExpr(ctx, env, c)
+	case *syntax.BinaryCmd:
+		return s.executeBinaryCmd(ctx, env, c)
+	case *syntax.Block:
+		return s.executeBlock(ctx, env, c)
+	case *syntax.Subshell:
+		return s.executeSubshell(ctx, env, c)
+	default:
+		fmt.Fprintf(env.Stderr, "bash: unsupported command type: %T\n", cmd)
+		return 1
 	}
+}
 
-	name := expr
-	def := ""
-	hasDefault := false
-	hasSubstring := false
-	hasCaseMod := false
-	hasRemoval := false
-	hasReplace := false
-	replacePattern := ""
-	replaceStr := ""
-	replaceAll := false
-	removalType := ""
-	removalPattern := ""
-	caseModType := ""
-	offset := 0
-	length := -1
-
-	// Check for replacement operator
-	if strings.Contains(name, "/") {
-		parts := strings.Split(name, "/")
-		name = parts[0]
-		hasReplace = true
-		if len(parts) > 1 {
-			patternExpr := parts[1]
-			if strings.HasPrefix(patternExpr, "/") {
-				replaceAll = true
-				replacePattern = patternExpr[1:]
-			} else {
-				replacePattern = patternExpr
-			}
+func (s *Shell) executeCallExpr(ctx context.Context, env *commands.Environment, c *syntax.CallExpr) int {
+	if len(c.Args) == 0 {
+		// Assignment only, e.g., VAR=val
+		for _, assign := range c.Assigns {
+			name := assign.Name.Value
+			val := s.wordToString(env, assign.Value)
+			env.EnvVars[name] = val
 		}
-		if len(parts) > 2 {
-			replaceStr = parts[2]
+		return 0
+	}
+
+	// Expand arguments
+	var args []string
+	for _, arg := range c.Args {
+		expanded := s.expandWord(env, arg)
+		args = append(args, expanded...)
+	}
+
+	if len(args) == 0 {
+		return 0
+	}
+
+	cmdName := args[0]
+	cmdArgs := args[1:]
+
+	if cmd, ok := s.Registry.Get(cmdName); ok {
+		return cmd.Run(ctx, env, cmdArgs)
+	}
+
+	fmt.Fprintf(env.Stderr, "%s: command not found\n", cmdName)
+	return 127
+}
+
+func (s *Shell) executeBinaryCmd(ctx context.Context, env *commands.Environment, c *syntax.BinaryCmd) int {
+	switch c.Op {
+	case syntax.Pipe, syntax.PipeAll:
+		return s.executePipeline(ctx, env, c)
+	case syntax.AndStmt:
+		exitCode := s.executeStmt(ctx, env, c.X)
+		if exitCode == 0 {
+			return s.executeStmt(ctx, env, c.Y)
+		}
+		return exitCode
+	case syntax.OrStmt:
+		exitCode := s.executeStmt(ctx, env, c.X)
+		if exitCode != 0 {
+			return s.executeStmt(ctx, env, c.Y)
+		}
+		return exitCode
+	default:
+		fmt.Fprintf(env.Stderr, "bash: unsupported binary operator: %s\n", c.Op.String())
+		return 1
+	}
+}
+
+func (s *Shell) executePipeline(ctx context.Context, env *commands.Environment, c *syntax.BinaryCmd) int {
+	// Create a pipe
+	pr, pw := io.Pipe()
+
+	// Clone environment for the left side (subshell behavior)
+	leftEnv := s.cloneEnv(env)
+	leftEnv.Stdout = pw
+	if c.Op == syntax.PipeAll {
+		leftEnv.Stderr = pw
+	}
+
+	// Channel to wait for the left side to finish
+	leftDone := make(chan int, 1)
+
+	// Execute left side in a goroutine
+	go func() {
+		defer pw.Close()
+		exitCode := s.executeStmt(ctx, leftEnv, c.X)
+		leftDone <- exitCode
+	}()
+
+	// Execute right side
+	oldStdin := env.Stdin
+	env.Stdin = pr
+	defer func() {
+		env.Stdin = oldStdin
+		pr.Close()
+	}()
+
+	exitCode := s.executeStmt(ctx, env, c.Y)
+
+	// Wait for left side
+	<-leftDone
+
+	return exitCode
+}
+
+func (s *Shell) executeBlock(ctx context.Context, env *commands.Environment, b *syntax.Block) int {
+	lastExitCode := 0
+	for _, stmt := range b.Stmts {
+		lastExitCode = s.executeStmt(ctx, env, stmt)
+		if env.ExitRequested || env.ReturnRequested || env.BreakRequested > 0 || env.ContinueRequested > 0 {
+			break
+		}
+	}
+	return lastExitCode
+}
+
+func (s *Shell) executeSubshell(ctx context.Context, env *commands.Environment, sub *syntax.Subshell) int {
+	subEnv := s.cloneEnv(env)
+	lastExitCode := 0
+	for _, stmt := range sub.Stmts {
+		lastExitCode = s.executeStmt(ctx, subEnv, stmt)
+		if subEnv.ExitRequested {
+			break
+		}
+	}
+	return lastExitCode
+}
+
+func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redirect, closers *[]io.Closer) int {
+	filename := s.wordToString(env, redir.Word)
+	path := s.resolvePath(filename)
+
+	var fd int
+	if redir.N != nil {
+		fmt.Sscanf(redir.N.Value, "%d", &fd)
+	} else {
+		// Default fds if not specified
+		switch redir.Op {
+		case syntax.RdrOut, syntax.AppOut, syntax.RdrAll, syntax.AppAll:
+			fd = 1
+		case syntax.RdrIn:
+			fd = 0
 		}
 	}
 
-	// Check for removal operators
-	if strings.Contains(name, "##") {
-		parts := strings.SplitN(name, "##", 2)
-		name = parts[0]
-		hasRemoval = true
-		removalType = "##"
-		removalPattern = parts[1]
-	} else if strings.Contains(name, "#") {
-		parts := strings.SplitN(name, "#", 2)
-		name = parts[0]
-		hasRemoval = true
-		removalType = "#"
-		removalPattern = parts[1]
-	} else if strings.Contains(name, "%%") {
-		parts := strings.SplitN(name, "%%", 2)
-		name = parts[0]
-		hasRemoval = true
-		removalType = "%%"
-		removalPattern = parts[1]
-	} else if strings.Contains(name, "%") {
-		parts := strings.SplitN(name, "%", 2)
-		name = parts[0]
-		hasRemoval = true
-		removalType = "%"
-		removalPattern = parts[1]
-	}
-
-	if strings.HasSuffix(name, "^^") {
-		name = name[:len(name)-2]
-		hasCaseMod = true
-		caseModType = "^^"
-	} else if strings.HasSuffix(name, "^") {
-		name = name[:len(name)-1]
-		hasCaseMod = true
-		caseModType = "^"
-	} else if strings.HasSuffix(name, ",,") {
-		name = name[:len(name)-2]
-		hasCaseMod = true
-		caseModType = ",,"
-	} else if strings.HasSuffix(name, ",") {
-		name = name[:len(name)-1]
-		hasCaseMod = true
-		caseModType = ","
-	}
-
-	if strings.Contains(expr, ":-") {
-		parts := strings.SplitN(expr, ":-", 2)
-		name = parts[0]
-		def = parts[1]
-		hasDefault = true
-	} else if strings.Contains(expr, ":+") {
-		parts := strings.SplitN(expr, ":+", 2)
-		name = parts[0]
-		alt := parts[1]
-		val, ok := s.Env.EnvVars[name]
-		if ok && val != "" {
-			return alt
+	switch redir.Op {
+	case syntax.RdrOut: // >
+		f, err := env.FS.Create(path)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
+			return 1
 		}
+		if fd == 1 {
+			env.Stdout = f
+		} else if fd == 2 {
+			env.Stderr = f
+		}
+		*closers = append(*closers, f)
+	case syntax.AppOut: // >>
+		f, err := env.FS.OpenFile(path, 0x1|0x40|0x8, 0644) // O_WRONLY|O_CREATE|O_APPEND
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
+			return 1
+		}
+		if fd == 1 {
+			env.Stdout = f
+		} else if fd == 2 {
+			env.Stderr = f
+		}
+		*closers = append(*closers, f)
+	case syntax.RdrIn: // <
+		f, err := env.FS.Open(path)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
+			return 1
+		}
+		env.Stdin = f
+		*closers = append(*closers, f)
+	case syntax.RdrAll: // &>
+		f, err := env.FS.Create(path)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
+			return 1
+		}
+		env.Stdout = f
+		env.Stderr = f
+		*closers = append(*closers, f)
+	case syntax.AppAll: // &>>
+		f, err := env.FS.OpenFile(path, 0x1|0x40|0x8, 0644)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
+			return 1
+		}
+		env.Stdout = f
+		env.Stderr = f
+		*closers = append(*closers, f)
+	default:
+		fmt.Fprintf(env.Stderr, "bash: unsupported redirection: %s\n", redir.Op.String())
+		return 1
+	}
+
+	return 0
+}
+
+func (s *Shell) cleanupClosers(closers []io.Closer) {
+	for _, c := range closers {
+		_ = c.Close()
+	}
+}
+
+func (s *Shell) wordToString(env *commands.Environment, w *syntax.Word) string {
+	if w == nil {
 		return ""
-	} else if strings.Contains(expr, ":?") {
-		parts := strings.SplitN(expr, ":?", 2)
-		name = parts[0]
-		errMsg := parts[1]
-		val, ok := s.Env.EnvVars[name]
-		if !ok || val == "" {
-			if errMsg == "" {
-				errMsg = "parameter null or unset"
+	}
+	var sb strings.Builder
+	for _, part := range w.Parts {
+		switch p := part.(type) {
+		case *syntax.Lit:
+			sb.WriteString(p.Value)
+		case *syntax.SglQuoted:
+			sb.WriteString(p.Value)
+		case *syntax.DblQuoted:
+			for _, qp := range p.Parts {
+				switch q := qp.(type) {
+				case *syntax.Lit:
+					sb.WriteString(q.Value)
+				case *syntax.ParamExp:
+					sb.WriteString(s.resolveParamExp(env, q))
+				}
 			}
-			fmt.Fprintf(s.Env.Stderr, "%s: %s\n", name, errMsg)
-			return "" // In real bash it might exit, but for simulator we just print error
+		case *syntax.ParamExp:
+			sb.WriteString(s.resolveParamExp(env, p))
 		}
-		return val
-	} else if strings.Contains(expr, ":") {
-		parts := strings.Split(expr, ":")
-		name = parts[0]
-		hasSubstring = true
-		if len(parts) > 1 {
-			fmt.Sscanf(parts[1], "%d", &offset)
-		}
-		if len(parts) > 2 {
-			fmt.Sscanf(parts[2], "%d", &length)
+	}
+	return sb.String()
+}
+
+func (s *Shell) expandWord(env *commands.Environment, w *syntax.Word) []string {
+	// 1. Parameter expansion
+	val := s.wordToString(env, w)
+
+	// 2. Globbing
+	if strings.ContainsAny(val, "*?") {
+		matches, err := filepath.Glob(s.resolvePath(val))
+		if err == nil && len(matches) > 0 {
+			return matches
 		}
 	}
 
-	val, ok := s.Env.EnvVars[name]
-	if !ok || (hasDefault && val == "") {
-		// Handle dynamic variables
+	return []string{val}
+}
+
+func (s *Shell) resolveParamExp(env *commands.Environment, p *syntax.ParamExp) string {
+	name := p.Param.Value
+	val, ok := env.EnvVars[name]
+	if !ok {
+		// Dynamic variables
 		switch name {
 		case "RANDOM":
-			val = fmt.Sprintf("%d", time.Now().UnixNano()%32768)
+			return fmt.Sprintf("%d", time.Now().UnixNano()%32768)
 		case "SECONDS":
-			val = fmt.Sprintf("%d", int(time.Since(s.Env.StartTime).Seconds()))
-		case "EPOCHSECONDS":
-			val = fmt.Sprintf("%d", time.Now().Unix())
-		case "UID":
-			val = fmt.Sprintf("%d", s.Env.Uid)
+			return fmt.Sprintf("%d", int(time.Since(env.StartTime).Seconds()))
+		case "UID", "EUID":
+			return fmt.Sprintf("%d", env.Uid)
 		case "GID":
-			val = fmt.Sprintf("%d", s.Env.Gid)
-		case "EUID":
-			val = fmt.Sprintf("%d", s.Env.Uid)
-		case "LINENO":
-			val = s.Env.EnvVars["LINENO"]
-		case "HOSTNAME":
-			val = s.Env.EnvVars["HOSTNAME"]
-		default:
-			if hasDefault {
-				return def
-			}
-			return ""
+			return fmt.Sprintf("%d", env.Gid)
 		}
+		return ""
 	}
-
-	if hasReplace {
-		if replaceAll {
-			val = strings.ReplaceAll(val, replacePattern, replaceStr)
-		} else {
-			val = strings.Replace(val, replacePattern, replaceStr, 1)
-		}
-	}
-
-	if hasRemoval {
-		// Basic prefix/suffix removal (simulated without full glob for now)
-		switch removalType {
-		case "#", "##": // Prefix removal
-			if strings.HasPrefix(val, removalPattern) {
-				val = val[len(removalPattern):]
-			}
-		case "%", "%%": // Suffix removal
-			if strings.HasSuffix(val, removalPattern) {
-				val = val[:len(val)-len(removalPattern)]
-			}
-		}
-	}
-
-	if hasSubstring {
-		runes := []rune(val)
-		if offset < 0 {
-			offset = len(runes) + offset
-		}
-		if offset < 0 {
-			offset = 0
-		}
-		if offset > len(runes) {
-			return ""
-		}
-		if length == -1 {
-			return string(runes[offset:])
-		}
-		if length < 0 {
-			length = len(runes) + length - offset
-		}
-		end := offset + length
-		if end > len(runes) {
-			end = len(runes)
-		}
-		if end < offset {
-			return ""
-		}
-		return string(runes[offset:end])
-	}
-
-	if hasCaseMod {
-		runes := []rune(val)
-		if len(runes) == 0 {
-			return ""
-		}
-		switch caseModType {
-		case "^^":
-			return strings.ToUpper(val)
-		case "^":
-			runes[0] = []rune(strings.ToUpper(string(runes[0])))[0]
-			return string(runes)
-		case ",,":
-			return strings.ToLower(val)
-		case ",":
-			runes[0] = []rune(strings.ToLower(string(runes[0])))[0]
-			return string(runes)
-		}
-	}
-
 	return val
 }
 
-func (s *Shell) expandBraces(line string) string {
-	// Simple {a,b}c -> ac bc
-	if !strings.Contains(line, "{") || !strings.Contains(line, "}") {
-		return line
-	}
-
-	start := strings.Index(line, "{")
-	end := strings.Index(line[start:], "}")
-	if end == -1 {
-		return line
-	}
-	end += start
-
-	prefix := line[:start]
-	suffix := line[end+1:]
-	options := strings.Split(line[start+1:end], ",")
-
-	var results []string
-	for _, opt := range options {
-		results = append(results, prefix+opt+suffix)
-	}
-
-	return strings.Join(results, " ")
+func (s *Shell) stmtToString(stmt *syntax.Stmt) string {
+	return "cmd" // Placeholder
 }
 
-func (s *Shell) expandTilde(line string) string {
-	if !strings.HasPrefix(line, "~") {
-		return line
+func (s *Shell) cloneEnv(env *commands.Environment) *commands.Environment {
+	newEnv := *env // Shallow copy mostly
+
+	// Deep copy maps and slices
+	newEnv.EnvVars = make(map[string]string)
+	for k, v := range env.EnvVars {
+		newEnv.EnvVars[k] = v
 	}
 
-	home := s.Env.EnvVars["HOME"]
-	if line == "~" || strings.HasPrefix(line, "~/") {
-		return strings.Replace(line, "~", home, 1)
+	newEnv.Aliases = make(map[string]string)
+	for k, v := range env.Aliases {
+		newEnv.Aliases[k] = v
 	}
 
-	// ~user/path -> /home/user/path
-	slashIdx := strings.Index(line, "/")
-	if slashIdx == -1 {
-		return "/home/" + line[1:]
+	newEnv.Arrays = make(map[string][]string)
+	for k, v := range env.Arrays {
+		newEnv.Arrays[k] = make([]string, len(v))
+		copy(newEnv.Arrays[k], v)
 	}
-	return "/home/" + line[1:slashIdx] + line[slashIdx:]
+
+	newEnv.Shopts = make(map[string]bool)
+	for k, v := range env.Shopts {
+		newEnv.Shopts[k] = v
+	}
+
+	newEnv.Traps = make(map[string]string)
+	for k, v := range env.Traps {
+		newEnv.Traps[k] = v
+	}
+
+	newEnv.Functions = make(map[string]string)
+	for k, v := range env.Functions {
+		newEnv.Functions[k] = v
+	}
+
+	newEnv.Hash = make(map[string]string)
+	for k, v := range env.Hash {
+		newEnv.Hash[k] = v
+	}
+
+	return &newEnv
 }
 
 func (s *Shell) resolvePath(p string) string {

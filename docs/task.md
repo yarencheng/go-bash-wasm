@@ -1820,8 +1820,8 @@ Status codes:
 ## Execution Flow
 
 ### Pipelines
-- [ ] Basic pipe `|`: `third_party/bash/execute_cmd.c:L191`
-- [ ] Combined stderr pipe `|&`: `third_party/bash/execute_cmd.c:L191`
+- [x] Basic pipe `|`: Implemented in `internal/shell/shell.go`
+- [x] Combined stderr pipe `|&`: Implemented in `internal/shell/shell.go`
 
 ### Compound Commands & Lists
 - [x] Sequential list `;`: Implemented in `internal/shell/shell.go`

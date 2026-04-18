@@ -120,7 +120,7 @@ Status codes:
 - [x] Flag `-s`, `--squeeze-blank`: `internal/commands/cat/cat.go`
 - [x] Flag `-t`: `internal/commands/cat/cat.go` (implies -vT)
 - [x] Flag `-T`, `--show-tabs`: `internal/commands/cat/cat.go`
-- [x] Flag `-u`: `internal/commands/cat/cat.go` (ignored)
+- [x] Flag `-u`: `internal/commands/cat/cat.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#cat))
 - [x] Flag `-v`, `--show-nonprinting`: `internal/commands/cat/cat.go`
 
 ### `cd`
@@ -157,32 +157,32 @@ Status codes:
 - [x] Basic mode change: Implemented in `internal/commands/chmod/chmod.go`
 - [x] Numeric mode support: `internal/commands/chmod/chmod.go`
 - [x] Symbolic mode support: `internal/commands/chmod/chmod.go`
-- [x] Flag `--dereference`: `internal/commands/chmod/chmod.go` (ignored)
-- [x] Flag `--no-preserve-root`: `internal/commands/chmod/chmod.go` (ignored)
-- [x] Flag `--preserve-root`: `internal/commands/chmod/chmod.go` (ignored)
+- [x] Flag `--dereference`: `internal/commands/chmod/chmod.go` (Ignored)
+- [x] Flag `--no-preserve-root`: `internal/commands/chmod/chmod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
+- [x] Flag `--preserve-root`: `internal/commands/chmod/chmod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
 - [x] Flag `--reference=RFILE`: `internal/commands/chmod/chmod.go`
 - [x] Flag `-R`: `internal/commands/chmod/chmod.go`
 - [x] Flag `-c`: `internal/commands/chmod/chmod.go`
 - [x] Flag `-f`: `internal/commands/chmod/chmod.go`
-- [x] Flag `-h`: `internal/commands/chmod/chmod.go` (ignored)
+- [x] Flag `-h`: `internal/commands/chmod/chmod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-v`: `internal/commands/chmod/chmod.go`
 
 ### `chown`
 
 - [x] Basic ownership change: Implemented in `internal/commands/chown/chown.go`
-- [x] Flag `--dereference`: `internal/commands/chown/chown.go` (ignored)
-- [x] Flag `--from`: `internal/commands/chown/chown.go` (ignored)
-- [x] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `internal/commands/chown/chown.go` (ignored)
-- [x] Flag `--no-preserve-root`: `internal/commands/chown/chown.go` (ignored)
-- [x] Flag `--preserve-root`: `internal/commands/chown/chown.go` (ignored)
+- [x] Flag `--dereference`: `internal/commands/chown/chown.go` (Ignored)
+- [x] Flag `--from`: `internal/commands/chown/chown.go` (Ignored)
+- [x] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `internal/commands/chown/chown.go` (Ignored)
+- [x] Flag `--no-preserve-root`: `internal/commands/chown/chown.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
+- [x] Flag `--preserve-root`: `internal/commands/chown/chown.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
 - [x] Flag `--reference=RFILE`: `internal/commands/chown/chown.go`
-- [x] Flag `-H`: `internal/commands/chown/chown.go` (ignored)
-- [x] Flag `-L`: `internal/commands/chown/chown.go` (ignored)
-- [x] Flag `-P`: `internal/commands/chown/chown.go` (ignored)
+- [x] Flag `-H`: `internal/commands/chown/chown.go` (Ignored)
+- [x] Flag `-L`: `internal/commands/chown/chown.go` (Ignored)
+- [x] Flag `-P`: `internal/commands/chown/chown.go` (Ignored)
 - [x] Flag `-R`: `internal/commands/chown/chown.go`
 - [x] Flag `-c`: `internal/commands/chown/chown.go`
 - [x] Flag `-f`: `internal/commands/chown/chown.go`
-- [x] Flag `-h`: `internal/commands/chown/chown.go` (ignored)
+- [x] Flag `-h`: `internal/commands/chown/chown.go` (Ignored)
 - [x] Flag `-v`: `internal/commands/chown/chown.go`
 
 ### `chroot`
@@ -287,9 +287,9 @@ Status codes:
 - [ ] Flag `-a`, `--archive`: `third_party/coreutils/src/cp.c:L173`
 - [ ] Flag `-b`, `--backup`: `third_party/coreutils/src/cp.c:L181`
 - [ ] Flag `-d`: `third_party/coreutils/src/cp.c:L185` (implies -P --preserve=links)
-- [x] Flag `-f`, `--force`: `internal/commands/cp/cp.go` (ignored)
+- [x] Flag `-f`, `--force`: `internal/commands/cp/cp.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [ ] Flag `-H`: `third_party/coreutils/src/cp.c:L201`
-- [x] Flag `-i`, `--interactive`: `internal/commands/cp/cp.go` (ignored)
+- [x] Flag `-i`, `--interactive`: `internal/commands/cp/cp.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [ ] Flag `-l`, `--link`: `third_party/coreutils/src/cp.c:L209`
 - [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/cp.c:L213`
 - [x] Flag `-n`, `--no-clobber`: `internal/commands/cp/cp.go`
@@ -331,7 +331,7 @@ Status codes:
 - [x] Flag `-c`, `--characters=LIST`: `internal/commands/cut/cut.go`
 - [x] Flag `-d`, `--delimiter=DELIM`: `internal/commands/cut/cut.go`
 - [x] Flag `-f`, `--fields=LIST`: `internal/commands/cut/cut.go`
-- [x] Flag `-n`: `internal/commands/cut/cut.go` (ignored)
+- [x] Flag `-n`: `internal/commands/cut/cut.go` (Ignored)
 - [x] Flag `-s`, `--only-delimited`: `internal/commands/cut/cut.go`
 - [x] Flag `-z`, `--zero-terminated`: `internal/commands/cut/cut.go`
 - [x] Flag `--complement`: `internal/commands/cut/cut.go`
@@ -676,8 +676,8 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/id.c`
 - [x] Basic output: Implemented in `internal/commands/id/id.go`
 - [x] Flag `-G`: `internal/commands/id/id.go`
-- [x] Flag `-Z`: `internal/commands/id/id.go` (ignored)
-- [x] Flag `-a`: `internal/commands/id/id.go` (ignored)
+- [x] Flag `-Z`: `internal/commands/id/id.go` (Unsupported; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#id))
+- [x] Flag `-a`: `internal/commands/id/id.go` (Ignored)
 - [x] Flag `-g`: `internal/commands/id/id.go`
 - [x] Flag `-n`: `internal/commands/id/id.go`
 - [x] Flag `-r`: `internal/commands/id/id.go` (real == effective)
@@ -1062,7 +1062,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/cd.def`
 - [x] Basic path reporting: Implemented in `internal/commands/pwd/pwd.go`
-- [-] Flag `--help`: Handled by the shell's global help dispatcher.
+- [-] Flag `--help`: Handled by the shell's global help dispatcher. (See [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#pwd))
 - [x] Flag `-L`: `internal/commands/pwd/pwd.go`
 - [x] Flag `-P`: `internal/commands/pwd/pwd.go`
 
@@ -1109,8 +1109,8 @@ Status codes:
 - [ ] Upstream: `third_party/coreutils/src/realpath.c`
 - [x] Basic output: Implemented in `internal/commands/realpath/realpath.go`
 - [x] Flag `-E`, `--canonicalize-existing`: `internal/commands/realpath/realpath.go`
-- [x] Flag `-L`, `--logical`: `internal/commands/realpath/realpath.go` (ignored)
-- [x] Flag `-P`, `--physical`: `internal/commands/realpath/realpath.go` (ignored)
+- [x] Flag `-L`, `--logical`: `internal/commands/realpath/realpath.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-P`, `--physical`: `internal/commands/realpath/realpath.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-q`, `--quiet`: `internal/commands/realpath/realpath.go`
 - [x] Flag `-s`, `--strip`: `internal/commands/realpath/realpath.go`
 - [x] Flag `-z`, `--zero`: `internal/commands/realpath/realpath.go`
@@ -1313,7 +1313,7 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/stat.c`
 - [x] Basic output: Implemented in `internal/commands/stat/stat.go`
 - [x] Flag `-c`, `--format=FORMAT`: `internal/commands/stat/stat.go`
-- [x] Flag `-f`, `--file-system`: `internal/commands/stat/stat.go` (ignored)
+- [x] Flag `-f`, `--file-system`: `internal/commands/stat/stat.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-L`, `--dereference`: `internal/commands/stat/stat.go`
 - [x] Flag `-t`, `--terse`: `internal/commands/stat/stat.go`
 - [ ] Flag `--printf=FORMAT`: `third_party/coreutils/src/stat.c:1924`
@@ -1576,8 +1576,8 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/wait.def`
 - [x] Basic waiting: Implemented in `internal/commands/wait/wait.go`
 - [x] Optional: jobspec or process ID: `internal/commands/wait/wait.go`
-- [x] Flag `-f`: `internal/commands/wait/wait.go` (ignored)
-- [x] Flag `-n`: `internal/commands/wait/wait.go` (ignored)
+- [x] Flag `-f`: `internal/commands/wait/wait.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#wait))
+- [x] Flag `-n`: `internal/commands/wait/wait.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#wait))
 - [ ] Flag `-p var`: `third_party/bash/builtins/wait.def:L137`
 
 ### `wc`

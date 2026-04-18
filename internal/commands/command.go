@@ -42,6 +42,8 @@ type Environment struct {
 	History       []string
 	Jobs          []*Job
 	Completions   map[string]map[string]string
+	Shopts        map[string]bool
+	Traps         map[string]string
 	Registry      *Registry
 	Executor      Executor
 }

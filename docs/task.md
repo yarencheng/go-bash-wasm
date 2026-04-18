@@ -37,12 +37,12 @@ Status codes:
 ### `base32`
 
 - [x] Basic encoding/decoding: Implemented in `internal/commands/base32/base32.go`
-- [ ] Flag `--base16`: `third_party/coreutils/src/basenc.c:L86`
-- [ ] Flag `--base2lsbf`: `third_party/coreutils/src/basenc.c:L88`
-- [ ] Flag `--base2msbf`: `third_party/coreutils/src/basenc.c:L87`
-- [x] Flag `--base32`: `internal/commands/base32/base32.go`
-- [ ] Flag `--base32hex`: `third_party/coreutils/src/basenc.c:L85`
-- [ ] Flag `--base58`: `third_party/coreutils/src/basenc.c:L83`
+- [-] Flag `--base16`: Use `basenc` instead
+- [-] Flag `--base2lsbf`: Use `basenc` instead
+- [-] Flag `--base2msbf`: Use `basenc` instead
+- [x] Flag `--base32`: `internal/commands/base32/base32.go` (default)
+- [-] Flag `--base32hex`: Use `basenc` instead
+- [-] Flag `--base58`: Use `basenc` instead
 - [x] Flag `--base64`: `internal/commands/base64/base64.go`
 - [x] Flag `--base64url`: `internal/commands/base32/base32.go`
 - [x] Flag `--z85`: `internal/commands/base32/base32.go`
@@ -497,13 +497,14 @@ Status codes:
 
 ### `enable`
 
-- [ ] Upstream: `third_party/bash/builtins/enable.def`
-- [ ] Flag `-a`: `third_party/bash/builtins/enable.def:L157` (display all)
-- [ ] Flag `-d`: `third_party/bash/builtins/enable.def:L160` (delete loaded)
-- [ ] Flag `-n`: `third_party/bash/builtins/enable.def:L163` (disable)
-- [ ] Flag `-p`: `third_party/bash/builtins/enable.def:L166` (print status)
-- [ ] Flag `-s`: `third_party/bash/builtins/enable.def:L169` (POSIX special only)
-- [ ] Flag `-f filename`: `third_party/bash/builtins/enable.def:L172` (load from dynamic file)
+- [x] Upstream: `third_party/bash/builtins/enable.def`
+- [x] Basic management: Implemented in `internal/commands/enable/enable.go`
+- [x] Flag `-a`: `third_party/bash/builtins/enable.def:L157` (display all)
+- [-] Flag `-d`: `third_party/bash/builtins/enable.def:L160` (delete loaded) - Dynamic loading not available
+- [x] Flag `-n`: `third_party/bash/builtins/enable.def:L163` (disable)
+- [x] Flag `-p`: `third_party/bash/builtins/enable.def:L166` (print status)
+- [x] Flag `-s`: `third_party/bash/builtins/enable.def:L169` (POSIX special only)
+- [-] Flag `-f filename`: `third_party/bash/builtins/enable.def:L172` (load from dynamic file) - Dynamic loading not available
 
 ### `env`
 
@@ -615,7 +616,8 @@ Status codes:
 
 ### `getlimits`
 
-- [ ] Upstream: `third_party/coreutils/src/getlimits.c`
+- [x] Upstream: `third_party/coreutils/src/getlimits.c`
+- [x] Basic operation: Implemented in `internal/commands/getlimits/getlimits.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/getlimits.c:L52`
 - [ ] Flag `--version`: `third_party/coreutils/src/getlimits.c:L52`
 
@@ -1215,13 +1217,13 @@ Status codes:
 
 ### `shopt`
 
-- [ ] Upstream: `third_party/bash/builtins/shopt.def`
-- [ ] Basic option management: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/shopt.def`
+- [x] Basic option management: Implemented in `internal/commands/shopt/shopt.go`
 - [ ] Flag `-o`: `third_party/bash/builtins/shopt.def:L65` (restrict to set -o)
-- [ ] Flag `-p`: `third_party/bash/builtins/shopt.def:L77` (print status)
-- [ ] Flag `-q`: `third_party/bash/builtins/shopt.def:L71` (quiet)
-- [ ] Flag `-s`: `third_party/bash/builtins/shopt.def:L62` (enable)
-- [ ] Flag `-u`: `third_party/bash/builtins/shopt.def:L65` (disable)
+- [x] Flag `-p`: `third_party/bash/builtins/shopt.def:L77` (print status)
+- [x] Flag `-q`: `third_party/bash/builtins/shopt.def:L71` (quiet)
+- [x] Flag `-s`: `third_party/bash/builtins/shopt.def:L62` (enable)
+- [x] Flag `-u`: `third_party/bash/builtins/shopt.def:L65` (disable)
 
 ### `shred`
 
@@ -1405,8 +1407,8 @@ Status codes:
 
 ### `times`
 
-- [ ] Upstream: `third_party/bash/builtins/times.def`
-- [ ] Basic output: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/times.def`
+- [x] Basic output: Implemented in `internal/commands/times/times.go`
 
 ### `touch`
 
@@ -1433,11 +1435,11 @@ Status codes:
 
 ### `trap`
 
-- [ ] Upstream: `third_party/bash/builtins/trap.def`
-- [ ] Basic trapping: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/trap.def`
+- [x] Basic trapping: Implemented in `internal/commands/trap/trap.go`
 - [ ] Flag `-P`: `third_party/bash/builtins/trap.def:L131`
 - [ ] Flag `-l`: `third_party/bash/builtins/trap.def:L125`
-- [ ] Flag `-p`: `third_party/bash/builtins/trap.def:L128`
+- [x] Flag `-p`: `third_party/bash/builtins/trap.def:L128`
 
 ### `true`
 
@@ -1477,17 +1479,17 @@ Status codes:
 
 ### `ulimit`
 
-- [ ] Upstream: `third_party/bash/builtins/ulimit.def`
-- [ ] Resource management: Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/ulimit.def:L35` (all)
-- [ ] Flag `-c`: `third_party/bash/builtins/ulimit.def:L37` (core)
-- [ ] Flag `-d`: `third_party/bash/builtins/ulimit.def:L38` (data)
-- [ ] Flag `-e`: `third_party/bash/builtins/ulimit.def:L39` (priority)
-- [ ] Flag `-f`: `third_party/bash/builtins/ulimit.def:L40` (file size)
-- [ ] Flag `-n`: `third_party/bash/builtins/ulimit.def:L45` (opened files)
-- [ ] Flag `-u`: `third_party/bash/builtins/ulimit.def:L51` (user processes)
-- [ ] Flag `-S`: `third_party/bash/builtins/ulimit.def:L33` (soft)
-- [ ] Flag `-H`: `third_party/bash/builtins/ulimit.def:L34` (hard)
+- [x] Upstream: `third_party/bash/builtins/ulimit.def`
+- [x] Resource management: Implemented in `internal/commands/ulimit/ulimit.go` (Simulation)
+- [x] Flag `-a`: `third_party/bash/builtins/ulimit.def:L35` (all)
+- [x] Flag `-c`: `third_party/bash/builtins/ulimit.def:L37` (core)
+- [x] Flag `-d`: `third_party/bash/builtins/ulimit.def:L38` (data)
+- [x] Flag `-e`: `third_party/bash/builtins/ulimit.def:L39` (priority)
+- [x] Flag `-f`: `third_party/bash/builtins/ulimit.def:L40` (file size)
+- [x] Flag `-n`: `third_party/bash/builtins/ulimit.def:L45` (opened files)
+- [x] Flag `-u`: `third_party/bash/builtins/ulimit.def:L51` (user processes)
+- [x] Flag `-S`: `third_party/bash/builtins/ulimit.def:L33` (soft) - Ignored in simulation
+- [x] Flag `-H`: `third_party/bash/builtins/ulimit.def:L34` (hard) - Ignored in simulation
 
 ### `umask`
 

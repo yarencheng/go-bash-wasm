@@ -63,6 +63,16 @@ This document tracks known functional gaps, intentional deviations, and implemen
 - `[x]` Flag `-f` (Ignored): `internal/commands/stat/stat.go:L28`
   > Rationale: Virtual filesystem (Afero MemMapFs) status information is static or unavailable. Standard file status reporting is prioritized over filesystem metadata.
 
+### `times`
+
+- `[x]` Basic Output (Simulation): `internal/commands/times/times.go`
+  > Rationale: Accurate process accounting for child processes is not supported by the WebAssembly environment. The shell's own user and system times are simulated based on the time elapsed since startup.
+
+### `ulimit`
+
+- `[x]` Resource Management (Simulation): `internal/commands/ulimit/ulimit.go`
+  > Rationale: Setting real resource limits (e.g., stack size, file descriptors) is not possible within the browser's WebAssembly sandbox. All limits are reported as static simulated values, and setting new limits is disabled.
+
 ### `wait`
 
 - `[x]` Flags `-f`, `-n` (Ignored): `internal/commands/wait/wait.go:L1579`

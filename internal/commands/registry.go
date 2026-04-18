@@ -9,14 +9,13 @@ import (
 type Registry struct {
 	mu       sync.RWMutex
 	commands map[string]Command
+	disabled map[string]bool
 }
-
-// NewRegistry creates a new empty command registry.
-type NewRegistry interface{}
 
 func New() *Registry {
 	return &Registry{
 		commands: make(map[string]Command),
+		disabled: make(map[string]bool),
 	}
 }
 
@@ -40,7 +39,11 @@ func (r *Registry) Get(name string) (Command, bool) {
 	defer r.mu.RUnlock()
 
 	cmd, exists := r.commands[name]
-	return cmd, exists
+	if !exists {
+		return nil, false
+	}
+	isDisabled := r.disabled[name]
+	return cmd, !isDisabled
 }
 
 // List returns all registered command names.
@@ -53,4 +56,39 @@ func (r *Registry) List() []string {
 		names = append(names, name)
 	}
 	return names
+}
+
+// Enable enables a command.
+func (r *Registry) Enable(name string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.commands[name]; !exists {
+		return fmt.Errorf("command not found: %s", name)
+	}
+	r.disabled[name] = false
+	return nil
+}
+
+// Disable disables a command.
+func (r *Registry) Disable(name string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, exists := r.commands[name]; !exists {
+		return fmt.Errorf("command not found: %s", name)
+	}
+	r.disabled[name] = true
+	return nil
+}
+
+// IsEnabled checks if a command is enabled.
+func (r *Registry) IsEnabled(name string) bool {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	if _, exists := r.commands[name]; !exists {
+		return false
+	}
+	return !r.disabled[name]
 }

@@ -49,6 +49,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/disown"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/du"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/echo"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/enable"
 	env "github.com/yarencheng/go-bash-wasm/internal/commands/env"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/eval"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/exec"
@@ -65,6 +66,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/grep"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/groups"
 	hashcmd "github.com/yarencheng/go-bash-wasm/internal/commands/hash"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/getlimits"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
 	helpcmd "github.com/yarencheng/go-bash-wasm/internal/commands/help"
 	historycmd "github.com/yarencheng/go-bash-wasm/internal/commands/history"
@@ -111,6 +113,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shuf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sleep"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/shopt"
 	sort "github.com/yarencheng/go-bash-wasm/internal/commands/sort"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/source"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
@@ -122,13 +125,16 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tee"
 	test "github.com/yarencheng/go-bash-wasm/internal/commands/test"
 	timecmd "github.com/yarencheng/go-bash-wasm/internal/commands/time"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/times"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/timeout"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/touch"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tr"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/trap"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/truncate"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tsort"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tty"
 	typecmd "github.com/yarencheng/go-bash-wasm/internal/commands/type"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/ulimit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/umask"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unalias"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/uname"
@@ -199,6 +205,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		bind.New(),
 		boolcmd.NewTrue(),
 		boolcmd.NewFalse(),
+		enable.New(),
 		echo.New(),
 		pwd.New(),
 		pathchk.New(),
@@ -232,6 +239,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		link.New(),
 		whoami.New(),
 		uname.New(),
+		ulimit.New(),
 		userscmd.New(),
 		nproccmd.New(),
 		uptime.New(),
@@ -257,9 +265,11 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		groups.New(),
 		hashcmd.New(),
 		set.New(),
+		shopt.New(),
 		helpcmd.New(),
 		historycmd.New(),
 		logname.New(),
+		getlimits.New(),
 		pushd.New(),
 		popd.New(),
 		dirs.New(),
@@ -277,7 +287,9 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		tac.New(),
 		sync.New(),
 		timeout.New(),
+		trap.New(),
 		truncate.New(),
+		times.New(),
 		tsort.New(),
 		unexpand.New(),
 		expand.New(),
@@ -383,7 +395,24 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		Hash:        make(map[string]string),
 		Jobs:        make([]*commands.Job, 0),
 		Completions: make(map[string]map[string]string),
-		Registry:    registry,
+		Shopts: map[string]bool{
+			"autocd":               false,
+			"cdspell":              false,
+			"checkwinsize":         true,
+			"cmdhist":              true,
+			"dotglob":              false,
+			"expand_aliases":       true,
+			"extglob":              false,
+			"globstar":             false,
+			"histappend":           true,
+			"interactive_comments": true,
+			"nullglob":             false,
+			"progcomp":             true,
+			"promptvars":           true,
+			"sourcepath":           true,
+		},
+		Traps:    make(map[string]string),
+		Registry: registry,
 	}
 
 	return &App{

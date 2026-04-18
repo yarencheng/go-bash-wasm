@@ -113,6 +113,7 @@ Status codes:
 
 ### `cat`
 
+- [x] Upstream: `third_party/coreutils/src/cat.c`
 - [x] Basic output: Implemented in `internal/commands/cat/cat.go`
 - [x] Flag `-A`, `--show-all`: `internal/commands/cat/cat.go`
 - [x] Flag `-b`, `--number-nonblank`: `internal/commands/cat/cat.go`
@@ -150,42 +151,41 @@ Status codes:
 
 ### `chgrp`
 
-- [x] Upstream: `third_party/coreutils/src/chown-chgrp.c`
-- [x] Inherits flags from `chown`: `--dereference`, `--no-dereference`, `--recursive`, `--from`, `--reference`, `-H`, `-L`, `-P`, `-c`, `-f`, `-v`
-- [x] Basic group change: Implemented in `internal/commands/chown/chown.go`
+- [x] Upstream: `third_party/coreutils/src/chgrp.c`
+- [x] Basic operation: Implemented in `internal/commands/chown/chown.go` (via `NewChgrp`)
+- [x] Flag `-c`, `--changes`: `internal/commands/chown/chown.go`
+- [x] Flag `-f`, `--silent`, `--quiet`: `internal/commands/chown/chown.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/chown/chown.go`
+- [x] Flag `--dereference`: `internal/commands/chown/chown.go`
+- [x] Flag `-h`, `--no-dereference`: `internal/commands/chown/chown.go`
+- [x] Flag `--reference=RFILE`: `internal/commands/chown/chown.go`
+- [x] Flag `-R`, `--recursive`: `internal/commands/chown/chown.go`
+- [x] Flag `-H`, `-L`, `-P`: `internal/commands/chown/chown.go` (Stub)
 
 ### `chmod`
 
-- [x] Basic mode change: Implemented in `internal/commands/chmod/chmod.go`
-- [x] Numeric mode support: `internal/commands/chmod/chmod.go`
-- [x] Symbolic mode support: `internal/commands/chmod/chmod.go`
-- [x] Flag `--dereference`: `internal/commands/chmod/chmod.go` (Ignored)
-- [x] Flag `--no-preserve-root`: `internal/commands/chmod/chmod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
-- [x] Flag `--preserve-root`: `internal/commands/chmod/chmod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
+- [x] Upstream: `third_party/coreutils/src/chmod.c`
+- [x] Basic operation: Implemented in `internal/commands/chmod/chmod.go`
+- [x] Flag `-c`, `--changes`: `internal/commands/chmod/chmod.go`
+- [x] Flag `-f`, `--silent`, `--quiet`: `internal/commands/chmod/chmod.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/chmod/chmod.go`
 - [x] Flag `--reference=RFILE`: `internal/commands/chmod/chmod.go`
-- [x] Flag `-R`: `internal/commands/chmod/chmod.go`
-- [x] Flag `-c`: `internal/commands/chmod/chmod.go`
-- [x] Flag `-f`: `internal/commands/chmod/chmod.go`
-- [x] Flag `-h`: `internal/commands/chmod/chmod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-v`: `internal/commands/chmod/chmod.go`
+- [x] Flag `-R`, `--recursive`: `internal/commands/chmod/chmod.go`
+- [x] Symbolic modes (u+x, g-w, etc.): Implemented in `internal/commands/chmod/chmod.go`
 
 ### `chown`
 
-- [x] Basic ownership change: Implemented in `internal/commands/chown/chown.go`
-- [x] Flag `--dereference`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `--from`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `--no-preserve-root`: `internal/commands/chown/chown.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
-- [x] Flag `--preserve-root`: `internal/commands/chown/chown.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chmod--chown))
+- [x] Upstream: `third_party/coreutils/src/chown.c`
+- [x] Basic operation: Implemented in `internal/commands/chown/chown.go`
+- [x] Flag `-c`, `--changes`: `internal/commands/chown/chown.go`
+- [x] Flag `-f`, `--silent`, `--quiet`: `internal/commands/chown/chown.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/chown/chown.go`
+- [x] Flag `--dereference`: `internal/commands/chown/chown.go`
+- [x] Flag `-h`, `--no-dereference`: `internal/commands/chown/chown.go`
+- [x] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `internal/commands/chown/chown.go` (Stub)
 - [x] Flag `--reference=RFILE`: `internal/commands/chown/chown.go`
-- [x] Flag `-H`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `-L`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `-P`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `-R`: `internal/commands/chown/chown.go`
-- [x] Flag `-c`: `internal/commands/chown/chown.go`
-- [x] Flag `-f`: `internal/commands/chown/chown.go`
-- [x] Flag `-h`: `internal/commands/chown/chown.go` (Ignored)
-- [x] Flag `-v`: `internal/commands/chown/chown.go`
+- [x] Flag `-R`, `--recursive`: `internal/commands/chown/chown.go`
+- [x] Flag `-H`, `-L`, `-P`: `internal/commands/chown/chown.go` (Stub)
 
 ### `chroot`
 
@@ -451,27 +451,26 @@ Status codes:
 ### `du`
 
 - [x] Upstream: `third_party/coreutils/src/du.c`
-- [x] Basic du: Implemented in `internal/commands/du/du.go`
-- [x] Basic usage summary: Implemented in `internal/commands/du/du.go`
+- [x] Basic operation: Implemented in `internal/commands/du/du.go`
+- [x] Flag `-0`, `--null`: `internal/commands/du/du.go`
 - [x] Flag `-a`, `--all`: `internal/commands/du/du.go`
-- [x] Flag `-A`, `--apparent-size`: `internal/commands/du/du.go`
-- [x] Flag `-b`, `--bytes`: `internal/commands/du/du.go`
+- [x] Flag `--apparent-size`: `internal/commands/du/du.go`
+- [x] Flag `-b`, `--bytes`: `internal/commands/du/du.go` (alias for apparent-size)
 - [x] Flag `-c`, `--total`: `internal/commands/du/du.go`
 - [x] Flag `-d`, `--max-depth=N`: `internal/commands/du/du.go`
-- [x] Flag `-D`, `--dereference-args`: `internal/commands/du/du.go`
 - [x] Flag `-h`, `--human-readable`: `internal/commands/du/du.go`
+- [x] Flag `-k`: `internal/commands/du/du.go`
+- [x] Flag `-m`: `internal/commands/du/du.go`
+- [x] Flag `-s`, `--summarize`: `internal/commands/du/du.go`
+- [x] Flag `-S`, `--separate-dirs`: `internal/commands/du/du.go` (Stub)
+- [x] Flag `-D`, `--dereference-args`: `internal/commands/du/du.go`
 - [x] Flag `-H`: `internal/commands/du/du.go` (dereference)
-- [x] Flag `-k`: `internal/commands/du/du.go` (1K blocks)
 - [x] Flag `-l`, `--count-links`: `internal/commands/du/du.go` (partial via size)
 - [x] Flag `-L`, `--dereference`: `internal/commands/du/du.go`
-- [x] Flag `-m`: `internal/commands/du/du.go` (1M blocks)
 - [x] Flag `-P`, `--no-dereference`: `internal/commands/du/du.go`
-- [x] Flag `-s`, `--summarize`: `internal/commands/du/du.go`
-- [ ] Flag `-S`, `--separate-dirs`: `third_party/coreutils/src/du.c:L365`
 - [ ] Flag `-t`, `--threshold=SIZE`: `third_party/coreutils/src/du.c:L377`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/du.c:L402`
 - [ ] Flag `-X`, `--exclude-from=FILE`: `third_party/coreutils/src/du.c:L394`
-- [x] Flag `-0`, `--null`: `internal/commands/du/du.go`
 - [ ] Flag `--exclude=PATTERN`: `third_party/coreutils/src/du.c:L398`
 - [ ] Flag `--files0-from=F`: `third_party/coreutils/src/du.c:L328`
 - [ ] Flag `--inodes`: `third_party/coreutils/src/du.c:L341`
@@ -481,10 +480,11 @@ Status codes:
 
 ### `echo`
 
+- [x] Upstream: `third_party/bash/builtins/echo.def`
 - [x] Basic output: Implemented in `internal/commands/echo/echo.go`
-- [x] Flag `-E`: `internal/commands/echo/echo.go`
-- [x] Flag `-e`: `internal/commands/echo/echo.go`
-- [x] Flag `-n`: `internal/commands/echo/echo.go`
+- [x] Flag `-n`: `internal/commands/echo/echo.go` (no newline)
+- [x] Flag `-e`: `internal/commands/echo/echo.go` (interpret escapes)
+- [x] Flag `-E`: `internal/commands/echo/echo.go` (disable escapes)
 
 ### `enable`
 
@@ -633,6 +633,7 @@ Status codes:
 
 ### `head`
 
+- [x] Upstream: `third_party/coreutils/src/head.c`
 - [x] Basic output: Implemented in `internal/commands/head/head.go`
 - [x] Flag `-c`, `--bytes`: `internal/commands/head/head.go`
 - [x] Flag `-n`, `--lines`: `internal/commands/head/head.go`
@@ -836,7 +837,6 @@ Status codes:
 - [x] Flag `-g`: `internal/commands/ls/ls.go` (like -l but no owner)
 - [x] Flag `-h`: `internal/commands/ls/ls.go` (human-readable)
 - [x] Flag `-i`: `internal/commands/ls/ls.go` (inode)
-- [x] Flag `-k`: `internal/commands/ls/ls.go` (kibibytes)
 - [x] Flag `-l`: `internal/commands/ls/ls.go` (long)
 - [x] Flag `-m`: `internal/commands/ls/ls.go` (comma)
 - [x] Flag `-n`: `internal/commands/ls/ls.go` (numeric)
@@ -1770,19 +1770,20 @@ Status codes:
 - [ ] Basic expansion $( (expression) ): `third_party/bash/subst.c:L10825`
 
 ### Brace Expansion
-- [ ] basic expansion {a,b,c}: `third_party/bash/braces.c`
+- [x] basic expansion {a,b,c}: Implemented in `internal/shell/shell.go`
 
 ### Tilde Expansion
-- [ ] basic expansion ~, ~user: `third_party/bash/subst.c:L10740`
+- [x] basic expansion ~, ~user: Implemented in `internal/shell/shell.go`
 
 ## Redirections
 
 ### Standard Redirections
-- [ ] Input redirection `[n]<word`: `third_party/bash/redir.c:L897`
-- [ ] Output redirection `[n]>word`: `third_party/bash/redir.c:L895`
-- [ ] Append redirection `[n]>>word`: `third_party/bash/redir.c:L896`
+- [x] Input redirection `[n]<word`: Implemented in `internal/shell/shell.go`
+- [x] Output redirection `[n]>word`: Implemented in `internal/shell/shell.go`
+- [x] Append redirection `[n]>>word`: Implemented in `internal/shell/shell.go`
 - [ ] Force output `[n]>|word`: `third_party/bash/redir.c:L902`
-- [ ] Combined stderr/stdout `&>word`, `&>>word`: `third_party/bash/redir.c:L899-900`
+- [x] Combined stderr/stdout `&>word`, `&>>word`: Implemented in `internal/shell/shell.go`
+- [x] Stderr redirection `2>word`: Implemented in `internal/shell/shell.go`
 
 ### File Descriptor Manipulation
 - [ ] Duplicating input `[n]<&word`: `third_party/bash/redir.c:L1115`
@@ -1798,8 +1799,8 @@ Status codes:
 ## Globbing Patterns
 
 ### Standard Wildcards
-- [ ] Match any string `*`: `third_party/bash/lib/glob/glob.c`
-- [ ] Match any character `?`: `third_party/bash/lib/glob/glob.c`
+- [x] Match any string `*`: Implemented in `internal/shell/shell.go`
+- [x] Match any character `?`: Implemented in `internal/shell/shell.go`
 
 ### Character Classes
 - [ ] Match set of characters `[...]`: `third_party/bash/lib/glob/smatch.c`

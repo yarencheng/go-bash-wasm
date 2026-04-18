@@ -3,7 +3,9 @@ package shell
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
@@ -90,14 +92,107 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 			cmdLine = strings.TrimSpace(cmdLine[1:])
 		}
 
-		// Parse simple command
+		// Support redirections (simple implementation)
 		args := strings.Fields(cmdLine)
-		if len(args) == 0 {
+		var finalArgs []string
+		
+		// Temporary redirects
+		var stdoutRedirect string
+		var stderrRedirect string
+		var stdinRedirect string
+		var appendStdout bool
+		var combinedRedirect bool
+
+		for i := 0; i < len(args); i++ {
+			arg := args[i]
+			if (arg == ">" || arg == "1>") && i+1 < len(args) {
+				stdoutRedirect = args[i+1]
+				i++
+			} else if arg == ">>" && i+1 < len(args) {
+				stdoutRedirect = args[i+1]
+				appendStdout = true
+				i++
+			} else if arg == "<" && i+1 < len(args) {
+				stdinRedirect = args[i+1]
+				i++
+			} else if arg == "2>" && i+1 < len(args) {
+				stderrRedirect = args[i+1]
+				i++
+			} else if arg == "&>" && i+1 < len(args) {
+				stdoutRedirect = args[i+1]
+				combinedRedirect = true
+				i++
+			} else if strings.HasPrefix(arg, ">") && len(arg) > 1 {
+				stdoutRedirect = arg[1:]
+			} else if strings.HasPrefix(arg, ">>") && len(arg) > 2 {
+				stdoutRedirect = arg[2:]
+				appendStdout = true
+			} else {
+				// Glob expansion
+				if strings.ContainsAny(arg, "*?") {
+					matches, err := filepath.Glob(s.resolvePath(arg))
+					if err == nil && len(matches) > 0 {
+						for _, m := range matches {
+							// Convert back to relative if needed or just use absolute
+							finalArgs = append(finalArgs, m)
+						}
+						continue
+					}
+				}
+				finalArgs = append(finalArgs, arg)
+			}
+		}
+
+		if len(finalArgs) == 0 {
 			continue
 		}
 
-		cmdName := args[0]
-		cmdArgs := args[1:]
+		cmdName := finalArgs[0]
+		cmdArgs := finalArgs[1:]
+
+		// Apply redirections in a sub-environment if possible
+		// For simulator, we just temporarily swap Stdout/Stderr/Stdin in Env
+		oldStdout := s.Env.Stdout
+		oldStderr := s.Env.Stderr
+		oldStdin := s.Env.Stdin
+
+		if stdoutRedirect != "" {
+			path := s.resolvePath(stdoutRedirect)
+			if appendStdout {
+				// Afero doesn't have a direct Append flag in OpenFile that is consistent across types,
+				// but let's assume we can handle it or just overwrite for now in simulator.
+				_ = s.Env.FS.Remove(path) // Simplification for simulator
+			} else {
+				_ = s.Env.FS.Remove(path)
+			}
+			f, err := s.Env.FS.Create(path)
+			if err == nil {
+				s.Env.Stdout = f
+				if combinedRedirect {
+					s.Env.Stderr = f
+				}
+				defer f.Close()
+			}
+		}
+
+		if stderrRedirect != "" {
+			path := s.resolvePath(stderrRedirect)
+			_ = s.Env.FS.Remove(path)
+			f, err := s.Env.FS.Create(path)
+			if err == nil {
+				s.Env.Stderr = f
+				defer f.Close()
+			}
+		}
+
+		if stdinRedirect != "" {
+			path := s.resolvePath(stdinRedirect)
+			f, err := s.Env.FS.Open(path)
+			if err == nil {
+				s.Env.Stdin = f
+				defer f.Close()
+			}
+		}
 
 		exitCode := 0
 		if cmd, ok := s.Registry.Get(cmdName); ok {
@@ -106,6 +201,11 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 			fmt.Fprintf(s.Env.Stderr, "%s: command not found\n", cmdName)
 			exitCode = 127
 		}
+
+		// Restore
+		s.Env.Stdout = oldStdout
+		s.Env.Stderr = oldStderr
+		s.Env.Stdin = oldStdin
 
 		if negate {
 			if exitCode == 0 {
@@ -126,8 +226,13 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 }
 
 func (s *Shell) expand(line string) string {
-	// Simple variable expansion: $VAR or ${VAR} or ${VAR:-default}
-	
+	// 1. Brace Expansion
+	line = s.expandBraces(line)
+
+	// 2. Tilde Expansion
+	line = s.expandTilde(line)
+
+	// 3. Simple variable expansion: $VAR or ${VAR} or ${VAR:-default}
 	result := line
 	
 	// Handle ${VAR} and ${VAR:-default}
@@ -372,4 +477,54 @@ func (s *Shell) resolveVariable(expr string) string {
 	}
 
 	return val
+}
+
+func (s *Shell) expandBraces(line string) string {
+	// Simple {a,b}c -> ac bc
+	if !strings.Contains(line, "{") || !strings.Contains(line, "}") {
+		return line
+	}
+
+	start := strings.Index(line, "{")
+	end := strings.Index(line[start:], "}")
+	if end == -1 {
+		return line
+	}
+	end += start
+
+	prefix := line[:start]
+	suffix := line[end+1:]
+	options := strings.Split(line[start+1:end], ",")
+
+	var results []string
+	for _, opt := range options {
+		results = append(results, prefix+opt+suffix)
+	}
+
+	return strings.Join(results, " ")
+}
+
+func (s *Shell) expandTilde(line string) string {
+	if !strings.HasPrefix(line, "~") {
+		return line
+	}
+
+	home := s.Env.EnvVars["HOME"]
+	if line == "~" || strings.HasPrefix(line, "~/") {
+		return strings.Replace(line, "~", home, 1)
+	}
+
+	// ~user/path -> /home/user/path
+	slashIdx := strings.Index(line, "/")
+	if slashIdx == -1 {
+		return "/home/" + line[1:]
+	}
+	return "/home/" + line[1:slashIdx] + line[slashIdx:]
+}
+
+func (s *Shell) resolvePath(p string) string {
+	if filepath.IsAbs(p) {
+		return p
+	}
+	return filepath.Join(s.Env.Cwd, p)
 }

@@ -16,6 +16,14 @@ func main() {
 	// Initialize the application with standard input, output and error.
 	a := app.New(os.Stdin, os.Stdout, os.Stderr)
 
+	// Check for --version flag
+	for _, arg := range os.Args {
+		if arg == "--version" {
+			a.ShowVersion()
+			os.Exit(0)
+		}
+	}
+
 	// Run the interactive shell.
 	if err := a.Run(ctx); err != nil {
 		fmt.Fprintf(os.Stderr, "bash simulator failed: %v\n", err)

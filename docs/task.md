@@ -75,6 +75,11 @@ Status codes:
 - [x] Flag `--base58`: `internal/commands/basenc/basenc.go`
 - [x] Flag `--z85`: `internal/commands/basenc/basenc.go`
 
+### `bash`
+
+- [x] Upstream: `third_party/bash/shell.c`, `third_party/bash/version.c`
+- [x] Flag `--version`: `third_party/bash/shell.c:L483`, `third_party/bash/version.c:L88`
+
 ### `bg`
 
 - [x] Upstream: `third_party/bash/builtins/fg_bg.def`

@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"time"
 
@@ -96,7 +97,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tsort"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unexpand"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/expand"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/fmt"
+	fmtcmd "github.com/yarencheng/go-bash-wasm/internal/commands/fmt"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/fold"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/numfmt"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
@@ -142,6 +143,13 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/compopt"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/caller"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/local"
+)
+
+const (
+	BashVersion   = "5.3-rc"
+	MachType      = "wasm32-unknown-wasi"
+	BashCopyright = "Copyright (C) 2026 go-bash-wasm team"
+	BashLicense   = "License Apache-2.0: Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>\n"
 )
 
 // App encapsulates the bash simulator application.
@@ -258,7 +266,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		tsort.New(),
 		unexpand.New(),
 		expand.New(),
-		fmt.New(),
+		fmtcmd.New(),
 		fold.New(),
 		numfmt.New(),
 		yes.New(),
@@ -337,10 +345,10 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 			"USER":         "wasm",
 			"HOME":         "/home/wasm",
 			"PWD":          "/",
-			"BASH_VERSION": "5.2.15(1)-release",
+			"BASH_VERSION": BashVersion,
 			"HOSTNAME":     "wasm-simulator",
 			"HOSTTYPE":     "wasm32",
-			"MACHTYPE":     "wasm32-unknown-wasi",
+			"MACHTYPE":     MachType,
 			"OSTYPE":       "linux-gnu",
 			"TERM":         "xterm-256color",
 			"SHELL":        "/bin/bash",
@@ -383,6 +391,13 @@ func (a *App) Run(ctx context.Context) error {
 
 	a.Logger.Info().Msg("shell session ended successfully")
 	return nil
+}
+
+// ShowVersion prints the version information of the bash simulator.
+func (a *App) ShowVersion() {
+	fmt.Fprintf(a.Env.Stdout, "go-bash-wasm, version %s (%s)\n", BashVersion, MachType)
+	fmt.Fprintf(a.Env.Stdout, "%s\n", BashCopyright)
+	fmt.Fprintf(a.Env.Stdout, "%s\n", BashLicense)
 }
 
 func setupMockFiles(fs afero.Fs, logger zerolog.Logger) {

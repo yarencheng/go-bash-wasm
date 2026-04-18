@@ -27,9 +27,33 @@ func (f *Fmt) Run(ctx context.Context, env *commands.Environment, args []string)
 	width := flags.StringP("width", "w", "75", "maximum line width")
 	splitOnly := flags.BoolP("split-only", "s", false, "split long lines, but do not refill")
 
+	_ = flags.BoolP("crown-margin", "c", false, "preserve indentation of first two lines (ignored)")
+	_ = flags.StringP("prefix", "p", "", "reformat only lines beginning with STRING (ignored)")
+	_ = flags.BoolP("tagged-paragraph", "t", false, "indentation of first line different from second (ignored)")
+	_ = flags.BoolP("uniform-spacing", "u", false, "one space between words, two after sentences (ignored)")
+	_ = flags.StringP("goal", "g", "", "goal width (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "fmt: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: fmt [-WIDTH] [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Reformat each paragraph in the FILE(s), writing to standard output.\n")
+		fmt.Fprintf(env.Stdout, "The default width is 75 columns.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "fmt")
+		return 0
 	}
 
 	maxWidth := 75

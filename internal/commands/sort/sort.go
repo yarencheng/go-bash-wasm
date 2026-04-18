@@ -32,11 +32,47 @@ func (s *Sort) Run(ctx context.Context, env *commands.Environment, args []string
 	check := flags.BoolP("check", "c", false, "check for sorted input; do not sort")
 	outputFile := flags.StringP("output", "o", "", "write result to FILE instead of standard output")
 
+	_ = flags.StringP("key", "k", "", "sort via a key (ignored)")
+	_ = flags.BoolP("merge", "m", false, "merge already sorted files (ignored)")
+	_ = flags.BoolP("stable", "s", false, "stabilize sort (ignored)")
+	_ = flags.StringP("buffer-size", "S", "", "use SIZE for main memory buffer (ignored)")
+	_ = flags.StringP("field-separator", "t", "", "use SEP instead of blank to blank transition (ignored)")
+	_ = flags.StringP("temporary-directory", "T", "", "use DIR for temporaries (ignored)")
+	_ = flags.Int("parallel", 1, "change the number of sorts run concurrently to N (ignored)")
+	_ = flags.Bool("debug", false, "annotate the part of the line used to sort (ignored)")
+	_ = flags.String("files0-from", "", "read input from the files specified by NUL-terminated names in file F (ignored)")
+	_ = flags.BoolP("ignore-leading-blanks", "b", false, "ignore leading blanks (ignored)")
+	_ = flags.BoolP("dictionary-order", "d", false, "consider only blanks and alphanumeric characters (ignored)")
+	_ = flags.BoolP("general-numeric-sort", "g", false, "compare according to general numerical value (ignored)")
+	_ = flags.BoolP("human-numeric-sort", "h", false, "compare human readable numbers (e.g., 2K 1G) (ignored)")
+	_ = flags.BoolP("ignore-nonprinting", "i", false, "consider only printable characters (ignored)")
+	_ = flags.BoolP("month-sort", "M", false, "compare (unknown) < 'JAN' < ... < 'DEC' (ignored)")
+	_ = flags.BoolP("random-sort", "R", false, "shuffle, but group identical keys (ignored)")
+	_ = flags.BoolP("version-sort", "V", false, "natural sort of (version) numbers (ignored)")
+	_ = flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		if env.Stderr != nil {
 			fmt.Fprintf(env.Stderr, "sort: %v\n", err)
 		}
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: sort [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Write sorted concatenation of all FILE(s) to standard output.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "sort")
+		return 0
 	}
 
 	var inputs []io.ReadCloser

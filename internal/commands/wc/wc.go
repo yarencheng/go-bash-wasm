@@ -41,9 +41,27 @@ func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) 
 	files0From := flags.String("files0-from", "", "read input from the files specified by NUL-terminated names in file F")
 	_ = flags.String("total", "auto", "when to print a line with a total; WHEN is: auto, always, only, never")
 
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "wc: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: wc [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Print newline, word, and byte counts for each FILE, and a total line if more than one FILE is specified.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "wc")
+		return 0
 	}
 
 	targets := flags.Args()

@@ -34,9 +34,31 @@ func (s *Split) Run(ctx context.Context, env *commands.Environment, args []strin
 	_ = flags.String("filter", "", "write to shell COMMAND; file name is $FILE")
 	_ = flags.StringP("line-bytes", "C", "", "put at most SIZE bytes of lines per output file")
 
+	_ = flags.BoolP("elide-empty-files", "e", false, "do not generate empty output files (ignored)")
+	_ = flags.BoolP("unbuffered", "u", false, "immediately copy input to output with '-n' (ignored)")
+	_ = flags.BoolP("hex-suffixes", "x", false, "use hex suffixes instead of alphabetic (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "split: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: split [OPTION]... [FILE [PREFIX]]\n")
+		fmt.Fprintf(env.Stdout, "Output pieces of FILE to PREFIXaa, PREFIXab, ...;\n")
+		fmt.Fprintf(env.Stdout, "default size is 1000 lines, and default PREFIX is 'x'.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "split")
+		return 0
 	}
 
 	remaining := flags.Args()

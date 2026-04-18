@@ -32,9 +32,30 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 	follow := flags.BoolP("follow", "f", false, "output appended data as the file grows")
 	_ = flags.BoolP("retry", "F", false, "keep trying to open a file if it is inaccessible (stub)")
 
+	_ = flags.Float64P("sleep-interval", "s", 1.0, "with -f, sleep for approximately N seconds between iterations (ignored)")
+	_ = flags.Int("pid", 0, "with -f, terminate after process ID, PID dies (ignored)")
+	_ = flags.Int("max-unchanged-stats", 5, "with --follow=name, reopen a FILE (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "tail: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: tail [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Print the last 10 lines of each FILE to standard output.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "tail")
+		return 0
 	}
 
 	targets := flags.Args()

@@ -53,9 +53,33 @@ func (d *Du) Run(ctx context.Context, env *commands.Environment, args []string) 
 	_ = flags.BoolP("dereference", "L", false, "dereference")
 	_ = flags.BoolP("no-dereference", "P", false, "no dereference")
 
+	_ = flags.BoolP("one-file-system", "x", false, "skip directories on different file systems (ignored)")
+	_ = flags.StringP("exclude-from", "X", "", "exclude files that match any pattern in FILE (ignored)")
+	_ = flags.String("exclude", "", "exclude files that match PATTERN (ignored)")
+	_ = flags.String("files0-from", "", "read input from the files (ignored)")
+	_ = flags.String("time", "", "show time of the last modification (ignored)")
+	_ = flags.String("time-style", "", "show times using STYLE (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "du: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: du [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Summarize disk usage of the set of FILEs, recursively for directories.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "du")
+		return 0
 	}
 
 	threshold, _ := strconv.ParseInt(*thresholdStr, 10, 64)

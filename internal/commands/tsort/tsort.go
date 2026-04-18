@@ -23,9 +23,27 @@ func (t *Tsort) Name() string {
 
 func (t *Tsort) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("tsort", pflag.ContinueOnError)
+	help := flags.BoolP("help", "", false, "display this help and exit")
+	version := flags.BoolP("version", "", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "tsort: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: tsort [OPTION] [FILE]\n")
+		fmt.Fprintf(env.Stdout, "Write totally ordered list consistent with the partial ordering in FILE.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "tsort")
+		return 0
 	}
 
 	remaining := flags.Args()

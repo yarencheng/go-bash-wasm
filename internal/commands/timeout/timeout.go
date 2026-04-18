@@ -22,14 +22,31 @@ func (t *Timeout) Name() string {
 
 func (t *Timeout) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("timeout", pflag.ContinueOnError)
+	help := flags.BoolP("help", "", false, "display this help and exit")
+	version := flags.BoolP("version", "", false, "output version information and exit")
 	_ = flags.Bool("foreground", false, "run command in the foreground")
 	_ = flags.StringP("kill-after", "k", "", "also send a KILL signal if command is still running")
 	_ = flags.StringP("signal", "s", "TERM", "specify the signal to be sent on timeout")
 	preserveCode := flags.Bool("preserve-status", false, "exit with the same status as COMMAND")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "timeout: %v\n", err)
 		return 125
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: timeout [OPTION] DURATION COMMAND [ARG]...\n")
+		fmt.Fprintf(env.Stdout, "Start COMMAND, and kill it if still running after DURATION.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "timeout")
+		return 0
 	}
 
 	remaining := flags.Args()

@@ -28,9 +28,31 @@ func (d *Date) Run(ctx context.Context, env *commands.Environment, args []string
 	flags.Lookup("iso-8601").NoOptDefVal = "date"
 	dateStr := flags.StringP("date", "d", "", "display time described by STRING, not 'now'")
 
+	_ = flags.StringP("file", "f", "", "list of dates to display (ignored)")
+	_ = flags.StringP("reference", "r", "", "display the last modification time of FILE (ignored)")
+	_ = flags.StringP("set", "s", "", "set time described by STRING (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "date: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: date [OPTION]... [+FORMAT]\n")
+		fmt.Fprintf(env.Stdout, "  or:  date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]\n")
+		fmt.Fprintf(env.Stdout, "Display the current time in the given FORMAT, or set the system date.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "date")
+		return 0
 	}
 
 	now := time.Now()

@@ -31,9 +31,32 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 	ignoreCase := flags.BoolP("ignore-case", "i", false, "ignore differences in case when comparing")
 	zero := flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline")
 
+	_ = flags.BoolP("all-repeated", "D", false, "print all duplicate lines (ignored)")
+	_ = flags.IntP("skip-fields", "f", 0, "avoid comparing the first N fields (ignored)")
+	_ = flags.IntP("skip-chars", "s", 0, "avoid comparing the first N characters (ignored)")
+	_ = flags.IntP("check-chars", "w", 0, "compare no more than N characters in lines (ignored)")
+	_ = flags.String("group", "", "show all items, separating groups with an empty line (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "uniq: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: uniq [OPTION]... [INPUT [OUTPUT]]\n")
+		fmt.Fprintf(env.Stdout, "Filter adjacent matching lines from INPUT (or standard input), writing to OUTPUT (or standard output).\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "uniq")
+		return 0
 	}
 
 	var input io.ReadCloser

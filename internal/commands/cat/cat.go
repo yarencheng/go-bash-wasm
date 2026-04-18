@@ -34,9 +34,27 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 	eFlag := flags.BoolP("e", "e", false, "equivalent to -vE")
 	tFlag := flags.BoolP("t", "t", false, "equivalent to -vT")
 
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "cat: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: cat [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Concatenate FILE(s) to standard output.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "cat")
+		return 0
 	}
 
 	if *showAll {

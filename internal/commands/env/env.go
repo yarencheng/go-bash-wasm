@@ -30,9 +30,34 @@ func (e *Env) Run(ctx context.Context, env *commands.Environment, args []string)
 	var unsetVars []string
 	flags.StringArrayVarP(&unsetVars, "unset", "u", nil, "remove variable from the environment")
 
+	_ = flags.StringP("argv0", "a", "", "pass NAME as the zeroth argument (ignored)")
+	_ = flags.StringP("split-string", "S", "", "process and split S into separate arguments (ignored)")
+	_ = flags.BoolP("debug", "v", false, "print verbose information (ignored)")
+	_ = flags.String("block-signal", "", "block delivery of SIG signal(s) (ignored)")
+	_ = flags.String("default-signal", "", "reset handling of SIG signal(s) (ignored)")
+	_ = flags.String("ignore-signal", "", "set handling of SIG signal(s) (ignored)")
+	_ = flags.Bool("list-signal-handling", false, "list non-default signal handling (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "env: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: env [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n")
+		fmt.Fprintf(env.Stdout, "Set each NAME to VALUE in the environment and run COMMAND.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "env")
+		return 0
 	}
 
 	remainingArgs := flags.Args()

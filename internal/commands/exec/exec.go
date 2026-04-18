@@ -24,11 +24,29 @@ func (e *Exec) Run(ctx context.Context, env *commands.Environment, args []string
 	_ = flags.StringP("name", "a", "", "use name as the zeroth argument of the executed command")
 	_ = flags.BoolP("clean", "c", false, "execute command with an empty environment")
 
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		if env.Stderr != nil {
 			fmt.Fprintf(env.Stderr, "exec: %v\n", err)
 		}
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: exec [-cl] [-a name] [command [arguments]]\n")
+		fmt.Fprintf(env.Stdout, "Replace the shell with the given command.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "exec")
+		return 0
 	}
 
 	targets := flags.Args()

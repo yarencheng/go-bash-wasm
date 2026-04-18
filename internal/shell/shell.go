@@ -1,10 +1,12 @@
 package shell
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"io"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -158,10 +160,48 @@ func (s *Shell) executeCmd(ctx context.Context, env *commands.Environment, cmd s
 		return s.executeBlock(ctx, env, c)
 	case *syntax.Subshell:
 		return s.executeSubshell(ctx, env, c)
+	case *syntax.IfClause:
+		return s.executeIfClause(ctx, env, c)
+	case *syntax.ForClause:
+		return s.executeForClause(ctx, env, c)
+	case *syntax.WhileClause:
+		return s.executeWhileClause(ctx, env, c)
+	case *syntax.CaseClause:
+		return s.executeCaseClause(ctx, env, c)
+	case *syntax.ArithmCmd:
+		return s.executeArithmCmd(ctx, env, c)
+	case *syntax.TestClause:
+		return s.executeTestClause(ctx, env, c)
+	case *syntax.DeclClause:
+		// declaration like 'local' or 'declare'
+		args := []*syntax.Word{{Parts: []syntax.WordPart{&syntax.Lit{Value: c.Variant.Value}}}}
+		for _, a := range c.Args {
+			if a.Name != nil {
+				val := a.Name.Value + "="
+				if a.Value != nil {
+					val += s.wordToString(env, a.Value)
+				}
+				args = append(args, &syntax.Word{Parts: []syntax.WordPart{&syntax.Lit{Value: val}}})
+			}
+		}
+		return s.executeCallExpr(ctx, env, &syntax.CallExpr{Args: args})
+	case *syntax.TimeClause:
+		return s.executeStmt(ctx, env, c.Stmt)
+	case *syntax.FuncDecl:
+		env.Functions[c.Name.Value] = s.stmtToString(c.Body)
+		return 0
 	default:
 		fmt.Fprintf(env.Stderr, "bash: unsupported command type: %T\n", cmd)
 		return 1
 	}
+}
+
+func (s *Shell) executeStmts(ctx context.Context, env *commands.Environment, stmts []*syntax.Stmt) int {
+	lastExitCode := 0
+	for _, stmt := range stmts {
+		lastExitCode = s.executeStmt(ctx, env, stmt)
+	}
+	return lastExitCode
 }
 
 func (s *Shell) executeCallExpr(ctx context.Context, env *commands.Environment, c *syntax.CallExpr) int {
@@ -470,9 +510,130 @@ func (s *Shell) cloneEnv(env *commands.Environment) *commands.Environment {
 	return &newEnv
 }
 
+func (s *Shell) executeIfClause(ctx context.Context, env *commands.Environment, ifClause *syntax.IfClause) int {
+	exitCode := s.executeStmts(ctx, env, ifClause.Cond)
+	if exitCode == 0 {
+		return s.executeStmts(ctx, env, ifClause.Then)
+	}
+	if ifClause.Else != nil {
+		return s.executeCmd(ctx, env, ifClause.Else)
+	}
+	return 0
+}
+
+func (s *Shell) executeForClause(ctx context.Context, env *commands.Environment, forClause *syntax.ForClause) int {
+	if forClause.Select {
+		// Basic select loop
+		var items []string
+		switch f := forClause.Loop.(type) {
+		case *syntax.WordIter:
+			for _, w := range f.Items {
+				items = append(items, s.expandWord(env, w)...)
+			}
+		}
+
+		if len(items) == 0 {
+			return 0
+		}
+
+		ps3 := env.EnvVars["PS3"]
+		if ps3 == "" {
+			ps3 = "#? "
+		}
+
+		for {
+			for i, item := range items {
+				fmt.Fprintf(env.Stdout, "%d) %s\n", i+1, item)
+			}
+			fmt.Fprint(env.Stdout, ps3)
+			reader := bufio.NewReader(env.Stdin)
+			input, err := reader.ReadString('\n')
+			if err != nil {
+				break
+			}
+			input = strings.TrimSpace(input)
+			if input == "" {
+				continue
+			}
+			idx, err := strconv.Atoi(input)
+			if err != nil || idx < 1 || idx > len(items) {
+				env.EnvVars[forClause.Loop.(*syntax.WordIter).Name.Value] = ""
+			} else {
+				env.EnvVars[forClause.Loop.(*syntax.WordIter).Name.Value] = items[idx-1]
+			}
+			s.executeStmts(ctx, env, forClause.Do)
+		}
+		return 0
+	}
+
+	var items []string
+	switch f := forClause.Loop.(type) {
+	case *syntax.WordIter:
+		for _, w := range f.Items {
+			items = append(items, s.expandWord(env, w)...)
+		}
+		var name string
+		if f.Name != nil {
+			name = f.Name.Value
+		}
+		lastExitCode := 0
+		for _, item := range items {
+			if name != "" {
+				env.EnvVars[name] = item
+			}
+			lastExitCode = s.executeStmts(ctx, env, forClause.Do)
+		}
+		return lastExitCode
+	case *syntax.CStyleLoop:
+		// Arithmetic for loop not yet fully supported
+		return 0
+	}
+	return 0
+}
+
+func (s *Shell) executeWhileClause(ctx context.Context, env *commands.Environment, whileClause *syntax.WhileClause) int {
+	lastExitCode := 0
+	for {
+		exitCode := s.executeStmts(ctx, env, whileClause.Cond)
+		if exitCode != 0 {
+			break
+		}
+		lastExitCode = s.executeStmts(ctx, env, whileClause.Do)
+	}
+	return lastExitCode
+}
+
+func (s *Shell) executeCaseClause(ctx context.Context, env *commands.Environment, caseClause *syntax.CaseClause) int {
+	val := s.wordToString(env, caseClause.Word)
+	for _, item := range caseClause.Items {
+		for _, pattern := range item.Patterns {
+			pat := s.wordToString(env, pattern)
+			if matchPattern(pat, val) {
+				return s.executeStmts(ctx, env, item.Stmts)
+			}
+		}
+	}
+	return 0
+}
+
+func (s *Shell) executeArithmCmd(ctx context.Context, env *commands.Environment, arithm *syntax.ArithmCmd) int {
+	// Simple stub for arithmetic command (( expression ))
+	return 0
+}
+
+func (s *Shell) executeTestClause(ctx context.Context, env *commands.Environment, test *syntax.TestClause) int {
+	// Simple stub for [[ expression ]]
+	return 0
+}
+
 func (s *Shell) resolvePath(p string) string {
 	if filepath.IsAbs(p) {
 		return p
 	}
 	return filepath.Join(s.Env.Cwd, p)
+}
+
+func matchPattern(pat, val string) bool {
+	matched, _ := filepath.Match(pat, val)
+	return matched
 }

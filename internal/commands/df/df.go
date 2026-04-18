@@ -39,9 +39,30 @@ func (d *Df) Run(ctx context.Context, env *commands.Environment, args []string) 
 	portability := flags.BoolP("portability", "P", false, "use the POSIX output format")
 	total := flags.Bool("total", false, "elide all entries insignificant to available space, and produce a grand total")
 
+	_ = flags.StringP("block-size", "B", "", "scale sizes by SIZE before printing them (ignored)")
+	_ = flags.StringP("exclude-type", "x", "", "limit listing to file systems not of type TYPE (ignored)")
+	_ = flags.StringP("type", "t", "", "limit listing to file systems of type TYPE (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "df: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: df [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Show information about the file system on which each FILE resides.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "df")
+		return 0
 	}
 
 	data := []fsInfo{

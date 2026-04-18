@@ -73,6 +73,11 @@ type lsFlags struct {
 	timeOpt        *string
 	blockSize      *string
 	sortOpt        *string
+	tabSize        *int
+	width          *int
+	help           *bool
+	version        *bool
+	context        *bool
 }
 
 func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) int {
@@ -128,11 +133,31 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		blockSize:      flagsSet.String("block-size", "", "scale sizes by SIZE when printing them"),
 		vertical:       flagsSet.BoolP("vertical", "C", false, "list entries by columns"),
 		sortOpt:        flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
+		tabSize:        flagsSet.IntP("tabsize", "T", 8, "assume tab stops at each COLS instead of 8"),
+		width:          flagsSet.IntP("width", "w", 80, "assume screen width instead of current value"),
+		help:           flagsSet.Bool("help", false, "display this help and exit"),
+		version:        flagsSet.Bool("version", false, "output version information and exit"),
+		context:        flagsSet.BoolP("context", "Z", false, "print any security context of each file"),
 	}
 
 	if err := flagsSet.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "ls: %v\n", err)
 		return 2
+	}
+
+	if *f.help {
+		fmt.Fprintf(env.Stdout, "Usage: ls [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "List information about the FILEs (the current directory by default).\n\n")
+		flagsSet.PrintDefaults()
+		return 0
+	}
+
+	if *f.version {
+		commands.ShowVersion(env.Stdout, "ls")
+		return 0
 	}
 
 	if *f.doNotSort {

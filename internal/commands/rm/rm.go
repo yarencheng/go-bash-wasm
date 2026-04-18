@@ -27,11 +27,28 @@ func (r *Rm) Run(ctx context.Context, env *commands.Environment, args []string) 
 	verbose := flags.BoolP("verbose", "v", false, "explain what is being done")
 	dir := flags.BoolP("dir", "d", false, "remove empty directories")
 	_ = flags.BoolP("interactive", "i", false, "prompt before every removal (stub)")
-	_ = flags.BoolP("interactive-once", "I", false, "prompt once before removing more than three files (stub)")
+	_ = flags.Bool("one-file-system", false, "when removing a hierarchy recursively, skip any directory that is on a file system different from that of the corresponding command line argument (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "rm: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: rm [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Remove (unlink) the FILE(ies).\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "rm")
+		return 0
 	}
 
 	targets := flags.Args()

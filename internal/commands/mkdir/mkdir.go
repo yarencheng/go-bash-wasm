@@ -29,11 +29,29 @@ func (m *Mkdir) Run(ctx context.Context, env *commands.Environment, args []strin
 	modeStr := flags.StringP("mode", "m", "0755", "set file mode (as in chmod), not a=rwx - umask")
 	_ = flags.StringP("context", "Z", "", "set SELinux security context of each created directory to CTX (ignored)")
 
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		if env.Stderr != nil {
 			fmt.Fprintf(env.Stderr, "mkdir: %v\n", err)
 		}
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: mkdir [OPTION]... DIRECTORY...\n")
+		fmt.Fprintf(env.Stdout, "Create the DIRECTORY(ies), if they do not already exist.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "mkdir")
+		return 0
 	}
 
 	mode := uint64(0755)

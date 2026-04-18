@@ -1100,17 +1100,18 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/read.def`
 - [x] Basic input: Implemented in `internal/commands/read/read.go`
-- [x] Flag `-a`, `--array`: Implemented in `internal/commands/read/read.go`
-- [x] Flag `-d`, `--delimiter`: Implemented in `internal/commands/read/read.go`
-- [x] Flag `-e`: `internal/commands/read/read.go` (Stub)
-- [x] Flag `-i`, `--initial-text`: `internal/commands/read/read.go` (Stub)
-- [x] Flag `-n`, `--nchars`: Implemented in `internal/commands/read/read.go`
-- [x] Flag `-N`, `--Nchars`: Implemented in `internal/commands/read/read.go`
-- [x] Flag `-p`, `--prompt`: `internal/commands/read/read.go`
-- [x] Flag `-r`: Implemented in `internal/commands/read/read.go` (raw mode)
-- [x] Flag `-s`, `--silent`: `internal/commands/read/read.go`
-- [x] Flag `-t`, `--timeout`: `internal/commands/read/read.go`
-- [x] Flag `-u`, `--fd`: `internal/commands/read/read.go` (Stub)
+- [x] Basic operation: Implemented in `internal/commands/read/read.go`
+- [x] Flag `-p PROMPT`: `internal/commands/read/read.go`
+- [x] Flag `-r` (raw): `internal/commands/read/read.go`
+- [x] Flag `-d DELIM`: `internal/commands/read/read.go`
+- [x] Flag `-n NCHARS`: `internal/commands/read/read.go`
+- [x] Flag `-N NCHARS`: `internal/commands/read/read.go`
+- [x] Flag `-a ARRAY`: `internal/commands/read/read.go`
+- [x] Flag `-s`: `internal/commands/read/read.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#read))
+- [x] Flag `-t TIMEOUT`: `internal/commands/read/read.go`
+- [x] Flag `-u FD`: `internal/commands/read/read.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#read))
+- [x] Flag `-e`: `internal/commands/read/read.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#read))
+- [x] Flag `-i TEXT`: `internal/commands/read/read.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#read))
 
 ### `readlink`
 
@@ -1227,6 +1228,8 @@ Status codes:
 
 ### `sha1sum`
 
+### `sha1sum`
+
 - [x] Upstream: `third_party/coreutils/src/coreutils-sha1sum.c`
 - [x] Inherits flags from `cksum`: `internal/commands/sum/sum.go`
 
@@ -1281,14 +1284,14 @@ Status codes:
 ### `shuf`
 
 - [x] Upstream: `third_party/coreutils/src/shuf.c`
-- [x] Basic shuffling: Implemented in `internal/commands/shuf/shuf.go`
-- [x] Flag `--random-source=FILE`: `internal/commands/shuf/shuf.go` (Stub)
-- [x] Flag `-e`: `internal/commands/shuf/shuf.go`
-- [x] Flag `-i`: `internal/commands/shuf/shuf.go`
-- [x] Flag `-n`: `internal/commands/shuf/shuf.go`
-- [x] Flag `-o`: `internal/commands/shuf/shuf.go`
-- [x] Flag `-r`: `internal/commands/shuf/shuf.go`
-- [x] Flag `-z`: `internal/commands/shuf/shuf.go`
+- [x] Basic operation: Implemented in `internal/commands/shuf/shuf.go`
+- [x] Flag `-e`, `--echo`: `internal/commands/shuf/shuf.go`
+- [x] Flag `-i`, `--input-range=LO-HI`: `internal/commands/shuf/shuf.go`
+- [x] Flag `-n`, `--head-count=COUNT`: `internal/commands/shuf/shuf.go`
+- [x] Flag `-o`, `--output=FILE`: `internal/commands/shuf/shuf.go`
+- [x] Flag `-r`, `--repeat`: `internal/commands/shuf/shuf.go`
+- [x] Flag `-z`, `--zero-terminated`: `internal/commands/shuf/shuf.go`
+- [x] Flag `--random-source=FILE`: `internal/commands/shuf/shuf.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#shuf))
 
 ### `sleep`
 

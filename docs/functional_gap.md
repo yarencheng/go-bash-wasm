@@ -54,9 +54,17 @@ This document tracks known functional gaps, intentional deviations, and implemen
   > Rationale: The simulator environment is designed to be failure-tolerant for educational purposes. Detailed diagnostics are preferred over silent failures in this context.
 
 ### `pwd`
-
+  
 - `[x]` Flag `--help` (Global Dispatcher): `docs/task.md:L1065`
   > Rationale: Built-in help is intercepted by the shell's help dispatcher to ensure a consistent instructional experience across all simulated commands.
+
+### `read`
+
+- `[x]` Flags `-s`, `-u`, `-e`, `-i` (Stubs): `internal/commands/read/read.go`
+  > Rationale: 
+  > - `-s` (Silent): Interactive terminal echoing is managed by the frontend (Xterm.js).
+  > - `-u` (FD): Browser WASM runtime has limited support for arbitrary file descriptor redirection beyond standard streams.
+  > - `-e` / `-i` (Readline): The simulator uses standard Go I/O rather than a full `readline` library for input.
 
 ### `stat`
 
@@ -130,6 +138,11 @@ Across multiple commands (`cp`, `mv`, `rm`, `chmod`, `chown`, `realpath`), sever
 
 - `[x]` Data Erasure (Workaround): `internal/commands/shred/shred.go`
   > Rationale: In a memory-mapped virtual filesystem, hardware-level secure deletion is not possible. `shred` performs basic buffer overwriting (using fixed patterns) to simulate the command's behavior without providing actual physical security.
+
+### `shuf`
+
+- `[x]` Flag `--random-source` (Ignored): `internal/commands/shuf/shuf.go`
+  > Rationale: Seeding for shuffle operations is handled by the WebAssembly environment's source of randomness (via `time.Now().UnixNano()`) rather than external polling files.
 
 ### `stdbuf`
 

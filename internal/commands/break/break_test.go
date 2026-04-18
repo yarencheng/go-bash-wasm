@@ -2,6 +2,7 @@ package breakcmd
 
 import (
 	"context"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -37,7 +38,10 @@ func TestBreak_Run(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			env := &commands.Environment{}
+			env := &commands.Environment{
+				Stdout: io.Discard,
+				Stderr: io.Discard,
+			}
 			b := New()
 			status := b.Run(context.Background(), env, tt.args)
 			assert.Equal(t, tt.expectedCode, status)

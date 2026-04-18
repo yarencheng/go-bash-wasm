@@ -63,6 +63,13 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 
 	s.Env.History = append(s.Env.History, line)
 
+	if s.Env.EnvVars == nil {
+		s.Env.EnvVars = make(map[string]string)
+	}
+	lineno := 0
+	fmt.Sscanf(s.Env.EnvVars["LINENO"], "%d", &lineno)
+	s.Env.EnvVars["LINENO"] = fmt.Sprintf("%d", lineno+1)
+
 	// Support sequential commands separated by ;
 	commandsList := strings.Split(line, ";")
 	lastExitCode := 0
@@ -143,15 +150,129 @@ func (s *Shell) expand(line string) string {
 }
 
 func (s *Shell) resolveVariable(expr string) string {
+	if strings.HasPrefix(expr, "#") {
+		name := expr[1:]
+		val, _ := s.Env.EnvVars[name]
+		return fmt.Sprintf("%d", len(val))
+	}
+
 	name := expr
 	def := ""
 	hasDefault := false
+	hasSubstring := false
+	hasCaseMod := false
+	hasRemoval := false
+	hasReplace := false
+	replacePattern := ""
+	replaceStr := ""
+	replaceAll := false
+	removalType := ""
+	removalPattern := ""
+	caseModType := ""
+	offset := 0
+	length := -1
+
+	// Check for replacement operator
+	if strings.Contains(name, "/") {
+		parts := strings.Split(name, "/")
+		name = parts[0]
+		hasReplace = true
+		if len(parts) > 1 {
+			patternExpr := parts[1]
+			if strings.HasPrefix(patternExpr, "/") {
+				replaceAll = true
+				replacePattern = patternExpr[1:]
+			} else {
+				replacePattern = patternExpr
+			}
+		}
+		if len(parts) > 2 {
+			replaceStr = parts[2]
+		}
+	}
+
+	// Check for removal operators
+	if strings.Contains(name, "##") {
+		parts := strings.SplitN(name, "##", 2)
+		name = parts[0]
+		hasRemoval = true
+		removalType = "##"
+		removalPattern = parts[1]
+	} else if strings.Contains(name, "#") {
+		parts := strings.SplitN(name, "#", 2)
+		name = parts[0]
+		hasRemoval = true
+		removalType = "#"
+		removalPattern = parts[1]
+	} else if strings.Contains(name, "%%") {
+		parts := strings.SplitN(name, "%%", 2)
+		name = parts[0]
+		hasRemoval = true
+		removalType = "%%"
+		removalPattern = parts[1]
+	} else if strings.Contains(name, "%") {
+		parts := strings.SplitN(name, "%", 2)
+		name = parts[0]
+		hasRemoval = true
+		removalType = "%"
+		removalPattern = parts[1]
+	}
+
+	if strings.HasSuffix(name, "^^") {
+		name = name[:len(name)-2]
+		hasCaseMod = true
+		caseModType = "^^"
+	} else if strings.HasSuffix(name, "^") {
+		name = name[:len(name)-1]
+		hasCaseMod = true
+		caseModType = "^"
+	} else if strings.HasSuffix(name, ",,") {
+		name = name[:len(name)-2]
+		hasCaseMod = true
+		caseModType = ",,"
+	} else if strings.HasSuffix(name, ",") {
+		name = name[:len(name)-1]
+		hasCaseMod = true
+		caseModType = ","
+	}
 
 	if strings.Contains(expr, ":-") {
 		parts := strings.SplitN(expr, ":-", 2)
 		name = parts[0]
 		def = parts[1]
 		hasDefault = true
+	} else if strings.Contains(expr, ":+") {
+		parts := strings.SplitN(expr, ":+", 2)
+		name = parts[0]
+		alt := parts[1]
+		val, ok := s.Env.EnvVars[name]
+		if ok && val != "" {
+			return alt
+		}
+		return ""
+	} else if strings.Contains(expr, ":?") {
+		parts := strings.SplitN(expr, ":?", 2)
+		name = parts[0]
+		errMsg := parts[1]
+		val, ok := s.Env.EnvVars[name]
+		if !ok || val == "" {
+			if errMsg == "" {
+				errMsg = "parameter null or unset"
+			}
+			fmt.Fprintf(s.Env.Stderr, "%s: %s\n", name, errMsg)
+			return "" // In real bash it might exit, but for simulator we just print error
+		}
+		return val
+	} else if strings.Contains(expr, ":") {
+		parts := strings.Split(expr, ":")
+		name = parts[0]
+		hasSubstring = true
+		if len(parts) > 1 {
+			fmt.Sscanf(parts[1], "%d", &offset)
+		}
+		if len(parts) > 2 {
+			fmt.Sscanf(parts[2], "%d", &length)
+		}
 	}
 
 	val, ok := s.Env.EnvVars[name]
@@ -159,25 +280,96 @@ func (s *Shell) resolveVariable(expr string) string {
 		// Handle dynamic variables
 		switch name {
 		case "RANDOM":
-			return fmt.Sprintf("%d", time.Now().UnixNano()%32768)
+			val = fmt.Sprintf("%d", time.Now().UnixNano()%32768)
 		case "SECONDS":
-			return fmt.Sprintf("%d", int(time.Since(s.Env.StartTime).Seconds()))
+			val = fmt.Sprintf("%d", int(time.Since(s.Env.StartTime).Seconds()))
 		case "EPOCHSECONDS":
-			return fmt.Sprintf("%d", time.Now().Unix())
+			val = fmt.Sprintf("%d", time.Now().Unix())
 		case "UID":
-			return fmt.Sprintf("%d", s.Env.Uid)
+			val = fmt.Sprintf("%d", s.Env.Uid)
 		case "GID":
-			return fmt.Sprintf("%d", s.Env.Gid)
+			val = fmt.Sprintf("%d", s.Env.Gid)
 		case "EUID":
-			return fmt.Sprintf("%d", s.Env.Uid)
+			val = fmt.Sprintf("%d", s.Env.Uid)
+		case "LINENO":
+			val = s.Env.EnvVars["LINENO"]
 		case "HOSTNAME":
-			return s.Env.EnvVars["HOSTNAME"]
+			val = s.Env.EnvVars["HOSTNAME"]
+		default:
+			if hasDefault {
+				return def
+			}
+			return ""
 		}
-		
-		if hasDefault {
-			return def
-		}
-		return ""
 	}
+
+	if hasReplace {
+		if replaceAll {
+			val = strings.ReplaceAll(val, replacePattern, replaceStr)
+		} else {
+			val = strings.Replace(val, replacePattern, replaceStr, 1)
+		}
+	}
+
+	if hasRemoval {
+		// Basic prefix/suffix removal (simulated without full glob for now)
+		switch removalType {
+		case "#", "##": // Prefix removal
+			if strings.HasPrefix(val, removalPattern) {
+				val = val[len(removalPattern):]
+			}
+		case "%", "%%": // Suffix removal
+			if strings.HasSuffix(val, removalPattern) {
+				val = val[:len(val)-len(removalPattern)]
+			}
+		}
+	}
+
+	if hasSubstring {
+		runes := []rune(val)
+		if offset < 0 {
+			offset = len(runes) + offset
+		}
+		if offset < 0 {
+			offset = 0
+		}
+		if offset > len(runes) {
+			return ""
+		}
+		if length == -1 {
+			return string(runes[offset:])
+		}
+		if length < 0 {
+			length = len(runes) + length - offset
+		}
+		end := offset + length
+		if end > len(runes) {
+			end = len(runes)
+		}
+		if end < offset {
+			return ""
+		}
+		return string(runes[offset:end])
+	}
+
+	if hasCaseMod {
+		runes := []rune(val)
+		if len(runes) == 0 {
+			return ""
+		}
+		switch caseModType {
+		case "^^":
+			return strings.ToUpper(val)
+		case "^":
+			runes[0] = []rune(strings.ToUpper(string(runes[0])))[0]
+			return string(runes)
+		case ",,":
+			return strings.ToLower(val)
+		case ",":
+			runes[0] = []rune(strings.ToLower(string(runes[0])))[0]
+			return string(runes)
+		}
+	}
+
 	return val
 }

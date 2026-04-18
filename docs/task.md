@@ -1172,24 +1172,24 @@ Status codes:
 ### `set`
 
 - [ ] Upstream: `third_party/bash/builtins/set.def`
-- [ ] Option management (-e, -u, -x, -o): Missing implementation
-- [ ] Positional parameters: `third_party/bash/builtins/set.def:L784`
+- [x] Option management (-e, -u, -x, -o): Implemented in `internal/commands/set/set.go`
+- [x] Positional parameters: Stub in `internal/commands/set/set.go`
 - [ ] Flag `-a`: `third_party/bash/builtins/set.def:L843` (allexport)
 - [ ] Flag `-b`: `third_party/bash/builtins/set.def:L843` (notify)
-- [ ] Flag `-e`: `third_party/bash/builtins/set.def:L843` (errexit)
-- [ ] Flag `-f`: `third_party/bash/builtins/set.def:L843` (noglob)
+- [x] Flag `-e`: `internal/commands/set/set.go` (errexit)
+- [x] Flag `-f`: `internal/commands/set/set.go` (noglob)
 - [ ] Flag `-h`: `third_party/bash/builtins/set.def:L843` (hashall)
 - [ ] Flag `-k`: `third_party/bash/builtins/set.def:L843` (keyword)
 - [ ] Flag `-m`: `third_party/bash/builtins/set.def:L843` (monitor)
 - [ ] Flag `-n`: `third_party/bash/builtins/set.def:L849` (noexec)
-- [ ] Flag `-o`: `third_party/bash/builtins/set.def:L732` (option-name)
+- [x] Flag `-o`: `internal/commands/set/set.go` (option-name)
 - [ ] Flag `-p`: `third_party/bash/builtins/set.def:L843` (privileged)
 - [ ] Flag `-t`: `third_party/bash/builtins/set.def:L843` (exit after one command)
-- [ ] Flag `-u`: `third_party/bash/builtins/set.def:L843` (nounset)
+- [x] Flag `-u`: `internal/commands/set/set.go` (nounset)
 - [ ] Flag `-v`: `third_party/bash/builtins/set.def:L846` (verbose)
-- [ ] Flag `-x`: `third_party/bash/builtins/set.def:L843` (xtrace)
+- [x] Flag `-x`: `internal/commands/set/set.go` (xtrace)
 - [ ] Flag `-B`: `third_party/bash/builtins/set.def:L843` (braceexpand)
-- [ ] Flag `-C`: `third_party/bash/builtins/set.def:L843` (noclobber)
+- [x] Flag `-C`: `internal/commands/set/set.go` (noclobber)
 - [ ] Flag `-E`: `third_party/bash/builtins/set.def:L843` (errtrace)
 - [ ] Flag `-H`: `third_party/bash/builtins/set.def:L843` (histexpand)
 - [ ] Flag `-P`: `third_party/bash/builtins/set.def:L843` (physical)
@@ -1752,13 +1752,14 @@ Status codes:
 
 ### Parameter Expansion
 - [x] Basic expansion `${var}`: Implemented in `internal/shell/shell.go`
-- [ ] Substring expansion `${var:offset:length}`: `third_party/bash/subst.c:L10170`
-- [ ] Prefix removal `${var#pattern}`, `${var##pattern}`: `third_party/bash/subst.c:L10313`
-- [ ] Suffix removal `${var%pattern}`, `${var%%pattern}`: `third_party/bash/subst.c:L10314`
-- [ ] Substring replacement `${var/pattern/string}`: `third_party/bash/subst.c:L10205`
-- [ ] Case modification `${var^}`, `${var^^}`, `${var,}`, `${var,,}`: `third_party/bash/subst.c:L10234`
+- [x] Substring expansion `${var:offset:length}`: Implemented in `internal/shell/shell.go`
+- [x] Prefix removal `${var#pattern}`, `${var##pattern}`: Implemented in `internal/shell/shell.go`
+- [x] Suffix removal `${var%pattern}`, `${var%%pattern}`: Implemented in `internal/shell/shell.go`
+- [x] Substring replacement `${var/pattern/string}`: Implemented in `internal/shell/shell.go`
+- [x] Case modification `${var^}`, `${var^^}`, `${var,}`, `${var,,}`: Implemented in `internal/shell/shell.go`
 - [x] Default values `${var:-default}`, `${var:=default}`: Implemented in `internal/shell/shell.go`
-- [ ] Alternative/Error values `${var:?error}`, `${var:+alternative}`: `third_party/bash/subst.c:L10338-10341`
+- [x] Alternative/Error values `${var:?error}`, `${var:+alternative}`: Implemented in `internal/shell/shell.go`
+- [x] Length expansion `${#var}`: Implemented in `internal/shell/shell.go`
 - [x] Dynamic variables (RANDOM, SECONDS, etc.): Implemented in `internal/shell/shell.go`
 - [x] IFS-based splitting in `read`: Implemented in `internal/commands/read/read.go`
 
@@ -1818,7 +1819,7 @@ Status codes:
 - [ ] Combined stderr pipe `|&`: `third_party/bash/execute_cmd.c:L191`
 
 ### Compound Commands & Lists
-- [ ] Sequential list `;`: `third_party/bash/execute_cmd.c:L193`
+- [x] Sequential list `;`: Implemented in `internal/shell/shell.go`
 - [ ] Background execution `&`: `third_party/bash/execute_cmd.c:L193`
 - [ ] Logical AND `&&`: `third_party/bash/execute_cmd.c:L193`
 - [ ] Logical OR `||`: `third_party/bash/execute_cmd.c:L193`

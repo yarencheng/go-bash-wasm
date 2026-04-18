@@ -83,6 +83,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/set"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shuf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sleep"
@@ -233,6 +234,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		declare.New(),
 		groups.New(),
 		hashcmd.New(),
+		set.New(),
 		helpcmd.New(),
 		historycmd.New(),
 		logname.New(),

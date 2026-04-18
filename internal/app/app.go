@@ -402,8 +402,8 @@ func (a *App) ShowVersion() {
 	fmt.Fprintf(a.Env.Stdout, "go-bash-wasm, version %s (%s)\n", BashVersion, MachType)
 	fmt.Fprintf(a.Env.Stdout, "%s\n", BashCopyright)
 	fmt.Fprintf(a.Env.Stdout, "%s\n", BashLicense)
-	fmt.Fprintf(a.Env.Stdout, "Home page:   <%s>\n", ProjectURL)
-	fmt.Fprintf(a.Env.Stdout, "Source code: <%s>\n", SourceURL)
+	fmt.Fprintf(a.Env.Stdout, "Home page:      <%s>\n", ProjectURL)
+	fmt.Fprintf(a.Env.Stdout, "Source code:    <%s>\n", SourceURL)
 	fmt.Fprintf(a.Env.Stdout, "Donation (BTC): <%s>\n", BtcAddress)
 	fmt.Fprintf(a.Env.Stdout, "Donation (ETH): <%s>\n", EthAddress)
 }

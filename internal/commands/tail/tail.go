@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
@@ -28,6 +29,8 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 	quiet := flags.BoolP("quiet", "q", false, "never output headers giving file names")
 	verbose := flags.BoolP("verbose", "v", false, "always output headers giving file names")
 	zero := flags.BoolP("zero-terminated", "z", false, "line delimiter is NUL, not newline")
+	follow := flags.BoolP("follow", "f", false, "output appended data as the file grows")
+	_ = flags.BoolP("retry", "F", false, "keep trying to open a file if it is inaccessible (stub)")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "tail: %v\n", err)
@@ -43,9 +46,12 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 	exitCode := 0
 
 	for i, target := range targets {
-		var reader io.Reader
+		var input io.Reader
+
 		if target == "-" {
-			reader = env.Stdin
+			input = env.Stdin
+			t.processReader(env, input, *lines, *bytes, *zero, showHeaders, i > 0, target)
+			continue
 		} else {
 			fullPath := target
 			if !filepath.IsAbs(target) {
@@ -58,64 +64,85 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 				continue
 			}
 			defer file.Close()
-			reader = file
-		}
-
-		if showHeaders {
-			if i > 0 {
-				fmt.Fprintln(env.Stdout)
-			}
-			name := target
-			if target == "-" {
-				name = "standard input"
-			}
-			fmt.Fprintf(env.Stdout, "==> %s <==\n", name)
-		}
-
-		if *bytes > 0 {
-			data, err := io.ReadAll(reader)
-			if err != nil {
-				fmt.Fprintf(env.Stderr, "tail: error reading '%s': %v\n", target, err)
-				exitCode = 1
-				continue
-			}
-			start := len(data) - *bytes
-			if start < 0 {
-				start = 0
-			}
-			env.Stdout.Write(data[start:])
-		} else {
-			var allLines []string
-			scanner := bufio.NewScanner(reader)
-			if *zero {
-				scanner.Split(scanNull)
-			}
-			for scanner.Scan() {
-				allLines = append(allLines, scanner.Text())
-			}
-			if err := scanner.Err(); err != nil {
-				fmt.Fprintf(env.Stderr, "tail: error reading '%s': %v\n", target, err)
-				exitCode = 1
-				continue
-			}
-
-			count := *lines
-			start := len(allLines) - count
-			if start < 0 {
-				start = 0
-			}
 			
-			terminator := "\n"
-			if *zero {
-				terminator = "\x00"
-			}
-			for _, line := range allLines[start:] {
-				fmt.Fprintf(env.Stdout, "%s%s", line, terminator)
+			// Try to seek if possible
+			input = file
+		}
+
+		t.processReader(env, input, *lines, *bytes, *zero, showHeaders, i > 0, target)
+
+		if *follow && target != "-" {
+			for {
+				select {
+				case <-ctx.Done():
+					return exitCode
+				default:
+					newData, err := io.ReadAll(input)
+					if err != nil {
+						return exitCode
+					}
+					if len(newData) > 0 {
+						env.Stdout.Write(newData)
+					}
+					time.Sleep(1 * time.Second)
+				}
 			}
 		}
 	}
 
 	return exitCode
+}
+
+func (t *Tail) processReader(env *commands.Environment, reader io.Reader, lines, bytes int, zero bool, showHeaders, interHeader bool, target string) {
+	if showHeaders {
+		if interHeader {
+			fmt.Fprintln(env.Stdout)
+		}
+		name := target
+		if target == "-" {
+			name = "standard input"
+		}
+		fmt.Fprintf(env.Stdout, "==> %s <==\n", name)
+	}
+
+	if bytes > 0 {
+		data, err := io.ReadAll(reader)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "tail: error reading '%s': %v\n", target, err)
+			return
+		}
+		start := len(data) - bytes
+		if start < 0 {
+			start = 0
+		}
+		env.Stdout.Write(data[start:])
+	} else {
+		var allLines []string
+		scanner := bufio.NewScanner(reader)
+		if zero {
+			scanner.Split(scanNull)
+		}
+		for scanner.Scan() {
+			allLines = append(allLines, scanner.Text())
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Fprintf(env.Stderr, "tail: error reading '%s': %v\n", target, err)
+			return
+		}
+
+		start := len(allLines) - lines
+		if start < 0 {
+			start = 0
+		}
+		
+		terminator := "\n"
+		if zero {
+			terminator = "\x00"
+		}
+		for _, line := range allLines[start:] {
+			fmt.Fprintf(env.Stdout, "%s%s", line, terminator)
+		}
+	}
 }
 
 func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
@@ -132,4 +159,3 @@ func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	}
 	return 0, nil, nil
 }
-

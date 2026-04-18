@@ -24,6 +24,8 @@ func (t *Tee) Name() string {
 func (t *Tee) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("tee", pflag.ContinueOnError)
 	appendFlag := flags.BoolP("append", "a", false, "append to the given FILEs, do not overwrite")
+	_ = flags.BoolP("ignore-interrupts", "i", false, "ignore interrupt signals")
+	_ = flags.BoolP("output-error", "p", false, "diagnose errors writing to non pipes")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "tee: %v\n", err)

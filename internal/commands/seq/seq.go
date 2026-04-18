@@ -23,6 +23,7 @@ func (s *Seq) Run(ctx context.Context, env *commands.Environment, args []string)
 	flags := pflag.NewFlagSet("seq", pflag.ContinueOnError)
 	separator := flags.StringP("separator", "s", "\n", "use STRING to separate numbers (default: \\n)")
 	equalWidth := flags.BoolP("equal-width", "w", false, "equalize width by padding with leading zeroes")
+	formatFlag := flags.StringP("format", "f", "", "use printf style floating-point FORMAT")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "seq: %v\n", err)
@@ -62,7 +63,9 @@ func (s *Seq) Run(ctx context.Context, env *commands.Environment, args []string)
 	}
 
 	format := "%g"
-	if *equalWidth {
+	if *formatFlag != "" {
+		format = *formatFlag
+	} else if *equalWidth {
 		// Calculate max width
 		maxW := 0
 		for val := start; (increment > 0 && val <= end) || (increment < 0 && val >= end); val += increment {

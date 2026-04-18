@@ -44,6 +44,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/declare"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/df"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/dir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dirname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dirs"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/disown"
@@ -112,6 +113,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/set"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/shred"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shuf"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sleep"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shopt"
@@ -151,6 +153,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/who"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/whoami"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/yes"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/vdir"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
 
 	"github.com/mdp/qrterminal/v3"
@@ -287,6 +290,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		sum.New("sha384sum"),
 		sum.New("sha512sum"),
 		shuf.New(),
+		shred.New(),
 		split.New(),
 		tac.New(),
 		sync.New(),
@@ -309,6 +313,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		cut.New(),
 		join.New(),
 		comm.New(),
+		dir.New(),
 		seq.New(),
 		expr.New(),
 		factor.New(),
@@ -350,6 +355,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		compopt.New(),
 		caller.New(),
 		local.New(),
+		vdir.New(),
 	}
 
 	for _, cmd := range cmds {
@@ -405,12 +411,15 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 			"cdspell":              false,
 			"checkwinsize":         true,
 			"cmdhist":              true,
+			"dirspell":             false,
 			"dotglob":              false,
 			"expand_aliases":       true,
 			"extglob":              false,
 			"globstar":             false,
 			"histappend":           true,
 			"interactive_comments": true,
+			"lastpipe":             false,
+			"nocaseglob":           false,
 			"nullglob":             false,
 			"progcomp":             true,
 			"promptvars":           true,

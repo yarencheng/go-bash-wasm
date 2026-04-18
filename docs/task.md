@@ -267,15 +267,15 @@ Status codes:
 - [x] Flag `-s`: `internal/commands/complete/complete.go` (service)
 - [x] Flag `-u`: `internal/commands/complete/complete.go` (user)
 - [x] Flag `-v`: `internal/commands/complete/complete.go` (variable)
-- [ ] Flag `-o=OPT`: `third_party/bash/builtins/complete.def:L205` (option)
-- [ ] Flag `-A=ACTION`: `third_party/bash/builtins/complete.def:L205` (action)
-- [ ] Flag `-G=GLOB`: `third_party/bash/builtins/complete.def:L205` (glob)
-- [ ] Flag `-W=WORDLIST`: `third_party/bash/builtins/complete.def:L205` (wordlist)
-- [ ] Flag `-P=PREFIX`: `third_party/bash/builtins/complete.def:L205` (prefix)
-- [ ] Flag `-S=SUFFIX`: `third_party/bash/builtins/complete.def:L205` (suffix)
-- [ ] Flag `-X=FILTER`: `third_party/bash/builtins/complete.def:L205` (filter)
-- [ ] Flag `-F=FUNC`: `third_party/bash/builtins/complete.def:L205` (function)
-- [ ] Flag `-C=CMD`: `third_party/bash/builtins/complete.def:L205` (command)
+- [x] Flag `-o=OPT`: `internal/commands/complete/complete.go`
+- [x] Flag `-A=ACTION`: `internal/commands/complete/complete.go`
+- [x] Flag `-G=GLOB`: `internal/commands/complete/complete.go`
+- [x] Flag `-W=WORDLIST`: `internal/commands/complete/complete.go`
+- [x] Flag `-P=PREFIX`: `internal/commands/complete/complete.go`
+- [x] Flag `-S=SUFFIX`: `internal/commands/complete/complete.go`
+- [x] Flag `-X=FILTER`: `internal/commands/complete/complete.go`
+- [x] Flag `-F=FUNC`: `internal/commands/complete/complete.go`
+- [x] Flag `-C=CMD`: `internal/commands/complete/complete.go`
 - [ ] Flag `-E`: `third_party/bash/builtins/complete.def:L205` (empty)
 - [ ] Flag `-I`: `third_party/bash/builtins/complete.def:L205` (initial)
 - [ ] Flag `-D`: `third_party/bash/builtins/complete.def:L205` (default)
@@ -423,8 +423,8 @@ Status codes:
 
 ### `dir`
 
-- [ ] Upstream: `third_party/coreutils/src/coreutils-dir.c`
-- [ ] Inherits flags from `ls`
+- [x] Upstream: `third_party/coreutils/src/coreutils-dir.c`
+- [x] Inherits flags from `ls`
 
 ### `dircolors`
 
@@ -1164,7 +1164,7 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/seq.c`
 - [x] Basic sequence: Implemented in `internal/commands/seq/seq.go`
-- [ ] Flag `-f`, `--format=FORMAT`: `third_party/coreutils/src/seq.c:L592`
+- [x] Flag `-f`, `--format=FORMAT`: `internal/commands/seq/seq.go`
 - [x] Flag `-s`, `--separator=STRING`: `internal/commands/seq/seq.go`
 - [x] Flag `-w`, `--equal-width`: `internal/commands/seq/seq.go`
 
@@ -1227,15 +1227,15 @@ Status codes:
 
 ### `shred`
 
-- [ ] Upstream: `third_party/coreutils/src/shred.c`
-- [ ] Data erasure: Missing implementation
-- [ ] Flag `-f`, `--force`: `third_party/coreutils/src/shred.c:L157`
-- [ ] Flag `-n`, `--iterations=N`: `third_party/coreutils/src/shred.c:L158`
-- [ ] Flag `-s`, `--size=N`: `third_party/coreutils/src/shred.c:L159`
-- [ ] Flag `-u`, `--remove`: `third_party/coreutils/src/shred.c:L160`
-- [ ] Flag `-v`, `--verbose`: `third_party/coreutils/src/shred.c:L161`
-- [ ] Flag `-x`, `--exact`: `third_party/coreutils/src/shred.c:L162`
-- [ ] Flag `-z`, `--zero`: `third_party/coreutils/src/shred.c:L163`
+- [x] Upstream: `third_party/coreutils/src/shred.c`
+- [x] Data erasure: Implemented in `internal/commands/shred/shred.go`
+- [x] Flag `-f`, `--force`: `internal/commands/shred/shred.go`
+- [x] Flag `-n`, `--iterations=N`: `internal/commands/shred/shred.go`
+- [x] Flag `-s`, `--size=N`: `internal/commands/shred/shred.go` (partial via iteration)
+- [x] Flag `-u`, `--remove`: `internal/commands/shred/shred.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/shred/shred.go`
+- [x] Flag `-x`, `--exact`: `internal/commands/shred/shred.go`
+- [x] Flag `-z`, `--zero`: `internal/commands/shred/shred.go`
 
 ### `shuf`
 
@@ -1351,8 +1351,8 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/sync.c`
 - [x] Basic operation: Implemented in `internal/commands/sync/sync.go`
-- [ ] Flag `-d`, `--data`: `third_party/coreutils/src/sync.c:L129`
-- [ ] Flag `-f`, `--file-system`: `third_party/coreutils/src/sync.c:L132`
+- [x] Flag `-d`, `--data`: `internal/commands/sync/sync.go` (no-op)
+- [x] Flag `-f`, `--file-system`: `internal/commands/sync/sync.go` (no-op)
 
 ### `tac`
 
@@ -1366,8 +1366,8 @@ Status codes:
 
 - [x] Basic output: Implemented in `internal/commands/tail/tail.go`
 - [x] Flag `-c`, `--bytes`: `internal/commands/tail/tail.go`
-- [ ] Flag `-f`, `--follow[={name|descriptor}]`: `third_party/coreutils/src/tail.c:L305`
-- [ ] Flag `-F`: `third_party/coreutils/src/tail.c:L309` (implies --follow=name --retry)
+- [x] Flag `-f`, `--follow[={name|descriptor}]`: `internal/commands/tail/tail.go`
+- [x] Flag `-F`: `internal/commands/tail/tail.go` (partial)
 - [x] Flag `-n`, `--lines`: `internal/commands/tail/tail.go`
 - [x] Flag `-q`, `--quiet`, `--silent`: `internal/commands/tail/tail.go`
 - [ ] Flag `-s`, `--sleep-interval`: `third_party/coreutils/src/tail.c:L322`
@@ -1381,8 +1381,8 @@ Status codes:
 
 - [x] Basic copy: Implemented in `internal/commands/tee/tee.go`
 - [x] Flag `-a`, `--append`: `internal/commands/tee/tee.go`
-- [ ] Flag `-i`, `--ignore-interrupts`: `third_party/coreutils/src/tee.c:L97`
-- [ ] Flag `-p`, `--output-error[=MODE]`: `third_party/coreutils/src/tee.c:L101`
+- [x] Flag `-i`, `--ignore-interrupts`: `internal/commands/tee/tee.go`
+- [x] Flag `-p`, `--output-error[=MODE]`: `internal/commands/tee/tee.go`
 
 ### `test`
 
@@ -1403,8 +1403,8 @@ Status codes:
 - [x] Basic output: Implemented in `internal/commands/timeout/timeout.go`
 - [ ] Flag `--help`: `third_party/coreutils/src/timeout.c:L44`
 - [ ] Flag `--version`: `third_party/coreutils/src/timeout.c:L44`
-- [ ] Flag `-k`: `third_party/coreutils/src/timeout.c:L531`
-- [ ] Flag `-s`: `third_party/coreutils/src/timeout.c:L539`
+- [x] Flag `-k`: `internal/commands/timeout/timeout.go`
+- [x] Flag `-s`: `internal/commands/timeout/timeout.go`
 
 ### `times`
 
@@ -1572,7 +1572,8 @@ Status codes:
 
 ### `vdir`
 
-- [ ] Upstream: `third_party/coreutils/src/ls.c`
+- [x] Upstream: `third_party/coreutils/src/ls.c`
+- [x] Inherits flags from `ls`
 
 ### `wait`
 

@@ -49,7 +49,7 @@ func (s *Set) Run(ctx context.Context, env *commands.Environment, args []string)
 	remaining := flags.Args()
 	if len(remaining) > 0 {
 		// Bash set command also allows setting positional parameters
-		// env.PositionalArgs = remaining
+		env.PositionalArgs = remaining
 	}
 
 	return 0

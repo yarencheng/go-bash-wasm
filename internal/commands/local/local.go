@@ -21,7 +21,7 @@ func (l *Local) Name() string {
 
 func (l *Local) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("local", pflag.ContinueOnError)
-	
+
 	// local accepts same flags as declare
 	_ = flags.BoolP("integer", "i", false, "make NAMEs have the integer attribute")
 	_ = flags.BoolP("readonly", "r", false, "make NAMEs readonly")

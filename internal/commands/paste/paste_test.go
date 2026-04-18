@@ -27,7 +27,7 @@ func TestPaste_Basic(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"/f1.txt", "/f2.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "1\ta\n2\tb\n\tc\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }
@@ -47,7 +47,7 @@ func TestPaste_Delimiter(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"-d", ",", "/f1.txt", "/f2.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "1,a\n2,b\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }

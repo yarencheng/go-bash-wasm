@@ -74,7 +74,7 @@ func (u *Unexpand) unexpandLine(line string, all bool, tabSize int) string {
 	var builder strings.Builder
 	column := 0
 	spaces := 0
-	
+
 	onlyInitial := !all
 
 	for i := 0; i < len(line); i++ {
@@ -101,7 +101,7 @@ func (u *Unexpand) unexpandLine(line string, all bool, tabSize int) string {
 			}
 		}
 	}
-	
+
 	// Final flush
 	for j := 0; j < spaces; j++ {
 		builder.WriteByte(' ')

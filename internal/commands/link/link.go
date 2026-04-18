@@ -34,10 +34,10 @@ func (l *Link) Run(ctx context.Context, env *commands.Environment, args []string
 		dst = filepath.Join(env.Cwd, dst)
 	}
 
-	// Many filesystems don't support hard links. 
+	// Many filesystems don't support hard links.
 	// afero.MemMapFs doesn't support Symlink or Link?
 	// Actually afero has Linker interface.
-	
+
 	linker, ok := env.FS.(interface {
 		Link(oldname, newname string) error
 	})

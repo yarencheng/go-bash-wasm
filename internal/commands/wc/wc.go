@@ -25,9 +25,9 @@ func (w *Wc) Name() string {
 }
 
 type counts struct {
-	lines int
-	words int
-	bytes int
+	lines      int
+	words      int
+	bytes      int
 	maxLineLen int
 }
 
@@ -172,4 +172,3 @@ func (w *Wc) printCounts(env *commands.Environment, c counts, name string, showL
 	}
 	fmt.Fprintln(env.Stdout, out)
 }
-

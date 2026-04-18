@@ -73,7 +73,7 @@ func (b *Base64) Run(ctx context.Context, env *commands.Environment, args []stri
 			return 1
 		}
 		encoded := base64.StdEncoding.EncodeToString(data)
-		
+
 		if *wrap <= 0 {
 			fmt.Fprintln(env.Stdout, encoded)
 		} else {

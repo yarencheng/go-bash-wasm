@@ -50,9 +50,9 @@ func TestCp_Run(t *testing.T) {
 	require.NoError(t, afero.WriteFile(fs, "/older.txt", []byte("old"), 0644))
 	// Set older time
 	// require.NoError(t, fs.Chtimes("/older.txt", time.Now().Add(-1*time.Hour), time.Now().Add(-1*time.Hour)))
-	// Since we can't easily Chtimes in MemMapFs for test without time package, 
+	// Since we can't easily Chtimes in MemMapFs for test without time package,
 	// just assume it works if we add it.
-	
+
 	// Test -r (recursive)
 	require.NoError(t, fs.MkdirAll("/srcdir/subdir", 0755))
 	require.NoError(t, afero.WriteFile(fs, "/srcdir/subdir/f.txt", []byte("sub"), 0644))

@@ -82,7 +82,7 @@ func (t *Tr) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	result := t.translate(string(data), set1, set2)
-	
+
 	if *squeezeFlag {
 		result = t.squeeze(result, set2)
 	}
@@ -90,7 +90,6 @@ func (t *Tr) Run(ctx context.Context, env *commands.Environment, args []string) 
 	fmt.Fprint(env.Stdout, result)
 	return 0
 }
-
 
 func (t *Tr) expandSet(s string) string {
 	// Very basic expansion of a-z, A-Z, 0-9

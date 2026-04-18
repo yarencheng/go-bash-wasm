@@ -173,4 +173,3 @@ func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	}
 	return 0, nil, nil
 }
-

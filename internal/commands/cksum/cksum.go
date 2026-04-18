@@ -248,7 +248,7 @@ func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptio
 			continue
 		}
 		parts := strings.Fields(line)
-		
+
 		var expected, fileName string
 		if strings.Contains(line, "(") && strings.Contains(line, ") = ") {
 			// BSD style: ALGO (FILE) = SUM
@@ -338,4 +338,3 @@ func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptio
 
 	return exitCode
 }
-

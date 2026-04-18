@@ -25,31 +25,31 @@ func (l *Ls) Name() string {
 }
 
 type lsFlags struct {
-	all          *bool
-	almostAll    *bool
-	long         *bool
-	human        *bool
-	classify     *bool
-	sortSize     *bool
-	sortTime     *bool
-	reverse      *bool
-	inode        *bool
-	recursive    *bool
-	oneLine      *bool
-	numeric      *bool
-	dirIndicator *bool
-	comma        *bool
-	ctime        *bool
-	atime        *bool
-	noGroup      *bool
-	directory    *bool
-	doNotSort    *bool
-	noOwner      *bool
-	noGroupLong  *bool
-	unsorted     *bool
-	versionSort  *bool
-	hide         *string
-	ignore       *string
+	all            *bool
+	almostAll      *bool
+	long           *bool
+	human          *bool
+	classify       *bool
+	sortSize       *bool
+	sortTime       *bool
+	reverse        *bool
+	inode          *bool
+	recursive      *bool
+	oneLine        *bool
+	numeric        *bool
+	dirIndicator   *bool
+	comma          *bool
+	ctime          *bool
+	atime          *bool
+	noGroup        *bool
+	directory      *bool
+	doNotSort      *bool
+	noOwner        *bool
+	noGroupLong    *bool
+	unsorted       *bool
+	versionSort    *bool
+	hide           *string
+	ignore         *string
 	indicatorStyle *string
 	fileType       *bool
 	sortExt        *bool
@@ -80,54 +80,54 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 	flagsSet.SetOutput(env.Stderr)
 
 	f := lsFlags{
-		all:          flagsSet.BoolP("all", "a", false, "do not ignore entries starting with ."),
-		almostAll:    flagsSet.BoolP("almost-all", "A", false, "do not list implied . and .."),
-		long:         flagsSet.BoolP("long", "l", false, "use a long listing format"),
-		human:        flagsSet.BoolP("human-readable", "h", false, "with -l, print sizes like 1K 234M 2G etc."),
-		classify:     flagsSet.BoolP("classify", "F", false, "append indicator (one of */=>@|) to entries"),
-		sortSize:     flagsSet.BoolP("sort-size", "S", false, "sort by file size, largest first"),
-		sortTime:     flagsSet.BoolP("sort-time", "t", false, "sort by modification time, newest first"),
-		reverse:      flagsSet.BoolP("reverse", "r", false, "reverse order while sorting"),
-		inode:        flagsSet.BoolP("inode", "i", false, "print the index number of each file"),
-		recursive:    flagsSet.BoolP("recursive", "R", false, "list subdirectories recursively"),
-		oneLine:      flagsSet.BoolP("format-1", "1", false, "list one file per line"),
-		numeric:      flagsSet.BoolP("numeric-uid-gid", "n", false, "list numeric user and group IDs"),
-		dirIndicator: flagsSet.BoolP("directory-indicator", "p", false, "append / indicator to directories"),
-		comma:        flagsSet.BoolP("comma", "m", false, "fill width with a comma separated list of entries"),
-		ctime:        flagsSet.BoolP("ctime", "c", false, "with -lt: sort by, and show, ctime; with -l: show ctime and sort by name"),
-		atime:        flagsSet.BoolP("atime", "u", false, "with -lt: sort by, and show, atime; with -l: show atime and sort by name"),
-		noGroup:      flagsSet.BoolP("no-group", "G", false, "in a long listing, don't print group names"),
-		directory:    flagsSet.BoolP("directory", "d", false, "list directories themselves, not their contents"),
-		doNotSort:    flagsSet.BoolP("do-not-sort", "f", false, "do not sort, enable -aU, disable -ls --color"),
-		noOwner:      flagsSet.BoolP("no-owner", "g", false, "like -l, but do not list owner"),
-		noGroupLong:  flagsSet.BoolP("no-group-long", "o", false, "like -l, but do not list group"),
-		unsorted:     flagsSet.BoolP("unsorted", "U", false, "do not sort; list entries in directory order"),
-		versionSort:  flagsSet.BoolP("version-sort", "v", false, "natural sort of (version) numbers"),
-		hide:         flagsSet.String("hide", "", "do not list implied entries matching shell PATTERN (overridden by -a or -A)"),
-		ignore:       flagsSet.StringP("ignore", "I", "", "do not list implied entries matching shell PATTERN"),
+		all:            flagsSet.BoolP("all", "a", false, "do not ignore entries starting with ."),
+		almostAll:      flagsSet.BoolP("almost-all", "A", false, "do not list implied . and .."),
+		long:           flagsSet.BoolP("long", "l", false, "use a long listing format"),
+		human:          flagsSet.BoolP("human-readable", "h", false, "with -l, print sizes like 1K 234M 2G etc."),
+		classify:       flagsSet.BoolP("classify", "F", false, "append indicator (one of */=>@|) to entries"),
+		sortSize:       flagsSet.BoolP("sort-size", "S", false, "sort by file size, largest first"),
+		sortTime:       flagsSet.BoolP("sort-time", "t", false, "sort by modification time, newest first"),
+		reverse:        flagsSet.BoolP("reverse", "r", false, "reverse order while sorting"),
+		inode:          flagsSet.BoolP("inode", "i", false, "print the index number of each file"),
+		recursive:      flagsSet.BoolP("recursive", "R", false, "list subdirectories recursively"),
+		oneLine:        flagsSet.BoolP("format-1", "1", false, "list one file per line"),
+		numeric:        flagsSet.BoolP("numeric-uid-gid", "n", false, "list numeric user and group IDs"),
+		dirIndicator:   flagsSet.BoolP("directory-indicator", "p", false, "append / indicator to directories"),
+		comma:          flagsSet.BoolP("comma", "m", false, "fill width with a comma separated list of entries"),
+		ctime:          flagsSet.BoolP("ctime", "c", false, "with -lt: sort by, and show, ctime; with -l: show ctime and sort by name"),
+		atime:          flagsSet.BoolP("atime", "u", false, "with -lt: sort by, and show, atime; with -l: show atime and sort by name"),
+		noGroup:        flagsSet.BoolP("no-group", "G", false, "in a long listing, don't print group names"),
+		directory:      flagsSet.BoolP("directory", "d", false, "list directories themselves, not their contents"),
+		doNotSort:      flagsSet.BoolP("do-not-sort", "f", false, "do not sort, enable -aU, disable -ls --color"),
+		noOwner:        flagsSet.BoolP("no-owner", "g", false, "like -l, but do not list owner"),
+		noGroupLong:    flagsSet.BoolP("no-group-long", "o", false, "like -l, but do not list group"),
+		unsorted:       flagsSet.BoolP("unsorted", "U", false, "do not sort; list entries in directory order"),
+		versionSort:    flagsSet.BoolP("version-sort", "v", false, "natural sort of (version) numbers"),
+		hide:           flagsSet.String("hide", "", "do not list implied entries matching shell PATTERN (overridden by -a or -A)"),
+		ignore:         flagsSet.StringP("ignore", "I", "", "do not list implied entries matching shell PATTERN"),
 		indicatorStyle: flagsSet.String("indicator-style", "none", "append indicator with style WORD to entry names: none (default), slash (-p), file-type (--file-type), classify (-F)"),
-		fileType:     flagsSet.Bool("file-type", false, "likewise, except do not append '*'"),
-		sortExt:      flagsSet.BoolP("sort-extension", "X", false, "sort alphabetically by entry extension"),
-		sizeBlocks:   flagsSet.BoolP("size", "s", false, "print the allocated size of each file, in blocks"),
-		ignoreBackups: flagsSet.BoolP("ignore-backups", "B", false, "do not list implied entries ending with ~"),
-		siUnits:      flagsSet.Bool("si", false, "likewise, but use powers of 1000 not 1024"),
-		kibibytes:    flagsSet.BoolP("kibibytes", "k", false, "default to 1024-byte blocks for disk usage"),
-		quotingStyle: flagsSet.String("quoting-style", "literal", "use quoting style WORD for entry names: literal, shell, shell-always, shell-escape, shell-escape-always, c, escape"),
-		escape:       flagsSet.BoolP("escape", "b", false, "print C-style escapes for nongraphic characters"),
-		quoteName:    flagsSet.BoolP("quote-name", "Q", false, "enclose entry names in double quotes"),
-		hideControl:  flagsSet.BoolP("hide-control-chars", "q", false, "print ? instead of nongraphic characters"),
+		fileType:       flagsSet.Bool("file-type", false, "likewise, except do not append '*'"),
+		sortExt:        flagsSet.BoolP("sort-extension", "X", false, "sort alphabetically by entry extension"),
+		sizeBlocks:     flagsSet.BoolP("size", "s", false, "print the allocated size of each file, in blocks"),
+		ignoreBackups:  flagsSet.BoolP("ignore-backups", "B", false, "do not list implied entries ending with ~"),
+		siUnits:        flagsSet.Bool("si", false, "likewise, but use powers of 1000 not 1024"),
+		kibibytes:      flagsSet.BoolP("kibibytes", "k", false, "default to 1024-byte blocks for disk usage"),
+		quotingStyle:   flagsSet.String("quoting-style", "literal", "use quoting style WORD for entry names: literal, shell, shell-always, shell-escape, shell-escape-always, c, escape"),
+		escape:         flagsSet.BoolP("escape", "b", false, "print C-style escapes for nongraphic characters"),
+		quoteName:      flagsSet.BoolP("quote-name", "Q", false, "enclose entry names in double quotes"),
+		hideControl:    flagsSet.BoolP("hide-control-chars", "q", false, "print ? instead of nongraphic characters"),
 		groupDirsFirst: flagsSet.Bool("group-directories-first", false, "group directories before files"),
-		zero:         flagsSet.Bool("zero", false, "end each output line with NUL, not newline"),
-		dereference:  flagsSet.BoolP("dereference", "L", false, "when showing file information for a symbolic link, show information for the file the link references rather than for the link itself"),
+		zero:           flagsSet.Bool("zero", false, "end each output line with NUL, not newline"),
+		dereference:    flagsSet.BoolP("dereference", "L", false, "when showing file information for a symbolic link, show information for the file the link references rather than for the link itself"),
 		dereferenceArg: flagsSet.BoolP("dereference-command-line", "H", false, "follow symbolic links listed on the command line"),
-		format:       flagsSet.String("format", "vertical", "across (-x), commas (-m), horizontal (-x), long (-l), single-column (-1), verbose (-l), vertical (-C)"),
-		timeStyle:    flagsSet.String("time-style", "locale", "time/date format with -l: full-iso, long-iso, iso, locale"),
-		color:        flagsSet.String("color", "never", "colorize the output; WHEN can be 'always' (default if omitted), 'auto', or 'never'"),
-		fullTime:     flagsSet.Bool("full-time", false, "like -l --time-style=full-iso"),
-		timeOpt:      flagsSet.String("time", "", "show time as WORD instead of modification time: atime, access, use, ctime, status"),
-		blockSize:    flagsSet.String("block-size", "", "scale sizes by SIZE when printing them"),
-		vertical:     flagsSet.BoolP("vertical", "C", false, "list entries by columns"),
-		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
+		format:         flagsSet.String("format", "vertical", "across (-x), commas (-m), horizontal (-x), long (-l), single-column (-1), verbose (-l), vertical (-C)"),
+		timeStyle:      flagsSet.String("time-style", "locale", "time/date format with -l: full-iso, long-iso, iso, locale"),
+		color:          flagsSet.String("color", "never", "colorize the output; WHEN can be 'always' (default if omitted), 'auto', or 'never'"),
+		fullTime:       flagsSet.Bool("full-time", false, "like -l --time-style=full-iso"),
+		timeOpt:        flagsSet.String("time", "", "show time as WORD instead of modification time: atime, access, use, ctime, status"),
+		blockSize:      flagsSet.String("block-size", "", "scale sizes by SIZE when printing them"),
+		vertical:       flagsSet.BoolP("vertical", "C", false, "list entries by columns"),
+		sortOpt:        flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
 	if err := flagsSet.Parse(args); err != nil {

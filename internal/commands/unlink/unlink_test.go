@@ -23,7 +23,7 @@ func TestUnlink_Run(t *testing.T) {
 	}
 
 	u := New()
-	
+
 	// Test basic unlink
 	status := u.Run(context.Background(), env, []string{"/test.txt"})
 	assert.Equal(t, 0, status)
@@ -34,7 +34,7 @@ func TestUnlink_Run(t *testing.T) {
 	// Test unlink non-existent
 	status = u.Run(context.Background(), env, []string{"/nonexistent"})
 	assert.Equal(t, 1, status)
-	
+
 	// Test unlink too many args
 	status = u.Run(context.Background(), env, []string{"a", "b"})
 	assert.Equal(t, 1, status)

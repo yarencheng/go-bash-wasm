@@ -21,7 +21,7 @@ func (n *Nice) Name() string {
 func (n *Nice) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("nice", pflag.ContinueOnError)
 	adjustment := flags.IntP("adjustment", "n", 10, "add adjustment to the priority")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "nice: %v\n", err)
 		return 125
@@ -45,6 +45,6 @@ func (n *Nice) Run(ctx context.Context, env *commands.Environment, args []string
 
 	// We ignore adjustment for now
 	_ = adjustment
-	
+
 	return cmd.Run(ctx, env, cmdArgs)
 }

@@ -65,7 +65,7 @@ func TestTouch_Reference(t *testing.T) {
 	targetFile := "/target.txt"
 	status := tr.Run(context.Background(), env, []string{"-r", "/ref.txt", targetFile})
 	assert.Equal(t, 0, status)
-	
+
 	targetInfo, _ := fs.Stat(targetFile)
 	assert.True(t, targetInfo.ModTime().Equal(refMtime))
 }

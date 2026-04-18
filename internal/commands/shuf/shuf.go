@@ -91,7 +91,7 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 	}
 
 	randSource := rand.New(rand.NewSource(time.Now().UnixNano()))
-	
+
 	var out io.Writer = env.Stdout
 	if *output != "" {
 		f, err := env.FS.Create(*output)
@@ -119,7 +119,7 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 		randSource.Shuffle(len(lines), func(i, j int) {
 			lines[i], lines[j] = lines[j], lines[i]
 		})
-		
+
 		limit := len(lines)
 		if *count >= 0 && *count < limit {
 			limit = *count

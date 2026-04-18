@@ -29,7 +29,7 @@ func (t *TTY) Run(ctx context.Context, env *commands.Environment, args []string)
 
 	// In a real system, we'd check if stdin is a terminal.
 	// For simulator, we always return /dev/tty for now.
-	
+
 	if !*silent {
 		fmt.Fprintln(env.Stdout, "/dev/tty")
 	}

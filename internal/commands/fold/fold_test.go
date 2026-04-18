@@ -28,7 +28,7 @@ func TestFold_Basic(t *testing.T) {
 	// Fold to 5 chars
 	status := cmd.Run(context.Background(), env, []string{"-w", "5", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "12345\n67890\n12345\n67890\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }
@@ -49,7 +49,7 @@ func TestFold_Spaces(t *testing.T) {
 	// Fold to 5 chars, breaking at spaces
 	status := cmd.Run(context.Background(), env, []string{"-w", "5", "-s", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "123 \n456 \n789\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }

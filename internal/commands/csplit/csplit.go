@@ -113,7 +113,7 @@ func (c *Csplit) Run(ctx context.Context, env *commands.Environment, args []stri
 			if searchStart < 0 {
 				searchStart = 0
 			}
-			// For regex, if we are already at a line that matched previously, 
+			// For regex, if we are already at a line that matched previously,
 			// we should probably start searching from the next line to find the NEXT occurrence.
 			// However, the very first split search should include the current line.
 			// Actually, GNU csplit: the next search starts at the line FOLLOWING the line that matched.
@@ -149,7 +149,7 @@ func (c *Csplit) Run(ctx context.Context, env *commands.Environment, args []stri
 			if *suffixFormat == "%02d" && *digits != 2 {
 				filename = fmt.Sprintf("%s%0*d", *prefix, *digits, fileIdx)
 			}
-			
+
 			absFilename := c.absPath(env, filename)
 			size, err := c.writeLines(env.FS, absFilename, chunk)
 			if err != nil {
@@ -163,7 +163,7 @@ func (c *Csplit) Run(ctx context.Context, env *commands.Environment, args []stri
 			}
 			fileIdx++
 		}
-		
+
 		if isRegex && *suppressMatched {
 			currentLine = splitLine + 1
 		} else {

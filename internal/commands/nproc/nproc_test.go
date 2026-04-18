@@ -18,7 +18,7 @@ func TestNproc_Basic(t *testing.T) {
 	n := New()
 	status := n.Run(context.Background(), env, []string{})
 	assert.Equal(t, 0, status)
-	
+
 	val := strings.TrimSpace(out.String())
 	assert.NotEmpty(t, val)
 }

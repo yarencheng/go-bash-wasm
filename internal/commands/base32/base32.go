@@ -76,7 +76,7 @@ func (b *Base32) Run(ctx context.Context, env *commands.Environment, args []stri
 			return 1
 		}
 		encoded := encoding.EncodeToString(data)
-		
+
 		if *wrap <= 0 {
 			fmt.Fprintln(env.Stdout, encoded)
 		} else {

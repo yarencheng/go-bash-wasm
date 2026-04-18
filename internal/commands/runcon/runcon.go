@@ -33,7 +33,7 @@ func (r *Runcon) Run(ctx context.Context, env *commands.Environment, args []stri
 
 	remaining := flags.Args()
 	if len(remaining) == 0 {
-		// If no command, just print context if context was given? 
+		// If no command, just print context if context was given?
 		// Actually runcon requires a command.
 		fmt.Fprintf(env.Stderr, "runcon: missing operand\n")
 		return 1

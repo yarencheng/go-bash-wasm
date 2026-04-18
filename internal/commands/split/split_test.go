@@ -28,7 +28,7 @@ func TestSplit_BasicLines(t *testing.T) {
 	// Default split is 1000 lines. Let's split by 2 lines.
 	status := cmd.Run(context.Background(), env, []string{"-l", "2", "/test.txt", "x"})
 	assert.Equal(t, 0, status)
-	
+
 	f1, err := afero.ReadFile(fs, "/xaa")
 	require.NoError(t, err)
 	assert.Equal(t, "line 1\nline 2\n", string(f1))
@@ -53,7 +53,7 @@ func TestSplit_BasicBytes(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"-b", "3", "/test.txt", "y"})
 	assert.Equal(t, 0, status)
-	
+
 	f1, _ := afero.ReadFile(fs, "/yaa")
 	assert.Equal(t, "abc", string(f1))
 	f2, _ := afero.ReadFile(fs, "/yab")

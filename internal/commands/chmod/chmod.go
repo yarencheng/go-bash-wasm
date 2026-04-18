@@ -156,7 +156,7 @@ func (c *Chmod) processPath(env *commands.Environment, path string, targetMode o
 func applySymbolicMode(current os.FileMode, symMode string) (os.FileMode, error) {
 	// [ugoa...][[-+=][perms...]...]
 	// perms: rwx
-	
+
 	// Split by comma if multiple
 	parts := strings.Split(symMode, ",")
 	newMode := current
@@ -165,7 +165,7 @@ func applySymbolicMode(current os.FileMode, symMode string) (os.FileMode, error)
 		if len(part) == 0 {
 			continue
 		}
-		
+
 		// Find operator
 		opIdx := strings.IndexAny(part, "+-=")
 		if opIdx == -1 {
@@ -206,7 +206,7 @@ func applySymbolicMode(current os.FileMode, symMode string) (os.FileMode, error)
 				whoMask |= 0007
 			}
 		}
-		
+
 		mask &= whoMask
 
 		switch op {

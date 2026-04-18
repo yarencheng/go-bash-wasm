@@ -38,7 +38,7 @@ func TestUnset_Run(t *testing.T) {
 	env.Functions["func2"] = "echo world"
 	status = cmd.Run(context.Background(), env, []string{"-f", "VAR2", "func2"})
 	assert.Equal(t, 0, status)
-	assert.Contains(t, env.EnvVars, "VAR2") // Should still be there
+	assert.Contains(t, env.EnvVars, "VAR2")       // Should still be there
 	assert.NotContains(t, env.Functions, "func2") // Should be removed
 
 	// Test -v (variables only)

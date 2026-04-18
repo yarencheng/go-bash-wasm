@@ -61,7 +61,7 @@ func (p *Pr) process(env *commands.Environment, r io.Reader, filename, customHea
 	scanner := bufio.NewScanner(r)
 	page := 1
 	lineCount := 0
-	
+
 	printHeader := func() {
 		if !omitHeader {
 			dateStr := time.Now().Format("2006-01-02 15:04")
@@ -78,10 +78,10 @@ func (p *Pr) process(env *commands.Environment, r io.Reader, filename, customHea
 
 	printHeader()
 	globalLineNum := 1
-	
+
 	for scanner.Scan() {
 		line := scanner.Text()
-		
+
 		if lineCount >= length-5 && !omitHeader {
 			// Print footer (5 blank lines)
 			for i := 0; i < 5; i++ {
@@ -95,7 +95,7 @@ func (p *Pr) process(env *commands.Environment, r io.Reader, filename, customHea
 		if numbering {
 			outLine = fmt.Sprintf("%5d\t%s", globalLineNum, outLine)
 		}
-		
+
 		fmt.Fprintln(env.Stdout, outLine)
 		lineCount++
 		globalLineNum++

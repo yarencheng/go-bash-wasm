@@ -25,7 +25,7 @@ func (c *Cd) Run(ctx context.Context, env *commands.Environment, args []string) 
 	usePhysical := flags.BoolP("physical", "P", false, "use the physical directory structure without following symbolic links")
 	useLogical := flags.BoolP("logical", "L", false, "force symbolic links to be followed (default)")
 	exitOnError := flags.BoolP("exit-on-error", "e", false, "if the -P option is supplied, and the current working directory cannot be determined successfully, exit with a non-zero status")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "cd: %v\n", err)
 		return 1
@@ -86,7 +86,7 @@ func (c *Cd) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	newPath = path.Clean(newPath)
-	
+
 	// Handle -P (physical)
 	if *usePhysical && !*useLogical {
 		// In Afero/WASM, we don't have real symlinks in MemMapFs usually,

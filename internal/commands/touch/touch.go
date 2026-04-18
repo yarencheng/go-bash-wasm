@@ -32,7 +32,7 @@ func (t *Touch) Run(ctx context.Context, env *commands.Environment, args []strin
 	reference := flags.StringP("reference", "r", "", "use this file's times instead of current time")
 	dateStr := flags.StringP("date", "d", "", "parse STRING and use it instead of current time")
 	timeStr := flags.StringP("time", "t", "", "use [[CC]YY]MMDDhhmm[.ss] instead of current time")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "touch: %v\n", err)
 		return 1
@@ -86,7 +86,7 @@ func (t *Touch) Run(ctx context.Context, env *commands.Environment, args []strin
 
 		info, err := env.FS.Stat(fullPath)
 		exists := err == nil
-		
+
 		if !exists {
 			if *noCreate {
 				continue

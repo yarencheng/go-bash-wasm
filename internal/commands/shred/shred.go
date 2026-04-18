@@ -54,7 +54,7 @@ func (s *Shred) Run(ctx context.Context, env *commands.Environment, args []strin
 		}
 
 		size := stat.Size()
-		
+
 		// Overwrite iterations
 		for i := 0; i < *iterations; i++ {
 			if *verbose {

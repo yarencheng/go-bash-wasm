@@ -46,7 +46,7 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	posArgs := flags.Args()
-	
+
 	var sources []string
 	var dest string
 
@@ -70,7 +70,7 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	doPreserve := *preserve || *archive
 	// Simplistic symlink handling: default to following links unless -P or -a is set
 	followLinks := *dereference || (!*noDereference && !*archive)
-	
+
 	exitCode := 0
 
 	destFullPath := dest
@@ -82,7 +82,7 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	isDestDir := destErr == nil && destInfo.IsDir()
 
 	if *noTargetDir && isDestDir && len(sources) > 0 {
-		// If -T is specified, dest cannot be a directory unless we're copying ONE thing into it? 
+		// If -T is specified, dest cannot be a directory unless we're copying ONE thing into it?
 		// No, -T means treat it as a file. If it already IS a directory, it's usually an error for -T.
 	}
 

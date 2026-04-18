@@ -13,7 +13,7 @@ import (
 func TestCommand_Run(t *testing.T) {
 	registry := commands.New()
 	registry.Register(echo.New())
-	
+
 	out := &strings.Builder{}
 	env := &commands.Environment{
 		Stdout:   out,

@@ -24,7 +24,7 @@ func (c *Complete) Run(ctx context.Context, env *commands.Environment, args []st
 	flags := pflag.NewFlagSet("complete", pflag.ContinueOnError)
 	pflag_p := flags.BoolP("print", "p", false, "print existing completion specifications")
 	pflag_r := flags.BoolP("remove", "r", false, "remove a completion specification")
-	
+
 	// Complex flags that take arguments
 	flag_A := flags.StringP("action", "A", "", "action")
 	flag_G := flags.StringP("globpat", "G", "", "globpat")
@@ -34,7 +34,7 @@ func (c *Complete) Run(ctx context.Context, env *commands.Environment, args []st
 	flag_X := flags.StringP("filterpat", "X", "", "filterpat")
 	flag_F := flags.StringP("function", "F", "", "function")
 	flag_C := flags.StringP("command", "C", "", "command")
-	
+
 	// Boolean flags for common actions
 	flag_a := flags.BoolP("alias", "a", false, "alias")
 	flag_b := flags.BoolP("builtin", "b", false, "builtin")
@@ -88,19 +88,43 @@ func (c *Complete) Run(ctx context.Context, env *commands.Environment, args []st
 
 	// Create spec
 	cs := &commands.CompSpec{}
-	if *flag_a { cs.Actions |= 1 << 0 }
-	if *flag_b { cs.Actions |= 1 << 1 }
-	if *flag_c { cs.Actions |= 1 << 2 }
-	if *flag_d { cs.Actions |= 1 << 3 }
-	if *flag_e { cs.Actions |= 1 << 4 }
-	if *flag_f { cs.Actions |= 1 << 5 }
-	if *flag_g { cs.Actions |= 1 << 6 }
-	if *flag_j { cs.Actions |= 1 << 7 }
-	if *flag_k { cs.Actions |= 1 << 8 }
-	if *flag_s { cs.Actions |= 1 << 9 }
-	if *flag_u { cs.Actions |= 1 << 10 }
-	if *flag_v { cs.Actions |= 1 << 11 }
-	
+	if *flag_a {
+		cs.Actions |= 1 << 0
+	}
+	if *flag_b {
+		cs.Actions |= 1 << 1
+	}
+	if *flag_c {
+		cs.Actions |= 1 << 2
+	}
+	if *flag_d {
+		cs.Actions |= 1 << 3
+	}
+	if *flag_e {
+		cs.Actions |= 1 << 4
+	}
+	if *flag_f {
+		cs.Actions |= 1 << 5
+	}
+	if *flag_g {
+		cs.Actions |= 1 << 6
+	}
+	if *flag_j {
+		cs.Actions |= 1 << 7
+	}
+	if *flag_k {
+		cs.Actions |= 1 << 8
+	}
+	if *flag_s {
+		cs.Actions |= 1 << 9
+	}
+	if *flag_u {
+		cs.Actions |= 1 << 10
+	}
+	if *flag_v {
+		cs.Actions |= 1 << 11
+	}
+
 	cs.FunctionName = *flag_F
 	cs.Command = *flag_C
 	cs.GlobPat = *flag_G
@@ -108,7 +132,7 @@ func (c *Complete) Run(ctx context.Context, env *commands.Environment, args []st
 	cs.Prefix = *flag_P
 	cs.Suffix = *flag_S
 	cs.FilterPat = *flag_X
-	
+
 	if *flag_A != "" {
 		// Basic mapping of action strings to flags if needed
 	}
@@ -122,26 +146,64 @@ func (c *Complete) Run(ctx context.Context, env *commands.Environment, args []st
 
 func (c *Complete) formatSpec(cs *commands.CompSpec) string {
 	var parts []string
-	if cs.Actions&(1<<0) != 0 { parts = append(parts, "-a") }
-	if cs.Actions&(1<<1) != 0 { parts = append(parts, "-b") }
-	if cs.Actions&(1<<2) != 0 { parts = append(parts, "-c") }
-	if cs.Actions&(1<<3) != 0 { parts = append(parts, "-d") }
-	if cs.Actions&(1<<4) != 0 { parts = append(parts, "-e") }
-	if cs.Actions&(1<<5) != 0 { parts = append(parts, "-f") }
-	if cs.Actions&(1<<6) != 0 { parts = append(parts, "-g") }
-	if cs.Actions&(1<<7) != 0 { parts = append(parts, "-j") }
-	if cs.Actions&(1<<8) != 0 { parts = append(parts, "-k") }
-	if cs.Actions&(1<<9) != 0 { parts = append(parts, "-s") }
-	if cs.Actions&(1<<10) != 0 { parts = append(parts, "-u") }
-	if cs.Actions&(1<<11) != 0 { parts = append(parts, "-v") }
-	
-	if cs.FunctionName != "" { parts = append(parts, "-F "+cs.FunctionName) }
-	if cs.Command != "" { parts = append(parts, "-C "+cs.Command) }
-	if cs.GlobPat != "" { parts = append(parts, "-G "+cs.GlobPat) }
-	if cs.WordList != "" { parts = append(parts, "-W "+cs.WordList) }
-	if cs.Prefix != "" { parts = append(parts, "-P "+cs.Prefix) }
-	if cs.Suffix != "" { parts = append(parts, "-S "+cs.Suffix) }
-	if cs.FilterPat != "" { parts = append(parts, "-X "+cs.FilterPat) }
-	
+	if cs.Actions&(1<<0) != 0 {
+		parts = append(parts, "-a")
+	}
+	if cs.Actions&(1<<1) != 0 {
+		parts = append(parts, "-b")
+	}
+	if cs.Actions&(1<<2) != 0 {
+		parts = append(parts, "-c")
+	}
+	if cs.Actions&(1<<3) != 0 {
+		parts = append(parts, "-d")
+	}
+	if cs.Actions&(1<<4) != 0 {
+		parts = append(parts, "-e")
+	}
+	if cs.Actions&(1<<5) != 0 {
+		parts = append(parts, "-f")
+	}
+	if cs.Actions&(1<<6) != 0 {
+		parts = append(parts, "-g")
+	}
+	if cs.Actions&(1<<7) != 0 {
+		parts = append(parts, "-j")
+	}
+	if cs.Actions&(1<<8) != 0 {
+		parts = append(parts, "-k")
+	}
+	if cs.Actions&(1<<9) != 0 {
+		parts = append(parts, "-s")
+	}
+	if cs.Actions&(1<<10) != 0 {
+		parts = append(parts, "-u")
+	}
+	if cs.Actions&(1<<11) != 0 {
+		parts = append(parts, "-v")
+	}
+
+	if cs.FunctionName != "" {
+		parts = append(parts, "-F "+cs.FunctionName)
+	}
+	if cs.Command != "" {
+		parts = append(parts, "-C "+cs.Command)
+	}
+	if cs.GlobPat != "" {
+		parts = append(parts, "-G "+cs.GlobPat)
+	}
+	if cs.WordList != "" {
+		parts = append(parts, "-W "+cs.WordList)
+	}
+	if cs.Prefix != "" {
+		parts = append(parts, "-P "+cs.Prefix)
+	}
+	if cs.Suffix != "" {
+		parts = append(parts, "-S "+cs.Suffix)
+	}
+	if cs.FilterPat != "" {
+		parts = append(parts, "-X "+cs.FilterPat)
+	}
+
 	return strings.Join(parts, " ")
 }

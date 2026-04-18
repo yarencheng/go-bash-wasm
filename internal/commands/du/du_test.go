@@ -35,7 +35,7 @@ func TestDu_Flags(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	require.NoError(t, afero.WriteFile(fs, "/file1.txt", make([]byte, 2000), 0644))
 	require.NoError(t, afero.WriteFile(fs, "/file2.txt", make([]byte, 5000), 0644))
-	
+
 	env := &commands.Environment{
 		FS:     fs,
 		Cwd:    "/",
@@ -44,7 +44,7 @@ func TestDu_Flags(t *testing.T) {
 	}
 
 	d := New()
-	
+
 	t.Run("Threshold", func(t *testing.T) {
 		var out bytes.Buffer
 		env.Stdout = &out

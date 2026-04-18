@@ -10,11 +10,11 @@ import (
 )
 
 type fsInfo struct {
-	fs, fstype string
-	size, used int64
+	fs, fstype    string
+	size, used    int64
 	itotal, iused int64
-	mount string
-	pseudo bool
+	mount         string
+	pseudo        bool
 }
 
 type Df struct{}

@@ -66,4 +66,3 @@ func (c *Command) Run(ctx context.Context, env *commands.Environment, args []str
 
 	return cmd.Run(ctx, env, remaining[1:])
 }
-

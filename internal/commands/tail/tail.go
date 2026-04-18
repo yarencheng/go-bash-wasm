@@ -64,7 +64,7 @@ func (t *Tail) Run(ctx context.Context, env *commands.Environment, args []string
 				continue
 			}
 			defer file.Close()
-			
+
 			// Try to seek if possible
 			input = file
 		}
@@ -134,7 +134,7 @@ func (t *Tail) processReader(env *commands.Environment, reader io.Reader, lines,
 		if start < 0 {
 			start = 0
 		}
-		
+
 		terminator := "\n"
 		if zero {
 			terminator = "\x00"

@@ -53,7 +53,7 @@ func (c *Chroot) Run(ctx context.Context, env *commands.Environment, args []stri
 	// Wrap the filesystem
 	originalFS := env.FS
 	env.FS = afero.NewBasePathFs(originalFS, newRoot)
-	
+
 	// Reset CWD to / in the new FS
 	originalCwd := env.Cwd
 	env.Cwd = "/"

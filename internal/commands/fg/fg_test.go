@@ -11,11 +11,11 @@ import (
 
 func TestFg_Run(t *testing.T) {
 	tests := []struct {
-		name         string
-		args         []string
-		initialJobs  []*commands.Job
+		name           string
+		args           []string
+		initialJobs    []*commands.Job
 		expectedStatus string
-		expectedCode int
+		expectedCode   int
 	}{
 		{
 			name: "fg specific job",
@@ -24,7 +24,7 @@ func TestFg_Run(t *testing.T) {
 				{ID: 1, PID: 101, Status: "Stopped", Command: "sleep 10"},
 			},
 			expectedStatus: "Running",
-			expectedCode: 0,
+			expectedCode:   0,
 		},
 	}
 

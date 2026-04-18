@@ -19,17 +19,17 @@ func TestPr_Basic(t *testing.T) {
 	require.NoError(t, afero.WriteFile(fs, "/test.txt", []byte(content), 0644))
 
 	env := &commands.Environment{
-		FS:     fs,
-		Cwd:    "/",
-		Stdout: &bytes.Buffer{},
-		Stderr: io.Discard,
+		FS:        fs,
+		Cwd:       "/",
+		Stdout:    &bytes.Buffer{},
+		Stderr:    io.Discard,
 		StartTime: time.Unix(1000000000, 0), // Constant time for testing
 	}
 
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	output := env.Stdout.(*bytes.Buffer).String()
 	// Default pr has header with date, filename, and page number.
 	// We'll check if it contains the filename and line 1.

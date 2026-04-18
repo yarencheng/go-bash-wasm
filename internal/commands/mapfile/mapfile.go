@@ -37,7 +37,7 @@ func (m *Mapfile) Run(ctx context.Context, env *commands.Environment, args []str
 	quantum := flags.IntP("quantum", "c", 1, "number of lines to read between each call to CALLBACK")
 	delim := flags.StringP("delimiter", "d", "\n", "use DELIM to terminate lines, instead of newline")
 	skip := flags.IntP("skip", "s", 0, "discard the first SKIP lines read")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "mapfile: %v\n", err)
 		return 1

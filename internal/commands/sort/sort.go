@@ -78,7 +78,7 @@ func (s *Sort) Run(ctx context.Context, env *commands.Environment, args []string
 			s1 = strings.ToLower(s1)
 			s2 = strings.ToLower(s2)
 		}
-		
+
 		res := 0
 		if *numeric {
 			var n1, n2 float64

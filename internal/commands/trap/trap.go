@@ -57,7 +57,7 @@ func (t *Trap) Run(ctx context.Context, env *commands.Environment, args []string
 	// If the first argument is a signal name, then we are resetting
 	// But bash is complex here. If it's a number, it's a signal.
 	// If it's a string, it might be a command.
-	
+
 	// Check if the first argument is a signal
 	isFirstArgSignal := false
 	if _, ok := t.getSignal(command); ok {
@@ -101,7 +101,7 @@ func (t *Trap) getSignal(sig string) (string, bool) {
 	if strings.HasPrefix(sig, "SIG") {
 		sig = sig[3:]
 	}
-	
+
 	// Common signals
 	valid := map[string]bool{
 		"EXIT": true, "DEBUG": true, "RETURN": true, "ERR": true,
@@ -113,10 +113,10 @@ func (t *Trap) getSignal(sig string) (string, bool) {
 		"VTALRM": true, "PROF": true, "WINCH": true, "IO": true, "PWR": true,
 		"SYS": true,
 	}
-	
+
 	if valid[sig] {
 		return sig, true
 	}
-	
+
 	return "", false
 }

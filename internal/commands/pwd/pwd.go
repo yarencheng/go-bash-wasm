@@ -34,9 +34,9 @@ func (p *Pwd) Run(ctx context.Context, env *commands.Environment, args []string)
 	path := env.Cwd
 	if *physical {
 		// Use realpath logic or EvalSymlinks if possible with afero
-		// For now, satisfy with EvalSymlinks on the effective path if it's a real FS, 
+		// For now, satisfy with EvalSymlinks on the effective path if it's a real FS,
 		// but since we use MemMapFs, we might need to be careful.
-		// Actually, let's just use filepath.Clean for now as a baseline, 
+		// Actually, let's just use filepath.Clean for now as a baseline,
 		// but if we want true -P we should resolve it.
 		if resolved, err := filepath.EvalSymlinks(env.Cwd); err == nil {
 			path = resolved

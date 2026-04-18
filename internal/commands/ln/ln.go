@@ -83,4 +83,3 @@ func (l *Ln) Run(ctx context.Context, env *commands.Environment, args []string) 
 	fmt.Fprintf(env.Stderr, "ln: hard links not supported by filesystem\n")
 	return 1
 }
-

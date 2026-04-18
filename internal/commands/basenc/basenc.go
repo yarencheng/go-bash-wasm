@@ -172,7 +172,7 @@ func (bd *binaryDecoder) Read(p []byte) (n int, err error) {
 	if bn == 0 {
 		return 0, berr
 	}
-	
+
 	// Simplify: only handle multiples of 8
 	count := bn / 8
 	for i := 0; i < count; i++ {

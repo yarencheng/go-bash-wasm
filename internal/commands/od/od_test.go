@@ -29,7 +29,7 @@ func TestOd_Basic(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	output := env.Stdout.(*bytes.Buffer).String()
 	assert.Contains(t, output, "0000000") // Starting address
 }

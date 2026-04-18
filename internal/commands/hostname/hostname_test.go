@@ -12,7 +12,7 @@ import (
 func TestHostname_Run(t *testing.T) {
 	var stdout bytes.Buffer
 	env := &commands.Environment{
-		Stdout: &stdout,
+		Stdout:  &stdout,
 		EnvVars: make(map[string]string),
 	}
 

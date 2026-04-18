@@ -111,7 +111,7 @@ func (c *Cut) cutBytes(w io.Writer, line, ranges string, complement bool, termin
 func (c *Cut) cutFields(w io.Writer, line, ranges, delim, outDelim string, complement bool, terminator string) {
 	parts := strings.Split(line, delim)
 	indices := c.parseRanges(ranges, len(parts), complement)
-	
+
 	var result []string
 	for _, i := range indices {
 		if i < len(parts) {
@@ -134,7 +134,6 @@ func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	return 0, nil, nil
 }
 
-
 func (c *Cut) parseRanges(ranges string, max int, complement bool) []int {
 	// Simple range parser for "1,2,5-8"
 	var result []int
@@ -149,12 +148,12 @@ func (c *Cut) parseRanges(ranges string, max int, complement bool) []int {
 			if startStr != "" {
 				start, _ = strconv.Atoi(startStr)
 			}
-			
+
 			end := max
 			if endStr != "" {
 				end, _ = strconv.Atoi(endStr)
 			}
-			
+
 			if start < 1 {
 				start = 1
 			}
@@ -168,7 +167,7 @@ func (c *Cut) parseRanges(ranges string, max int, complement bool) []int {
 			}
 		}
 	}
-	
+
 	// Deduplicate and sort
 	unique := make(map[int]bool)
 	var final []int

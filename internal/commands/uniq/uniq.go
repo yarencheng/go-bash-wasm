@@ -2,8 +2,8 @@ package uniq
 
 import (
 	"bufio"
-	"context"
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"path/filepath"
@@ -110,7 +110,6 @@ func (u *Uniq) Run(ctx context.Context, env *commands.Environment, args []string
 	return 0
 }
 
-
 func scanNull(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if atEOF && len(data) == 0 {
 		return 0, nil, nil
@@ -138,4 +137,3 @@ func (u *Uniq) outputLine(w io.Writer, line string, count int, showCount, onlyRe
 		fmt.Fprintf(w, "%s%s", line, terminator)
 	}
 }
-

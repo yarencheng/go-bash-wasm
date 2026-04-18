@@ -25,7 +25,7 @@ func (o *Od) Run(ctx context.Context, env *commands.Environment, args []string) 
 	skip := flags.IntP("skip-bytes", "j", 0, "skip bytes from the beginning of input")
 	readLimit := flags.IntP("read-bytes", "N", -1, "limit dump to BYTES input bytes")
 	width := flags.IntP("width", "w", 16, "output BYTES bytes per line")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "od: %v\n", err)
 		return 1
@@ -69,7 +69,7 @@ func (o *Od) process(env *commands.Environment, r io.Reader, addrRadix string, s
 
 	buf := make([]byte, width)
 	offset := int64(skip)
-	
+
 	for {
 		n, err := io.ReadFull(reader, buf)
 		if n > 0 {
@@ -113,7 +113,7 @@ func (o *Od) printLine(env *commands.Environment, offset int64, data []byte, rad
 	if radix != "n" {
 		o.printAddress(env, offset, radix)
 	}
-	
+
 	// Default behavior is 2-byte octal words
 	for i := 0; i < len(data); i += 2 {
 		if i+1 < len(data) {

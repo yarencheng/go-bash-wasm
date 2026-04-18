@@ -28,7 +28,7 @@ func (s *Stat) Run(ctx context.Context, env *commands.Environment, args []string
 	fileSystem := flags.BoolP("file-system", "f", false, "display file system status instead of file status (ignored)")
 	format := flags.StringP("format", "c", "", "use the specified FORMAT instead of the default")
 	terse := flags.BoolP("terse", "t", false, "print the information in terse form")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "stat: %v\n", err)
 		return 1
@@ -89,4 +89,3 @@ func (s *Stat) Run(ctx context.Context, env *commands.Environment, args []string
 
 	return exitCode
 }
-

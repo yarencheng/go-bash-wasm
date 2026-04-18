@@ -22,7 +22,7 @@ func (y *Yes) Name() string {
 func (y *Yes) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("yes", pflag.ContinueOnError)
 	// pflag handles --help by default if we don't define it, but we can define it to be explicit.
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "yes: %v\n", err)
 		return 1

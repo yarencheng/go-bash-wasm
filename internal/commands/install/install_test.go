@@ -21,7 +21,7 @@ func TestInstall_Directory(t *testing.T) {
 	i := New()
 	status := i.Run(context.Background(), env, []string{"-d", "/new/dir"})
 	assert.Equal(t, 0, status)
-	
+
 	info, err := fs.Stat("/new/dir")
 	assert.NoError(t, err)
 	assert.True(t, info.IsDir())
@@ -39,7 +39,7 @@ func TestInstall_File(t *testing.T) {
 	i := New()
 	status := i.Run(context.Background(), env, []string{"/src.txt", "/dst.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	content, _ := afero.ReadFile(fs, "/dst.txt")
 	assert.Equal(t, "hello", string(content))
 }

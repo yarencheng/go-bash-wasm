@@ -74,11 +74,11 @@ func parseDuration(s string) (time.Duration, error) {
 	if s == "" {
 		return 0, fmt.Errorf("empty duration")
 	}
-	
+
 	unit := s[len(s)-1]
 	valStr := s
 	multiplier := time.Second
-	
+
 	switch unit {
 	case 's':
 		valStr = s[:len(s)-1]
@@ -101,6 +101,6 @@ func parseDuration(s string) (time.Duration, error) {
 	if err != nil {
 		return 0, err
 	}
-	
+
 	return time.Duration(val * float64(multiplier)), nil
 }

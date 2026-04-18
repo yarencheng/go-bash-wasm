@@ -29,37 +29,37 @@ type CompSpec struct {
 
 // Environment defines the execution environment for a command.
 type Environment struct {
-	FS     afero.Fs
-	Stdin  io.ReadCloser
-	Stdout io.Writer
-	Stderr io.Writer
-	Cwd    string
-	User   string
-	Uid    int
-	Gid    int
-	Umask  uint32
-	Groups        []int
-	StartTime     time.Time
-	ExitRequested bool
-	ExitCode      int
-	ReturnRequested bool
-	ReturnCode      int
+	FS                afero.Fs
+	Stdin             io.ReadCloser
+	Stdout            io.Writer
+	Stderr            io.Writer
+	Cwd               string
+	User              string
+	Uid               int
+	Gid               int
+	Umask             uint32
+	Groups            []int
+	StartTime         time.Time
+	ExitRequested     bool
+	ExitCode          int
+	ReturnRequested   bool
+	ReturnCode        int
 	BreakRequested    int
 	ContinueRequested int
-	EnvVars       map[string]string
-	PositionalArgs []string
-	Arrays        map[string][]string
-	DirStack      []string
-	Aliases       map[string]string
-	Functions     map[string]string
-	Hash          map[string]string
-	History       []string
-	Jobs          []*Job
-	Completions   map[string]*CompSpec
-	Shopts        map[string]bool
-	Traps         map[string]string
-	Registry      *Registry
-	Executor      Executor
+	EnvVars           map[string]string
+	PositionalArgs    []string
+	Arrays            map[string][]string
+	DirStack          []string
+	Aliases           map[string]string
+	Functions         map[string]string
+	Hash              map[string]string
+	History           []string
+	Jobs              []*Job
+	Completions       map[string]*CompSpec
+	Shopts            map[string]bool
+	Traps             map[string]string
+	Registry          *Registry
+	Executor          Executor
 }
 
 // Executor defines the interface for executing shell commands.

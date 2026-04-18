@@ -14,7 +14,7 @@ func TestEval_Run(t *testing.T) {
 	var stdout bytes.Buffer
 	registry := commands.New()
 	registry.Register(echo.New())
-	
+
 	env := &commands.Environment{
 		Stdout:   &stdout,
 		Registry: registry,

@@ -67,7 +67,7 @@ func (t *Truncate) Run(ctx context.Context, env *commands.Environment, args []st
 			fmt.Fprintf(env.Stderr, "truncate: invalid size '%s': %v\n", *sizeStr, err)
 			return 1
 		}
-		
+
 		valSize := val * multiplier
 		if rel == 0 {
 			targetSize = valSize
@@ -79,7 +79,7 @@ func (t *Truncate) Run(ctx context.Context, env *commands.Environment, args []st
 	exitCode := 0
 	for _, arg := range remaining {
 		var finalSize int64 = targetSize
-		
+
 		if strings.HasPrefix(*sizeStr, "+") || strings.HasPrefix(*sizeStr, "-") {
 			stat, err := env.FS.Stat(arg)
 			if err != nil {
@@ -92,12 +92,12 @@ func (t *Truncate) Run(ctx context.Context, env *commands.Environment, args []st
 					continue
 				}
 			}
-			
+
 			currentSize := int64(0)
 			if stat != nil {
 				currentSize = stat.Size()
 			}
-			
+
 			val, multiplier, _ := parseSize((*sizeStr)[1:])
 			adj := val * multiplier
 			if strings.HasPrefix(*sizeStr, "+") {
@@ -114,7 +114,7 @@ func (t *Truncate) Run(ctx context.Context, env *commands.Environment, args []st
 		if !*noCreate {
 			mode |= os.O_CREATE
 		}
-		
+
 		f, err := env.FS.OpenFile(arg, mode, 0666)
 		if err != nil {
 			if !(*noCreate && os.IsNotExist(err)) {
@@ -123,7 +123,7 @@ func (t *Truncate) Run(ctx context.Context, env *commands.Environment, args []st
 			}
 			continue
 		}
-		
+
 		if err := f.Truncate(finalSize); err != nil {
 			fmt.Fprintf(env.Stderr, "truncate: failed to truncate '%s' to %d bytes: %v\n", arg, finalSize, err)
 			exitCode = 1
@@ -138,10 +138,10 @@ func parseSize(s string) (int64, int64, error) {
 	if s == "" {
 		return 0, 0, fmt.Errorf("empty size")
 	}
-	
+
 	multiplier := int64(1)
 	valStr := s
-	
+
 	last := s[len(s)-1]
 	switch last {
 	case 'K', 'k':

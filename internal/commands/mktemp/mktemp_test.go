@@ -23,10 +23,10 @@ func TestMktemp_Basic(t *testing.T) {
 	m := New()
 	status := m.Run(context.Background(), env, []string{})
 	assert.Equal(t, 0, status)
-	
+
 	path := strings.TrimSpace(out.String())
 	assert.Contains(t, path, "tmp.")
-	
+
 	info, err := fs.Stat(path)
 	assert.NoError(t, err)
 	assert.False(t, info.IsDir())
@@ -44,7 +44,7 @@ func TestMktemp_Directory(t *testing.T) {
 	m := New()
 	status := m.Run(context.Background(), env, []string{"-d"})
 	assert.Equal(t, 0, status)
-	
+
 	path := strings.TrimSpace(out.String())
 	info, err := fs.Stat(path)
 	assert.NoError(t, err)
@@ -64,7 +64,7 @@ func TestMktemp_Suffix(t *testing.T) {
 	// mktemp test.XXXXXX
 	status := m.Run(context.Background(), env, []string{"test.XXXXXX"})
 	assert.Equal(t, 0, status)
-	
+
 	path := strings.TrimSpace(out.String())
 	assert.True(t, strings.HasPrefix(filepath.Base(path), "test."))
 }

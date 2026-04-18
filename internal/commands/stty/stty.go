@@ -30,7 +30,7 @@ func (s *Stty) Run(ctx context.Context, env *commands.Environment, args []string
 	}
 
 	// Stub: in WASM we don't really have a TTY that we can configure this way.
-	
+
 	if len(args) == 0 || (len(args) == 1 && (args[0] == "-a" || args[0] == "--all")) {
 		fmt.Fprintf(env.Stdout, "speed 38400 baud; line = 0;\n")
 		fmt.Fprintf(env.Stdout, "-brkint -imaxbel\n")

@@ -22,7 +22,7 @@ func TestLn_Run(t *testing.T) {
 	}
 
 	lnCmd := New()
-	
+
 	// Test symbolic link
 	status := lnCmd.Run(context.Background(), env, []string{"-s", "/test.txt", "/link.txt"})
 

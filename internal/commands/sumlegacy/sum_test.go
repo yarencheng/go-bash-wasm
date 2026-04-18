@@ -13,14 +13,14 @@ import (
 func TestSumLegacy(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	afero.WriteFile(fs, "/test", []byte("hello world\n"), 0644)
-	
+
 	env := &commands.Environment{
 		FS:     fs,
 		Stdout: new(bytes.Buffer),
 		Stderr: new(bytes.Buffer),
 		Cwd:    "/",
 	}
-	
+
 	s := New()
 
 	t.Run("BSD sum", func(t *testing.T) {

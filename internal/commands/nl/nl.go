@@ -87,8 +87,12 @@ func (n *Nl) process(env *commands.Environment, r io.Reader, opts nlOptions) int
 
 	d1 := ":"
 	d2 := ":"
-	if len(opts.delim) >= 1 { d1 = string(opts.delim[0]) }
-	if len(opts.delim) >= 2 { d2 = string(opts.delim[1]) }
+	if len(opts.delim) >= 1 {
+		d1 = string(opts.delim[0])
+	}
+	if len(opts.delim) >= 2 {
+		d2 = string(opts.delim[1])
+	}
 
 	pair := d1 + d2
 	hDelim := pair + pair + pair
@@ -97,19 +101,25 @@ func (n *Nl) process(env *commands.Environment, r io.Reader, opts nlOptions) int
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		
+
 		isDelim := false
 		if line == hDelim {
 			section = "header"
-			if !opts.noRenumber { lineNum = opts.startNum }
+			if !opts.noRenumber {
+				lineNum = opts.startNum
+			}
 			isDelim = true
 		} else if line == bDelim {
 			section = "body"
-			if !opts.noRenumber { lineNum = opts.startNum }
+			if !opts.noRenumber {
+				lineNum = opts.startNum
+			}
 			isDelim = true
 		} else if line == fDelim {
 			section = "footer"
-			if !opts.noRenumber { lineNum = opts.startNum }
+			if !opts.noRenumber {
+				lineNum = opts.startNum
+			}
 			isDelim = true
 		}
 
@@ -119,17 +129,21 @@ func (n *Nl) process(env *commands.Environment, r io.Reader, opts nlOptions) int
 		}
 
 		style := opts.bStyle
-		if section == "header" { style = opts.hStyle }
-		if section == "footer" { style = opts.fStyle }
+		if section == "header" {
+			style = opts.hStyle
+		}
+		if section == "footer" {
+			style = opts.fStyle
+		}
 
 		shouldNumber := false
 		isEmpty := strings.TrimSpace(line) == ""
-		
+
 		if isEmpty {
 			blankCount++
 			if blankCount >= opts.joinBlank {
 				blankCount = 0
-				if style == "a" || style == "t" { // GNU nl: t numbers non-empty, but if joined blanks reach threshold it might number? 
+				if style == "a" || style == "t" { // GNU nl: t numbers non-empty, but if joined blanks reach threshold it might number?
 					// Actually 't' only numbers non-empty. 'a' numbers all.
 				}
 			}

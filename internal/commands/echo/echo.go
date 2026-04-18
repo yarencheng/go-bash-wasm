@@ -29,7 +29,7 @@ func (e *Echo) Run(ctx context.Context, env *commands.Environment, args []string
 		if len(arg) < 2 || arg[0] != '-' {
 			break
 		}
-		
+
 		isFlag := true
 		for j := 1; j < len(arg); j++ {
 			switch arg[j] {
@@ -47,7 +47,7 @@ func (e *Echo) Run(ctx context.Context, env *commands.Environment, args []string
 				break
 			}
 		}
-		
+
 		if !isFlag {
 			break
 		}

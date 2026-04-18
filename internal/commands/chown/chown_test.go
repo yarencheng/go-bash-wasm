@@ -23,7 +23,7 @@ func TestChown_Run(t *testing.T) {
 	}
 
 	c := New()
-	
+
 	// Test chown wasm:wasm
 	status := c.Run(context.Background(), env, []string{"wasm:wasm", "/test.txt"})
 	assert.Equal(t, 0, status)
@@ -31,7 +31,7 @@ func TestChown_Run(t *testing.T) {
 	// Test chown root
 	status = c.Run(context.Background(), env, []string{"root", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	// Test chown :1001
 	status = c.Run(context.Background(), env, []string{":1001", "/test.txt"})
 	assert.Equal(t, 0, status)

@@ -28,7 +28,7 @@ func TestUnexpand_Basic(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "\tline 1\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }

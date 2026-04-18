@@ -72,10 +72,18 @@ func (j *Join) Run(ctx context.Context, env *commands.Environment, args []string
 	}
 	defer f2.Close()
 
-	if *auto1 || aFilter == 1 { aFilter = 1 }
-	if *auto2 || aFilter == 2 { aFilter = 2 }
-	if *unpair1 || vFilter == 1 { vFilter = 1 }
-	if *unpair2 || vFilter == 2 { vFilter = 2 }
+	if *auto1 || aFilter == 1 {
+		aFilter = 1
+	}
+	if *auto2 || aFilter == 2 {
+		aFilter = 2
+	}
+	if *unpair1 || vFilter == 1 {
+		vFilter = 1
+	}
+	if *unpair2 || vFilter == 2 {
+		vFilter = 2
+	}
 
 	splitFunc := strings.Fields
 	if *delim != "" {
@@ -187,7 +195,7 @@ func (j *Join) formatOutput(format, key string, p1, p2 []string, f1, f2 int, emp
 		fileNum := numField[0]
 		fieldIdx := 0
 		fmt.Sscanf(numField[1], "%d", &fieldIdx)
-		
+
 		val := empty
 		if fileNum == "1" && p1 != nil && fieldIdx <= len(p1) {
 			val = p1[fieldIdx-1]

@@ -47,7 +47,7 @@ func (f *Fg) Run(ctx context.Context, env *commands.Environment, args []string) 
 
 	targetJob.Status = "Running"
 	fmt.Fprintf(env.Stdout, "%s\n", targetJob.Command)
-	
+
 	// In a real shell, we would wait for it.
 	// In the simulator, if it's "running" in the foreground, we just return.
 	return 0

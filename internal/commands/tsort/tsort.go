@@ -48,7 +48,7 @@ func (t *Tsort) Run(ctx context.Context, env *commands.Environment, args []strin
 func (t *Tsort) process(env *commands.Environment, r io.Reader) int {
 	scanner := bufio.NewScanner(r)
 	scanner.Split(bufio.ScanWords)
-	
+
 	var words []string
 	for scanner.Scan() {
 		words = append(words, scanner.Text())
@@ -79,7 +79,7 @@ func (t *Tsort) process(env *commands.Environment, r io.Reader) int {
 			queue = append(queue, node)
 		}
 	}
-	
+
 	// For deterministic output, sort the initial queue
 	sort.Strings(queue)
 
@@ -92,7 +92,7 @@ func (t *Tsort) process(env *commands.Environment, r io.Reader) int {
 		for _, v := range adj[u] {
 			inDegree[v]--
 			if inDegree[v] == 0 {
-				// To keep it somewhat stable/deterministic, we could sort the queue after each add, 
+				// To keep it somewhat stable/deterministic, we could sort the queue after each add,
 				// but Kahn's typically adds to the end.
 				queue = append(queue, v)
 				sort.Strings(queue)

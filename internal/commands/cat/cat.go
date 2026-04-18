@@ -33,7 +33,7 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 	showNonPrinting := flags.BoolP("show-nonprinting", "v", false, "use ^ and M- notation, except for LFD and TAB")
 	eFlag := flags.BoolP("e", "e", false, "equivalent to -vE")
 	tFlag := flags.BoolP("t", "t", false, "equivalent to -vT")
-	
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "cat: %v\n", err)
 		return 1
@@ -132,16 +132,16 @@ func (c *Cat) Run(ctx context.Context, env *commands.Environment, args []string)
 			if *showNonPrinting {
 				processed = toNonPrinting(processed)
 			}
-			
+
 			fmt.Fprint(env.Stdout, processed)
-			
+
 			if *showEnds && hasNewline {
 				fmt.Fprint(env.Stdout, "$")
 			}
 			if hasNewline {
 				fmt.Fprint(env.Stdout, "\n")
 			}
-			
+
 			lastLineEmpty = isEmpty
 		}
 	}
@@ -180,4 +180,3 @@ func toNonPrinting(s string) string {
 	}
 	return b.String()
 }
-

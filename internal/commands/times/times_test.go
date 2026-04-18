@@ -21,7 +21,7 @@ func TestTimes(t *testing.T) {
 
 	code := tm.Run(context.Background(), env, []string{})
 	assert.Equal(t, 0, code)
-	
+
 	output := stdout.String()
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	assert.Equal(t, 2, len(lines))

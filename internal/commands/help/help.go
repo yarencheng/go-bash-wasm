@@ -38,10 +38,10 @@ func (h *Help) Run(ctx context.Context, env *commands.Environment, args []string
 		fmt.Fprintln(env.Stdout, "This is a Go-based Bash simulator (WASM).")
 		fmt.Fprintln(env.Stdout, "These shell commands are defined internally.  Type `help' to see this list.")
 		fmt.Fprintln(env.Stdout, "")
-		
+
 		cmds := env.Registry.List()
 		sort.Strings(cmds)
-		
+
 		// Print in columns
 		for i, name := range cmds {
 			fmt.Fprintf(env.Stdout, "%-15s", name)

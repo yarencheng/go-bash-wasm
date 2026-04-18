@@ -21,7 +21,7 @@ func TestLink_Run(t *testing.T) {
 
 	ln := New()
 	status := ln.Run(context.Background(), env, []string{"/src.txt", "/dst.txt"})
-	
+
 	// MemMapFs doesn't support Link, so we expect status 1 (error)
 	// If it ever supports it, this test will fail and we can update it.
 	assert.Equal(t, 1, status)

@@ -10,7 +10,8 @@ import (
 )
 
 type mockCmd struct{ name string }
-func (m *mockCmd) Name() string { return m.name }
+
+func (m *mockCmd) Name() string                                                          { return m.name }
 func (m *mockCmd) Run(ctx context.Context, env *commands.Environment, args []string) int { return 0 }
 
 func TestEnable(t *testing.T) {

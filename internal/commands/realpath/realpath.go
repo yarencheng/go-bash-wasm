@@ -29,7 +29,7 @@ func (r *Realpath) Run(ctx context.Context, env *commands.Environment, args []st
 	zero := flags.BoolP("zero", "z", false, "end each output line with NUL, not newline")
 	relativeTo := flags.String("relative-to", "", "print the resolved paths relative to FILE")
 	relativeBase := flags.String("relative-base", "", "print paths relative to FILE, or absolute if not under FILE")
-	
+
 	// -L and -P are usually flags for following symlinks
 	_ = flags.BoolP("logical", "L", false, "resolve '..' components before symlinks")
 	_ = flags.BoolP("physical", "P", false, "resolve symlinks (default)")
@@ -81,7 +81,7 @@ func (r *Realpath) Run(ctx context.Context, env *commands.Environment, args []st
 		if !*strip && !*canonicalizeMissing {
 			// This is where symlink resolution would go if supported
 		}
-		
+
 		result := cleanPath
 		if relTo != "" {
 			var err error

@@ -56,7 +56,7 @@ func (t *Tac) Run(ctx context.Context, env *commands.Environment, args []string)
 
 func (t *Tac) process(env *commands.Environment, r io.Reader, sep string, before bool) int {
 	var chunks []string
-	
+
 	if sep == "\n" {
 		scanner := bufio.NewScanner(r)
 		for scanner.Scan() {
@@ -80,9 +80,9 @@ func (t *Tac) process(env *commands.Environment, r io.Reader, sep string, before
 	}
 
 	parts := strings.Split(string(data), sep)
-	// If it ends with sep, the last part is empty. 
+	// If it ends with sep, the last part is empty.
 	// GNU tac: if input ends with sep, we should keep it.
-	
+
 	for i := len(parts) - 1; i >= 0; i-- {
 		if i == len(parts)-1 && parts[i] == "" {
 			continue

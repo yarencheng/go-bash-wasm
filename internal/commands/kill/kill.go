@@ -48,11 +48,11 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 	list := flags.BoolP("list", "l", false, "list signal names")
 	sigName := flags.StringP("signal", "s", "", "specify the signal to be sent")
 	sigNum := flags.IntP("signum", "n", -1, "specify the signal number to be sent")
-	
+
 	// kill has weird flag parsing where -SIGNAL is common.
 	// pflag doesn't handle -9 or -TERM easily as flags.
 	// We'll manually check for those.
-	
+
 	if len(args) > 0 && strings.HasPrefix(args[0], "-") && !strings.HasPrefix(args[0], "--") && len(args[0]) > 1 {
 		// Might be -9 or -TERM
 		if !*list {
@@ -95,7 +95,7 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 					fmt.Fprintf(env.Stderr, "kill: %s: invalid signal number\n", arg)
 				}
 			} else {
-				// name to number? 
+				// name to number?
 				found := false
 				name := strings.ToUpper(strings.TrimPrefix(arg, "SIG"))
 				for num, sig := range signals {
@@ -149,7 +149,7 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 
 		// In simulator, we only have 'process' 1 (the shell itself) or nothing.
 		if pid == 1 {
-			// Signaling self? 
+			// Signaling self?
 			// For now just ignore but return success if it's a known signal.
 			_ = signal
 		} else {

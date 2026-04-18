@@ -47,7 +47,7 @@ func TestSort_Run(t *testing.T) {
 	status = s.Run(context.Background(), env, []string{"-f", "/case.txt"})
 	assert.Equal(t, 0, status)
 	// Without -f, B < a. With -f, a and B are compared case-insensitively.
-	// Bash sort -f: a comes before B typically? Depends on locale. 
+	// Bash sort -f: a comes before B typically? Depends on locale.
 	// Usually "a" and "B" compared as "A" vs "B".
 	assert.Equal(t, "a\nB\n", env.Stdout.(*bytes.Buffer).String())
 
@@ -60,7 +60,7 @@ func TestSort_Run(t *testing.T) {
 
 	// Test check
 	status = s.Run(context.Background(), env, []string{"-c", "/test.txt"}) // /test.txt is c, a, b
-	assert.Equal(t, 1, status) // Should fail check
+	assert.Equal(t, 1, status)                                             // Should fail check
 
 	// Test output file
 	status = s.Run(context.Background(), env, []string{"-o", "/out.txt", "/test.txt"})

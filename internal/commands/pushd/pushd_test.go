@@ -13,7 +13,7 @@ import (
 func TestPushd_Basic(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	fs.MkdirAll("/dir1", 0755)
-	
+
 	env := &commands.Environment{
 		FS:       fs,
 		Stdout:   io.Discard,
@@ -44,7 +44,7 @@ func TestPushd_NoChdir(t *testing.T) {
 	status := p.Run(context.Background(), env, []string{"-n", "/dir1"})
 	assert.Equal(t, 0, status)
 	assert.Equal(t, "/", env.Cwd)
-	// Bash pushd -n /dir1 adds /dir1 to the SECOND position? 
+	// Bash pushd -n /dir1 adds /dir1 to the SECOND position?
 	// Actually, Bash pushd -n dir adds dir to the stack but keeps CWD.
 	// The stack becomes: CWD dir old_stack...
 	assert.Contains(t, env.DirStack, "/dir1")

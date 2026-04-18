@@ -91,7 +91,7 @@ func TestLs_Run(t *testing.T) {
 	t.Run("sort by size -S", func(t *testing.T) {
 		// file1 and file2 are same size in my setup, let's create a bigger one
 		require.NoError(t, afero.WriteFile(fs, "/big.txt", make([]byte, 100), 0644))
-		
+
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{
 			FS:     fs,
@@ -124,7 +124,7 @@ func TestLs_Run(t *testing.T) {
 	t.Run("recursive listing -R", func(t *testing.T) {
 		require.NoError(t, fs.MkdirAll("/dir1/subdir", 0755))
 		require.NoError(t, afero.WriteFile(fs, "/dir1/subdir/deep.txt", []byte("deep"), 0644))
-		
+
 		var stdout, stderr bytes.Buffer
 		env := &commands.Environment{
 			FS:     fs,
@@ -153,7 +153,7 @@ func TestLs_Run(t *testing.T) {
 		assert.Equal(t, 0, status)
 		// Usually numeric IDs are shown as 0 or 1000 etc.
 		// afero doesn't mock these well but we check for formatting.
-		assert.Contains(t, stdout.String(), "0") 
+		assert.Contains(t, stdout.String(), "0")
 	})
 
 	t.Run("directory indicator -p", func(t *testing.T) {
@@ -202,7 +202,7 @@ func TestLs_Run(t *testing.T) {
 		for _, line := range lines {
 			parts := strings.Fields(line)
 			// Mode, owner, size, month, day, time, name
-			assert.LessOrEqual(t, len(parts), 7) 
+			assert.LessOrEqual(t, len(parts), 7)
 		}
 	})
 
@@ -261,7 +261,7 @@ func TestLs_Run(t *testing.T) {
 		status := ls.Run(context.Background(), env, []string{"-g"})
 		assert.Equal(t, 0, status)
 		// Should contain group but not owner
-		assert.Contains(t, stdout.String(), "root") 
+		assert.Contains(t, stdout.String(), "root")
 		// owner usually comes before group, if it's "root  root", we check if only one is there.
 		// Actually my implementation joins with "  ".
 		output := stdout.String()
@@ -364,7 +364,7 @@ func TestLs_Run(t *testing.T) {
 		status := ls.Run(context.Background(), env, []string{"-s"})
 		assert.Equal(t, 0, status)
 		// Should contain a block number before names
-		assert.Contains(t, stdout.String(), "1") 
+		assert.Contains(t, stdout.String(), "1")
 	})
 
 	t.Run("ignore backups -B", func(t *testing.T) {

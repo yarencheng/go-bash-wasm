@@ -22,7 +22,7 @@ func TestHelp_ListAll(t *testing.T) {
 	registry := commands.New()
 	registry.Register(&mockCommand{name: "test1"})
 	registry.Register(&mockCommand{name: "test2"})
-	
+
 	out := &strings.Builder{}
 	env := &commands.Environment{
 		Stdout:   out,

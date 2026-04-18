@@ -55,7 +55,7 @@ func (d *Disown) Run(ctx context.Context, env *commands.Environment, args []stri
 				return 0
 			}
 			if *hup {
-				// We don't have a field for this, but we simulate it by doing nothing 
+				// We don't have a field for this, but we simulate it by doing nothing
 				// since our jobs are already persistent in the simulation.
 				return 0
 			}

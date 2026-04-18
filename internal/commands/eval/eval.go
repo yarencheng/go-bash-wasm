@@ -24,7 +24,7 @@ func (e *Eval) Run(ctx context.Context, env *commands.Environment, args []string
 
 	// join arguments into a single string
 	line := strings.Join(args, " ")
-	
+
 	// Very simple shell execution logic for now, similar to shell.go
 	// In the future, this should probably use the full shell parser/executor
 	subArgs := strings.Fields(line)
@@ -38,6 +38,6 @@ func (e *Eval) Run(ctx context.Context, env *commands.Environment, args []string
 	if cmd, ok := env.Registry.Get(cmdName); ok {
 		return cmd.Run(ctx, env, cmdArgs)
 	}
-	
+
 	return 127
 }

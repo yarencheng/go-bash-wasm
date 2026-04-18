@@ -11,11 +11,11 @@ import (
 
 func TestDisown_Run(t *testing.T) {
 	tests := []struct {
-		name          string
-		args          []string
-		initialJobs   []*commands.Job
-		expectedJobs  []*commands.Job
-		expectedCode  int
+		name         string
+		args         []string
+		initialJobs  []*commands.Job
+		expectedJobs []*commands.Job
+		expectedCode int
 	}{
 		{
 			name: "disown specific job",

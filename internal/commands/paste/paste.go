@@ -80,7 +80,7 @@ func (p *Paste) processParallel(env *commands.Environment, files []io.ReadCloser
 	}
 
 	delimChars := []rune(delims)
-	
+
 	for {
 		active := false
 		var builder strings.Builder
@@ -116,7 +116,7 @@ func (p *Paste) processSerial(env *commands.Environment, files []io.ReadCloser, 
 		if zero {
 			scanner.Split(scanNull)
 		}
-		
+
 		first := true
 		i := 0
 		for scanner.Scan() {

@@ -40,7 +40,7 @@ func (e *Enable) Run(ctx context.Context, env *commands.Environment, args []stri
 
 		for _, name := range names {
 			isEnabled := env.Registry.IsEnabled(name)
-			
+
 			if *posix {
 				// Special stubs - for now consider all special
 			}

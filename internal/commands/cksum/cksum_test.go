@@ -15,7 +15,7 @@ import (
 func TestCksum_Basic(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	afero.WriteFile(fs, "/test", []byte("hello"), 0644)
-	
+
 	out := &strings.Builder{}
 	env := &commands.Environment{
 		FS:     fs,

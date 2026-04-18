@@ -74,8 +74,6 @@ func (s *Split) Run(ctx context.Context, env *commands.Environment, args []strin
 		byteLimit = val
 	}
 
-	
-	
 	if *numChunks != "" {
 		n, err := strconv.Atoi(*numChunks)
 		if err == nil && n > 0 {
@@ -207,7 +205,7 @@ func (s *Split) getSuffix(index, length int, numeric bool) string {
 	if numeric {
 		return fmt.Sprintf("%0*d", length, index)
 	}
-	
+
 	res := make([]byte, length)
 	temp := index
 	for i := length - 1; i >= 0; i-- {

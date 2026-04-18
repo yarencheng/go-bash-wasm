@@ -95,7 +95,7 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 		// Support redirections (simple implementation)
 		args := strings.Fields(cmdLine)
 		var finalArgs []string
-		
+
 		// Temporary redirects
 		var stdoutRedirect string
 		var stderrRedirect string
@@ -234,7 +234,7 @@ func (s *Shell) expand(line string) string {
 
 	// 3. Simple variable expansion: $VAR or ${VAR} or ${VAR:-default}
 	result := line
-	
+
 	// Handle ${VAR} and ${VAR:-default}
 	for strings.Contains(result, "${") {
 		start := strings.Index(result, "${")
@@ -244,11 +244,11 @@ func (s *Shell) expand(line string) string {
 		}
 		end += start
 		expr := result[start+2 : end]
-		
+
 		val := s.resolveVariable(expr)
 		result = result[:start] + val + result[end+1:]
 	}
-	
+
 	// Simple $VAR expansion (non-greedy)
 	// This is a rough approximation
 	return result

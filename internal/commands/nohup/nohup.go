@@ -43,6 +43,6 @@ func (n *Nohup) Run(ctx context.Context, env *commands.Environment, args []strin
 	// In real nohup, we would redirect stdout/stderr to nohup.out if they are terminals.
 	// For simulator, we just run the command.
 	// "nohup: ignoring input and appending output to 'nohup.out'" message skipped for now.
-	
+
 	return cmd.Run(ctx, env, cmdArgs)
 }

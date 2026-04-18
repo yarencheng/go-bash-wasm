@@ -28,15 +28,15 @@ func (t *Time) Run(ctx context.Context, env *commands.Environment, args []string
 	}
 
 	start := time.Now()
-	
+
 	// Re-execute the rest of the arguments as a command
 	line := strings.Join(args, " ")
 	exitCode := env.Executor.Execute(ctx, line)
-	
+
 	duration := time.Since(start)
 
 	if env.Stderr != nil {
-		fmt.Fprintf(env.Stderr, "\nreal %dm%.3fs\nuser 0m0.000s\nsys 0m0.000s\n", 
+		fmt.Fprintf(env.Stderr, "\nreal %dm%.3fs\nuser 0m0.000s\nsys 0m0.000s\n",
 			int(duration.Minutes()), duration.Seconds()-float64(int(duration.Minutes())*60))
 	}
 

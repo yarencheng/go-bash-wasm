@@ -44,7 +44,7 @@ func TestChmod_Symbolic(t *testing.T) {
 	}
 
 	c := New()
-	
+
 	// u+x
 	status := c.Run(context.Background(), env, []string{"u+x", "/test.txt"})
 	assert.Equal(t, 0, status)
@@ -62,7 +62,7 @@ func TestChmod_Symbolic(t *testing.T) {
 	assert.Equal(t, 0, status)
 	info, _ = fs.Stat("/test.txt")
 	assert.Equal(t, os.FileMode(0726), info.Mode().Perm())
-	
+
 	// =r
 	status = c.Run(context.Background(), env, []string{"=r", "/test.txt"})
 	assert.Equal(t, 0, status)

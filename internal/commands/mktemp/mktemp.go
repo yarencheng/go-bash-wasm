@@ -52,7 +52,7 @@ func (m *Mktemp) Run(ctx context.Context, env *commands.Environment, args []stri
 	// Basic implementation of mktemp template
 	// GNU mktemp template suffix is XXXXXX (at least 3)
 	// afero.TempFile/TempDir use 'pattern' differently.
-	
+
 	pattern := template
 	if strings.HasSuffix(template, "XXXXXX") {
 		// afero uses '*' as a placeholder for random string

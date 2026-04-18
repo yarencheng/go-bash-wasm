@@ -37,7 +37,7 @@ func (s *Stdbuf) Run(ctx context.Context, env *commands.Environment, args []stri
 
 	// Stub: we just execute the command without actually changing buffering.
 	// In a real system this would use LD_PRELOAD.
-	
+
 	cmdName := remaining[0]
 	cmdArgs := remaining[1:]
 

@@ -41,7 +41,7 @@ func (h *Hash) Run(ctx context.Context, env *commands.Environment, args []string
 			fmt.Fprintln(env.Stdout, "hash: hash table empty")
 			return 0
 		}
-		
+
 		fmt.Fprintln(env.Stdout, "hits\tcommand")
 		keys := make([]string, 0, len(env.Hash))
 		for k := range env.Hash {

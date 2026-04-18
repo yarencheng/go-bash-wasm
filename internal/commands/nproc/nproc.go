@@ -33,7 +33,7 @@ func (n *Nproc) Run(ctx context.Context, env *commands.Environment, args []strin
 	if *all {
 		// In Go/WASM they might be same
 	}
-	
+
 	result := num - *ignore
 	if result < 1 {
 		result = 1

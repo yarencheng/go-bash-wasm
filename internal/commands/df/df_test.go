@@ -12,7 +12,7 @@ import (
 
 func TestDf_Flags(t *testing.T) {
 	d := New()
-	
+
 	t.Run("Inodes", func(t *testing.T) {
 		var out bytes.Buffer
 		env := &commands.Environment{Stdout: &out, Stderr: io.Discard}

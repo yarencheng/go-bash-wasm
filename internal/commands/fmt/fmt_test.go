@@ -28,7 +28,7 @@ func TestFmt_Basic(t *testing.T) {
 	// Wrap to 20 chars
 	status := cmd.Run(context.Background(), env, []string{"-w", "20", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	// Check if any line exceeds 20 chars
 	lines := bytes.Split(env.Stdout.(*bytes.Buffer).Bytes(), []byte("\n"))
 	for _, line := range lines {
@@ -54,6 +54,6 @@ func TestFmt_SplitOnly(t *testing.T) {
 	// Split only should not join short lines
 	status := cmd.Run(context.Background(), env, []string{"-s", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	assert.Equal(t, content, env.Stdout.(*bytes.Buffer).String())
 }

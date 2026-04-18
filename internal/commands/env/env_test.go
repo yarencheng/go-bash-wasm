@@ -60,7 +60,7 @@ func TestEnv_Run(t *testing.T) {
 	t.Run("execute command", func(t *testing.T) {
 		var stdout bytes.Buffer
 		registry := commands.New()
-		
+
 		// Mock command
 		mockCmd := &mockCommand{name: "hi"}
 		registry.Register(mockCmd)

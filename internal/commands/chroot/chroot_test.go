@@ -15,11 +15,11 @@ func TestChroot_Run(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	_ = fs.MkdirAll("/newroot/etc", 0755)
 	_ = afero.WriteFile(fs, "/newroot/etc/hostname", []byte("chrooted-host"), 0644)
-	
+
 	var stdout bytes.Buffer
 	registry := commands.New()
 	registry.Register(pwd.New())
-	
+
 	env := &commands.Environment{
 		FS:       fs,
 		Stdout:   &stdout,

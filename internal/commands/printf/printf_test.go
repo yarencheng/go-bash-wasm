@@ -18,7 +18,7 @@ func TestPrintf_Complex(t *testing.T) {
 	}
 
 	p := New()
-	
+
 	// Test %b
 	stdout.Reset()
 	status := p.Run(context.Background(), env, []string{"%b", "hello\\nworld"})

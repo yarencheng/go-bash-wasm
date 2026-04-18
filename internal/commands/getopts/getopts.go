@@ -26,7 +26,7 @@ func (g *Getopts) Run(ctx context.Context, env *commands.Environment, args []str
 
 	optstring := args[0]
 	varname := args[1]
-	
+
 	// Arguments to parse are from args[2:]
 	// If args[2:] is empty, we should probably look at shell's positional parameters.
 	// But our Environment doesn't have shell positional parameters directly yet.

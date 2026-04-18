@@ -73,7 +73,7 @@ func (e *Expand) process(env *commands.Environment, r io.Reader, initial bool, t
 func (e *Expand) expandLine(line string, initial bool, tabSize int) string {
 	var builder strings.Builder
 	column := 0
-	
+
 	onlyInitial := initial
 
 	for i := 0; i < len(line); i++ {

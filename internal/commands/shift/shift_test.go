@@ -12,7 +12,7 @@ import (
 func TestShift_Run(t *testing.T) {
 	env := &commands.Environment{
 		PositionalArgs: []string{"a", "b", "c"},
-		Stderr: io.Discard,
+		Stderr:         io.Discard,
 	}
 
 	s := New()

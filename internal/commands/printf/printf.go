@@ -20,7 +20,7 @@ func (p *Printf) Name() string {
 
 func (p *Printf) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	var varName string
-	
+
 	// Printf flags must come before the format string
 	i := 0
 	for ; i < len(args); i++ {
@@ -61,7 +61,7 @@ func (p *Printf) Run(ctx context.Context, env *commands.Environment, args []stri
 			processedFormat := ""
 			currentArgs := []interface{}{}
 			argIdx := 0
-			
+
 			for j := 0; j < len(format); j++ {
 				if format[j] == '%' && j+1 < len(format) {
 					spec := format[j+1]
@@ -70,17 +70,17 @@ func (p *Printf) Run(ctx context.Context, env *commands.Environment, args []stri
 						j++
 						continue
 					}
-					
+
 					if argIdx >= len(remainingArgs) {
 						// Out of args for this spec
 						// Bash usually prints nothing or default for the type
 						// We'll just stop processing format
 						break
 					}
-					
+
 					arg := remainingArgs[argIdx]
 					argIdx++
-					
+
 					switch spec {
 					case 'b':
 						processedFormat += "%s"
@@ -100,9 +100,9 @@ func (p *Printf) Run(ctx context.Context, env *commands.Environment, args []stri
 					processedFormat += string(format[j])
 				}
 			}
-			
+
 			fmt.Fprintf(writer, processedFormat, currentArgs...)
-			
+
 			if argIdx == 0 { // avoid infinite loop if no specifiers
 				break
 			}

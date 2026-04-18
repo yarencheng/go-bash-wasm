@@ -125,4 +125,3 @@ func (f *Fold) foldLine(env *commands.Environment, line string, maxWidth int, by
 		}
 	}
 }
-

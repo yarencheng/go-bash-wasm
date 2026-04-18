@@ -32,6 +32,6 @@ func (d *Dircolors) Run(ctx context.Context, env *commands.Environment, args []s
 
 	// Stub: we don't really support color configuration via dircolors yet.
 	// We just print a default LS_COLORS if requested, or empty code.
-	
+
 	return 0
 }

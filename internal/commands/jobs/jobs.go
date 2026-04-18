@@ -48,7 +48,7 @@ func (j *Jobs) Run(ctx context.Context, env *commands.Environment, args []string
 			continue
 		}
 		if changedOnly != nil && *changedOnly {
-			// In a real shell, we would track status changes. 
+			// In a real shell, we would track status changes.
 			// For now, we show everything if -n is set to avoid missing data in simulation.
 		}
 

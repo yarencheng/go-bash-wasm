@@ -23,7 +23,7 @@ func TestRealpath_Run(t *testing.T) {
 	}
 
 	r := New()
-	
+
 	// Test basic
 	env.Stdout.(*bytes.Buffer).Reset()
 	status := r.Run(context.Background(), env, []string{"logs/../logs"})

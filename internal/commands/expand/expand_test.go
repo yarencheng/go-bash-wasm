@@ -27,7 +27,7 @@ func TestExpand_Basic(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	// Default tab size is 8
 	expected := "        line 1\n        line 2\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
@@ -49,7 +49,7 @@ func TestExpand_Initial(t *testing.T) {
 	// Only initial tabs
 	status := cmd.Run(context.Background(), env, []string{"-i", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "        a\tb\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }
@@ -69,7 +69,7 @@ func TestExpand_TabSize(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"-t", "4", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	expected := "    a\n"
 	assert.Equal(t, expected, env.Stdout.(*bytes.Buffer).String())
 }

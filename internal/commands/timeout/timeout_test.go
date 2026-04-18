@@ -12,6 +12,7 @@ import (
 )
 
 type mockSleep struct{}
+
 func (m *mockSleep) Name() string { return "sleep" }
 func (m *mockSleep) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	select {

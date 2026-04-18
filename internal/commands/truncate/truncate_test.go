@@ -24,7 +24,7 @@ func TestTruncate_Basic(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"-s", "5", "/test.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	f, err := afero.ReadFile(fs, "/test.txt")
 	require.NoError(t, err)
 	assert.Equal(t, 5, len(f))
@@ -42,7 +42,7 @@ func TestTruncate_Create(t *testing.T) {
 	cmd := New()
 	status := cmd.Run(context.Background(), env, []string{"-s", "10", "/new.txt"})
 	assert.Equal(t, 0, status)
-	
+
 	f, err := afero.ReadFile(fs, "/new.txt")
 	require.NoError(t, err)
 	assert.Equal(t, 10, len(f))

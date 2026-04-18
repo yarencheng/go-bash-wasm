@@ -50,6 +50,14 @@ Status codes:
 - [x] Flag `-i`: `internal/commands/base32/base32.go`
 - [x] Flag `-w`: `internal/commands/base32/base32.go`
 
+### `base64`
+
+- [x] Upstream: `third_party/coreutils/src/base64.c`
+- [x] Basic encoding/decoding: Implemented in `internal/commands/base64/base64.go`
+- [x] Flag `-d`, `--decode`: `internal/commands/base64/base64.go`
+- [x] Flag `-i`, `--ignore-garbage`: `internal/commands/base64/base64.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-w`, `--wrap=COLS`: `internal/commands/base64/base64.go`
+
 ### `basename`
 
 - [x] Upstream: `third_party/coreutils/src/basename.c`
@@ -147,6 +155,7 @@ Status codes:
 ### `chcon`
 
 - [x] Upstream: `third_party/coreutils/src/chcon.c`
+- [x] Basic operation: `internal/commands/chcon/chcon.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chcon-runcon))
 - [x] Flag `-h`, `--no-dereference`: `internal/commands/chcon/chcon.go`
 - [x] Flag `-H`: `internal/commands/chcon/chcon.go`
 - [x] Flag `-L`: `internal/commands/chcon/chcon.go`
@@ -429,7 +438,7 @@ Status codes:
 ### `dircolors`
 
 - [x] Upstream: `third_party/coreutils/src/dircolors.c`
-- [x] Output configuration: Implemented in `internal/commands/dircolors/dircolors.go` (stub)
+- [x] Output configuration: Implemented in `internal/commands/dircolors/dircolors.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#dircolors))
 - [x] Flag `-b`, `--sh`, `--bourne-shell`: `internal/commands/dircolors/dircolors.go`
 - [x] Flag `-c`, `--csh`, `--c-shell`: `internal/commands/dircolors/dircolors.go`
 - [x] Flag `-p`, `--print-database`: `internal/commands/dircolors/dircolors.go`
@@ -572,6 +581,13 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/factor.c`
 - [x] Prime factorization: Implemented in `internal/commands/factor/factor.go`
 
+### `find`
+
+- [x] Upstream: `third_party/coreutils/src/find.c`
+- [x] Basic Search: `internal/commands/find/find.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#find))
+- [x] Flag `-name`: `internal/commands/find/find.go`
+- [x] Flag `-type`: `internal/commands/find/find.go`
+
 ### `false`
 
 - [x] Upstream: `third_party/bash/builtins/colon.def`, `third_party/coreutils/src/false.c`
@@ -625,6 +641,16 @@ Status codes:
 
 - [x] Basic parsing: Implemented in `internal/commands/getopts/getopts.go`
 - [x] Silent mode support (`:`): `internal/commands/getopts/getopts.go`
+
+### `grep`
+
+- [x] Upstream: `third_party/coreutils/src/grep.c`
+- [x] Regex Search: `internal/commands/grep/grep.go` (Workaround; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#grep))
+- [x] Flag `-i`, `--ignore-case`: `internal/commands/grep/grep.go`
+- [x] Flag `-v`, `--invert-match`: `internal/commands/grep/grep.go`
+- [x] Flag `-n`, `--line-number`: `internal/commands/grep/grep.go`
+- [x] Flag `-c`, `--count`: `internal/commands/grep/grep.go`
+- [x] Flag `-l`, `--files-with-matches`: `internal/commands/grep/grep.go`
 
 ### `groups`
 
@@ -787,11 +813,11 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/exit.def`
 - [x] Basic operation: Implemented in `internal/commands/logout/logout.go`
 
-#### `ls`
+### `ls`
 
 - [x] Basic listing: `internal/commands/ls/ls.go`
-- [ ] Color output (`--color`): `third_party/coreutils/src/ls.c:L215`
-- [x] Flag `--author`: `internal/commands/ls/ls.go` (partial via info)
+- [x] Color output (`--color`): `internal/commands/ls/ls.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#ls))
+- [x] Flag `--author`: `internal/commands/ls/ls.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#ls))
 - [x] Flag `--block-size`: `internal/commands/ls/ls.go`
 - [x] Flag `--color`: `internal/commands/ls/ls.go` (ANSI colors)
 - [x] Flag `--dereference-command-line-symlink-to-dir`: `internal/commands/ls/ls.go` (-H)
@@ -879,16 +905,16 @@ Status codes:
 ### `mkfifo`
 
 - [x] Upstream: `third_party/coreutils/src/mkfifo.c`
-- [x] Basic operation: Implemented in `internal/commands/mkfifo/mkfifo.go` (stub)
+- [x] Basic operation: Implemented in `internal/commands/mkfifo/mkfifo.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#mkfifo-mknod))
 - [x] Flag `-m`, `--mode=MODE`: `internal/commands/mkfifo/mkfifo.go`
-- [x] Flag `-Z`, `--context=CTX`: `internal/commands/mkfifo/mkfifo.go` (ignored)
+- [x] Flag `-Z`, `--context=CTX`: `internal/commands/mkfifo/mkfifo.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 
 ### `mknod`
 
 - [x] Upstream: `third_party/coreutils/src/mknod.c`
-- [x] Basic operation: Implemented in `internal/commands/mknod/mknod.go` (stub)
+- [x] Basic operation: Implemented in `internal/commands/mknod/mknod.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#mkfifo-mknod))
 - [x] Flag `-m`, `--mode=MODE`: `internal/commands/mknod/mknod.go`
-- [x] Flag `-Z`, `--context=CTX`: `internal/commands/mknod/mknod.go` (ignored)
+- [x] Flag `-Z`, `--context=CTX`: `internal/commands/mknod/mknod.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#commonly-ignored-flags))
 
 ### `mktemp`
 
@@ -991,16 +1017,16 @@ Status codes:
 ### `pinky`
 
 - [x] Upstream: `third_party/coreutils/src/pinky.c`
-- [x] Basic operation: Implemented in `internal/commands/pinky/pinky.go` (stub)
-- [x] Flag `-b`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-f`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-h`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-i`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-l`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-p`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-q`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-s`: `internal/commands/pinky/pinky.go`
-- [x] Flag `-w`: `internal/commands/pinky/pinky.go`
+- [x] Basic operation: Implemented in `internal/commands/pinky/pinky.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#pinky))
+- [x] Flag `-b`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-f`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-h`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-i`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-l`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-p`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-q`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-s`: `internal/commands/pinky/pinky.go` (Ignored)
+- [x] Flag `-w`: `internal/commands/pinky/pinky.go` (Ignored)
 
 ### `popd`
 
@@ -1037,17 +1063,18 @@ Status codes:
 ### `ptx`
 
 - [x] Upstream: `third_party/coreutils/src/ptx.c`
-- [x] Flag `-A`, `--auto-reference`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-F`, `--flag-truncation=STRING`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-G`, `--gnu-extensions`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-M`, `--macro-name=STRING`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-O`, `--format=roff`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-R`, `--right-side-refs`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-S`, `--sentence-regexp=REGEXP`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-T`, `--format=tex`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-W`, `--word-regexp=REGEXP`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-b`, `--break-file=FILE`: `internal/commands/ptx/ptx.go`
-- [x] Flag `-f`, `--ignore-case`: `internal/commands/ptx/ptx.go`
+- [x] Permuted Index: `internal/commands/ptx/ptx.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#ptx))
+- [x] Flag `-A`, `--auto-reference`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-F`, `--flag-truncation=STRING`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-G`, `--gnu-extensions`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-M`, `--macro-name=STRING`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-O`, `--format=roff`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-R`, `--right-side-refs`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-S`, `--sentence-regexp=REGEXP`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-T`, `--format=tex`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-W`, `--word-regexp=REGEXP`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-b`, `--break-file=FILE`: `internal/commands/ptx/ptx.go` (Ignored)
+- [x] Flag `-f`, `--ignore-case`: `internal/commands/ptx/ptx.go` (Ignored)
 - [x] Flag `-g`, `--gap-size=NUMBER`: `internal/commands/ptx/ptx.go`
 - [x] Flag `-i`, `--ignore-file=FILE`: `internal/commands/ptx/ptx.go`
 - [x] Flag `-o`, `--only-file=FILE`: `internal/commands/ptx/ptx.go`
@@ -1152,6 +1179,7 @@ Status codes:
 ### `runcon`
 
 - [x] Upstream: `third_party/coreutils/src/runcon.c`
+- [x] Basic operation: `internal/commands/runcon/runcon.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#chcon-runcon))
 - [x] Flag `-c`, `--compute`: `internal/commands/runcon/runcon.go`
 - [x] Flag `-l`, `--user=USER`: `internal/commands/runcon/runcon.go`
 - [x] Flag `-r`, `--role=ROLE`: `internal/commands/runcon/runcon.go`
@@ -1327,16 +1355,18 @@ Status codes:
 ### `stdbuf`
 
 - [x] Upstream: `third_party/coreutils/src/stdbuf.c`
-- [x] Flag `-e`, `--error=MODE`: `internal/commands/stdbuf/stdbuf.go`
-- [x] Flag `-i`, `--input=MODE`: `internal/commands/stdbuf/stdbuf.go`
-- [x] Flag `-o`, `--output=MODE`: `internal/commands/stdbuf/stdbuf.go`
+- [x] Stream Buffering: `internal/commands/stdbuf/stdbuf.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#stdbuf))
+- [x] Flag `-e`, `--error=MODE`: `internal/commands/stdbuf/stdbuf.go` (Ignored)
+- [x] Flag `-i`, `--input=MODE`: `internal/commands/stdbuf/stdbuf.go` (Ignored)
+- [x] Flag `-o`, `--output=MODE`: `internal/commands/stdbuf/stdbuf.go` (Ignored)
 
 ### `stty`
 
 - [x] Upstream: `third_party/coreutils/src/stty.c`
-- [x] Flag `-F`, `--file=DEVICE`: `internal/commands/stty/stty.go`
-- [x] Flag `-a`, `--all`: `internal/commands/stty/stty.go`
-- [x] Flag `-g`, `--save`: `internal/commands/stty/stty.go`
+- [x] TTY Configuration: `internal/commands/stty/stty.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#stty))
+- [x] Flag `-F`, `--file=DEVICE`: `internal/commands/stty/stty.go` (Ignored)
+- [x] Flag `-a`, `--all`: `internal/commands/stty/stty.go` (Partial output)
+- [x] Flag `-g`, `--save`: `internal/commands/stty/stty.go` (Ignored)
 
 ### `sum`
 
@@ -1348,6 +1378,7 @@ Status codes:
 ### `suspend`
 
 - [x] Upstream: `third_party/bash/builtins/suspend.def`
+- [x] Basic operation: `internal/commands/suspend/suspend.go` (Unsupported; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#suspend))
 - [x] Flag `-f`: `internal/commands/suspend/suspend.go`
 
 ### `sync`

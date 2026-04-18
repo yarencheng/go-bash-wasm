@@ -96,6 +96,56 @@ Across multiple commands (`cp`, `mv`, `rm`, `chmod`, `chown`, `realpath`), sever
 - `[x]` **Filesystem Hints** (`-f`, `--file-system`, `--dereference`): `internal/commands/`
   > Rationale: Metadata like filesystem type or raw mount information is not available or static in the WASM memory-mapped filesystem.
 
+### `chcon` / `runcon`
+  
+- `[-]` SELinux Contexts (WASM Limitation): `internal/commands/chcon/chcon.go`, `internal/commands/runcon/runcon.go`
+  > Rationale: SELinux security contexts are not supported by the browser's WebAssembly runtime or the virtual filesystem. These commands return errors or exit with status 1 when context manipulation is attempted.
+
+### `dircolors`
+
+- `[x]` Basic Output (Stub): `internal/commands/dircolors/dircolors.go`
+  > Rationale: The simulator uses hardcoded ANSI color mappings in the shell and `ls` implementation. `dircolors` is provided as a stub to prevent script failures but does not yet influence the environment's color database.
+
+### `find`
+
+- `[x]` Basic Search (Workaround): `internal/commands/find/find.go`
+  > Rationale: The simulator implements a limited subset of `find` functionality (supporting `-name` and `-type`). Advanced predicates like `-mtime`, `-exec`, or `-size` are currently pending.
+
+### `grep`
+
+- `[x]` Regex Support (Workaround): `internal/commands/grep/grep.go`
+  > Rationale: Uses Go's `regexp` package which implements RE2 syntax. Some GNU-specific extensions or backreferences may not behave identically to the original `grep`.
+
+### `mkfifo` / `mknod`
+
+- `[x]` Device Creation (Stub): `internal/commands/mkfifo/mkfifo.go`, `internal/commands/mknod/mknod.go`
+  > Rationale: The Afero MemMapFs does not support real FIFOs or device nodes. These commands create normal files with the appropriate mode bits as placeholders to allow scripts to proceed without error.
+
+### `pinky`
+
+- `[x]` User Information (Stub): `internal/commands/pinky/pinky.go`
+  > Rationale: Reports static simulated information for the single user in the environment. Real finger/pinky protocols or multiple user tracking are not supported.
+
+### `stdbuf`
+
+- `[x]` Stream Buffering (Stub): `internal/commands/stdbuf/stdbuf.go`
+  > Rationale: GNU `stdbuf` relies on `LD_PRELOAD` to intercept library calls, which is not possible in the WebAssembly runtime. Standard I/O streams are managed by Go's runtime and the simulator's shell logic.
+
+### `stty`
+
+- `[x]` TTY Configuration (Stub): `internal/commands/stty/stty.go`
+  > Rationale: The simulator's terminal is a web frontend component (Xterm.js) and does not provide a raw Unix TTY device that can be configured via `ioctl` as required by `stty`.
+
+### `suspend`
+
+- `[-]` Process Suspension (Unsupported): `internal/commands/suspend/suspend.go`
+  > Rationale: WebAssembly processes in the browser cannot be suspended/resumed by the shell in the same way as OS-level processes.
+
+### `ptx`
+
+- `[x]` Permuted Index (Stub): `internal/commands/ptx/ptx.go`
+  > Rationale: Currently implements a simplified output that mirrors input lines, rather than performing full permuted index generation.
+
 ---
 
-*Last Updated: 2026-04-18*
+*Last Updated: 2026-04-19* (Current Date)

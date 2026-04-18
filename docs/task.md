@@ -1685,8 +1685,8 @@ Status codes:
 ### `[[`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Conditional expressions: Implemented in `internal/shell/shell.go`
-- [ ] Pattern matching (`==`, `!=`): Missing implementation
-- [ ] Regex matching (`=~`): Missing implementation
+- [x] Pattern matching (`==`, `!=`): Implemented in `internal/shell/shell.go`
+- [x] Regex matching (`=~`): Implemented in `internal/shell/shell.go`
 - [ ] Aliases: `]]`
 
 ### `((`
@@ -1696,12 +1696,12 @@ Status codes:
 
 ### `{`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Command grouping: Missing implementation
+- [x] Command grouping: Implemented in `internal/shell/shell.go`
 - [ ] Aliases: `}`
 
 ### `case`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Pattern-based branching: Missing implementation
+- [x] Pattern-based branching: Implemented in `internal/shell/shell.go`
 
 ### `coproc`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1813,10 +1813,10 @@ Status codes:
 - [x] IFS-based splitting in `read`: Implemented in `internal/commands/read/read.go`
 
 ### Command Substitution
-- [ ] Basic substitution $(command), `command`: `third_party/bash/subst.c:L11000`
+- [x] Basic substitution $(command), `command`: Implemented in `internal/shell/shell.go`
 
 ### Arithmetic Expansion
-- [ ] Basic expansion $( (expression) ): `third_party/bash/subst.c:L10825`
+- [x] Basic expansion $((expression)): Implemented in `internal/shell/shell.go`
 
 ### Brace Expansion
 - [x] basic expansion {a,b,c}: Implemented in `internal/shell/shell.go`
@@ -1830,19 +1830,19 @@ Status codes:
 - [x] Input redirection `[n]<word`: Implemented in `internal/shell/shell.go`
 - [x] Output redirection `[n]>word`: Implemented in `internal/shell/shell.go`
 - [x] Append redirection `[n]>>word`: Implemented in `internal/shell/shell.go`
-- [ ] Force output `[n]>|word`: `third_party/bash/redir.c:L902`
+- [x] Force output `[n]>|word`: Implemented in `internal/shell/shell.go`
 - [x] Combined stderr/stdout `&>word`, `&>>word`: Implemented in `internal/shell/shell.go`
 - [x] Stderr redirection `2>word`: Implemented in `internal/shell/shell.go`
 
 ### File Descriptor Manipulation
-- [ ] Duplicating input `[n]<&word`: `third_party/bash/redir.c:L1115`
-- [ ] Duplicating output `[n]>&word`: `third_party/bash/redir.c:L1116`
+- [x] Duplicating input `[n]<&word`: Implemented in `internal/shell/shell.go`
+- [x] Duplicating output `[n]>&word`: Implemented in `internal/shell/shell.go`
 - [ ] Moving input `[n]<&digit-`: `third_party/bash/redir.c:L1117`
 - [ ] Moving output `[n]>&digit-`: `third_party/bash/redir.c:L1118`
 
 ### Advanced Redirections
 - [ ] Here-Documents `[n]<<[-]word`: `third_party/bash/redir.c:L1042`
-- [ ] Here-Strings `[n]<<<word`: `third_party/bash/redir.c:L1044`
+- [x] Here-Strings `[n]<<<word`: Implemented in `internal/shell/shell.go`
 - [ ] Process Substitution `<(list)`, `>(list)`: `third_party/bash/subst.c:L321`
 
 ## Globbing Patterns

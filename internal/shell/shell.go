@@ -12,6 +12,8 @@ import (
 
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 	"mvdan.cc/sh/v3/syntax"
+	"os"
+	"regexp"
 )
 
 // LineReader defines the interface for reading lines from the terminal.
@@ -72,13 +74,34 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 	if s.Env.EnvVars == nil {
 		s.Env.EnvVars = make(map[string]string)
 	}
+	if s.Env.Arrays == nil {
+		s.Env.Arrays = make(map[string][]string)
+	}
+	if s.Env.Aliases == nil {
+		s.Env.Aliases = make(map[string]string)
+	}
+	if s.Env.Functions == nil {
+		s.Env.Functions = make(map[string]string)
+	}
+	if s.Env.Hash == nil {
+		s.Env.Hash = make(map[string]string)
+	}
+	if s.Env.Completions == nil {
+		s.Env.Completions = make(map[string]*commands.CompSpec)
+	}
+	if s.Env.Shopts == nil {
+		s.Env.Shopts = make(map[string]bool)
+	}
+	if s.Env.Traps == nil {
+		s.Env.Traps = make(map[string]string)
+	}
 	lineno := 0
 	fmt.Sscanf(s.Env.EnvVars["LINENO"], "%d", &lineno)
 	s.Env.EnvVars["LINENO"] = fmt.Sprintf("%d", lineno+1)
 
 	// Use mvdan.cc/sh/syntax to parse the command line
 	reader := strings.NewReader(line)
-	parser := syntax.NewParser()
+	parser := syntax.NewParser(syntax.Variant(syntax.LangBash))
 	f, err := parser.Parse(reader, "")
 	if err != nil {
 		fmt.Fprintf(s.Env.Stderr, "bash: syntax error: %v\n", err)
@@ -206,11 +229,21 @@ func (s *Shell) executeStmts(ctx context.Context, env *commands.Environment, stm
 
 func (s *Shell) executeCallExpr(ctx context.Context, env *commands.Environment, c *syntax.CallExpr) int {
 	if len(c.Args) == 0 {
-		// Assignment only, e.g., VAR=val
+		// Assignment only, e.g., VAR=val or VAR=(val1 val2)
 		for _, assign := range c.Assigns {
 			name := assign.Name.Value
-			val := s.wordToString(env, assign.Value)
-			env.EnvVars[name] = val
+			if assign.Value != nil {
+				val := s.wordToString(env, assign.Value)
+				env.EnvVars[name] = val
+			} else if assign.Array != nil {
+				var vals []string
+				for _, elem := range assign.Array.Elems {
+					if elem.Value != nil {
+						vals = append(vals, s.expandWord(env, elem.Value)...)
+					}
+				}
+				env.Arrays[name] = vals
+			}
 		}
 		return 0
 	}
@@ -329,15 +362,15 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 	} else {
 		// Default fds if not specified
 		switch redir.Op {
-		case syntax.RdrOut, syntax.AppOut, syntax.RdrAll, syntax.AppAll:
+		case syntax.RdrOut, syntax.AppOut, syntax.RdrAll, syntax.AppAll, syntax.RdrClob, syntax.DplOut:
 			fd = 1
-		case syntax.RdrIn:
+		case syntax.RdrIn, syntax.DplIn, syntax.WordHdoc:
 			fd = 0
 		}
 	}
 
 	switch redir.Op {
-	case syntax.RdrOut: // >
+	case syntax.RdrOut, syntax.RdrClob: // > or >|
 		f, err := env.FS.Create(path)
 		if err != nil {
 			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
@@ -350,7 +383,7 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 		}
 		*closers = append(*closers, f)
 	case syntax.AppOut: // >>
-		f, err := env.FS.OpenFile(path, 0x1|0x40|0x8, 0644) // O_WRONLY|O_CREATE|O_APPEND
+		f, err := env.FS.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 		if err != nil {
 			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
 			return 1
@@ -379,7 +412,7 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 		env.Stderr = f
 		*closers = append(*closers, f)
 	case syntax.AppAll: // &>>
-		f, err := env.FS.OpenFile(path, 0x1|0x40|0x8, 0644)
+		f, err := env.FS.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 		if err != nil {
 			fmt.Fprintf(env.Stderr, "bash: %s: %v\n", filename, err)
 			return 1
@@ -387,6 +420,36 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 		env.Stdout = f
 		env.Stderr = f
 		*closers = append(*closers, f)
+	case syntax.DplIn: // <&
+		target := s.wordToString(env, redir.Word)
+		if target == "0" {
+			// No-op
+		} else if target == "1" {
+			env.Stdin = io.NopCloser(strings.NewReader("")) // Mock: can't easily duplicate stdout to stdin interface
+		}
+	case syntax.DplOut: // >&
+		target := s.wordToString(env, redir.Word)
+		if target == "1" {
+			if fd == 2 {
+				env.Stderr = env.Stdout
+			}
+		} else if target == "2" {
+			if fd == 1 {
+				env.Stdout = env.Stderr
+			}
+		} else {
+			// treat as &>
+			f, err := env.FS.Create(path)
+			if err != nil {
+				return 1
+			}
+			env.Stdout = f
+			env.Stderr = f
+			*closers = append(*closers, f)
+		}
+	case syntax.WordHdoc: // <<<
+		content := s.wordToString(env, redir.Word) + "\n"
+		env.Stdin = io.NopCloser(strings.NewReader(content))
 	default:
 		fmt.Fprintf(env.Stderr, "bash: unsupported redirection: %s\n", redir.Op.String())
 		return 1
@@ -407,25 +470,37 @@ func (s *Shell) wordToString(env *commands.Environment, w *syntax.Word) string {
 	}
 	var sb strings.Builder
 	for _, part := range w.Parts {
-		switch p := part.(type) {
-		case *syntax.Lit:
-			sb.WriteString(p.Value)
-		case *syntax.SglQuoted:
-			sb.WriteString(p.Value)
-		case *syntax.DblQuoted:
-			for _, qp := range p.Parts {
-				switch q := qp.(type) {
-				case *syntax.Lit:
-					sb.WriteString(q.Value)
-				case *syntax.ParamExp:
-					sb.WriteString(s.resolveParamExp(env, q))
-				}
-			}
-		case *syntax.ParamExp:
-			sb.WriteString(s.resolveParamExp(env, p))
-		}
+		sb.WriteString(s.resolveWordPart(env, part))
 	}
 	return sb.String()
+}
+
+func (s *Shell) resolveWordPart(env *commands.Environment, part syntax.WordPart) string {
+	switch p := part.(type) {
+	case *syntax.Lit:
+		return p.Value
+	case *syntax.SglQuoted:
+		return p.Value
+	case *syntax.DblQuoted:
+		var sb strings.Builder
+		for _, qp := range p.Parts {
+			sb.WriteString(s.resolveWordPart(env, qp))
+		}
+		return sb.String()
+	case *syntax.ParamExp:
+		return s.resolveParamExp(env, p)
+	case *syntax.CmdSubst:
+		var out strings.Builder
+		subEnv := s.cloneEnv(env)
+		subEnv.Stdout = &out
+		for _, stmt := range p.Stmts {
+			s.executeStmt(context.Background(), subEnv, stmt)
+		}
+		return strings.TrimRight(out.String(), "\n")
+	case *syntax.ArithmExp:
+		return strconv.Itoa(s.evalArithmExpr(env, p.X))
+	}
+	return ""
 }
 
 func (s *Shell) expandWord(env *commands.Environment, w *syntax.Word) []string {
@@ -802,13 +877,13 @@ func (s *Shell) evalArithmExpr(env *commands.Environment, expr syntax.ArithmExpr
 	case *syntax.ParenArithm:
 		return s.evalArithmExpr(env, e.X)
 	case *syntax.Word:
-		valStr := s.wordToString(env, e)
+		valStr := strings.TrimSpace(s.wordToString(env, e))
 		if val, err := strconv.Atoi(valStr); err == nil {
 			return val
 		}
 		// Try to resolve as variable
 		if v, ok := env.EnvVars[valStr]; ok {
-			if val, err := strconv.Atoi(v); err == nil {
+			if val, err := strconv.Atoi(strings.TrimSpace(v)); err == nil {
 				return val
 			}
 		}
@@ -865,9 +940,12 @@ func (s *Shell) evalTestExpr(env *commands.Environment, expr syntax.TestExpr) bo
 		}
 		switch e.Op {
 		case syntax.TsMatch: // ==
-			return left == right
+			return matchPattern(right, left)
 		case syntax.TsNoMatch: // !=
-			return left != right
+			return !matchPattern(right, left)
+		case syntax.TsReMatch: // =~
+			matched, _ := regexp.MatchString(right, left)
+			return matched
 		}
 	case *syntax.ParenTest:
 		return s.evalTestExpr(env, e.X)

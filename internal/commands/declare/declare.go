@@ -36,10 +36,27 @@ func (d *Declare) Run(ctx context.Context, env *commands.Environment, args []str
 	_ = flags.BoolP("inherit", "I", false, "inherit attributes from name in surrounding scope")
 	_ = flags.BoolP("array", "a", false, "make NAMEs indexed arrays")
 	_ = flags.BoolP("assoc", "A", false, "make NAMEs associative arrays")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "declare: %v\n", err)
 		return 2
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: declare [-aAfFgilnrtux] [-p] [name[=value] ...]\n")
+		fmt.Fprintf(env.Stdout, "Declare variables and give them attributes.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "declare")
+		return 0
 	}
 
 	targets := flags.Args()

@@ -585,8 +585,22 @@ func (s *Shell) executeForClause(ctx context.Context, env *commands.Environment,
 		}
 		return lastExitCode
 	case *syntax.CStyleLoop:
-		// Arithmetic for loop not yet fully supported
-		return 0
+		if f.Init != nil {
+			s.evalArithmExpr(env, f.Init)
+		}
+		lastExitCode := 0
+		for {
+			if f.Cond != nil {
+				if s.evalArithmExpr(env, f.Cond) == 0 {
+					break
+				}
+			}
+			lastExitCode = s.executeStmts(ctx, env, forClause.Do)
+			if f.Post != nil {
+				s.evalArithmExpr(env, f.Post)
+			}
+		}
+		return lastExitCode
 	}
 	return 0
 }
@@ -595,8 +609,14 @@ func (s *Shell) executeWhileClause(ctx context.Context, env *commands.Environmen
 	lastExitCode := 0
 	for {
 		exitCode := s.executeStmts(ctx, env, whileClause.Cond)
-		if exitCode != 0 {
-			break
+		if whileClause.Until {
+			if exitCode == 0 {
+				break
+			}
+		} else {
+			if exitCode != 0 {
+				break
+			}
 		}
 		lastExitCode = s.executeStmts(ctx, env, whileClause.Do)
 	}
@@ -617,13 +637,242 @@ func (s *Shell) executeCaseClause(ctx context.Context, env *commands.Environment
 }
 
 func (s *Shell) executeArithmCmd(ctx context.Context, env *commands.Environment, arithm *syntax.ArithmCmd) int {
-	// Simple stub for arithmetic command (( expression ))
+	val := s.evalArithmExpr(env, arithm.X)
+	if val != 0 {
+		return 0
+	}
+	return 1
+}
+
+func (s *Shell) evalArithmExpr(env *commands.Environment, expr syntax.ArithmExpr) int {
+	switch e := expr.(type) {
+	case *syntax.BinaryArithm:
+		left := s.evalArithmExpr(env, e.X)
+		right := s.evalArithmExpr(env, e.Y)
+		switch e.Op {
+		case syntax.Add: // +
+			return left + right
+		case syntax.Sub: // -
+			return left - right
+		case syntax.Mul: // *
+			return left * right
+		case syntax.Quo: // /
+			if right == 0 {
+				return 0
+			}
+			return left / right
+		case syntax.Rem: // %
+			if right == 0 {
+				return 0
+			}
+			return left % right
+		case syntax.And: // &
+			return left & right
+		case syntax.Or: // |
+			return left | right
+		case syntax.Xor: // ^
+			return left ^ right
+		case syntax.Shl: // <<
+			return left << uint(right)
+		case syntax.Shr: // >>
+			return left >> uint(right)
+		case syntax.Lss: // <
+			if left < right {
+				return 1
+			}
+			return 0
+		case syntax.Leq: // <=
+			if left <= right {
+				return 1
+			}
+			return 0
+		case syntax.Gtr: // >
+			if left > right {
+				return 1
+			}
+			return 0
+		case syntax.Geq: // >=
+			if left >= right {
+				return 1
+			}
+			return 0
+		case syntax.Eql: // ==
+			if left == right {
+				return 1
+			}
+			return 0
+		case syntax.Neq: // !=
+			if left != right {
+				return 1
+			}
+			return 0
+		case syntax.AndArit: // &&
+			if left != 0 && right != 0 {
+				return 1
+			}
+			return 0
+		case syntax.OrArit: // ||
+			if left != 0 || right != 0 {
+				return 1
+			}
+			return 0
+		case syntax.Assgn, syntax.AddAssgn, syntax.SubAssgn, syntax.MulAssgn, syntax.QuoAssgn, syntax.RemAssgn,
+			syntax.AndAssgn, syntax.OrAssgn, syntax.XorAssgn, syntax.ShlAssgn, syntax.ShrAssgn:
+			// Assignment
+			var name string
+			if w, ok := e.X.(*syntax.Word); ok {
+				name = s.wordToString(env, w)
+			} else {
+				return 0
+			}
+			currentVal := 0
+			if v, ok := env.EnvVars[name]; ok {
+				currentVal, _ = strconv.Atoi(v)
+			}
+			newVal := right
+			switch e.Op {
+			case syntax.AddAssgn:
+				newVal = currentVal + right
+			case syntax.SubAssgn:
+				newVal = currentVal - right
+			case syntax.MulAssgn:
+				newVal = currentVal * right
+			case syntax.QuoAssgn:
+				if right != 0 {
+					newVal = currentVal / right
+				}
+			case syntax.RemAssgn:
+				if right != 0 {
+					newVal = currentVal % right
+				}
+			case syntax.AndAssgn:
+				newVal = currentVal & right
+			case syntax.OrAssgn:
+				newVal = currentVal | right
+			case syntax.XorAssgn:
+				newVal = currentVal ^ right
+			case syntax.ShlAssgn:
+				newVal = currentVal << uint(right)
+			case syntax.ShrAssgn:
+				newVal = currentVal >> uint(right)
+			}
+			env.EnvVars[name] = strconv.Itoa(newVal)
+			return newVal
+		}
+	case *syntax.UnaryArithm:
+		switch e.Op {
+		case syntax.Inc, syntax.Dec:
+			// Pre/Post-increment/decrement
+			var name string
+			if w, ok := e.X.(*syntax.Word); ok {
+				name = s.wordToString(env, w)
+			} else {
+				return 0
+			}
+			currentVal := 0
+			if v, ok := env.EnvVars[name]; ok {
+				currentVal, _ = strconv.Atoi(v)
+			}
+			oldVal := currentVal
+			if e.Op == syntax.Inc {
+				currentVal++
+			} else {
+				currentVal--
+			}
+			env.EnvVars[name] = strconv.Itoa(currentVal)
+			if e.Post {
+				return oldVal
+			}
+			return currentVal
+		}
+		val := s.evalArithmExpr(env, e.X)
+		switch e.Op {
+		case syntax.Plus: // +
+			return val
+		case syntax.Minus: // -
+			return -val
+		case syntax.Not: // !
+			if val == 0 {
+				return 1
+			}
+			return 0
+		case syntax.BitNegation: // ~
+			return ^val
+		}
+	case *syntax.ParenArithm:
+		return s.evalArithmExpr(env, e.X)
+	case *syntax.Word:
+		valStr := s.wordToString(env, e)
+		if val, err := strconv.Atoi(valStr); err == nil {
+			return val
+		}
+		// Try to resolve as variable
+		if v, ok := env.EnvVars[valStr]; ok {
+			if val, err := strconv.Atoi(v); err == nil {
+				return val
+			}
+		}
+	}
 	return 0
 }
 
 func (s *Shell) executeTestClause(ctx context.Context, env *commands.Environment, test *syntax.TestClause) int {
-	// Simple stub for [[ expression ]]
-	return 0
+	if s.evalTestExpr(env, test.X) {
+		return 0
+	}
+	return 1
+}
+
+func (s *Shell) evalTestExpr(env *commands.Environment, expr syntax.TestExpr) bool {
+	switch e := expr.(type) {
+	case *syntax.UnaryTest:
+		if e.Op == syntax.TsNot { // !
+			return !s.evalTestExpr(env, e.X)
+		}
+		var val string
+		// For unary tests like [[ -f foo ]], X is the operand.
+		if w, ok := e.X.(*syntax.Word); ok {
+			val = s.wordToString(env, w)
+		}
+		switch e.Op {
+		case syntax.TsDirect: // -d
+			info, err := env.FS.Stat(s.resolvePath(val))
+			return err == nil && info.IsDir()
+		case syntax.TsRegFile: // -f
+			info, err := env.FS.Stat(s.resolvePath(val))
+			return err == nil && !info.IsDir()
+		case syntax.TsExists: // -e
+			_, err := env.FS.Stat(s.resolvePath(val))
+			return err == nil
+		case syntax.TsEmpStr: // -z
+			return val == ""
+		case syntax.TsNempStr: // -n
+			return val != ""
+		}
+	case *syntax.BinaryTest:
+		if e.Op == syntax.AndTest { // &&
+			return s.evalTestExpr(env, e.X) && s.evalTestExpr(env, e.Y)
+		}
+		if e.Op == syntax.OrTest { // ||
+			return s.evalTestExpr(env, e.X) || s.evalTestExpr(env, e.Y)
+		}
+		var left, right string
+		if w, ok := e.X.(*syntax.Word); ok {
+			left = s.wordToString(env, w)
+		}
+		if w, ok := e.Y.(*syntax.Word); ok {
+			right = s.wordToString(env, w)
+		}
+		switch e.Op {
+		case syntax.TsMatch: // ==
+			return left == right
+		case syntax.TsNoMatch: // !=
+			return left != right
+		}
+	case *syntax.ParenTest:
+		return s.evalTestExpr(env, e.X)
+	}
+	return false
 }
 
 func (s *Shell) resolvePath(p string) string {

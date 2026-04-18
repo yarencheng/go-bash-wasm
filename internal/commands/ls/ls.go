@@ -78,6 +78,8 @@ type lsFlags struct {
 	help           *bool
 	version        *bool
 	context        *bool
+	dired          *bool
+	literal        *bool
 }
 
 func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) int {
@@ -138,6 +140,8 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		help:           flagsSet.Bool("help", false, "display this help and exit"),
 		version:        flagsSet.Bool("version", false, "output version information and exit"),
 		context:        flagsSet.BoolP("context", "Z", false, "print any security context of each file"),
+		dired:          flagsSet.BoolP("dired", "D", false, "generate output designed for Emacs' dired mode (ignored)"),
+		literal:        flagsSet.BoolP("literal", "N", false, "print raw entry names (don't treat specially e.g. control chars) (ignored)"),
 	}
 
 	if err := flagsSet.Parse(args); err != nil {

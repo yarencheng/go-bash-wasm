@@ -31,6 +31,7 @@ func (d *Date) Run(ctx context.Context, env *commands.Environment, args []string
 	_ = flags.StringP("file", "f", "", "list of dates to display (ignored)")
 	_ = flags.StringP("reference", "r", "", "display the last modification time of FILE (ignored)")
 	_ = flags.StringP("set", "s", "", "set time described by STRING (ignored)")
+	_ = flags.Bool("debug", false, "annotate the parsed date, and warn about questionable usage to stderr (ignored)")
 	help := flags.Bool("help", false, "display this help and exit")
 	version := flags.Bool("version", false, "output version information and exit")
 

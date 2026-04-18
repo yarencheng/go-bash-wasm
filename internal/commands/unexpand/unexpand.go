@@ -25,10 +25,27 @@ func (u *Unexpand) Run(ctx context.Context, env *commands.Environment, args []st
 	flags := pflag.NewFlagSet("unexpand", pflag.ContinueOnError)
 	all := flags.BoolP("all", "a", false, "convert all blanks, instead of just initial blanks")
 	tabs := flags.StringP("tabs", "t", "8", "have tabs N characters apart")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "unexpand: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: unexpand [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Convert spaces in each FILE to tabs, writing to standard output.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "unexpand")
+		return 0
 	}
 
 	tabSize := 8

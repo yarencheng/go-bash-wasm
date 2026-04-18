@@ -35,7 +35,19 @@ func (f *Fmt) Run(ctx context.Context, env *commands.Environment, args []string)
 	help := flags.Bool("help", false, "display this help and exit")
 	version := flags.Bool("version", false, "output version information and exit")
 
-	if err := flags.Parse(args); err != nil {
+	// Pre-parse numeric flags like -75
+	var filtered []string
+	for _, arg := range args {
+		if len(arg) > 1 && arg[0] == '-' && arg[1] >= '0' && arg[1] <= '9' {
+			if _, err := strconv.Atoi(arg[1:]); err == nil {
+				filtered = append(filtered, "-w", arg[1:])
+				continue
+			}
+		}
+		filtered = append(filtered, arg)
+	}
+
+	if err := flags.Parse(filtered); err != nil {
 		if err == pflag.ErrHelp {
 			return 0
 		}

@@ -49,9 +49,30 @@ func (c *Complete) Run(ctx context.Context, env *commands.Environment, args []st
 	flag_u := flags.BoolP("user", "u", false, "user")
 	flag_v := flags.BoolP("variable", "v", false, "variable")
 
+	_ = flags.BoolP("empty", "E", false, "apply to empty line (ignored)")
+	_ = flags.BoolP("initial", "I", false, "apply to initial non-command word (ignored)")
+	_ = flags.BoolP("default", "D", false, "apply to commands for which no spec exists (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "complete: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: complete [-abcdefgjklsv] [-A action] [-G globpat] [-W wordlist] [-P prefix] [-S suffix] [-X filterpat] [-F function] [-C command] [name ...]\n")
+		fmt.Fprintf(env.Stdout, "Specify how arguments are to be completed by Readline.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "complete")
+		return 0
 	}
 
 	targets := flags.Args()

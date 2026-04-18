@@ -29,10 +29,29 @@ func (p *Pr) Run(ctx context.Context, env *commands.Environment, args []string) 
 	width := flags.IntP("width", "w", 72, "page width in characters")
 	doubleSpace := flags.BoolP("double-space", "d", false, "double space the output")
 	numbering := flags.BoolP("numbering", "n", false, "number lines")
+	_ = flags.BoolP("across", "a", false, "print columns across rather than down (ignored)")
+	_ = flags.BoolP("merge", "m", false, "print all files in parallel, one in each column (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "pr: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: pr [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Paginate or columnate FILE(s) for printing.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "pr")
+		return 0
 	}
 
 	remaining := flags.Args()

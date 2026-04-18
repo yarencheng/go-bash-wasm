@@ -26,10 +26,27 @@ func (t *Tac) Run(ctx context.Context, env *commands.Environment, args []string)
 	before := flags.BoolP("before", "b", false, "attach the separator before instead of after")
 	_ = flags.BoolP("regex", "r", false, "interpret the separator as a regular expression (not implemented)")
 	separator := flags.StringP("separator", "s", "\n", "use STRING as the separator instead of newline")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "tac: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: tac [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Write each FILE to standard output, last line first.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "tac")
+		return 0
 	}
 
 	remaining := flags.Args()

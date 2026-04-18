@@ -28,10 +28,37 @@ func (i *Install) Run(ctx context.Context, env *commands.Environment, args []str
 	owner := flags.StringP("owner", "o", "", "set ownership (super-user only)")
 	group := flags.StringP("group", "g", "", "set group ownership")
 	verbose := flags.BoolP("verbose", "v", false, "explain what is being done")
+	_ = flags.BoolP("create-leading", "D", false, "create all leading components of DEST except the last (ignored)")
+	_ = flags.BoolP("preserve-timestamps", "p", false, "apply access/modification times of SOURCE files to corresponding destination files (ignored)")
+	_ = flags.BoolP("strip", "s", false, "strip symbol tables (ignored)")
+	_ = flags.StringP("suffix", "S", "", "override the usual backup suffix (ignored)")
+	_ = flags.StringP("target-directory", "t", "", "copy all SOURCE arguments into DIRECTORY (ignored)")
+	_ = flags.BoolP("no-target-directory", "T", false, "treat DEST as a normal file (ignored)")
+	_ = flags.BoolP("compare", "C", false, "compare content of source and destination files (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "install: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: install [OPTION]... [-T] SOURCE DEST\n")
+		fmt.Fprintf(env.Stdout, "  or:  install [OPTION]... SOURCE... DIRECTORY\n")
+		fmt.Fprintf(env.Stdout, "  or:  install [OPTION]... -t DIRECTORY SOURCE...\n")
+		fmt.Fprintf(env.Stdout, "  or:  install [OPTION]... -d DIRECTORY...\n")
+		fmt.Fprintf(env.Stdout, "Copy SOURCE to DEST or multiple SOURCE(s) to the existing DIRECTORY, while setting permission modes and owner/group.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "install")
+		return 0
 	}
 
 	// Suppress unused variable errors for flags we don't handle yet

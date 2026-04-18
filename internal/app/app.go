@@ -61,6 +61,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/export"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/expr"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/factor"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/fc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/fg"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/find"
 	fmtcmd "github.com/yarencheng/go-bash-wasm/internal/commands/fmt"
@@ -259,6 +260,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		csplit.New(),
 		head.New(),
 		tail.New(),
+		fc.New(),
 		wc.New(),
 		tty.New(),
 		touch.New(),

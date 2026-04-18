@@ -28,10 +28,29 @@ func (n *Numfmt) Run(ctx context.Context, env *commands.Environment, args []stri
 	from := flags.String("from", "none", "auto-scale input numbers; UNIT can be: none, auto, si, iec, iec-i")
 	to := flags.String("to", "none", "auto-scale output numbers; UNIT can be: none, auto, si, iec, iec-i")
 	header := flags.Int("header", 0, "skip N header lines")
+	_ = flags.StringP("delimiter", "d", "", "use X instead of whitespace for field delimiter (ignored)")
+	_ = flags.BoolP("zero-terminated", "z", false, "end each output line with NUL, not newline (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "numfmt: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: numfmt [OPTION]... [NUMBER]...\n")
+		fmt.Fprintf(env.Stdout, "Reformat NUMBER(s), or numbers from standard input if none are specified.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "numfmt")
+		return 0
 	}
 
 	remaining := flags.Args()

@@ -23,10 +23,34 @@ func (t *Trap) Name() string {
 func (t *Trap) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("trap", pflag.ContinueOnError)
 	print := flags.BoolP("print", "p", false, "display current traps")
+	listSignals := flags.BoolP("list", "l", false, "list signal names and their corresponding numbers")
+	_ = flags.BoolP("print-reusable", "P", false, "print each trap command in a format that can be reused as input (ignored; -p used)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "trap: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: trap [-lp] [[arg] signal_spec ...]\n")
+		fmt.Fprintf(env.Stdout, "Define and activate handlers to be executed when the shell receives signals or other conditions.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "trap")
+		return 0
+	}
+
+	if *listSignals {
+		t.printSignals(env)
+		return 0
 	}
 
 	targets := flags.Args()
@@ -119,4 +143,28 @@ func (t *Trap) getSignal(sig string) (string, bool) {
 	}
 
 	return "", false
+}
+
+func (t *Trap) printSignals(env *commands.Environment) {
+	// Common signals with numbers
+	sigs := []struct {
+		name string
+		num  int
+	}{
+		{"HUP", 1}, {"INT", 2}, {"QUIT", 3}, {"ILL", 4}, {"TRAP", 5},
+		{"ABRT", 6}, {"BUS", 7}, {"FPE", 8}, {"KILL", 9}, {"USR1", 10},
+		{"SEGV", 11}, {"USR2", 12}, {"PIPE", 13}, {"ALRM", 14}, {"TERM", 15},
+		{"STKFLT", 16}, {"CHLD", 17}, {"CONT", 18}, {"STOP", 19}, {"TSTP", 20},
+		{"TTIN", 21}, {"TTOU", 22}, {"URG", 23}, {"XCPU", 24}, {"XFSZ", 25},
+		{"VTALRM", 26}, {"PROF", 27}, {"WINCH", 28}, {"IO", 29}, {"PWR", 30},
+		{"SYS", 31},
+	}
+
+	for i, sig := range sigs {
+		fmt.Fprintf(env.Stdout, "%2d) SIG%-10s", sig.num, sig.name)
+		if (i+1)%4 == 0 {
+			fmt.Fprintln(env.Stdout)
+		}
+	}
+	fmt.Fprintln(env.Stdout)
 }

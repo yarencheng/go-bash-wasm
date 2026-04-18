@@ -23,11 +23,30 @@ func (p *Pushd) Run(ctx context.Context, env *commands.Environment, args []strin
 	flags := pflag.NewFlagSet("pushd", pflag.ContinueOnError)
 	noChdir := flags.BoolP("no-chdir", "n", false, "suppress the normal change of directory")
 
+	_ = flags.BoolP("long", "l", false, "do not print the tilde-prefix (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		if env.Stderr != nil {
 			fmt.Fprintf(env.Stderr, "pushd: %v\n", err)
 		}
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: pushd [-n] [+N] [-N] [dir]\n")
+		fmt.Fprintf(env.Stdout, "Add directories to stack.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "pushd")
+		return 0
 	}
 
 	targets := flags.Args()

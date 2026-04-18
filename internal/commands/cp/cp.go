@@ -38,11 +38,42 @@ func (c *Cp) Run(ctx context.Context, env *commands.Environment, args []string) 
 	_ = flags.BoolP("interactive", "i", false, "prompt before overwrite (ignored)")
 	_ = flags.BoolP("force", "f", false, "if an existing destination file cannot be opened, remove it and try again (ignored)")
 
+	_ = flags.BoolP("backup", "b", false, "make a backup of each existing destination file (ignored)")
+	_ = flags.Bool("attributes-only", false, "don't copy the file data, just the attributes (ignored)")
+	_ = flags.BoolP("link", "l", false, "hard link files instead of copying (ignored)")
+	_ = flags.BoolP("symbolic-link", "s", false, "make symbolic links instead of copying (ignored)")
+	_ = flags.BoolP("one-file-system", "x", false, "stay on this file system (ignored)")
+	_ = flags.StringP("context", "Z", "", "set SELinux security context (ignored)")
+	_ = flags.String("parents", "", "use full source file name under DIRECTORY (ignored)")
+	_ = flags.String("reflink", "always", "control clone/CoW copies (ignored)")
+	_ = flags.String("sparse", "auto", "control creation of sparse files (ignored)")
+	_ = flags.String("no-preserve", "", "don't preserve the specified attributes (ignored)")
+	_ = flags.Bool("H", false, "follow command-line symbolic links in SOURCE (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		if env.Stderr != nil {
 			fmt.Fprintf(env.Stderr, "cp: %v\n", err)
 		}
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: cp [OPTION]... [-T] SOURCE DEST\n")
+		fmt.Fprintf(env.Stdout, "  or:  cp [OPTION]... SOURCE... DIRECTORY\n")
+		fmt.Fprintf(env.Stdout, "  or:  cp [OPTION]... -t DIRECTORY SOURCE...\n")
+		fmt.Fprintf(env.Stdout, "Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "cp")
+		return 0
 	}
 
 	posArgs := flags.Args()

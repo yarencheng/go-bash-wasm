@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -19,7 +20,29 @@ func (g *Getlimits) Name() string {
 }
 
 func (g *Getlimits) Run(ctx context.Context, env *commands.Environment, args []string) int {
-	// Simple implementation of getlimits following coreutils output format
+	flags := pflag.NewFlagSet("getlimits", pflag.ContinueOnError)
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
+
+	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
+		fmt.Fprintf(env.Stderr, "getlimits: %v\n", err)
+		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: getlimits\n")
+		fmt.Fprintf(env.Stdout, "Output platform dependent limits in a format suitable for shell scripts.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "getlimits")
+		return 0
+	}
 
 	// Integer limits
 	fmt.Fprintf(env.Stdout, "CHAR_MAX=%d\n", 127)

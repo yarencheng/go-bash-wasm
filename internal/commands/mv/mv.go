@@ -27,12 +27,35 @@ func (m *Mv) Run(ctx context.Context, env *commands.Environment, args []string) 
 	targetDir := flags.StringP("target-directory", "t", "", "move all SOURCE arguments into DIRECTORY")
 	noTargetDir := flags.BoolP("no-target-directory", "T", false, "treat DEST as a normal file")
 	update := flags.BoolP("update", "u", false, "move only when the SOURCE file is newer than the destination file or when the destination file is missing")
+	_ = flags.BoolP("backup", "b", false, "make a backup of each existing destination file (ignored)")
+	_ = flags.BoolP("context", "Z", false, "set SELinux security context of destination file to default type (ignored)")
+	_ = flags.Bool("exchange", false, "exchange source and destination (ignored)")
+	_ = flags.Bool("no-copy", false, "do not copy if rename fails (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		if env.Stderr != nil {
 			fmt.Fprintf(env.Stderr, "mv: %v\n", err)
 		}
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: mv [OPTION]... [-T] SOURCE DEST\n")
+		fmt.Fprintf(env.Stdout, "  or:  mv [OPTION]... SOURCE... DIRECTORY\n")
+		fmt.Fprintf(env.Stdout, "  or:  mv [OPTION]... -t DIRECTORY SOURCE...\n")
+		fmt.Fprintf(env.Stdout, "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "mv")
+		return 0
 	}
 
 	posArgs := flags.Args()

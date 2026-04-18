@@ -34,6 +34,31 @@ func (d *DD) Run(ctx context.Context, env *commands.Environment, args []string) 
 	notrunc := false
 
 	for _, arg := range args {
+		if arg == "--help" {
+			fmt.Fprintf(env.Stdout, "Usage: dd [OPERAND]...\n")
+			fmt.Fprintf(env.Stdout, "  or:  dd OPTION\n")
+			fmt.Fprintf(env.Stdout, "Copy a file, converting and formatting according to the operands.\n\n")
+			fmt.Fprintf(env.Stdout, "  bs=BYTES        read and write up to BYTES bytes at a time (default: 512)\n")
+			fmt.Fprintf(env.Stdout, "  count=N         copy only N input blocks\n")
+			fmt.Fprintf(env.Stdout, "  if=FILE         read from FILE instead of stdin\n")
+			fmt.Fprintf(env.Stdout, "  of=FILE         write to FILE instead of stdout\n")
+			fmt.Fprintf(env.Stdout, "  seek=N          skip N obs-sized blocks at start of output\n")
+			fmt.Fprintf(env.Stdout, "  skip=N          skip N ibs-sized blocks at start of input\n")
+			fmt.Fprintf(env.Stdout, "\nOperands that are currently ignored (stubs for parity):\n")
+			fmt.Fprintf(env.Stdout, "  cbs=BYTES       convert BYTES bytes at a time\n")
+			fmt.Fprintf(env.Stdout, "  conv=CONVS      convert the file as per the comma separated symbol list\n")
+			fmt.Fprintf(env.Stdout, "  ibs=BYTES       read up to BYTES bytes at a time (default: 512)\n")
+			fmt.Fprintf(env.Stdout, "  obs=BYTES       write up to BYTES bytes at a time (default: 512)\n")
+			fmt.Fprintf(env.Stdout, "  iflag=FLAGS     read as per the comma separated symbol list\n")
+			fmt.Fprintf(env.Stdout, "  oflag=FLAGS     write as per the comma separated symbol list\n")
+			fmt.Fprintf(env.Stdout, "  status=LEVEL    The LEVEL of information to print to stderr\n")
+			return 0
+		}
+		if arg == "--version" {
+			commands.ShowVersion(env.Stdout, "dd")
+			return 0
+		}
+
 		parts := strings.SplitN(arg, "=", 2)
 		if len(parts) != 2 {
 			continue
@@ -56,6 +81,8 @@ func (d *DD) Run(ctx context.Context, env *commands.Environment, args []string) 
 			if val == "notrunc" {
 				notrunc = true
 			}
+		case "ibs", "obs", "cbs", "iflag", "oflag", "status":
+			// Ignored for now
 		}
 	}
 

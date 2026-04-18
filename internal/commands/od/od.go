@@ -25,10 +25,30 @@ func (o *Od) Run(ctx context.Context, env *commands.Environment, args []string) 
 	skip := flags.IntP("skip-bytes", "j", 0, "skip bytes from the beginning of input")
 	readLimit := flags.IntP("read-bytes", "N", -1, "limit dump to BYTES input bytes")
 	width := flags.IntP("width", "w", 16, "output BYTES bytes per line")
+	_ = flags.StringP("type", "t", "o2", "select output format (ignored; 2-byte octal used)")
+	_ = flags.BoolP("output-duplicates", "v", false, "do not use * to mark line suppression (ignored)")
+	_ = flags.StringP("strings", "S", "", "output strings of at least BYTES graphic characters (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "od: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: od [OPTION]... [FILE]...\n")
+		fmt.Fprintf(env.Stdout, "Write an unambiguous representation, octal bytes by default, of FILE to standard output.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "od")
+		return 0
 	}
 
 	remaining := flags.Args()

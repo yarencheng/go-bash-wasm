@@ -25,11 +25,28 @@ func (s *Shopt) Run(ctx context.Context, env *commands.Environment, args []strin
 	unset := flags.BoolP("unset", "u", false, "disable each optname")
 	quiet := flags.BoolP("quiet", "q", false, "suppress output")
 	print := flags.BoolP("print", "p", false, "print each shell option with an indication of its status")
-	// -o flag for set -o options is skipped for now to keep it simple
+	_ = flags.BoolP("set-o", "o", false, "restrict to shell options defined for 'set -o' (ignored)")
+	help := flags.Bool("help", false, "display this help and exit")
+	version := flags.Bool("version", false, "output version information and exit")
 
 	if err := flags.Parse(args); err != nil {
+		if err == pflag.ErrHelp {
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "shopt: %v\n", err)
 		return 1
+	}
+
+	if *help {
+		fmt.Fprintf(env.Stdout, "Usage: shopt [-pqsu] [-o] [optname ...]\n")
+		fmt.Fprintf(env.Stdout, "Modify and appear shell options.\n\n")
+		flags.PrintDefaults()
+		return 0
+	}
+
+	if *version {
+		commands.ShowVersion(env.Stdout, "shopt")
+		return 0
 	}
 
 	targets := flags.Args()

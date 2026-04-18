@@ -23,6 +23,7 @@ func (w *Wait) Run(ctx context.Context, env *commands.Environment, args []string
 	flags := pflag.NewFlagSet("wait", pflag.ContinueOnError)
 	_ = flags.BoolP("wait-all", "f", false, "wait for each ID to terminate before returning (ignored)")
 	_ = flags.BoolP("next", "n", false, "wait for the next job to terminate and return its exit status (ignored)")
+	pidVar := flags.StringP("pid-var", "p", "", "store the process ID or job management ID of the job for which the exit status is returned in the variable VARNAME")
 	
 	if err := flags.Parse(args); err != nil {
 		if env.Stderr != nil {
@@ -54,6 +55,9 @@ func (w *Wait) Run(ctx context.Context, env *commands.Environment, args []string
 		for _, job := range env.Jobs {
 			if job.PID == pid {
 				found = true
+				if *pidVar != "" {
+					env.EnvVars[*pidVar] = strconv.Itoa(pid)
+				}
 				if job.Status == "Running" {
 					// We can't really wait in WASM easily without a scheduler,
 					// so we assume it completes immediately for this simulation.

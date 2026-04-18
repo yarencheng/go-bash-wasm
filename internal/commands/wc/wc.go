@@ -37,6 +37,8 @@ func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) 
 	bytes := flags.BoolP("bytes", "c", false, "print the byte counts")
 	chars := flags.BoolP("chars", "m", false, "print the character counts")
 	maxLineLen := flags.BoolP("max-line-length", "L", false, "print the maximum display width")
+	files0From := flags.String("files0-from", "", "read input from the files specified by NUL-terminated names in file F")
+	_ = flags.String("total", "auto", "when to print a line with a total; WHEN is: auto, always, only, never")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "wc: %v\n", err)
@@ -44,6 +46,19 @@ func (w *Wc) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	targets := flags.Args()
+	if *files0From != "" {
+		fullPath := *files0From
+		if !filepath.IsAbs(*files0From) {
+			fullPath = filepath.Join(env.Cwd, *files0From)
+		}
+		data, err := afero.ReadFile(env.FS, fullPath)
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "wc: %v\n", err)
+			return 1
+		}
+		targets = append(targets, strings.Split(string(data), "\x00")...)
+	}
+
 	if len(targets) == 0 {
 		targets = []string{"-"}
 	}

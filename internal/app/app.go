@@ -15,6 +15,7 @@ import (
 	base64cmd "github.com/yarencheng/go-bash-wasm/internal/commands/base64"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/basenc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/basename"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bind"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/csplit"
@@ -77,6 +78,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pathchk"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/read"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/readonly"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/readlink"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
@@ -170,12 +172,15 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		ls.New(),
 		colon.New(),
 		commandcmd.New(),
+		basename.New(),
+		bind.New(),
 		boolcmd.NewTrue(),
 		boolcmd.NewFalse(),
 		echo.New(),
 		pwd.New(),
 		pathchk.New(),
 		read.New(),
+		readonly.New(),
 		readlink.New(),
 		cat.New(),
 		cksumcmd.New(),
@@ -184,7 +189,6 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		od.New(),
 		paste.New(),
 		pr.New(),
-		basename.New(),
 		dirname.New(),
 		mkdir.New(),
 		mktemp.New(),

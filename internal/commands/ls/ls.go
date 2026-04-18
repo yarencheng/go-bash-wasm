@@ -69,6 +69,7 @@ type lsFlags struct {
 	timeStyle      *string
 	color          *string
 	fullTime       *bool
+	vertical       *bool
 	timeOpt        *string
 	blockSize      *string
 	sortOpt        *string
@@ -125,6 +126,7 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		fullTime:     flagsSet.Bool("full-time", false, "like -l --time-style=full-iso"),
 		timeOpt:      flagsSet.String("time", "", "show time as WORD instead of modification time: atime, access, use, ctime, status"),
 		blockSize:    flagsSet.String("block-size", "", "scale sizes by SIZE when printing them"),
+		vertical:     flagsSet.BoolP("vertical", "C", false, "list entries by columns"),
 		sortOpt:      flagsSet.String("sort", "", "sort by WORD: none (-U), size (-S), time (-t), version (-v), extension (-X)"),
 	}
 
@@ -140,6 +142,10 @@ func (l *Ls) Run(ctx context.Context, env *commands.Environment, args []string) 
 		// But usually it just means it changes the default or behaves as if they are off unless forced?
 		// Actually GNU ls -f DOES disable -l -s --color.
 		*f.long = false
+	}
+
+	if *f.vertical {
+		*f.format = "vertical"
 	}
 
 	targets := flagsSet.Args()

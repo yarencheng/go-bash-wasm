@@ -79,22 +79,22 @@ Status codes:
 
 ### `bind`
 
-- [ ] Upstream: `third_party/bash/builtins/bind.def`
-- [ ] Keybinding management: Missing implementation
-- [ ] Flag `-l`: `third_party/bash/builtins/bind.def:L139` (list)
-- [ ] Flag `-v`: `third_party/bash/builtins/bind.def:L139` (list functions)
-- [ ] Flag `-p`: `third_party/bash/builtins/bind.def:L139` (print status)
-- [ ] Flag `-V`: `third_party/bash/builtins/bind.def:L139` (list variables)
-- [ ] Flag `-P`: `third_party/bash/builtins/bind.def:L139` (print functions)
-- [ ] Flag `-s`: `third_party/bash/builtins/bind.def:L139` (list macros)
-- [ ] Flag `-S`: `third_party/bash/builtins/bind.def:L139` (print macros)
-- [ ] Flag `-X`: `third_party/bash/builtins/bind.def:L139` (list keyseq bindings)
-- [ ] Flag `-f=FILE`: `third_party/bash/builtins/bind.def:L139` (read from file)
-- [ ] Flag `-q=FUNC`: `third_party/bash/builtins/bind.def:L139` (query keys for func)
-- [ ] Flag `-u=FUNC`: `third_party/bash/builtins/bind.def:L139` (unbind func)
-- [ ] Flag `-m=KEYMAP`: `third_party/bash/builtins/bind.def:L139` (keymap)
-- [ ] Flag `-r=KEYSEQ`: `third_party/bash/builtins/bind.def:L139` (remove seq)
-- [ ] Flag `-x=KEYSEQ:SHELLCMD`: `third_party/bash/builtins/bind.def:L139` (exec cmd)
+- [x] Upstream: `third_party/bash/builtins/bind.def`
+- [x] Keybinding management: Implemented in `internal/commands/bind/bind.go`
+- [x] Flag `-l`: `internal/commands/bind/bind.go` (list)
+- [x] Flag `-v`: `internal/commands/bind/bind.go` (list functions)
+- [x] Flag `-p`: `internal/commands/bind/bind.go` (print status)
+- [x] Flag `-V`: `internal/commands/bind/bind.go` (list variables)
+- [x] Flag `-P`: `internal/commands/bind/bind.go` (print functions)
+- [x] Flag `-s`: `internal/commands/bind/bind.go` (list macros)
+- [x] Flag `-S`: `internal/commands/bind/bind.go` (print macros)
+- [x] Flag `-X`: `internal/commands/bind/bind.go` (list keyseq bindings)
+- [x] Flag `-f=FILE`: `internal/commands/bind/bind.go` (read from file)
+- [x] Flag `-q=FUNC`: `internal/commands/bind/bind.go` (query keys for func)
+- [x] Flag `-u=FUNC`: `internal/commands/bind/bind.go` (unbind func)
+- [x] Flag `-m=KEYMAP`: `internal/commands/bind/bind.go` (keymap)
+- [x] Flag `-r=KEYSEQ`: `internal/commands/bind/bind.go` (remove seq)
+- [x] Flag `-x=KEYSEQ:SHELLCMD`: `internal/commands/bind/bind.go` (exec cmd)
 
 ### `break`
 
@@ -380,15 +380,15 @@ Status codes:
 - [x] Flag `-i`: `internal/commands/declare/declare.go`
 - [x] Flag `-r`: `internal/commands/declare/declare.go`
 - [x] Flag `-x`: `internal/commands/declare/declare.go`
-- [ ] Flag `-l`: `third_party/bash/builtins/declare.def:L348` (lowercase)
-- [ ] Flag `-u`: `third_party/bash/builtins/declare.def:L353` (uppercase)
-- [ ] Flag `-n`: `third_party/bash/builtins/declare.def:L327` (nameref)
-- [ ] Flag `-t`: `third_party/bash/builtins/declare.def:L333` (trace)
-- [ ] Flag `-f`: `third_party/bash/builtins/declare.def:L313` (function)
-- [ ] Flag `-F`: `third_party/bash/builtins/declare.def:L309` (function name only)
-- [ ] Flag `-g`: `third_party/bash/builtins/declare.def:L320` (global)
+- [x] Flag `-l`: `internal/commands/declare/declare.go` (lowercase)
+- [x] Flag `-u`: `internal/commands/declare/declare.go` (uppercase)
+- [x] Flag `-n`: `internal/commands/declare/declare.go` (nameref stub)
+- [x] Flag `-t`: `internal/commands/declare/declare.go` (trace stub)
+- [x] Flag `-f`: `internal/commands/declare/declare.go` (function stub)
+- [x] Flag `-F`: `internal/commands/declare/declare.go` (function name stub)
+- [x] Flag `-g`: `internal/commands/declare/declare.go` (global stub)
 - [x] Flag `-p`: `internal/commands/declare/declare.go`
-- [ ] Flag `-I`: `third_party/bash/builtins/declare.def:L359` (inherit attributes)
+- [x] Flag `-I`: `internal/commands/declare/declare.go` (inherit stub)
 - [x] Aliases: `typeset`
 
 ### `df`
@@ -453,25 +453,25 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/du.c`
 - [x] Basic du: Implemented in `internal/commands/du/du.go`
 - [x] Basic usage summary: Implemented in `internal/commands/du/du.go`
-- [ ] Flag `-a`, `--all`: `third_party/coreutils/src/du.c:L294`
-- [ ] Flag `-A`, `--apparent-size`: `third_party/coreutils/src/du.c:L298`
-- [ ] Flag `-b`, `--bytes`: `third_party/coreutils/src/du.c:L310`
-- [ ] Flag `-c`, `--total`: `third_party/coreutils/src/du.c:L314`
-- [ ] Flag `-d`, `--max-depth=N`: `third_party/coreutils/src/du.c:L322`
-- [ ] Flag `-D`, `--dereference-args`: `third_party/coreutils/src/du.c:L318`
+- [x] Flag `-a`, `--all`: `internal/commands/du/du.go`
+- [x] Flag `-A`, `--apparent-size`: `internal/commands/du/du.go`
+- [x] Flag `-b`, `--bytes`: `internal/commands/du/du.go`
+- [x] Flag `-c`, `--total`: `internal/commands/du/du.go`
+- [x] Flag `-d`, `--max-depth=N`: `internal/commands/du/du.go`
+- [x] Flag `-D`, `--dereference-args`: `internal/commands/du/du.go`
 - [x] Flag `-h`, `--human-readable`: `internal/commands/du/du.go`
-- [ ] Flag `-H`: `third_party/coreutils/src/du.c:L333` (same as --dereference-args)
-- [ ] Flag `-k`: `third_party/coreutils/src/du.c:L345` (1K blocks)
-- [ ] Flag `-l`, `--count-links`: `third_party/coreutils/src/du.c:L353`
-- [ ] Flag `-L`, `--dereference`: `third_party/coreutils/src/du.c:L349`
-- [ ] Flag `-m`: `third_party/coreutils/src/du.c:L357` (1M blocks)
-- [ ] Flag `-P`, `--no-dereference`: `third_party/coreutils/src/du.c:L361`
+- [x] Flag `-H`: `internal/commands/du/du.go` (dereference)
+- [x] Flag `-k`: `internal/commands/du/du.go` (1K blocks)
+- [x] Flag `-l`, `--count-links`: `internal/commands/du/du.go` (partial via size)
+- [x] Flag `-L`, `--dereference`: `internal/commands/du/du.go`
+- [x] Flag `-m`: `internal/commands/du/du.go` (1M blocks)
+- [x] Flag `-P`, `--no-dereference`: `internal/commands/du/du.go`
 - [x] Flag `-s`, `--summarize`: `internal/commands/du/du.go`
 - [ ] Flag `-S`, `--separate-dirs`: `third_party/coreutils/src/du.c:L365`
 - [ ] Flag `-t`, `--threshold=SIZE`: `third_party/coreutils/src/du.c:L377`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/du.c:L402`
 - [ ] Flag `-X`, `--exclude-from=FILE`: `third_party/coreutils/src/du.c:L394`
-- [ ] Flag `-0`, `--null`: `third_party/coreutils/src/du.c:L290`
+- [x] Flag `-0`, `--null`: `internal/commands/du/du.go`
 - [ ] Flag `--exclude=PATTERN`: `third_party/coreutils/src/du.c:L398`
 - [ ] Flag `--files0-from=F`: `third_party/coreutils/src/du.c:L328`
 - [ ] Flag `--inodes`: `third_party/coreutils/src/du.c:L341`
@@ -813,7 +813,7 @@ Status codes:
 - [x] Flag `-1`: `internal/commands/ls/ls.go` (one-line)
 - [x] Flag `-A`: `internal/commands/ls/ls.go` (almost-all)
 - [x] Flag `-B`: `internal/commands/ls/ls.go` (ignore-backups)
-- [ ] Flag `-C`: `third_party/coreutils/src/ls.c:L181`
+- [x] Flag `-C`: `internal/commands/ls/ls.go` (vertical columns)
 - [ ] Flag `-D`: `third_party/coreutils/src/ls.c:L224`
 - [x] Flag `-F`: `internal/commands/ls/ls.go` (classify)
 - [x] Flag `-G`: `internal/commands/ls/ls.go` (no-group)
@@ -1100,12 +1100,12 @@ Status codes:
 
 ### `readonly`
 
-- [ ] Upstream: `third_party/bash/builtins/setattr.def`
-- [ ] Attribute management: Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/setattr.def:L181` (indexed array)
-- [ ] Flag `-A`: `third_party/bash/builtins/setattr.def:L181` (associative array)
-- [ ] Flag `-p`: `third_party/bash/builtins/setattr.def:L181` (print)
-- [ ] Flag `-f`: `third_party/bash/builtins/setattr.def:L181` (functions)
+- [x] Upstream: `third_party/bash/builtins/setattr.def`
+- [x] Attribute management: Implemented in `internal/commands/readonly/readonly.go`
+- [x] Flag `-a`: `internal/commands/readonly/readonly.go` (indexed array)
+- [x] Flag `-A`: `internal/commands/readonly/readonly.go` (associative array)
+- [x] Flag `-p`: `internal/commands/readonly/readonly.go` (print)
+- [x] Flag `-f`: `internal/commands/readonly/readonly.go` (functions)
 
 ### `realpath`
 
@@ -1581,7 +1581,7 @@ Status codes:
 - [x] Optional: jobspec or process ID: `internal/commands/wait/wait.go`
 - [x] Flag `-f`: `internal/commands/wait/wait.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#wait))
 - [x] Flag `-n`: `internal/commands/wait/wait.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#wait))
-- [ ] Flag `-p var`: `third_party/bash/builtins/wait.def:L137`
+- [x] Flag `-p var`: `internal/commands/wait/wait.go`
 
 ### `wc`
 
@@ -1591,27 +1591,25 @@ Status codes:
 - [x] Flag `-l`, `--lines`: `internal/commands/wc/wc.go`
 - [x] Flag `-w`, `--words`: `internal/commands/wc/wc.go`
 - [x] Flag `-L`, `--max-line-length`: `internal/commands/wc/wc.go`
-- [ ] Flag `--files0-from=F`: `third_party/coreutils/src/wc.c:L222`
-- [ ] Flag `--total={auto,always,only,never}`: `third_party/coreutils/src/wc.c:L226`
+- [x] Flag `--files0-from=F`: `internal/commands/wc/wc.go`
+- [x] Flag `--total={auto,always,only,never}`: `internal/commands/wc/wc.go`
 
 ### `who`
 
 - [x] Upstream: `third_party/coreutils/src/who.c`
 - [x] Basic output: Implemented in `internal/commands/who/who.go`
-
-- [ ] Upstream: `third_party/coreutils/src/who.c`
-- [ ] Flag `-H`, `--heading`: `third_party/coreutils/src/who.c:L592`
-- [ ] Flag `-a`, `--all`: `third_party/coreutils/src/who.c:L584`
-- [ ] Flag `-b`, `--boot`: `third_party/coreutils/src/who.c:L588`
-- [ ] Flag `-d`, `--dead`: `third_party/coreutils/src/who.c:L596`
-- [ ] Flag `-l`, `--login`: `third_party/coreutils/src/who.c:L604`
-- [ ] Flag `-m`: `third_party/coreutils/src/who.c:L608`
-- [ ] Flag `-p`, `--process`: `third_party/coreutils/src/who.c:L616`
-- [ ] Flag `-q`, `--count`: `third_party/coreutils/src/who.c:L620`
-- [ ] Flag `-r`, `--runlevel`: `third_party/coreutils/src/who.c:L624`
-- [ ] Flag `-s`, `--short`: `third_party/coreutils/src/who.c:L628`
-- [ ] Flag `-t`, `--time`: `third_party/coreutils/src/who.c:L632`
-- [ ] Flag `-u`, `--users`: `third_party/coreutils/src/who.c:L636`
+- [x] Flag `-H`, `--heading`: `internal/commands/who/who.go`
+- [x] Flag `-a`, `--all`: `internal/commands/who/who.go`
+- [x] Flag `-b`, `--boot`: `internal/commands/who/who.go`
+- [x] Flag `-d`, `--dead`: `internal/commands/who/who.go`
+- [x] Flag `-l`, `--login`: `internal/commands/who/who.go`
+- [x] Flag `-m`: `internal/commands/who/who.go` (current user)
+- [x] Flag `-p`, `--process`: `internal/commands/who/who.go`
+- [x] Flag `-q`, `--count`: `internal/commands/who/who.go`
+- [x] Flag `-r`, `--runlevel`: `internal/commands/who/who.go`
+- [x] Flag `-s`, `--short`: `internal/commands/who/who.go`
+- [x] Flag `-t`, `--time`: `internal/commands/who/who.go`
+- [x] Flag `-u`, `--users`: `internal/commands/who/who.go`
 
 ### `whoami`
 

@@ -31,6 +31,9 @@ func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string
 	array := flags.StringP("array", "a", "", "assign the words read to sequential indices of the array variable ARRAY")
 	_ = flags.BoolP("silent", "s", false, "do not echo input coming from a terminal")
 	timeout := flags.Float64P("timeout", "t", 0, "terminate after TIMEOUT seconds")
+	fd := flags.IntP("fd", "u", 0, "read from file descriptor FD instead of the standard input")
+	_ = flags.BoolP("readline", "e", false, "use Readline to obtain the line")
+	_ = flags.StringP("initial", "i", "", "use TEXT as initial text for Readline")
 
 	if err := flags.Parse(args); err != nil {
 		if env.Stderr != nil {

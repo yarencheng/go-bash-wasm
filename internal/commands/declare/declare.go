@@ -26,6 +26,16 @@ func (d *Declare) Run(ctx context.Context, env *commands.Environment, args []str
 	_ = flags.BoolP("export", "x", false, "make NAMEs export")
 	_ = flags.BoolP("readonly", "r", false, "make NAMEs readonly")
 	_ = flags.BoolP("integer", "i", false, "make NAMEs have the integer attribute")
+	lower := flags.BoolP("lowercase", "l", false, "convert NAMEs to lowercase on assignment")
+	upper := flags.BoolP("uppercase", "u", false, "convert NAMEs to uppercase on assignment")
+	_ = flags.BoolP("nameref", "n", false, "make NAME a reference to the variable named by its value")
+	_ = flags.BoolP("trace", "t", false, "make NAMEs have the trace attribute")
+	_ = flags.BoolP("function", "f", false, "restrict action or display to function names and definitions")
+	_ = flags.BoolP("funcname", "F", false, "restrict display to function names only")
+	_ = flags.BoolP("global", "g", false, "create NAMEs in the global scope")
+	_ = flags.BoolP("inherit", "I", false, "inherit attributes from name in surrounding scope")
+	_ = flags.BoolP("array", "a", false, "make NAMEs indexed arrays")
+	_ = flags.BoolP("assoc", "A", false, "make NAMEs associative arrays")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "declare: %v\n", err)
@@ -50,7 +60,14 @@ func (d *Declare) Run(ctx context.Context, env *commands.Environment, args []str
 	for _, arg := range targets {
 		if strings.Contains(arg, "=") {
 			parts := strings.SplitN(arg, "=", 2)
-			env.EnvVars[parts[0]] = parts[1]
+			val := parts[1]
+			if *lower {
+				val = strings.ToLower(val)
+			}
+			if *upper {
+				val = strings.ToUpper(val)
+			}
+			env.EnvVars[parts[0]] = val
 		}
 	}
 

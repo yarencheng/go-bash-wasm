@@ -1,3 +1,10 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/yarencheng/go-bash-wasm)](https://goreportcard.com/report/github.com/yarencheng/go-bash-wasm)
+[![Go Reference](https://pkg.go.dev/badge/github.com/yarencheng/go-bash-wasm.svg)](https://pkg.go.dev/github.com/yarencheng/go-bash-wasm)
+![Go Version](https://img.shields.io/github/go-mod/go-version/yarencheng/go-bash-wasm)
+[![Build Status](https://github.com/yarencheng/go-bash-wasm/actions/workflows/go.yml/badge.svg)](https://github.com/yarencheng/go-bash-wasm/actions)
+[![codecov](https://codecov.io/gh/yarencheng/go-bash-wasm/branch/main/graph/badge.svg)](https://codecov.io/gh/yarencheng/go-bash-wasm)
+![GitHub License](https://img.shields.io/github/license/yarencheng/go-bash-wasm)
+
 # go-bash-wasm
 
 **go-bash-wasm** is a high-fidelity, clean-room simulator of the GNU Bash shell and Coreutils, written in Go and optimized for WebAssembly (WASM). It brings the power of a standard UNIX environment to sandboxed ecosystems like browsers, edge computing, and secure server-side runtimes.

@@ -14,6 +14,7 @@ func TestWait_Run(t *testing.T) {
 		Jobs: []*commands.Job{
 			{ID: 1, PID: 1234, Command: "sleep 10", Status: "Running"},
 		},
+		Stdout: io.Discard,
 		Stderr: io.Discard,
 	}
 

@@ -1,6 +1,7 @@
 package bg
 
 import (
+	"bytes"
 	"context"
 	"testing"
 
@@ -29,8 +30,11 @@ func TestBg_Run(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			var stdout, stderr bytes.Buffer
 			env := &commands.Environment{
-				Jobs: tt.initialJobs,
+				Jobs:   tt.initialJobs,
+				Stdout: &stdout,
+				Stderr: &stderr,
 			}
 			b := New()
 			status := b.Run(context.Background(), env, tt.args)

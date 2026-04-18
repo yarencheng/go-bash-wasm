@@ -14,8 +14,8 @@ import (
 )
 
 func main() {
-	// Suppress zerolog noise from appearing in the browser terminal.
-	zerolog.SetGlobalLevel(zerolog.Disabled)
+	// zerolog is redirected to browser console via BrowserConsoleWriter.
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
 	ctx := context.Background()
 

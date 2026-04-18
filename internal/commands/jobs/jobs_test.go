@@ -10,9 +10,10 @@ import (
 )
 
 func TestJobs_Run(t *testing.T) {
-	var stdout bytes.Buffer
+	var stdout, stderr bytes.Buffer
 	env := &commands.Environment{
 		Stdout: &stdout,
+		Stderr: &stderr,
 		Jobs: []*commands.Job{
 			{ID: 1, PID: 123, Command: "echo hello", Status: "Running"},
 			{ID: 2, PID: 124, Command: "sleep 10", Status: "Stopped"},

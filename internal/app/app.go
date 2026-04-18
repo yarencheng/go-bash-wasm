@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"io"
-	"os"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -155,7 +154,7 @@ type App struct {
 // New creates a new bash simulator application.
 func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 	// Setup standard logger
-	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	logger := zerolog.New(newLoggerWriter()).With().Timestamp().Logger()
 	log.Logger = logger
 
 	logger.Info().Msg("initializing go-bash-wasm application")

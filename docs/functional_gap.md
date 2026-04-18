@@ -126,6 +126,11 @@ Across multiple commands (`cp`, `mv`, `rm`, `chmod`, `chown`, `realpath`), sever
 - `[x]` User Information (Stub): `internal/commands/pinky/pinky.go`
   > Rationale: Reports static simulated information for the single user in the environment. Real finger/pinky protocols or multiple user tracking are not supported.
 
+### `shred`
+
+- `[x]` Data Erasure (Workaround): `internal/commands/shred/shred.go`
+  > Rationale: In a memory-mapped virtual filesystem, hardware-level secure deletion is not possible. `shred` performs basic buffer overwriting (using fixed patterns) to simulate the command's behavior without providing actual physical security.
+
 ### `stdbuf`
 
 - `[x]` Stream Buffering (Stub): `internal/commands/stdbuf/stdbuf.go`

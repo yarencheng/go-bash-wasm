@@ -1259,7 +1259,7 @@ Status codes:
 ### `shred`
 
 - [x] Upstream: `third_party/coreutils/src/shred.c`
-- [x] Data erasure: Implemented in `internal/commands/shred/shred.go`
+- [x] Data erasure: Implemented in `internal/commands/shred/shred.go` (Workaround; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/functional_gap.md#shred))
 - [x] Flag `-f`, `--force`: `internal/commands/shred/shred.go`
 - [x] Flag `-n`, `--iterations=N`: `internal/commands/shred/shred.go`
 - [x] Flag `-s`, `--size=N`: `internal/commands/shred/shred.go` (partial via iteration)

@@ -1225,17 +1225,27 @@ Status codes:
 - [ ] Flag `-P`: `third_party/bash/builtins/set.def:L843` (physical)
 - [ ] Flag `-T`: `third_party/bash/builtins/set.def:L843` (functrace)
 
+### `sha1sum`
+
 - [x] Upstream: `third_party/coreutils/src/coreutils-sha1sum.c`
 - [x] Inherits flags from `cksum`: `internal/commands/sum/sum.go`
+
+### `sha224sum`
 
 - [x] Upstream: `third_party/coreutils/src/coreutils-sha224sum.c`
 - [x] Inherits flags from `cksum`: `internal/commands/sum/sum.go`
 
+### `sha256sum`
+
 - [x] Upstream: `third_party/coreutils/src/coreutils-sha256sum.c`
 - [x] Inherits flags from `cksum`: `internal/commands/sum/sum.go`
 
+### `sha384sum`
+
 - [x] Upstream: `third_party/coreutils/src/coreutils-sha384sum.c`
 - [x] Inherits flags from `cksum`: `internal/commands/sum/sum.go`
+
+### `sha512sum`
 
 - [x] Upstream: `third_party/coreutils/src/coreutils-sha512sum.c`
 - [x] Inherits flags from `cksum`: `internal/commands/sum/sum.go`

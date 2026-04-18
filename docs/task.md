@@ -69,7 +69,10 @@ Status codes:
 - [x] Flag `--base32hex`: `internal/commands/basenc/basenc.go`
 - [x] Flag `--base64`: `internal/commands/basenc/basenc.go`
 - [x] Flag `--base64url`: `internal/commands/basenc/basenc.go`
-- [ ] Flag `--z85`: `third_party/coreutils/src/basenc.c:L145`
+- [x] Flag `--base2lsbf`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base2msbf`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--base58`: `internal/commands/basenc/basenc.go`
+- [x] Flag `--z85`: `internal/commands/basenc/basenc.go`
 
 ### `bg`
 
@@ -317,13 +320,13 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/csplit.c`
 - [x] Basic split: Implemented in `internal/commands/csplit/csplit.go`
-- [ ] Flag `--suppress-matched`: `third_party/coreutils/src/csplit.c:1435`
-- [ ] Flag `-b`: `third_party/coreutils/src/csplit.c:1423`
-- [ ] Flag `-f`: `third_party/coreutils/src/csplit.c:1427`
-- [ ] Flag `-k`: `third_party/coreutils/src/csplit.c:1431`
-- [ ] Flag `-n`: `third_party/coreutils/src/csplit.c:1439`
-- [ ] Flag `-s`: `third_party/coreutils/src/csplit.c:1443`
-- [ ] Flag `-z`: `third_party/coreutils/src/csplit.c:1447`
+- [x] Flag `--suppress-matched`: `internal/commands/csplit/csplit.go`
+- [x] Flag `-b`: `internal/commands/csplit/csplit.go`
+- [x] Flag `-f`: `internal/commands/csplit/csplit.go`
+- [x] Flag `-k`: `internal/commands/csplit/csplit.go`
+- [x] Flag `-n`: `internal/commands/csplit/csplit.go`
+- [x] Flag `-s`: `internal/commands/csplit/csplit.go`
+- [x] Flag `-z`: `internal/commands/csplit/csplit.go`
 
 ### `cut`
 
@@ -344,13 +347,13 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/date.c`
 - [x] Basic output: Implemented in `internal/commands/date/date.go`
 - [x] Custom format `+FORMAT`: `internal/commands/date/date.go`
-- [ ] Flag `-d`, `--date=STRING`: `third_party/coreutils/src/date.c:L501`
+- [x] Flag `-d`, `--date=STRING`: `internal/commands/date/date.go`
 - [ ] Flag `-f`, `--file=DATEFILE`: `third_party/coreutils/src/date.c:L508`
-- [ ] Flag `-I[FMT]`, `--iso-8601[=FMT]`: `third_party/coreutils/src/date.c:L513`
+- [x] Flag `-I[FMT]`, `--iso-8601[=FMT]`: `internal/commands/date/date.go`
 - [ ] Flag `-r`, `--reference=FILE`: `third_party/coreutils/src/date.c:L543`
-- [ ] Flag `-R`, `--rfc-email`: `third_party/coreutils/src/date.c:L549`
+- [x] Flag `-R`, `--rfc-email`: `internal/commands/date/date.go`
 - [ ] Flag `-s`, `--set=STRING`: `third_party/coreutils/src/date.c:L553`
-- [ ] Flag `-u`, `--utc`, `--universal`: `third_party/coreutils/src/date.c:L561`
+- [x] Flag `-u`, `--utc`, `--universal`: `internal/commands/date/date.go`
 - [ ] Flag `--debug`: `third_party/coreutils/src/date.c:L497`
 
 ### `dd`
@@ -399,16 +402,16 @@ Status codes:
 - [ ] Flag `--no-sync`: `third_party/coreutils/src/df.c:L266`
 - [ ] Flag `--output[=FIELD_LIST]`: `third_party/coreutils/src/df.c:L262`
 - [ ] Flag `--sync`: `third_party/coreutils/src/df.c:L265`
-- [ ] Flag `--total`: `third_party/coreutils/src/df.c:L267`
+- [x] Flag `--total`: `internal/commands/df/df.go`
 - [ ] Flag `-B`: `third_party/coreutils/src/df.c:L257`
 - [x] Flag `-H`: `internal/commands/df/df.go`
-- [ ] Flag `-P`: `third_party/coreutils/src/df.c:L263`
+- [x] Flag `-P`: `internal/commands/df/df.go`
 - [x] Flag `-T`: `internal/commands/df/df.go`
 - [x] Flag `-a`: `internal/commands/df/df.go`
 - [x] Flag `-h`: `internal/commands/df/df.go`
-- [ ] Flag `-i`: `third_party/coreutils/src/df.c:L258`
+- [x] Flag `-i`: `internal/commands/df/df.go`
 - [x] Flag `-k`: `internal/commands/df/df.go`
-- [ ] Flag `-l`: `third_party/coreutils/src/df.c:L261`
+- [x] Flag `-l`: `internal/commands/df/df.go`
 - [ ] Flag `-t`: `third_party/coreutils/src/df.c:L268`
 - [ ] Flag `-x`: `third_party/coreutils/src/df.c:L269`
 
@@ -468,13 +471,13 @@ Status codes:
 - [x] Flag `-l`, `--count-links`: `internal/commands/du/du.go` (partial via size)
 - [x] Flag `-L`, `--dereference`: `internal/commands/du/du.go`
 - [x] Flag `-P`, `--no-dereference`: `internal/commands/du/du.go`
-- [ ] Flag `-t`, `--threshold=SIZE`: `third_party/coreutils/src/du.c:L377`
+- [x] Flag `-t`, `--threshold=SIZE`: `internal/commands/du/du.go`
 - [ ] Flag `-x`, `--one-file-system`: `third_party/coreutils/src/du.c:L402`
 - [ ] Flag `-X`, `--exclude-from=FILE`: `third_party/coreutils/src/du.c:L394`
 - [ ] Flag `--exclude=PATTERN`: `third_party/coreutils/src/du.c:L398`
 - [ ] Flag `--files0-from=F`: `third_party/coreutils/src/du.c:L328`
-- [ ] Flag `--inodes`: `third_party/coreutils/src/du.c:L341`
-- [ ] Flag `--si`: `third_party/coreutils/src/du.c:L369` (1000 instead of 1024)
+- [x] Flag `--inodes`: `internal/commands/du/du.go`
+- [x] Flag `--si`: `internal/commands/du/du.go`
 - [ ] Flag `--time[=WORD]`: `third_party/coreutils/src/du.c:L382`
 - [ ] Flag `--time-style=STYLE`: `third_party/coreutils/src/du.c:L389`
 

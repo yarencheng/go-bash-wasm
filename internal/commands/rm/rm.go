@@ -25,6 +25,9 @@ func (r *Rm) Run(ctx context.Context, env *commands.Environment, args []string) 
 	recursiveUpper := flags.BoolP("recursive-upper", "R", false, "identical to -r")
 	force := flags.BoolP("force", "f", false, "ignore nonexistent files and arguments, never prompt")
 	verbose := flags.BoolP("verbose", "v", false, "explain what is being done")
+	dir := flags.BoolP("dir", "d", false, "remove empty directories")
+	_ = flags.BoolP("interactive", "i", false, "prompt before every removal (stub)")
+	_ = flags.BoolP("interactive-once", "I", false, "prompt once before removing more than three files (stub)")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "rm: %v\n", err)
@@ -55,14 +58,18 @@ func (r *Rm) Run(ctx context.Context, env *commands.Environment, args []string) 
 			continue
 		}
 
-		if info.IsDir() && !doRecursive {
+		if info.IsDir() && !doRecursive && !*dir {
 			fmt.Fprintf(env.Stderr, "rm: cannot remove '%s': Is a directory\n", target)
 			exitCode = 1
 			continue
 		}
 
 		if info.IsDir() {
-			err = env.FS.RemoveAll(fullPath)
+			if doRecursive {
+				err = env.FS.RemoveAll(fullPath)
+			} else if *dir {
+				err = env.FS.Remove(fullPath)
+			}
 		} else {
 			err = env.FS.Remove(fullPath)
 		}

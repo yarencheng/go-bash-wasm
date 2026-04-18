@@ -52,14 +52,9 @@ func (r *Readlink) Run(ctx context.Context, env *commands.Environment, args []st
 	var err error
 
 	if *canonicalize || *canonicalizeExisting || *canonicalizeMissing {
-		// afero doesn't have a simple EvalSymlinks that works across all its Fs types easily if they are mixed
-		// but afero.Fs should generally satisfy some interface or we can use a helper
-		// For MemMapFs, we might need a custom implementation or use filepath if it's OsFs.
-		// Since we are mostly MemMapFs in tests, let's use a simpler approach or just Readlink loop.
-		
+		fullPath := target
 		if *canonicalizeExisting {
-			// Components must exist
-			_, err = env.FS.Stat(target)
+			_, err = env.FS.Stat(fullPath)
 			if err != nil {
 				if env.Stderr != nil && *verbose {
 					fmt.Fprintf(env.Stderr, "readlink: %s: %v\n", target, err)
@@ -68,12 +63,15 @@ func (r *Readlink) Run(ctx context.Context, env *commands.Environment, args []st
 			}
 		}
 
-		// Simplified canonicalization: just use Absolute path for now if not implemented
-		// TODO: Implement full symlink following canonicalization
-		result = filepath.Clean(target)
+		// Simplified canonicalization for MemMapFs
+		result = filepath.Clean(fullPath)
+		// TODO: follow symlinks with afero once we have a good helper
 	} else {
 		linker, ok := env.FS.(afero.Symlinker)
 		if !ok {
+			if env.Stderr != nil && *verbose {
+				fmt.Fprintln(env.Stderr, "readlink: filesystem does not support symlinks")
+			}
 			return 1
 		}
 		result, err = linker.ReadlinkIfPossible(target)
@@ -83,8 +81,8 @@ func (r *Readlink) Run(ctx context.Context, env *commands.Environment, args []st
 			}
 			return 1
 		}
-		// If ReadlinkIfPossible returns the same path, it's not a link
 		if result == target {
+			// Not a symlink
 			return 1
 		}
 	}

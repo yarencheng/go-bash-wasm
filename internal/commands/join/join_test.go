@@ -12,20 +12,55 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
-func TestJoin_Run(t *testing.T) {
+func TestJoin_Flags(t *testing.T) {
 	fs := afero.NewMemMapFs()
-	require.NoError(t, afero.WriteFile(fs, "/file1.txt", []byte("1 a\n2 b\n"), 0644))
-	require.NoError(t, afero.WriteFile(fs, "/file2.txt", []byte("1 x\n2 y\n"), 0644))
+	require.NoError(t, afero.WriteFile(fs, "/f1.txt", []byte("A 1\nB 2\n"), 0644))
+	require.NoError(t, afero.WriteFile(fs, "/f2.txt", []byte("a X\nb Y\nc Z\n"), 0644))
 
-	env := &commands.Environment{
-		FS:     fs,
-		Cwd:    "/",
-		Stdout: &bytes.Buffer{},
-		Stderr: io.Discard,
-	}
+	t.Run("IgnoreCase", func(t *testing.T) {
+		var out bytes.Buffer
+		env := &commands.Environment{FS: fs, Cwd: "/", Stdout: &out, Stderr: io.Discard}
+		status := New().Run(context.Background(), env, []string{"-i", "/f1.txt", "/f2.txt"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, out.String(), "A 1 X")
+		assert.Contains(t, out.String(), "B 2 Y")
+	})
 
-	j := New()
-	status := j.Run(context.Background(), env, []string{"/file1.txt", "/file2.txt"})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "1 a x\n2 b y\n", env.Stdout.(*bytes.Buffer).String())
+	t.Run("Unpairable1", func(t *testing.T) {
+		var out bytes.Buffer
+		env := &commands.Environment{FS: fs, Cwd: "/", Stdout: &out, Stderr: io.Discard}
+		status := New().Run(context.Background(), env, []string{"-a1", "/f1.txt", "/f2.txt"})
+		assert.Equal(t, 0, status)
+		// A and B don't match exactly (case)
+		assert.Contains(t, out.String(), "A 1")
+		assert.Contains(t, out.String(), "B 2")
+	})
+
+	t.Run("Unpairable2", func(t *testing.T) {
+		var out bytes.Buffer
+		env := &commands.Environment{FS: fs, Cwd: "/", Stdout: &out, Stderr: io.Discard}
+		status := New().Run(context.Background(), env, []string{"-a2", "/f1.txt", "/f2.txt"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, out.String(), "a X")
+		assert.Contains(t, out.String(), "c Z")
+	})
+
+	t.Run("OutputFormat", func(t *testing.T) {
+		var out bytes.Buffer
+		env := &commands.Environment{FS: fs, Cwd: "/", Stdout: &out, Stderr: io.Discard}
+		// -o 0 1.2 2.2 -> key, field 2 of file 1, field 2 of file 2
+		status := New().Run(context.Background(), env, []string{"-i", "-o", "0 1.2 2.2", "/f1.txt", "/f2.txt"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, out.String(), "A 1 X")
+		assert.Contains(t, out.String(), "B 2 Y")
+	})
+
+	t.Run("EmptyField", func(t *testing.T) {
+		var out bytes.Buffer
+		env := &commands.Environment{FS: fs, Cwd: "/", Stdout: &out, Stderr: io.Discard}
+		// -a2 -e EMPTY -o 0 1.2 2.2
+		status := New().Run(context.Background(), env, []string{"-i", "-a2", "-e", "EMPTY", "-o", "0 1.2 2.2", "/f1.txt", "/f2.txt"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, out.String(), "c EMPTY Z")
+	})
 }

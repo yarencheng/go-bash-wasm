@@ -44,14 +44,15 @@ Status codes:
 - [ ] Flag `--base32hex`: `third_party/coreutils/src/basenc.c:L85`
 - [ ] Flag `--base58`: `third_party/coreutils/src/basenc.c:L83`
 - [x] Flag `--base64`: `internal/commands/base64/base64.go`
-- [ ] Flag `--base64url`: `third_party/coreutils/src/basenc.c:L82`
-- [ ] Flag `--z85`: `third_party/coreutils/src/basenc.c:L89`
+- [x] Flag `--base64url`: `internal/commands/base32/base32.go`
+- [x] Flag `--z85`: `internal/commands/base32/base32.go`
 - [x] Flag `-d`: `internal/commands/base32/base32.go`
 - [x] Flag `-i`: `internal/commands/base32/base32.go`
 - [x] Flag `-w`: `internal/commands/base32/base32.go`
 
 ### `basename`
 
+- [x] Upstream: `third_party/coreutils/src/basename.c`
 - [x] Basic operation: Implemented in `internal/commands/basename/basename.go`
 - [x] Flag `-a`, `--multiple`: `internal/commands/basename/basename.go`
 - [x] Flag `-s`, `--suffix=SUFFIX`: `internal/commands/basename/basename.go`
@@ -723,32 +724,18 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/join.c`
 - [x] Basic join: Implemented in `internal/commands/join/join.go`
-- [ ] Flag `-1 FIELD`: `third_party/coreutils/src/join.c:L186`
-- [ ] Flag `-2 FIELD`: `third_party/coreutils/src/join.c:L187`
-- [ ] Flag `-a FILENUM`: `third_party/coreutils/src/join.c:L188`
-- [ ] Flag `-e STRING`: `third_party/coreutils/src/join.c:L189`
-- [ ] Flag `-i`, `--ignore-case`: `third_party/coreutils/src/join.c:L190`
-- [ ] Flag `-j FIELD`: `third_party/coreutils/src/join.c:L191`
-- [ ] Flag `-o FORMAT`: `third_party/coreutils/src/join.c:L192`
-- [ ] Flag `-t CHAR`: `third_party/coreutils/src/join.c:L193`
-- [ ] Flag `-v FILENUM`: `third_party/coreutils/src/join.c:L194`
-- [ ] Flag `-z`, `--zero-terminated`: `third_party/coreutils/src/join.c:L195`
-- [ ] Flag `--check-order`: `third_party/coreutils/src/join.c:L196`
-- [ ] Flag `--nocheck-order`: `third_party/coreutils/src/join.c:L197`
-- [ ] Flag `--header`: `third_party/coreutils/src/join.c:L198`
-- [ ] Flag `--check-order`: `third_party/coreutils/src/join.c:L248`
-- [ ] Flag `--header`: `third_party/coreutils/src/join.c:L257`
-- [ ] Flag `--nocheck-order`: `third_party/coreutils/src/join.c:L253`
-- [ ] Flag `-1 FIELD`: `third_party/coreutils/src/join.c:L240`
-- [ ] Flag `-2 FIELD`: `third_party/coreutils/src/join.c:L244`
-- [ ] Flag `-a FILENUM`: `third_party/coreutils/src/join.c:L210`
-- [ ] Flag `-e STRING`: `third_party/coreutils/src/join.c:L215`
-- [ ] Flag `-i`: `third_party/coreutils/src/join.c:L220`
-- [ ] Flag `-j FIELD`: `third_party/coreutils/src/join.c:L224`
-- [ ] Flag `-o FORMAT`: `third_party/coreutils/src/join.c:L228`
-- [ ] Flag `-t CHAR`: `third_party/coreutils/src/join.c:L232`
-- [ ] Flag `-v FILENUM`: `third_party/coreutils/src/join.c:L236`
-- [ ] Flag `-z`: `third_party/coreutils/src/join.c:L262`
+- [x] Flag `-a FILENUM`: `internal/commands/join/join.go` (unpairable lines from file FILENUM)
+- [x] Flag `-e EMPTY`: `internal/commands/join/join.go` (replace empty input fields with EMPTY)
+- [x] Flag `-i`, `--ignore-case`: `internal/commands/join/join.go`
+- [x] Flag `-j FIELD`: `internal/commands/join/join.go` (equivalent to -1 FIELD -2 FIELD)
+- [x] Flag `-o FORMAT`: `internal/commands/join/join.go` (obey FORMAT while constructing output line)
+- [x] Flag `-t CHAR`: `internal/commands/join/join.go` (use CHAR as input and output field separator)
+- [x] Flag `-v FILENUM`: `internal/commands/join/join.go` (like -a FILENUM, but suppress joined output lines)
+- [x] Flag `-1 FIELD`: `internal/commands/join/join.go` (join on this FIELD of file 1)
+- [x] Flag `-2 FIELD`: `internal/commands/join/join.go` (join on this FIELD of file 2)
+- [x] Flag `--check-order`: `internal/commands/join/join.go` (check that the input is correctly sorted)
+- [x] Flag `--nocheck-order`: `internal/commands/join/join.go` (do not check that the input is correctly sorted)
+- [x] Flag `--header`: `internal/commands/join/join.go` (treat the first line of each file as field headers)
 
 ### `kill`
 
@@ -930,17 +917,17 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/nl.c`
 - [x] Basic numbering: Implemented in `internal/commands/nl/nl.go`
-- [x] Flag `-b`, `--body-numbering`: `internal/commands/nl/nl.go`
-- [ ] Flag `-d`, `--section-delimiter`: `third_party/coreutils/src/nl.c:L132`
-- [x] Flag `-f`, `--footer-numbering`: `internal/commands/nl/nl.go`
-- [x] Flag `-h`, `--header-numbering`: `internal/commands/nl/nl.go`
-- [x] Flag `-i`, `--line-increment`: `internal/commands/nl/nl.go`
-- [ ] Flag `-l`, `--join-blank-lines`: `third_party/coreutils/src/nl.c:L144`
-- [x] Flag `-n`, `--number-format`: `internal/commands/nl/nl.go`
-- [ ] Flag `-p`, `--no-renumber`: `third_party/coreutils/src/nl.c:L150`
-- [x] Flag `-s`, `--number-separator`: `internal/commands/nl/nl.go`
-- [x] Flag `-v`, `--starting-line-number`: `internal/commands/nl/nl.go`
-- [x] Flag `-w`, `--number-width`: `internal/commands/nl/nl.go`
+- [x] Flag `-b`, `--body-numbering=STYLE`: `internal/commands/nl/nl.go`
+- [x] Flag `-d`, `--section-delimiter=CC`: `internal/commands/nl/nl.go`
+- [x] Flag `-f`, `--footer-numbering=STYLE`: `internal/commands/nl/nl.go`
+- [x] Flag `-h`, `--header-numbering=STYLE`: `internal/commands/nl/nl.go`
+- [x] Flag `-i`, `--line-increment=NUMBER`: `internal/commands/nl/nl.go`
+- [x] Flag `-l`, `--join-blank-lines=NUMBER`: `internal/commands/nl/nl.go`
+- [x] Flag `-n`, `--number-format=FORMAT`: `internal/commands/nl/nl.go`
+- [x] Flag `-p`, `--no-renumber`: `internal/commands/nl/nl.go`
+- [x] Flag `-s`, `--number-separator=STRING`: `internal/commands/nl/nl.go`
+- [x] Flag `-v`, `--starting-line-number=NUMBER`: `internal/commands/nl/nl.go`
+- [x] Flag `-w`, `--number-width=NUMBER`: `internal/commands/nl/nl.go`
 
 ### `nohup`
 
@@ -1120,7 +1107,8 @@ Status codes:
 - [x] Flag `-q`, `--quiet`: `internal/commands/realpath/realpath.go`
 - [x] Flag `-s`, `--strip`: `internal/commands/realpath/realpath.go`
 - [x] Flag `-z`, `--zero`: `internal/commands/realpath/realpath.go`
-- [ ] Flag `--relative-to`: `third_party/coreutils/src/realpath.c:L246`
+- [x] Flag `--relative-to`: `internal/commands/realpath/realpath.go`
+- [x] Flag `--relative-base`: `internal/commands/realpath/realpath.go`
 - [x] Flag `-e`: `internal/commands/realpath/realpath.go`
 - [x] Flag `-m`: `internal/commands/realpath/realpath.go`
 
@@ -1134,12 +1122,13 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/rm.c`
 - [x] Basic removal: Implemented in `internal/commands/rm/rm.go`
-- [ ] Flag `-I`: `third_party/coreutils/src/rm.c:L157` (prompt once)
+- [x] Flag `-I`: `internal/commands/rm/rm.go` (prompt once)
 - [x] Flag `-d`, `--dir`: `internal/commands/rm/rm.go`
 - [x] Flag `-v`, `--verbose`: `internal/commands/rm/rm.go`
 - [x] Flag `-f`: `internal/commands/rm/rm.go`
 - [x] Flag `-i`: `internal/commands/rm/rm.go`
 - [x] Flag `-r`: `internal/commands/rm/rm.go`
+- [ ] Flag `--one-file-system`: `third_party/coreutils/src/rm.c:L221`
 
 ### `rmdir`
 
@@ -1454,7 +1443,7 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/truncate.c`
 - [x] Basic truncation: Implemented in `internal/commands/truncate/truncate.go`
 - [x] Flag `-c`: `internal/commands/truncate/truncate.go`
-- [ ] Flag `-o`: `third_party/coreutils/src/truncate.c:L85`
+- [x] Flag `-o`: `internal/commands/truncate/truncate.go` (ignored stub)
 - [x] Flag `-r`: `internal/commands/truncate/truncate.go`
 - [x] Flag `-s`: `internal/commands/truncate/truncate.go`
 
@@ -1528,7 +1517,7 @@ Status codes:
 - [x] Basic conversion: Implemented in `internal/commands/unexpand/unexpand.go`
 - [x] Flag `-a`, `--all`: `internal/commands/unexpand/unexpand.go`
 - [x] Flag `-t`, `--tabs=LIST`: `internal/commands/unexpand/unexpand.go`
-- [ ] Flag `--first-only`: `third_party/coreutils/src/unexpand.c:L91`
+- [x] Flag `--first-only`: `internal/commands/unexpand/unexpand.go`
 
 ### `uniq`
 

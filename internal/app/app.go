@@ -220,7 +220,6 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		bind.New(),
 		boolcmd.NewTrue(),
 		boolcmd.NewFalse(),
-		complete.New(),
 		enable.New(),
 		echo.New(),
 		pwd.New(),

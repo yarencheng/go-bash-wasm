@@ -47,7 +47,7 @@ jobs:
 
       - name: Build WASM
         run: |
-          GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o main.wasm ./cmd/go-bash-wasm/
+          GOOS=js GOARCH=wasm go build -ldflags="-s -w -X 'github.com/yarencheng/go-bash-wasm/internal/app.MachType=wasm32-unknown-wasi'" -o main.wasm ./cmd/go-bash-wasm/
 
       - name: Optimize WASM
         run: |

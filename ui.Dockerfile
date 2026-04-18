@@ -24,7 +24,7 @@ RUN go test -v ./...
 
 # Build the WASM binary using the native Go build tool
 # Targeting js/wasm for browser execution
-RUN GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o main.wasm ./cmd/go-bash-wasm/
+RUN GOOS=js GOARCH=wasm go build -ldflags="-s -w -X 'github.com/yarencheng/go-bash-wasm/internal/app.MachType=wasm32-unknown-wasi'" -o main.wasm ./cmd/go-bash-wasm/
 
 ARG OPTIMIZE=fast
 RUN if [ "${OPTIMIZE}" = "fast" ]; then \

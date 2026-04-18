@@ -15,7 +15,7 @@ RUN go test -v ./...
 
 # 2. Build web assembly output
 # Using wasip1/wasm is the modern standard for executing Go with Wasmtime
-RUN GOOS=wasip1 GOARCH=wasm go build -o /out/main.wasm ./cmd/go-bash-wasm/
+RUN GOOS=wasip1 GOARCH=wasm go build -ldflags "-X 'github.com/yarencheng/go-bash-wasm/internal/app.MachType=wasm32-unknown-wasi'" -o /out/main.wasm ./cmd/go-bash-wasm/
 
 # Stage 2: Wasmtime Runner
 FROM debian:bullseye-slim

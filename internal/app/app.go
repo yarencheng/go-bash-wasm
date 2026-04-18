@@ -145,7 +145,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/local"
 )
 
-const (
+var (
 	BashVersion   = "5.3-rc"
 	MachType      = "wasm32-unknown-wasi"
 	BashCopyright = "Copyright (C) 2026 go-bash-wasm team"

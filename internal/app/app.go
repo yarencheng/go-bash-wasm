@@ -150,6 +150,8 @@ var (
 	MachType      = "wasm32-unknown-wasi"
 	BashCopyright = "Copyright (C) 2026 go-bash-wasm team"
 	BashLicense   = "License Apache-2.0: Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>\n"
+	ProjectURL    = "https://bash.devops-playground.dev/"
+	SourceURL     = "https://github.com/yarencheng/go-bash-wasm"
 )
 
 // App encapsulates the bash simulator application.
@@ -398,6 +400,8 @@ func (a *App) ShowVersion() {
 	fmt.Fprintf(a.Env.Stdout, "go-bash-wasm, version %s (%s)\n", BashVersion, MachType)
 	fmt.Fprintf(a.Env.Stdout, "%s\n", BashCopyright)
 	fmt.Fprintf(a.Env.Stdout, "%s\n", BashLicense)
+	fmt.Fprintf(a.Env.Stdout, "Home page:   <%s>\n", ProjectURL)
+	fmt.Fprintf(a.Env.Stdout, "Source code: <%s>\n", SourceURL)
 }
 
 func setupMockFiles(fs afero.Fs, logger zerolog.Logger) {

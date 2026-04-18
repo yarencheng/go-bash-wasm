@@ -162,7 +162,7 @@ func (c *Cp) copyFile(env *commands.Environment, src, dest string, verbose, noCl
 	if !followLinks && (srcInfo.Mode()&os.ModeSymlink != 0) {
 		// Afero limited symlink support
 		// For now, we skip or try to readlink
-		if linker, ok := env.FS.(afero.Linker); ok {
+		if linker, ok := env.FS.(afero.Symlinker); ok {
 			target, err := linker.ReadlinkIfPossible(src)
 			if err == nil {
 				return linker.SymlinkIfPossible(target, dest)

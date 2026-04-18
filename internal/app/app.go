@@ -37,7 +37,6 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/compopt"
 	continuecmd "github.com/yarencheng/go-bash-wasm/internal/commands/continue"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/csplit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cut"

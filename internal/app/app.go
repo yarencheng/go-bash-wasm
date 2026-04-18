@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -11,138 +12,140 @@ import (
 	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/alias"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/arch"
 	base32cmd "github.com/yarencheng/go-bash-wasm/internal/commands/base32"
 	base64cmd "github.com/yarencheng/go-bash-wasm/internal/commands/base64"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/basenc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/basename"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/basenc"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bg"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/bind"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
+	breakcmd "github.com/yarencheng/go-bash-wasm/internal/commands/break"
+	builtincmd "github.com/yarencheng/go-bash-wasm/internal/commands/builtin"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/caller"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/csplit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chmod"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chown"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chroot"
 	cksumcmd "github.com/yarencheng/go-bash-wasm/internal/commands/cksum"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/clear"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/colon"
-	commandcmd "github.com/yarencheng/go-bash-wasm/internal/commands/command"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/comm"
+	commandcmd "github.com/yarencheng/go-bash-wasm/internal/commands/command"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/compgen"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/compopt"
+	continuecmd "github.com/yarencheng/go-bash-wasm/internal/commands/continue"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cp"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/csplit"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cut"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/date"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/declare"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/getopts"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/df"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dirname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/dirs"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/disown"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/du"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/echo"
 	env "github.com/yarencheng/go-bash-wasm/internal/commands/env"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/eval"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/exec"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/exit"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/expand"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/export"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/factor"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/expr"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/factor"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/fg"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/find"
+	fmtcmd "github.com/yarencheng/go-bash-wasm/internal/commands/fmt"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/fold"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/getopts"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/grep"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/groups"
 	hashcmd "github.com/yarencheng/go-bash-wasm/internal/commands/hash"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
 	helpcmd "github.com/yarencheng/go-bash-wasm/internal/commands/help"
 	historycmd "github.com/yarencheng/go-bash-wasm/internal/commands/history"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/head"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/hostname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/hostid"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/hostname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/id"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/install"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/link"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/jobs"
 	join "github.com/yarencheng/go-bash-wasm/internal/commands/join"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/kill"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/letcmd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/link"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ln"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/local"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/logname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/logout"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mapfile"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/logout"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/logname"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/letcmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mkdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mktemp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nice"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nl"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/od"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/paste"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/pr"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nohup"
 	nproccmd "github.com/yarencheng/go-bash-wasm/internal/commands/nproc"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/kill"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/pushd"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/popd"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/dirs"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/numfmt"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/od"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/paste"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pathchk"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/popd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pr"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pushd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/read"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/readonly"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/readlink"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/readonly"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/realpath"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/set"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shuf"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sleep"
 	sort "github.com/yarencheng/go-bash-wasm/internal/commands/sort"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/source"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/stat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sum"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sync"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tac"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/timeout"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/truncate"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/tsort"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/unexpand"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/expand"
-	fmtcmd "github.com/yarencheng/go-bash-wasm/internal/commands/fmt"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/fold"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/numfmt"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tee"
 	test "github.com/yarencheng/go-bash-wasm/internal/commands/test"
+	timecmd "github.com/yarencheng/go-bash-wasm/internal/commands/time"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/timeout"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/touch"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/tty"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tr"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/uname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/truncate"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tsort"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/tty"
+	typecmd "github.com/yarencheng/go-bash-wasm/internal/commands/type"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/umask"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unalias"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/uname"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/unexpand"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/uniq"
-	userscmd "github.com/yarencheng/go-bash-wasm/internal/commands/users"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/unlink"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/unset"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/uptime"
+	userscmd "github.com/yarencheng/go-bash-wasm/internal/commands/users"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/wait"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/wc"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/who"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/whoami"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/yes"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/arch"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/chmod"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/chown"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/realpath"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/wait"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/umask"
-	timecmd "github.com/yarencheng/go-bash-wasm/internal/commands/time"
-	typecmd "github.com/yarencheng/go-bash-wasm/internal/commands/type"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/unlink"
 	"github.com/yarencheng/go-bash-wasm/internal/shell"
-	builtincmd "github.com/yarencheng/go-bash-wasm/internal/commands/builtin"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/eval"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/exec"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/chroot"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/jobs"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/source"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/bg"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/fg"
-	breakcmd "github.com/yarencheng/go-bash-wasm/internal/commands/break"
-	continuecmd "github.com/yarencheng/go-bash-wasm/internal/commands/continue"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/disown"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/compgen"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/compopt"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/caller"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/local"
+
+	"github.com/mdp/qrterminal/v3"
 )
 
 var (
@@ -163,7 +166,6 @@ const Banner = `
 ██    ██ ██    ██     ██   ██ ██   ██      ██  ██   ██     ██ ███ ██  ██   ██      ██  ██  ██  ██ 
  ██████   ██████      ██████  ██   ██ ██████   ██   ██      ███ ███   ██   ██ ██████   ██      ██ 
 `
-
 
 // App encapsulates the bash simulator application.
 type App struct {
@@ -186,7 +188,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 
 	// Setup command registry
 	registry := commands.New()
-	
+
 	// Register commands
 	cmds := []commands.Command{
 		builtincmd.New(),
@@ -339,16 +341,15 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		}
 	}
 
-
 	// Setup environment
 	env := &commands.Environment{
-		FS:     fs,
-		Stdin:  stdin,
-		Stdout: stdout,
-		Stderr: stderr,
-		Cwd:    "/",
-		User:   "wasm",
-		Uid:    1000,
+		FS:        fs,
+		Stdin:     stdin,
+		Stdout:    stdout,
+		Stderr:    stderr,
+		Cwd:       "/",
+		User:      "wasm",
+		Uid:       1000,
 		Gid:       1000,
 		Umask:     022,
 		Groups:    []int{1000},
@@ -376,13 +377,13 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 			"HISTFILESIZE": "500",
 			"PS1":          "\\u@\\h:\\w\\$ ",
 		},
-		Aliases: make(map[string]string),
-		Arrays:  make(map[string][]string),
-		DirStack: make([]string, 0),
-		Hash:    make(map[string]string),
-		Jobs:    make([]*commands.Job, 0),
+		Aliases:     make(map[string]string),
+		Arrays:      make(map[string][]string),
+		DirStack:    make([]string, 0),
+		Hash:        make(map[string]string),
+		Jobs:        make([]*commands.Job, 0),
 		Completions: make(map[string]map[string]string),
-		Registry: registry,
+		Registry:    registry,
 	}
 
 	return &App{
@@ -397,7 +398,7 @@ func (a *App) Run(ctx context.Context) error {
 	a.ShowBanner()
 	a.Logger.Info().Msg("starting interactive shell")
 	shellObj := shell.New(a.Registry, a.Env)
-	
+
 	if err := shellObj.RunInteractive(); err != nil {
 		a.Logger.Error().Err(err).Msg("shell session ended with error")
 		return err
@@ -410,6 +411,27 @@ func (a *App) Run(ctx context.Context) error {
 // ShowBanner prints the startup banner.
 func (a *App) ShowBanner() {
 	fmt.Fprint(a.Env.Stdout, Banner)
+	fmt.Fprint(a.Env.Stdout, "\n")
+
+	var btc strings.Builder
+	var eth strings.Builder
+
+	qrterminal.GenerateHalfBlock(BtcAddress, qrterminal.M, &btc)
+	qrterminal.GenerateHalfBlock(EthAddress, qrterminal.M, &eth)
+
+	var merge string
+	btcLines := strings.Split(btc.String(), "\n")
+	ethLines := strings.Split(eth.String(), "\n")
+
+	for i := range btcLines {
+		if i == 10 {
+			merge += "BTC " + btcLines[i] + " ETH " + ethLines[i] + "\n"
+		} else {
+			merge += "    " + btcLines[i] + "     " + ethLines[i] + "\n"
+		}
+	}
+
+	fmt.Fprint(a.Env.Stdout, merge)
 }
 
 // ShowVersion prints the version information of the bash simulator.
@@ -429,6 +451,6 @@ func setupMockFiles(fs afero.Fs, logger zerolog.Logger) {
 	_ = fs.Mkdir("/configs", 0755)
 	_ = afero.WriteFile(fs, "/configs/app.yaml", []byte("version: 0.1\nenv: development"), 0644)
 	_ = afero.WriteFile(fs, "/welcome.log", []byte("bash simulator started"), 0644)
-	
+
 	logger.Debug().Msg("mock filesystem populated")
 }

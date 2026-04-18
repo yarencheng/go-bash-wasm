@@ -124,7 +124,6 @@ func (s *Shell) executeStmt(ctx context.Context, env *commands.Environment, stmt
 		return 0
 	}
 
-	// Handle background execution &
 	if stmt.Background {
 		// Basic stub for background execution in simulator
 		jobID := len(env.Jobs) + 1
@@ -193,6 +192,8 @@ func (s *Shell) executeCmd(ctx context.Context, env *commands.Environment, cmd s
 		return s.executeCaseClause(ctx, env, c)
 	case *syntax.ArithmCmd:
 		return s.executeArithmCmd(ctx, env, c)
+	case *syntax.FuncDecl:
+		return s.executeFuncDecl(ctx, env, c)
 	case *syntax.TestClause:
 		return s.executeTestClause(ctx, env, c)
 	case *syntax.DeclClause:
@@ -210,9 +211,6 @@ func (s *Shell) executeCmd(ctx context.Context, env *commands.Environment, cmd s
 		return s.executeCallExpr(ctx, env, &syntax.CallExpr{Args: args})
 	case *syntax.TimeClause:
 		return s.executeStmt(ctx, env, c.Stmt)
-	case *syntax.FuncDecl:
-		env.Functions[c.Name.Value] = s.stmtToString(c.Body)
-		return 0
 	default:
 		fmt.Fprintf(env.Stderr, "bash: unsupported command type: %T\n", cmd)
 		return 1
@@ -223,6 +221,9 @@ func (s *Shell) executeStmts(ctx context.Context, env *commands.Environment, stm
 	lastExitCode := 0
 	for _, stmt := range stmts {
 		lastExitCode = s.executeStmt(ctx, env, stmt)
+		if env.ExitRequested || env.ReturnRequested || env.BreakRequested > 0 || env.ContinueRequested > 0 {
+			break
+		}
 	}
 	return lastExitCode
 }
@@ -264,6 +265,27 @@ func (s *Shell) executeCallExpr(ctx context.Context, env *commands.Environment, 
 
 	if cmd, ok := s.Registry.Get(cmdName); ok {
 		return cmd.Run(ctx, env, cmdArgs)
+	}
+
+	if body, ok := env.Functions[cmdName]; ok {
+		// Run function
+		oldArgs := env.PositionalArgs
+		env.PositionalArgs = cmdArgs
+		
+		// Parse body again (simulator-level simple approach)
+		parser := syntax.NewParser(syntax.Variant(syntax.LangBash))
+		f, err := parser.Parse(strings.NewReader(body), "")
+		if err != nil {
+			fmt.Fprintf(env.Stderr, "bash: error parsing function %s: %v\n", cmdName, err)
+			return 1
+		}
+		
+		exitCode := s.executeStmts(ctx, env, f.Stmts)
+		
+		// Clear return request if any (function returned)
+		env.ReturnRequested = false
+		env.PositionalArgs = oldArgs
+		return exitCode
 	}
 
 	fmt.Fprintf(env.Stderr, "%s: command not found\n", cmdName)
@@ -522,6 +544,14 @@ func (s *Shell) resolveParamExp(env *commands.Environment, p *syntax.ParamExp) s
 	name := p.Param.Value
 	val, ok := env.EnvVars[name]
 	if !ok {
+		// Handle positional parameters $1, $2, etc.
+		if idx, err := strconv.Atoi(name); err == nil {
+			if idx > 0 && idx <= len(env.PositionalArgs) {
+				return env.PositionalArgs[idx-1]
+			}
+			return ""
+		}
+
 		// Dynamic variables
 		switch name {
 		case "RANDOM":
@@ -657,6 +687,17 @@ func (s *Shell) executeForClause(ctx context.Context, env *commands.Environment,
 				env.EnvVars[name] = item
 			}
 			lastExitCode = s.executeStmts(ctx, env, forClause.Do)
+			if env.ExitRequested || env.ReturnRequested {
+				break
+			}
+			if env.BreakRequested > 0 {
+				env.BreakRequested--
+				break
+			}
+			if env.ContinueRequested > 0 {
+				env.ContinueRequested--
+				continue
+			}
 		}
 		return lastExitCode
 	case *syntax.CStyleLoop:
@@ -671,6 +712,18 @@ func (s *Shell) executeForClause(ctx context.Context, env *commands.Environment,
 				}
 			}
 			lastExitCode = s.executeStmts(ctx, env, forClause.Do)
+			if env.ExitRequested || env.ReturnRequested {
+				break
+			}
+			if env.BreakRequested > 0 {
+				env.BreakRequested--
+				break
+			}
+			if env.ContinueRequested > 0 {
+				env.ContinueRequested--
+				// post-expression still runs for continue in C-style loop? 
+				// In bash it does.
+			}
 			if f.Post != nil {
 				s.evalArithmExpr(env, f.Post)
 			}
@@ -694,8 +747,29 @@ func (s *Shell) executeWhileClause(ctx context.Context, env *commands.Environmen
 			}
 		}
 		lastExitCode = s.executeStmts(ctx, env, whileClause.Do)
+		if env.ExitRequested || env.ReturnRequested {
+			break
+		}
+		if env.BreakRequested > 0 {
+			env.BreakRequested--
+			break
+		}
+		if env.ContinueRequested > 0 {
+			env.ContinueRequested--
+			continue
+		}
 	}
 	return lastExitCode
+}
+
+func (s *Shell) executeFuncDecl(ctx context.Context, env *commands.Environment, f *syntax.FuncDecl) int {
+	name := f.Name.Value
+	var buf strings.Builder
+	printer := syntax.NewPrinter()
+	// Print only the body stmts
+	_ = printer.Print(&buf, f.Body)
+	env.Functions[name] = buf.String()
+	return 0
 }
 
 func (s *Shell) executeCaseClause(ctx context.Context, env *commands.Environment, caseClause *syntax.CaseClause) int {
@@ -946,6 +1020,30 @@ func (s *Shell) evalTestExpr(env *commands.Environment, expr syntax.TestExpr) bo
 		case syntax.TsReMatch: // =~
 			matched, _ := regexp.MatchString(right, left)
 			return matched
+		case syntax.TsEql: // -eq
+			l, _ := strconv.Atoi(strings.TrimSpace(left))
+			r, _ := strconv.Atoi(strings.TrimSpace(right))
+			return l == r
+		case syntax.TsNeq: // -ne
+			l, _ := strconv.Atoi(strings.TrimSpace(left))
+			r, _ := strconv.Atoi(strings.TrimSpace(right))
+			return l != r
+		case syntax.TsLss: // -lt
+			l, _ := strconv.Atoi(strings.TrimSpace(left))
+			r, _ := strconv.Atoi(strings.TrimSpace(right))
+			return l < r
+		case syntax.TsLeq: // -le
+			l, _ := strconv.Atoi(strings.TrimSpace(left))
+			r, _ := strconv.Atoi(strings.TrimSpace(right))
+			return l <= r
+		case syntax.TsGtr: // -gt
+			l, _ := strconv.Atoi(strings.TrimSpace(left))
+			r, _ := strconv.Atoi(strings.TrimSpace(right))
+			return l > r
+		case syntax.TsGeq: // -ge
+			l, _ := strconv.Atoi(strings.TrimSpace(left))
+			r, _ := strconv.Atoi(strings.TrimSpace(right))
+			return l >= r
 		}
 	case *syntax.ParenTest:
 		return s.evalTestExpr(env, e.X)

@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/break"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/continue"
 )
 
 func TestExecuteTestClausePattern(t *testing.T) {
@@ -100,4 +102,51 @@ func TestExecuteArrayAssignment(t *testing.T) {
 
 	s.Execute(context.Background(), "arr=(val1 val2 val3)")
 	assert.Equal(t, []string{"val1", "val2", "val3"}, env.Arrays["arr"])
+}
+func TestExecuteFunction(t *testing.T) {
+	s, env, _, _ := setupTestShell()
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprint(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	// 1. Basic function definition and call
+	s.Execute(context.Background(), "hello() { echo hi; }")
+	assert.NotEmpty(t, env.Functions["hello"])
+
+	s.Execute(context.Background(), "echo_val > /out") // setup mock echo
+	s.Execute(context.Background(), "hello > /out")
+	data, _ := afero.ReadFile(env.FS, "/out")
+	assert.Contains(t, string(data), "hi")
+
+	// 2. Positional arguments in function
+	s.Execute(context.Background(), "greet() { echo hello $1; }")
+	s.Execute(context.Background(), "greet world > /out_greet")
+	data, _ = afero.ReadFile(env.FS, "/out_greet")
+	assert.Contains(t, string(data), "hello world")
+}
+
+func TestExecuteLoopControl(t *testing.T) {
+	s, env, _, _ := setupTestShell()
+	env.Registry.Register(breakcmd.New())
+	env.Registry.Register(continuecmd.New())
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprint(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	// 1. break in while
+	s.Execute(context.Background(), "i=0; while [[ $i -lt 10 ]]; do i=$((i+1)); if [[ $i -eq 5 ]]; then break; fi; done")
+	assert.Equal(t, "5", env.EnvVars["i"])
+
+	// 2. continue in for
+	s.Execute(context.Background(), "sum=0; for i in 1 2 3 4 5; do if [[ $i -eq 3 ]]; then continue; fi; sum=$((sum+i)); done")
+	// sum should be 1+2+4+5 = 12
+	assert.Equal(t, "12", env.EnvVars["sum"])
 }

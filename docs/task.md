@@ -1189,8 +1189,8 @@ Status codes:
 - [x] Flag `-u`, `--user=USER`: `internal/commands/runcon/runcon.go`
 
 ### `select`
-
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Selection from list: Implemented in `internal/shell/shell.go`
 - [x] Basic operation: Implemented in `internal/shell/shell.go`
 
 ### `seq`
@@ -1687,6 +1687,7 @@ Status codes:
 - [x] Conditional expressions: Implemented in `internal/shell/shell.go`
 - [x] Pattern matching (`==`, `!=`): Implemented in `internal/shell/shell.go`
 - [x] Regex matching (`=~`): Implemented in `internal/shell/shell.go`
+- [x] Arithmetic comparisons (`-eq`, `-lt`, etc.): Implemented in `internal/shell/shell.go`
 - [ ] Aliases: `]]`
 
 ### `((`
@@ -1709,16 +1710,16 @@ Status codes:
 
 ### `for`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] List-based iteration: Missing implementation
+- [x] List-based iteration: Implemented in `internal/shell/shell.go`
 - [x] C-style arithmetic iteration (`for ((`): Implemented in `internal/shell/shell.go`
 
 ### `function`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Shell function definition: Missing implementation
+- [x] Shell function definition: Implemented in `internal/shell/shell.go`
 
 ### `if`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Conditional branching (if/then/elif/else/fi): Missing implementation
+- [x] Conditional branching (if/then/elif/else/fi): Implemented in `internal/shell/shell.go`
 
 ### `until`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1726,7 +1727,7 @@ Status codes:
 
 ### `while`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Positive condition looping: Missing implementation
+- [x] Positive condition looping: Implemented in `internal/shell/shell.go`
 - [x] Sequential list `;`: Implemented in `internal/shell/shell.go`
 
 ## Shell Variables

@@ -35,6 +35,8 @@ func (m *Mapfile) Run(ctx context.Context, env *commands.Environment, args []str
 	fd := flags.IntP("fd", "u", 0, "read from file descriptor FD")
 	callback := flags.StringP("callback", "C", "", "evaluate CALLBACK each time QUANTUM lines are read")
 	quantum := flags.IntP("quantum", "c", 1, "number of lines to read between each call to CALLBACK")
+	delim := flags.StringP("delimiter", "d", "\n", "use DELIM to terminate lines, instead of newline")
+	skip := flags.IntP("skip", "s", 0, "discard the first SKIP lines read")
 	
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "mapfile: %v\n", err)
@@ -65,24 +67,37 @@ func (m *Mapfile) Run(ctx context.Context, env *commands.Environment, args []str
 		lines = existingLines[:*origin]
 	}
 
+	d := byte('\n')
+	if *delim != "" {
+		d = (*delim)[0]
+	}
+
 	lineCount := 0
+	readCount := 0
 	for {
 		if *count > 0 && lineCount >= *count {
 			break
 		}
 
-		line, err := reader.ReadString('\n')
+		line, err := reader.ReadString(d)
 		if line != "" {
-			if *trim {
-				line = strings.TrimSuffix(line, "\n")
-				line = strings.TrimSuffix(line, "\r")
-			}
-			lines = append(lines, line)
-			lineCount++
+			readCount++
+			if readCount <= *skip {
+				// Skip this line
+			} else {
+				if *trim {
+					line = strings.TrimSuffix(line, string(d))
+					if d == '\n' {
+						line = strings.TrimSuffix(line, "\r")
+					}
+				}
+				lines = append(lines, line)
+				lineCount++
 
-			if *callback != "" && lineCount%(*quantum) == 0 {
-				// Mock: evaluate callback
-				_ = env.Executor.Execute(ctx, *callback)
+				if *callback != "" && lineCount%(*quantum) == 0 {
+					// Mock: evaluate callback
+					_ = env.Executor.Execute(ctx, *callback)
+				}
 			}
 		}
 		if err != nil {

@@ -25,6 +25,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/caller"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cat"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/cd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/chcon"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chmod"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chown"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/chroot"
@@ -45,6 +46,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/declare"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/df"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dir"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/dircolors"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dirname"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/dirs"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/disown"
@@ -87,6 +89,8 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mapfile"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mkdir"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/mkfifo"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/mknod"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mktemp"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/mv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/nice"
@@ -97,10 +101,12 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/od"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/paste"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pathchk"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/pinky"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/popd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pr"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printenv"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/printf"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/ptx"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pushd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/pwd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/read"
@@ -110,6 +116,7 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/returncmd"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rm"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/rmdir"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/runcon"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/seq"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/set"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
@@ -121,8 +128,11 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/source"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/split"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/stat"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/stdbuf"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/stty"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sum"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sumlegacy"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/suspend"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/sync"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tac"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/tail"
@@ -225,10 +235,14 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		od.New(),
 		paste.New(),
 		pr.New(),
+		ptx.New(),
 		dirname.New(),
 		mkdir.New(),
+		mkfifo.New(),
+		mknod.New(),
 		mktemp.New(),
 		rmdir.New(),
+		runcon.New(),
 		rm.New(),
 		cp.New(),
 		mv.New(),
@@ -239,6 +253,8 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		tty.New(),
 		touch.New(),
 		stat.New(),
+		stdbuf.New(),
+		stty.New(),
 		id.New(),
 		install.New(),
 		ln.New(),
@@ -293,6 +309,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		shred.New(),
 		split.New(),
 		tac.New(),
+		suspend.New(),
 		sync.New(),
 		timeout.New(),
 		trap.New(),
@@ -314,6 +331,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		join.New(),
 		comm.New(),
 		dir.New(),
+		dircolors.New(),
 		seq.New(),
 		expr.New(),
 		factor.New(),
@@ -327,9 +345,11 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		df.New(),
 		date.New(),
 		who.New(),
+		pinky.New(),
 		arch.New(),
 		chmod.New(),
 		chown.New(),
+		chcon.New(),
 		chown.NewChgrp(),
 		unlink.New(),
 		realpath.New(),

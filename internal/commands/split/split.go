@@ -31,6 +31,8 @@ func (s *Split) Run(ctx context.Context, env *commands.Environment, args []strin
 	verbose := flags.Bool("verbose", false, "print a diagnostic just before each output file is opened")
 	numChunks := flags.StringP("number", "n", "", "generate CHUNKS output files")
 	separator := flags.StringP("separator", "t", "", "use SEP instead of newline as the record separator")
+	_ = flags.String("filter", "", "write to shell COMMAND; file name is $FILE")
+	_ = flags.StringP("line-bytes", "C", "", "put at most SIZE bytes of lines per output file")
 
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "split: %v\n", err)

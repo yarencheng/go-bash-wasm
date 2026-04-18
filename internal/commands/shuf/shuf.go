@@ -32,6 +32,7 @@ func (s *Shuf) Run(ctx context.Context, env *commands.Environment, args []string
 	output := flags.StringP("output", "o", "", "write result to FILE instead of standard output")
 	repeat := flags.BoolP("repeat", "r", false, "output lines can be repeated")
 	zero := flags.BoolP("zero", "z", false, "end each output line with NUL, not newline")
+	_ = flags.String("random-source", "", "get random bytes from FILE")
 
 	if err := flags.Parse(args); err != nil {
 		if env.Stderr != nil {

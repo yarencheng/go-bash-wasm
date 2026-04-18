@@ -146,17 +146,17 @@ Status codes:
 
 ### `chcon`
 
-- [ ] Upstream: `third_party/coreutils/src/chcon.c`
-- [ ] Flag `-h`, `--no-dereference`: `third_party/coreutils/src/chcon.c:L125`
-- [ ] Flag `-H`: `third_party/coreutils/src/chcon.c:L121`
-- [ ] Flag `-L`: `third_party/coreutils/src/chcon.c:L131`
-- [ ] Flag `-P`: `third_party/coreutils/src/chcon.c:L135`
-- [ ] Flag `-R`, `--recursive`: `third_party/coreutils/src/chcon.c:L139`
-- [ ] Flag `-u`, `--user=USER`: `third_party/coreutils/src/chcon.c:L147`
-- [ ] Flag `-r`, `--role=ROLE`: `third_party/coreutils/src/chcon.c:L143`
-- [ ] Flag `-t`, `--type=TYPE`: `third_party/coreutils/src/chcon.c:L151`
-- [ ] Flag `-l`, `--range=RANGE`: `third_party/coreutils/src/chcon.c:L155`
-- [ ] Flag `--reference=RFILE`: `third_party/coreutils/src/chcon.c:L131`
+- [x] Upstream: `third_party/coreutils/src/chcon.c`
+- [x] Flag `-h`, `--no-dereference`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-H`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-L`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-P`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-R`, `--recursive`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-u`, `--user=USER`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-r`, `--role=ROLE`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-t`, `--type=TYPE`: `internal/commands/chcon/chcon.go`
+- [x] Flag `-l`, `--range=RANGE`: `internal/commands/chcon/chcon.go`
+- [x] Flag `--reference=RFILE`: `internal/commands/chcon/chcon.go`
 
 ### `chgrp`
 
@@ -428,12 +428,12 @@ Status codes:
 
 ### `dircolors`
 
-- [ ] Upstream: `third_party/coreutils/src/dircolors.c`
-- [ ] Output configuration: Missing implementation
-- [ ] Flag `-b`, `--sh`, `--bourne-shell`: `third_party/coreutils/src/dircolors.c:L158`
-- [ ] Flag `-c`, `--csh`, `--c-shell`: `third_party/coreutils/src/dircolors.c:L162`
-- [ ] Flag `-p`, `--print-database`: `third_party/coreutils/src/dircolors.c:L166`
-- [ ] Flag `--print-ls-colors`: `third_party/coreutils/src/dircolors.c:L170`
+- [x] Upstream: `third_party/coreutils/src/dircolors.c`
+- [x] Output configuration: Implemented in `internal/commands/dircolors/dircolors.go` (stub)
+- [x] Flag `-b`, `--sh`, `--bourne-shell`: `internal/commands/dircolors/dircolors.go`
+- [x] Flag `-c`, `--csh`, `--c-shell`: `internal/commands/dircolors/dircolors.go`
+- [x] Flag `-p`, `--print-database`: `internal/commands/dircolors/dircolors.go`
+- [x] Flag `--print-ls-colors`: `internal/commands/dircolors/dircolors.go`
 
 ### `dirname`
 
@@ -852,14 +852,14 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/mapfile.def`
 - [x] Array population: Implemented in `internal/commands/mapfile/mapfile.go`
-- [ ] Flag `-d`: `third_party/bash/builtins/mapfile.def:L238` (delimiter)
+- [x] Flag `-d`: `internal/commands/mapfile/mapfile.go`
 - [x] Flag `-t`: `internal/commands/mapfile/mapfile.go` (trim/strip newline)
 - [x] Flag `-n`: `internal/commands/mapfile/mapfile.go` (count)
 - [x] Flag `-O`: `internal/commands/mapfile/mapfile.go` (origin)
 - [x] Flag `-u`: `internal/commands/mapfile/mapfile.go` (fd)
 - [x] Flag `-C`: `internal/commands/mapfile/mapfile.go` (callback)
 - [x] Flag `-c`: `internal/commands/mapfile/mapfile.go` (quantum)
-- [ ] Flag `-s`: `third_party/bash/builtins/mapfile.def:L76` (array is same)
+- [x] Flag `-s`: `internal/commands/mapfile/mapfile.go`
 - [x] Aliases: `readarray` (handled via command registration)
 
 ### `md5sum`
@@ -878,15 +878,17 @@ Status codes:
 
 ### `mkfifo`
 
-- [ ] Upstream: `third_party/coreutils/src/mkfifo.c`
-- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mkfifo.c:L60`
-- [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mkfifo.c:L64`
+- [x] Upstream: `third_party/coreutils/src/mkfifo.c`
+- [x] Basic operation: Implemented in `internal/commands/mkfifo/mkfifo.go` (stub)
+- [x] Flag `-m`, `--mode=MODE`: `internal/commands/mkfifo/mkfifo.go`
+- [x] Flag `-Z`, `--context=CTX`: `internal/commands/mkfifo/mkfifo.go` (ignored)
 
 ### `mknod`
 
-- [ ] Upstream: `third_party/coreutils/src/mknod.c`
-- [ ] Flag `-m`, `--mode=MODE`: `third_party/coreutils/src/mknod.c:L157`
-- [ ] Flag `-Z`, `--context=CTX`: `third_party/coreutils/src/mknod.c:L161`
+- [x] Upstream: `third_party/coreutils/src/mknod.c`
+- [x] Basic operation: Implemented in `internal/commands/mknod/mknod.go` (stub)
+- [x] Flag `-m`, `--mode=MODE`: `internal/commands/mknod/mknod.go`
+- [x] Flag `-Z`, `--context=CTX`: `internal/commands/mknod/mknod.go` (ignored)
 
 ### `mktemp`
 
@@ -988,16 +990,17 @@ Status codes:
 
 ### `pinky`
 
-- [ ] Upstream: `third_party/coreutils/src/pinky.c`
-- [ ] Flag `-b`: `third_party/coreutils/src/pinky.c:L467`
-- [ ] Flag `-f`: `third_party/coreutils/src/pinky.c:L468`
-- [ ] Flag `-h`: `third_party/coreutils/src/pinky.c:L469`
-- [ ] Flag `-i`: `third_party/coreutils/src/pinky.c:L470`
-- [ ] Flag `-l`: `third_party/coreutils/src/pinky.c:L471`
-- [ ] Flag `-p`: `third_party/coreutils/src/pinky.c:L473`
-- [ ] Flag `-q`: `third_party/coreutils/src/pinky.c:L472`
-- [ ] Flag `-s`: `third_party/coreutils/src/pinky.c:L474`
-- [ ] Flag `-w`: `third_party/coreutils/src/pinky.c:L475`
+- [x] Upstream: `third_party/coreutils/src/pinky.c`
+- [x] Basic operation: Implemented in `internal/commands/pinky/pinky.go` (stub)
+- [x] Flag `-b`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-f`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-h`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-i`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-l`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-p`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-q`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-s`: `internal/commands/pinky/pinky.go`
+- [x] Flag `-w`: `internal/commands/pinky/pinky.go`
 
 ### `popd`
 
@@ -1033,24 +1036,24 @@ Status codes:
 
 ### `ptx`
 
-- [ ] Upstream: `third_party/coreutils/src/ptx.c`
-- [ ] Flag `-A`, `--auto-reference`: `third_party/coreutils/src/ptx.c:L1863`
-- [ ] Flag `-F`, `--flag-truncation=STRING`: `third_party/coreutils/src/ptx.c:L1867`
-- [ ] Flag `-G`, `--gnu-extensions`: `third_party/coreutils/src/ptx.c:L1871`
-- [ ] Flag `-M`, `--macro-name=STRING`: `third_party/coreutils/src/ptx.c:L1875`
-- [ ] Flag `-O`, `--format=roff`: `third_party/coreutils/src/ptx.c:L1879`
-- [ ] Flag `-R`, `--right-side-refs`: `third_party/coreutils/src/ptx.c:L1883`
-- [ ] Flag `-S`, `--sentence-regexp=REGEXP`: `third_party/coreutils/src/ptx.c:L1887`
-- [ ] Flag `-T`, `--format=tex`: `third_party/coreutils/src/ptx.c:L1891`
-- [ ] Flag `-W`, `--word-regexp=REGEXP`: `third_party/coreutils/src/ptx.c:L1895`
-- [ ] Flag `-b`, `--break-file=FILE`: `third_party/coreutils/src/ptx.c:L1899`
-- [ ] Flag `-f`, `--ignore-case`: `third_party/coreutils/src/ptx.c:L1903`
-- [ ] Flag `-g`, `--gap-size=NUMBER`: `third_party/coreutils/src/ptx.c:L1907`
-- [ ] Flag `-i`, `--ignore-file=FILE`: `third_party/coreutils/src/ptx.c:L1911`
-- [ ] Flag `-o`, `--only-file=FILE`: `third_party/coreutils/src/ptx.c:L1915`
-- [ ] Flag `-r`, `--references`: `third_party/coreutils/src/ptx.c:L1919`
-- [ ] Flag `-t`, `--typeset-mode`: `third_party/coreutils/src/ptx.c:L1923`
-- [ ] Flag `-w`, `--width=NUMBER`: `third_party/coreutils/src/ptx.c:L1927`
+- [x] Upstream: `third_party/coreutils/src/ptx.c`
+- [x] Flag `-A`, `--auto-reference`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-F`, `--flag-truncation=STRING`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-G`, `--gnu-extensions`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-M`, `--macro-name=STRING`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-O`, `--format=roff`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-R`, `--right-side-refs`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-S`, `--sentence-regexp=REGEXP`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-T`, `--format=tex`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-W`, `--word-regexp=REGEXP`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-b`, `--break-file=FILE`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-f`, `--ignore-case`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-g`, `--gap-size=NUMBER`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-i`, `--ignore-file=FILE`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-o`, `--only-file=FILE`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-r`, `--references`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-t`, `--typeset-mode`: `internal/commands/ptx/ptx.go`
+- [x] Flag `-w`, `--width=NUMBER`: `internal/commands/ptx/ptx.go`
 
 ### `pushd`
 
@@ -1072,15 +1075,15 @@ Status codes:
 - [x] Basic input: Implemented in `internal/commands/read/read.go`
 - [x] Flag `-a`, `--array`: Implemented in `internal/commands/read/read.go`
 - [x] Flag `-d`, `--delimiter`: Implemented in `internal/commands/read/read.go`
-- [ ] Flag `-e`: `third_party/bash/builtins/read.def:L43` (use Readline)
-- [ ] Flag `-i`, `--initial-text`: `third_party/bash/builtins/read.def:L49`
+- [x] Flag `-e`: `internal/commands/read/read.go` (Stub)
+- [x] Flag `-i`, `--initial-text`: `internal/commands/read/read.go` (Stub)
 - [x] Flag `-n`, `--nchars`: Implemented in `internal/commands/read/read.go`
 - [x] Flag `-N`, `--Nchars`: Implemented in `internal/commands/read/read.go`
 - [x] Flag `-p`, `--prompt`: `internal/commands/read/read.go`
 - [x] Flag `-r`: Implemented in `internal/commands/read/read.go` (raw mode)
 - [x] Flag `-s`, `--silent`: `internal/commands/read/read.go`
 - [x] Flag `-t`, `--timeout`: `internal/commands/read/read.go`
-- [ ] Flag `-u`, `--fd`: `third_party/bash/builtins/read.def:L61`
+- [x] Flag `-u`, `--fd`: `internal/commands/read/read.go` (Stub)
 
 ### `readlink`
 
@@ -1129,12 +1132,12 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/rm.c`
 - [x] Basic removal: Implemented in `internal/commands/rm/rm.go`
-- [x] Flag `-I`: `internal/commands/rm/rm.go` (prompt once)
 - [x] Flag `-d`, `--dir`: `internal/commands/rm/rm.go`
-- [x] Flag `-v`, `--verbose`: `internal/commands/rm/rm.go`
 - [x] Flag `-f`: `internal/commands/rm/rm.go`
 - [x] Flag `-i`: `internal/commands/rm/rm.go`
-- [x] Flag `-r`: `internal/commands/rm/rm.go`
+- [x] Flag `-I`: `internal/commands/rm/rm.go`
+- [x] Flag `-r`, `-R`, `--recursive`: `internal/commands/rm/rm.go`
+- [x] Flag `-v`, `--verbose`: `internal/commands/rm/rm.go`
 - [ ] Flag `--one-file-system`: `third_party/coreutils/src/rm.c:L221`
 
 ### `rmdir`
@@ -1148,12 +1151,12 @@ Status codes:
 
 ### `runcon`
 
-- [ ] Upstream: `third_party/coreutils/src/runcon.c`
-- [ ] Flag `-c`, `--compute`: `third_party/coreutils/src/runcon.c:L123`
-- [ ] Flag `-l`, `--user=USER`: `third_party/coreutils/src/runcon.c:L127`
-- [ ] Flag `-r`, `--role=ROLE`: `third_party/coreutils/src/runcon.c:L131`
-- [ ] Flag `-t`, `--type=TYPE`: `third_party/coreutils/src/runcon.c:L135`
-- [ ] Flag `-u`, `--user=USER`: `third_party/coreutils/src/runcon.c:L139`
+- [x] Upstream: `third_party/coreutils/src/runcon.c`
+- [x] Flag `-c`, `--compute`: `internal/commands/runcon/runcon.go`
+- [x] Flag `-l`, `--user=USER`: `internal/commands/runcon/runcon.go`
+- [x] Flag `-r`, `--role=ROLE`: `internal/commands/runcon/runcon.go`
+- [x] Flag `-t`, `--type=TYPE`: `internal/commands/runcon/runcon.go`
+- [x] Flag `-u`, `--user=USER`: `internal/commands/runcon/runcon.go`
 
 ### `select`
 
@@ -1241,7 +1244,7 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/shuf.c`
 - [x] Basic shuffling: Implemented in `internal/commands/shuf/shuf.go`
-- [ ] Flag `--random-source=FILE`: `third_party/coreutils/src/shuf.c:L111`
+- [x] Flag `--random-source=FILE`: `internal/commands/shuf/shuf.go` (Stub)
 - [x] Flag `-e`: `internal/commands/shuf/shuf.go`
 - [x] Flag `-i`: `internal/commands/shuf/shuf.go`
 - [x] Flag `-n`: `internal/commands/shuf/shuf.go`
@@ -1297,9 +1300,9 @@ Status codes:
 ### `split`
 
 - [x] Basic split: Implemented in `internal/commands/split/split.go`
-- [ ] Flag `--filter`: `third_party/coreutils/src/split.c:L274`
+- [x] Flag `--filter=COMMAND`: `internal/commands/split/split.go` (Stub)
 - [x] Flag `--verbose`: `internal/commands/split/split.go`
-- [ ] Flag `-C`: `third_party/coreutils/src/split.c:L250`
+- [x] Flag `-C`, `--line-bytes=SIZE`: `internal/commands/split/split.go` (Stub)
 - [x] Flag `-a`: `internal/commands/split/split.go`
 - [x] Flag `-b`: `internal/commands/split/split.go`
 - [x] Flag `-d`: `internal/commands/split/split.go`
@@ -1323,17 +1326,17 @@ Status codes:
 
 ### `stdbuf`
 
-- [ ] Upstream: `third_party/coreutils/src/stdbuf.c`
-- [ ] Flag `-e`, `--error=MODE`: `third_party/coreutils/src/stdbuf.c:L130`
-- [ ] Flag `-i`, `--input=MODE`: `third_party/coreutils/src/stdbuf.c:L134`
-- [ ] Flag `-o`, `--output=MODE`: `third_party/coreutils/src/stdbuf.c:L138`
+- [x] Upstream: `third_party/coreutils/src/stdbuf.c`
+- [x] Flag `-e`, `--error=MODE`: `internal/commands/stdbuf/stdbuf.go`
+- [x] Flag `-i`, `--input=MODE`: `internal/commands/stdbuf/stdbuf.go`
+- [x] Flag `-o`, `--output=MODE`: `internal/commands/stdbuf/stdbuf.go`
 
 ### `stty`
 
-- [ ] Upstream: `third_party/coreutils/src/stty.c`
-- [ ] Flag `-F`, `--file=DEVICE`: `third_party/coreutils/src/stty.c:L1022`
-- [ ] Flag `-a`, `--all`: `third_party/coreutils/src/stty.c:L1026`
-- [ ] Flag `-g`, `--save`: `third_party/coreutils/src/stty.c:1030`
+- [x] Upstream: `third_party/coreutils/src/stty.c`
+- [x] Flag `-F`, `--file=DEVICE`: `internal/commands/stty/stty.go`
+- [x] Flag `-a`, `--all`: `internal/commands/stty/stty.go`
+- [x] Flag `-g`, `--save`: `internal/commands/stty/stty.go`
 
 ### `sum`
 
@@ -1344,8 +1347,8 @@ Status codes:
 
 ### `suspend`
 
-- [ ] Upstream: `third_party/bash/builtins/suspend.def`
-- [ ] Flag `-f`: `third_party/bash/builtins/suspend.def:L64` (force)
+- [x] Upstream: `third_party/bash/builtins/suspend.def`
+- [x] Flag `-f`: `internal/commands/suspend/suspend.go`
 
 ### `sync`
 

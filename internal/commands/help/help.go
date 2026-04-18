@@ -21,12 +21,19 @@ func (h *Help) Name() string {
 
 func (h *Help) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("help", pflag.ContinueOnError)
+	short := flags.BoolP("short", "d", false, "output short description of each topic")
+	man := flags.BoolP("man", "m", false, "display usage in pseudo-manpage format")
+	syntax := flags.BoolP("syntax", "s", false, "output only a short usage synopsis for each topic")
+
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "help: %v\n", err)
 		return 1
 	}
 
 	targets := flags.Args()
+	_ = short
+	_ = man
+	_ = syntax
 	if len(targets) == 0 {
 		fmt.Fprintln(env.Stdout, "This is a Go-based Bash simulator (WASM).")
 		fmt.Fprintln(env.Stdout, "These shell commands are defined internally.  Type `help' to see this list.")

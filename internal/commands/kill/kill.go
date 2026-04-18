@@ -46,6 +46,8 @@ var signals = map[int]string{
 func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("kill", pflag.ContinueOnError)
 	list := flags.BoolP("list", "l", false, "list signal names")
+	sigName := flags.StringP("signal", "s", "", "specify the signal to be sent")
+	sigNum := flags.IntP("signum", "n", -1, "specify the signal number to be sent")
 	
 	// kill has weird flag parsing where -SIGNAL is common.
 	// pflag doesn't handle -9 or -TERM easily as flags.
@@ -117,6 +119,25 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 		return 2
 	}
 
+	signal := 15 // Default SIGTERM
+	if *sigNum != -1 {
+		signal = *sigNum
+	} else if *sigName != "" {
+		name := strings.ToUpper(strings.TrimPrefix(*sigName, "SIG"))
+		found := false
+		for num, s := range signals {
+			if s == name {
+				signal = num
+				found = true
+				break
+			}
+		}
+		if !found {
+			fmt.Fprintf(env.Stderr, "kill: %s: invalid signal specification\n", *sigName)
+			return 1
+		}
+	}
+
 	exitCode := 0
 	for _, pidStr := range targets {
 		pid, err := strconv.Atoi(pidStr)
@@ -130,9 +151,28 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 		if pid == 1 {
 			// Signaling self? 
 			// For now just ignore but return success if it's a known signal.
+			_ = signal
 		} else {
-			fmt.Fprintf(env.Stderr, "kill: (%d) - no such process\n", pid)
-			exitCode = 1
+			// Check if it's a job ID
+			foundJob := false
+			for _, job := range env.Jobs {
+				if job.PID == pid {
+					foundJob = true
+					// Mock signaling the job
+					if signal == 9 || signal == 15 {
+						job.Status = "Done"
+					} else if signal == 19 || signal == 20 {
+						job.Status = "Stopped"
+					} else if signal == 18 {
+						job.Status = "Running"
+					}
+					break
+				}
+			}
+			if !foundJob {
+				fmt.Fprintf(env.Stderr, "kill: (%d) - no such process\n", pid)
+				exitCode = 1
+			}
 		}
 	}
 

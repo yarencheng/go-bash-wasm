@@ -3,6 +3,7 @@ package jobs
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
@@ -24,6 +25,8 @@ func (j *Jobs) Run(ctx context.Context, env *commands.Environment, args []string
 	onlyPids := flags.BoolP("pids", "p", false, "list only the process ID of the job's process group leader")
 	runningOnly := flags.BoolP("running", "r", false, "display only running jobs")
 	stoppedOnly := flags.BoolP("stopped", "s", false, "display only stopped jobs")
+	changedOnly := flags.BoolP("changed", "n", false, "display only jobs that have changed status since last notification")
+	execute := flags.BoolP("execute", "x", false, "execute a command for each job")
 
 	if err := flags.Parse(args); err != nil {
 		if env.Stderr != nil {
@@ -42,6 +45,22 @@ func (j *Jobs) Run(ctx context.Context, env *commands.Environment, args []string
 			continue
 		}
 		if stoppedOnly != nil && *stoppedOnly && job.Status != "Stopped" {
+			continue
+		}
+		if changedOnly != nil && *changedOnly {
+			// In a real shell, we would track status changes. 
+			// For now, we show everything if -n is set to avoid missing data in simulation.
+		}
+
+		if *execute {
+			// Mock execution using the job data
+			ctx := context.Background()
+			args := flags.Args()
+			if len(args) > 0 {
+				line := strings.Join(args, " ")
+				// Replace placeholders if any (not implemented yet)
+				_ = env.Executor.Execute(ctx, line)
+			}
 			continue
 		}
 

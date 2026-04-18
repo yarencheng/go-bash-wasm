@@ -30,6 +30,8 @@ type Environment struct {
 	StartTime     time.Time
 	ExitRequested bool
 	ExitCode      int
+	BreakRequested    int
+	ContinueRequested int
 	EnvVars       map[string]string
 	PositionalArgs []string
 	Arrays        map[string][]string
@@ -39,6 +41,7 @@ type Environment struct {
 	Hash          map[string]string
 	History       []string
 	Jobs          []*Job
+	Completions   map[string]map[string]string
 	Registry      *Registry
 	Executor      Executor
 }

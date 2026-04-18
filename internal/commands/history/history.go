@@ -29,6 +29,8 @@ func (h *History) Run(ctx context.Context, env *commands.Environment, args []str
 	doRead := flags.BoolP("read", "r", false, "read the history file and append the contents to the history list")
 	write := flags.BoolP("write", "w", false, "write the current history to the history file")
 	readNew := flags.BoolP("read-new", "n", false, "read the history lines not already read from the history file")
+	printExpand := flags.BoolP("print", "p", false, "perform history expansion on each ARG and display the result")
+	store := flags.BoolP("store", "s", false, "store the ARGs in the history list as a single entry")
 
 	if err := flags.Parse(args); err != nil {
 		if env.Stderr != nil {
@@ -90,6 +92,7 @@ func (h *History) Run(ctx context.Context, env *commands.Environment, args []str
 	}
 
 	if *doRead || *readNew {
+		// ... existing read logic ...
 		data, err := afero.ReadFile(env.FS, histFile)
 		if err != nil {
 			if env.Stderr != nil {
@@ -107,6 +110,21 @@ func (h *History) Run(ctx context.Context, env *commands.Environment, args []str
 	}
 
 	targets := flags.Args()
+
+	if *printExpand {
+		for _, arg := range targets {
+			// Basic mock: just print the arg as is (no expansion logic yet)
+			fmt.Fprintln(env.Stdout, arg)
+		}
+		return 0
+	}
+
+	if *store {
+		if len(targets) > 0 {
+			env.History = append(env.History, strings.Join(targets, " "))
+		}
+		return 0
+	}
 	limit := len(env.History)
 	if len(targets) > 0 {
 		n, err := strconv.Atoi(targets[0])

@@ -130,6 +130,16 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands/jobs"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/source"
 	"github.com/yarencheng/go-bash-wasm/internal/commands/shift"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bg"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/fg"
+	breakcmd "github.com/yarencheng/go-bash-wasm/internal/commands/break"
+	continuecmd "github.com/yarencheng/go-bash-wasm/internal/commands/continue"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/disown"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/complete"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/compgen"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/compopt"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/caller"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/local"
 )
 
 // App encapsulates the bash simulator application.
@@ -207,6 +217,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		exit.New(),
 		logout.New(),
 		mapfile.New(),
+		mapfile.NewWithName("readarray"),
 		grep.New(),
 		find.New(),
 		getopts.New(),
@@ -284,6 +295,16 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		source.New(),
 		source.NewDot(),
 		shift.New(),
+		bg.New(),
+		fg.New(),
+		breakcmd.New(),
+		continuecmd.New(),
+		disown.New(),
+		complete.New(),
+		compgen.New(),
+		compopt.New(),
+		caller.New(),
+		local.New(),
 	}
 
 	for _, cmd := range cmds {
@@ -317,6 +338,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		DirStack: make([]string, 0),
 		Hash:    make(map[string]string),
 		Jobs:    make([]*commands.Job, 0),
+		Completions: make(map[string]map[string]string),
 		Registry: registry,
 	}
 

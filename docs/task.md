@@ -73,9 +73,9 @@ Status codes:
 
 ### `bg`
 
-- [ ] Upstream: `third_party/bash/builtins/fg_bg.def`
-- [ ] Basic job management: Missing implementation
-- [ ] Job specification support: `third_party/bash/builtins/fg_bg.def:L65`
+- [x] Upstream: `third_party/bash/builtins/fg_bg.def`
+- [x] Basic job management: Implemented in `internal/commands/bg/bg.go`
+- [x] Job specification support: `internal/commands/bg/bg.go`
 
 ### `bind`
 
@@ -98,7 +98,8 @@ Status codes:
 
 ### `break`
 
-- [ ] Upstream: `third_party/bash/builtins/break.def`
+- [x] Upstream: `third_party/bash/builtins/break.def`
+- [x] Basic operation: Implemented in `internal/commands/break/break.go`
 
 ### `builtin`
 
@@ -107,7 +108,8 @@ Status codes:
 
 ### `caller`
 
-- [ ] Upstream: `third_party/bash/builtins/caller.def`
+- [x] Upstream: `third_party/bash/builtins/caller.def`
+- [x] Basic operation: Implemented in `internal/commands/caller/caller.go`
 
 ### `cat`
 
@@ -235,27 +237,27 @@ Status codes:
 
 ### `compgen`
 
-- [ ] Upstream: `third_party/bash/builtins/complete.def`
-- [ ] Inherits all `complete` flags: `third_party/bash/builtins/complete.def`
+- [x] Upstream: `third_party/bash/builtins/complete.def`
+- [x] Inherits all `complete` flags: Implemented in `internal/commands/compgen/compgen.go`
 
 ### `complete`
 
-- [ ] Upstream: `third_party/bash/builtins/complete.def`
-- [ ] Completion management: Missing implementation
-- [ ] Flag `-a`: `third_party/bash/builtins/complete.def:L205` (alias)
-- [ ] Flag `-b`: `third_party/bash/builtins/complete.def:L205` (builtin)
-- [ ] Flag `-c`: `third_party/bash/builtins/complete.def:L205` (command)
-- [ ] Flag `-d`: `third_party/bash/builtins/complete.def:L205` (directory)
-- [ ] Flag `-e`: `third_party/bash/builtins/complete.def:L205` (export)
-- [ ] Flag `-f`: `third_party/bash/builtins/complete.def:L204` (file)
-- [ ] Flag `-g`: `third_party/bash/builtins/complete.def:L205` (group)
-- [ ] Flag `-j`: `third_party/bash/builtins/complete.def:L205` (job)
-- [ ] Flag `-k`: `third_party/bash/builtins/complete.def:L205` (keyword)
-- [ ] Flag `-p`: `third_party/bash/builtins/complete.def:L205` (print)
-- [ ] Flag `-r`: `third_party/bash/builtins/complete.def:L205` (remove)
-- [ ] Flag `-s`: `third_party/bash/builtins/complete.def:L205` (service)
-- [ ] Flag `-u`: `third_party/bash/builtins/complete.def:L205` (user)
-- [ ] Flag `-v`: `third_party/bash/builtins/complete.def:L205` (variable)
+- [x] Upstream: `third_party/bash/builtins/complete.def`
+- [x] Completion management: Implemented in `internal/commands/complete/complete.go`
+- [x] Flag `-a`: `internal/commands/complete/complete.go` (alias)
+- [x] Flag `-b`: `internal/commands/complete/complete.go` (builtin)
+- [x] Flag `-c`: `internal/commands/complete/complete.go` (command)
+- [x] Flag `-d`: `internal/commands/complete/complete.go` (directory)
+- [x] Flag `-e`: `internal/commands/complete/complete.go` (export)
+- [x] Flag `-f`: `internal/commands/complete/complete.go` (file)
+- [x] Flag `-g`: `internal/commands/complete/complete.go` (group)
+- [x] Flag `-j`: `internal/commands/complete/complete.go` (job)
+- [x] Flag `-k`: `internal/commands/complete/complete.go` (keyword)
+- [x] Flag `-p`: `internal/commands/complete/complete.go` (print)
+- [x] Flag `-r`: `internal/commands/complete/complete.go` (remove)
+- [x] Flag `-s`: `internal/commands/complete/complete.go` (service)
+- [x] Flag `-u`: `internal/commands/complete/complete.go` (user)
+- [x] Flag `-v`: `internal/commands/complete/complete.go` (variable)
 - [ ] Flag `-o=OPT`: `third_party/bash/builtins/complete.def:L205` (option)
 - [ ] Flag `-A=ACTION`: `third_party/bash/builtins/complete.def:L205` (action)
 - [ ] Flag `-G=GLOB`: `third_party/bash/builtins/complete.def:L205` (glob)
@@ -271,15 +273,15 @@ Status codes:
 
 ### `compopt`
 
-- [ ] Upstream: `third_party/bash/builtins/complete.def`
-- [ ] Flag `-o`, `--options`: `third_party/bash/builtins/complete.def:L323`
-- [ ] Flag `-D`, `--default`: `third_party/bash/builtins/complete.def:L321`
-- [ ] Flag `-E`, `--empty`: `third_party/bash/builtins/complete.def:L322`
+- [x] Upstream: `third_party/bash/builtins/complete.def`
+- [x] Flag `-o`, `--options`: `internal/commands/compopt/compopt.go`
+- [x] Flag `-D`, `--default`: `internal/commands/compopt/compopt.go`
+- [x] Flag `-E`, `--empty`: `internal/commands/compopt/compopt.go`
 
 ### `continue`
 
-- [ ] Upstream: `third_party/bash/builtins/break.def`
-- [ ] Basic operation: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/break.def`
+- [x] Basic operation: Implemented in `internal/commands/continue/continue.go`
 
 ### `cp`
 
@@ -441,10 +443,10 @@ Status codes:
 
 ### `disown`
 
-- [ ] Upstream: `third_party/bash/builtins/jobs.def`
-- [ ] Flag `-a`: `third_party/bash/builtins/jobs.def:L196` (all jobs)
-- [ ] Flag `-h`: `third_party/bash/builtins/jobs.def:L199` (mark to not receive SIGHUP)
-- [ ] Flag `-r`: `third_party/bash/builtins/jobs.def:L202` (running jobs only)
+- [x] Upstream: `third_party/bash/builtins/jobs.def`
+- [x] Flag `-a`: `internal/commands/disown/disown.go` (all jobs)
+- [x] Flag `-h`: `internal/commands/disown/disown.go` (mark to not receive SIGHUP)
+- [x] Flag `-r`: `internal/commands/disown/disown.go` (running jobs only)
 
 ### `du`
 
@@ -577,7 +579,8 @@ Status codes:
 
 ### `fg`
 
-- [ ] Upstream: `third_party/bash/builtins/fg_bg.def`
+- [x] Upstream: `third_party/bash/builtins/fg_bg.def`
+- [x] Basic operation: Implemented in `internal/commands/fg/fg.go`
 
 ### `fmt`
 
@@ -641,9 +644,9 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/help.def`
 - [x] Help system: Implemented in `internal/commands/help/help.go`
-- [ ] Flag `-d`: `third_party/bash/builtins/help.def:L105` (short description)
-- [ ] Flag `-m`: `third_party/bash/builtins/help.def:L108` (man-page format)
-- [ ] Flag `-s`: `third_party/bash/builtins/help.def:L111` (syntax only)
+- [x] Flag `-d`: `internal/commands/help/help.go` (short description)
+- [x] Flag `-m`: `internal/commands/help/help.go` (man-page format)
+- [x] Flag `-s`: `internal/commands/help/help.go` (syntax only)
 
 ### `history`
 
@@ -653,9 +656,9 @@ Status codes:
 - [x] Flag `-a`: `internal/commands/history/history.go` (append)
 - [x] Flag `-c`: `internal/commands/history/history.go` (clear)
 - [x] Flag `-n`: `internal/commands/history/history.go` (read non-recorded)
-- [ ] Flag `-p`: `third_party/bash/builtins/history.def:L148` (print/expand)
+- [x] Flag `-p`: `internal/commands/history/history.go` (print/expand)
 - [x] Flag `-r`: `internal/commands/history/history.go` (read file)
-- [ ] Flag `-s`: `third_party/bash/builtins/history.def:L141` (store/append)
+- [x] Flag `-s`: `internal/commands/history/history.go` (store/append)
 - [x] Flag `-w`: `internal/commands/history/history.go` (write file)
 
 ### `hostid`
@@ -706,11 +709,11 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/jobs.def`
 - [x] Basic listing: Implemented in `internal/commands/jobs/jobs.go`
 - [x] Flag `-l`: `internal/commands/jobs/jobs.go` (long format)
-- [ ] Flag `-n`: `third_party/bash/builtins/jobs.def:L97` (only jobs that changed)
+- [x] Flag `-n`: `internal/commands/jobs/jobs.go` (only jobs that changed)
 - [x] Flag `-p`: `internal/commands/jobs/jobs.go` (only PIDs)
 - [x] Flag `-r`: `internal/commands/jobs/jobs.go` (running only)
 - [x] Flag `-s`: `internal/commands/jobs/jobs.go` (stopped only)
-- [ ] Flag `-x command`: `third_party/bash/builtins/jobs.def:L109` (execute command)
+- [x] Flag `-x command`: `internal/commands/jobs/jobs.go` (execute command)
 
 ### `join`
 
@@ -748,9 +751,9 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/kill.def`
 - [x] Basic signaling: Implemented in `internal/commands/kill/kill.go`
 - [x] Flag `-l`: `internal/commands/kill/kill.go`
-- [ ] Flag `-n num`: `third_party/bash/builtins/kill.def:L130`
-- [ ] Flag `-l`: `third_party/coreutils/src/kill.c:L277` / `third_party/bash/builtins/kill.def:L114`
-- [ ] Flag `-s SIGNAL`: `third_party/coreutils/src/kill.c:L262` / `third_party/bash/builtins/kill.def:L129`
+- [x] Flag `-n num`: `internal/commands/kill/kill.go`
+- [x] Flag `-l`: `internal/commands/kill/kill.go`
+- [x] Flag `-s SIGNAL`: `internal/commands/kill/kill.go`
 
 ### `let`
 
@@ -770,8 +773,9 @@ Status codes:
 
 ### `local`
 
-- [ ] Upstream: `third_party/bash/builtins/declare.def`
-- [ ] Inherits all `declare` attributes: `third_party/bash/builtins/declare.def`
+- [x] Upstream: `third_party/bash/builtins/declare.def`
+- [x] Basic operation: Implemented in `internal/commands/local/local.go`
+- [x] Inherits generic `declare` behavior
 
 ### `logname`
 
@@ -852,15 +856,14 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/mapfile.def`
 - [x] Array population: Implemented in `internal/commands/mapfile/mapfile.go`
 - [ ] Flag `-d`: `third_party/bash/builtins/mapfile.def:L238` (delimiter)
-- [x] Flag `-t`: `internal/commands/mapfile/mapfile.go` (trim)
-- [ ] Flag `-n`: `third_party/bash/builtins/mapfile.def:L238` (count)
-- [ ] Flag `-O`: `third_party/bash/builtins/mapfile.def:L238` (origin)
-- [ ] Flag `-t`: `third_party/bash/builtins/mapfile.def:L238` (strip newline)
-- [ ] Flag `-u`: `third_party/bash/builtins/mapfile.def:L238` (fd)
-- [ ] Flag `-C`: `third_party/bash/builtins/mapfile.def:L238` (callback)
-- [ ] Flag `-c`: `third_party/bash/builtins/mapfile.def:L238` (quantum)
+- [x] Flag `-t`: `internal/commands/mapfile/mapfile.go` (trim/strip newline)
+- [x] Flag `-n`: `internal/commands/mapfile/mapfile.go` (count)
+- [x] Flag `-O`: `internal/commands/mapfile/mapfile.go` (origin)
+- [x] Flag `-u`: `internal/commands/mapfile/mapfile.go` (fd)
+- [x] Flag `-C`: `internal/commands/mapfile/mapfile.go` (callback)
+- [x] Flag `-c`: `internal/commands/mapfile/mapfile.go` (quantum)
 - [ ] Flag `-s`: `third_party/bash/builtins/mapfile.def:L76` (array is same)
-- [ ] Aliases: `readarray`
+- [x] Aliases: `readarray` (handled via command registration)
 
 ### `md5sum`
 

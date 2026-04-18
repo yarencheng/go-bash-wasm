@@ -11,19 +11,30 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
-type Mapfile struct{}
+type Mapfile struct {
+	name string
+}
 
 func New() *Mapfile {
-	return &Mapfile{}
+	return &Mapfile{name: "mapfile"}
+}
+
+func NewWithName(name string) *Mapfile {
+	return &Mapfile{name: name}
 }
 
 func (m *Mapfile) Name() string {
-	return "mapfile"
+	return m.name
 }
 
 func (m *Mapfile) Run(ctx context.Context, env *commands.Environment, args []string) int {
-	flags := pflag.NewFlagSet("mapfile", pflag.ContinueOnError)
+	flags := pflag.NewFlagSet(m.name, pflag.ContinueOnError)
 	trim := flags.BoolP("trim", "t", false, "remove trailing newline from each line")
+	count := flags.IntP("count", "n", 0, "copy at most COUNT lines")
+	origin := flags.IntP("origin", "O", 0, "begin assigning to array at index ORIGIN")
+	fd := flags.IntP("fd", "u", 0, "read from file descriptor FD")
+	callback := flags.StringP("callback", "C", "", "evaluate CALLBACK each time QUANTUM lines are read")
+	quantum := flags.IntP("quantum", "c", 1, "number of lines to read between each call to CALLBACK")
 	
 	if err := flags.Parse(args); err != nil {
 		fmt.Fprintf(env.Stderr, "mapfile: %v\n", err)
@@ -35,10 +46,31 @@ func (m *Mapfile) Run(ctx context.Context, env *commands.Environment, args []str
 		arrayName = flags.Args()[0]
 	}
 
-	reader := bufio.NewReader(env.Stdin)
+	var input io.Reader = env.Stdin
+	if *fd != 0 {
+		// Mock: we only support FD 0 for now.
+		// In a real WASM env, FD might be tricky.
+	}
+
+	reader := bufio.NewReader(input)
 	var lines []string
 
+	existingLines := env.Arrays[arrayName]
+	if *origin > 0 {
+		if *origin > len(existingLines) {
+			// Pad with empty strings
+			padding := make([]string, *origin-len(existingLines))
+			existingLines = append(existingLines, padding...)
+		}
+		lines = existingLines[:*origin]
+	}
+
+	lineCount := 0
 	for {
+		if *count > 0 && lineCount >= *count {
+			break
+		}
+
 		line, err := reader.ReadString('\n')
 		if line != "" {
 			if *trim {
@@ -46,6 +78,12 @@ func (m *Mapfile) Run(ctx context.Context, env *commands.Environment, args []str
 				line = strings.TrimSuffix(line, "\r")
 			}
 			lines = append(lines, line)
+			lineCount++
+
+			if *callback != "" && lineCount%(*quantum) == 0 {
+				// Mock: evaluate callback
+				_ = env.Executor.Execute(ctx, *callback)
+			}
 		}
 		if err != nil {
 			if err != io.EOF {

@@ -118,8 +118,17 @@ func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string
 	content := line.String()
 	fields := flags.Args()
 
+	ifs := env.EnvVars["IFS"]
+	if ifs == "" {
+		ifs = " \t\n"
+	}
+
+	splitFn := func(r rune) bool {
+		return strings.ContainsRune(ifs, r)
+	}
+
 	if *array != "" {
-		words := strings.Fields(content)
+		words := strings.FieldsFunc(content, splitFn)
 		if env.Arrays == nil {
 			env.Arrays = make(map[string][]string)
 		}
@@ -132,11 +141,11 @@ func (r *Read) Run(ctx context.Context, env *commands.Environment, args []string
 		return 0
 	}
 
-	words := strings.Fields(content)
+	words := strings.FieldsFunc(content, splitFn)
 	for i, field := range fields {
 		if i < len(words) {
 			if i == len(fields)-1 {
-				// Last field gets the rest of the line including spaces
+				// Last field gets the rest of the line including spaces/separators
 				// We need to find the actual start of this word in the content
 				// This is simplified:
 				remaining := strings.Join(words[i:], " ")

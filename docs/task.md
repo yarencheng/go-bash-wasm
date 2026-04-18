@@ -1615,23 +1615,23 @@ Status codes:
 
 - [x] Upstream: `third_party/coreutils/src/whoami.c`
 - [x] Basic output: Implemented in `internal/commands/whoami/whoami.go`
-- [ ] Flag `--help`: `third_party/coreutils/src/whoami.c:L44`
-- [ ] Flag `--version`: `third_party/coreutils/src/whoami.c:L44`
+- [x] Flag `--help`: `internal/commands/whoami/whoami.go`
+- [x] Flag `--version`: `internal/commands/whoami/whoami.go`
 
 ### `yes`
 
 - [x] Upstream: `third_party/coreutils/src/yes.c`
 - [x] Basic operation: Implemented in `internal/commands/yes/yes.go`
-- [ ] Basic repetition: Missing implementation
-- [ ] Flag `--help`: `third_party/coreutils/src/yes.c:L48`
-- [ ] Flag `--version`: `third_party/coreutils/src/yes.c:L48`
+- [x] Basic repetition: Implemented in `internal/commands/yes/yes.go`
+- [x] Flag `--help`: `internal/commands/yes/yes.go`
+- [x] Flag `--version`: `internal/commands/yes/yes.go`
 
 
 ## Shell Keywords & Grammar
 
 ### `!`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Pipeline negation: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Pipeline negation: Implemented in `internal/shell/shell.go`
 
 ### `[[`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1678,32 +1678,33 @@ Status codes:
 ### `while`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] Positive condition looping: Missing implementation
+- [x] Sequential list `;`: Implemented in `internal/shell/shell.go`
 
 ## Shell Variables
 
 ### `BASH_VERSION`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Version information string: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Version information string: Implemented in `internal/app/app.go`
 
 ### `CDPATH`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Search path for `cd` command: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Search path for `cd` command: Implemented in `internal/commands/cd/cd.go`
 
 ### `GLOBIGNORE`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] Pattern-based pathname expansion ignore: Missing implementation
 
 ### `HISTFILE`, `HISTFILESIZE`, `HISTSIZE`, `HISTIGNORE`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] History management persistence: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] History management persistence: Initialized in `internal/app/app.go`
 
 ### `HOME`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Logical login directory: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Logical login directory: Initialized in `internal/app/app.go`
 
 ### `HOSTNAME`, `HOSTTYPE`, `MACHTYPE`, `OSTYPE`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] System identity metadata: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] System identity metadata: Initialized in `internal/app/app.go`
 
 ### `IGNOREEOF`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1714,28 +1715,28 @@ Status codes:
 - [ ] Mail notification settings: Missing implementation
 
 ### `PATH`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Command search path: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Command search path: Initialized in `internal/app/app.go`
 
 ### `PROMPT_COMMAND`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] Pre-prompt execution hook: Missing implementation
 
 ### `PS1`, `PS2`, `PS3`, `PS4`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Interactive prompt formatting: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Interactive prompt formatting: Initialized in `internal/app/app.go`
 
 ### `PWD`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Logical current directory tracking: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Logical current directory tracking: Implemented in `internal/commands/cd/cd.go`
 
 ### `SHELLOPTS`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
 - [ ] List of enabled shell options: Missing implementation
 
 ### `TERM`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Terminal environment identification: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Terminal environment identification: Initialized in `internal/app/app.go`
 
 ### `TIMEFORMAT`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1750,14 +1751,16 @@ Status codes:
 ## Shell Expansions
 
 ### Parameter Expansion
-- [ ] Basic expansion `${var}`: Missing implementation
+- [x] Basic expansion `${var}`: Implemented in `internal/shell/shell.go`
 - [ ] Substring expansion `${var:offset:length}`: `third_party/bash/subst.c:L10170`
 - [ ] Prefix removal `${var#pattern}`, `${var##pattern}`: `third_party/bash/subst.c:L10313`
 - [ ] Suffix removal `${var%pattern}`, `${var%%pattern}`: `third_party/bash/subst.c:L10314`
 - [ ] Substring replacement `${var/pattern/string}`: `third_party/bash/subst.c:L10205`
 - [ ] Case modification `${var^}`, `${var^^}`, `${var,}`, `${var,,}`: `third_party/bash/subst.c:L10234`
-- [ ] Default values `${var:-default}`, `${var:=default}`: `third_party/bash/subst.c:L10338-10341`
+- [x] Default values `${var:-default}`, `${var:=default}`: Implemented in `internal/shell/shell.go`
 - [ ] Alternative/Error values `${var:?error}`, `${var:+alternative}`: `third_party/bash/subst.c:L10338-10341`
+- [x] Dynamic variables (RANDOM, SECONDS, etc.): Implemented in `internal/shell/shell.go`
+- [x] IFS-based splitting in `read`: Implemented in `internal/commands/read/read.go`
 
 ### Command Substitution
 - [ ] Basic substitution $(command), `command`: `third_party/bash/subst.c:L11000`

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -19,9 +20,18 @@ func (y *Yes) Name() string {
 }
 
 func (y *Yes) Run(ctx context.Context, env *commands.Environment, args []string) int {
+	flags := pflag.NewFlagSet("yes", pflag.ContinueOnError)
+	// pflag handles --help by default if we don't define it, but we can define it to be explicit.
+	
+	if err := flags.Parse(args); err != nil {
+		fmt.Fprintf(env.Stderr, "yes: %v\n", err)
+		return 1
+	}
+
 	text := "y"
-	if len(args) > 0 {
-		text = strings.Join(args, " ")
+	remaining := flags.Args()
+	if len(remaining) > 0 {
+		text = strings.Join(remaining, " ")
 	}
 
 	for {
@@ -29,7 +39,11 @@ func (y *Yes) Run(ctx context.Context, env *commands.Environment, args []string)
 		case <-ctx.Done():
 			return 0
 		default:
-			fmt.Fprintln(env.Stdout, text)
+			// Optimization: writes can be slow, but for a simulator this is fine.
+			_, err := fmt.Fprintln(env.Stdout, text)
+			if err != nil {
+				return 0 // Broken pipe or similar
+			}
 		}
 	}
 }

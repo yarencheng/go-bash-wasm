@@ -113,6 +113,7 @@ func (c *Cd) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 	env.EnvVars["OLDPWD"] = env.Cwd
 	env.Cwd = newPath
+	env.EnvVars["PWD"] = env.Cwd
 	return 0
 }
 

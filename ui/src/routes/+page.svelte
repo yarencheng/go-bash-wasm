@@ -113,8 +113,29 @@
 		initWasm();
 
 		// 4. Wire Terminal Data to WASM Stdin (Raw Mode)
+		let commandBuffer = '';
 		term.onData((data) => {
 			if (!wasmReady) return;
+
+			// Capture command for Google Analytics
+			for (const char of data) {
+				if (char === '\r' || char === '\n') {
+					const trimmedCommand = commandBuffer.trim();
+					if (trimmedCommand && typeof (window as any).gtag === 'function') {
+						(window as any).gtag('event', 'terminal_command', {
+							command: trimmedCommand
+						});
+					}
+					commandBuffer = '';
+				} else if (char === '\x7f') {
+					// Handle backspace
+					commandBuffer = commandBuffer.slice(0, -1);
+				} else if (char.charCodeAt(0) >= 32) {
+					// Append printable characters
+					commandBuffer += char;
+				}
+			}
+
 			if (typeof (window as any).writeStdin === 'function') {
 				(window as any).writeStdin(data);
 			}

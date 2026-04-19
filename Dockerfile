@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # 1. Run all unit tests
-RUN go test -v ./...
+RUN go test -v -cover -race ./...
 
 # 2. Build web assembly output
 # Using wasip1/wasm is the modern standard for executing Go with Wasmtime

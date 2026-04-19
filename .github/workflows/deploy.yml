@@ -43,7 +43,7 @@ jobs:
           rm -rf binaryen-version_${BINARYEN_VERSION}
 
       - name: Run Go tests
-        run: go test -v -coverprofile=coverage.txt ./...
+        run: go test -v -coverprofile=coverage.txt  -race ./...
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

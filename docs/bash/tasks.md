@@ -118,9 +118,9 @@ Status codes:
 - [x] Flag `-X=FILTER`: `internal/commands/bash/complete/complete.go`
 - [x] Flag `-F=FUNC`: `internal/commands/bash/complete/complete.go`
 - [x] Flag `-C=CMD`: `internal/commands/bash/complete/complete.go`
-- [x] Flag `-E`: `internal/commands/bash/complete/complete.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-I`: `internal/commands/bash/complete/complete.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-D`: `internal/commands/bash/complete/complete.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-E`: `internal/commands/bash/complete/complete.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-I`: `internal/commands/bash/complete/complete.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-D`: `internal/commands/bash/complete/complete.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 
 ### `compopt`
 
@@ -159,7 +159,7 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/pushd.def`
 - [x] Basic listing: Implemented in `internal/commands/bash/dirs/dirs.go`
 - [x] Flag `-c`: `internal/commands/bash/dirs/dirs.go` (clear stack)
-- [x] Flag `-l`: `internal/commands/bash/pushd/pushd.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-l`: `internal/commands/bash/pushd/pushd.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-p`: `internal/commands/bash/dirs/dirs.go` (print with one line per entry)
 - [x] Flag `-v`: `internal/commands/bash/dirs/dirs.go` (verbose)
 
@@ -198,9 +198,9 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/exec.def`
 - [x] Basic execution: Implemented in `internal/commands/bash/exec/exec.go`
-- [x] Flag `-l`: `internal/commands/bash/exec/exec.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-a name`: `internal/commands/bash/exec/exec.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-c`: `internal/commands/bash/exec/exec.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-l`: `internal/commands/bash/exec/exec.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-a name`: `internal/commands/bash/exec/exec.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-c`: `internal/commands/bash/exec/exec.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 
 ### `exit`
 
@@ -212,8 +212,8 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/setattr.def`
 - [x] Basic operation: Implemented in `internal/commands/bash/export/export.go`
-- [x] Flag `-f`: `internal/commands/bash/export/export.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-n`: `internal/commands/bash/export/export.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-f`: `internal/commands/bash/export/export.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-n`: `internal/commands/bash/export/export.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-p`: `internal/commands/bash/export/export.go`
 
 ### `true`
@@ -254,10 +254,10 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/hash.def`
 - [x] Command hashing: Implemented in `internal/commands/bash/hash/hash.go`
 - [x] Flag `-r`: `internal/commands/bash/hash/hash.go`
-- [x] Flag `-d`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-p`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-t`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-l`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-d`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-p`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-t`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-l`: `internal/commands/bash/hash/hash.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 
 ### `help`
 
@@ -404,7 +404,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/set.def`
 - [x] Option management (-e, -u, -x, -o): Implemented in `internal/commands/bash/set/set.go`
-- [x] Positional parameters: Stub in `internal/commands/bash/set/set.go`
+- [x] Positional parameters: Stub in `internal/commands/bash/set/set.go` (See [functional_gap.md](./functional_gap.md#set))
 - [x] Flag `-a`: `internal/commands/bash/set/set.go` (allexport)
 - [x] Flag `-b`: `internal/commands/bash/set/set.go` (notify)
 - [x] Flag `-e`: `internal/commands/bash/set/set.go` (errexit)
@@ -436,7 +436,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/shopt.def`
 - [x] Basic option management: Implemented in `internal/commands/bash/shopt/shopt.go`
-- [x] Flag `-o`: `internal/commands/bash/shopt/shopt.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-o`: `internal/commands/bash/shopt/shopt.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-p`: `third_party/bash/builtins/shopt.def:L77` (print status)
 - [x] Flag `-q`: `third_party/bash/builtins/shopt.def:L71` (quiet)
 - [x] Flag `-s`: `third_party/bash/builtins/shopt.def:L62` (enable)
@@ -481,7 +481,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/trap.def`
 - [x] Basic trapping: Implemented in `internal/commands/bash/trap/trap.go`
-- [x] Flag `-P`: `internal/commands/bash/trap/trap.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-P`: `internal/commands/bash/trap/trap.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 - [x] Flag `-l`: `internal/commands/bash/trap/trap.go`
 - [x] Flag `-p`: `internal/commands/bash/trap/trap.go`
 
@@ -506,8 +506,8 @@ Status codes:
 - [x] Flag `-f`: `third_party/bash/builtins/ulimit.def:L40` (file size)
 - [x] Flag `-n`: `third_party/bash/builtins/ulimit.def:L45` (opened files)
 - [x] Flag `-u`: `third_party/bash/builtins/ulimit.def:L51` (user processes)
-- [x] Flag `-S`: `internal/commands/bash/ulimit/ulimit.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-H`: `internal/commands/bash/ulimit/ulimit.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-S`: `internal/commands/bash/ulimit/ulimit.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-H`: `internal/commands/bash/ulimit/ulimit.go` (Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 
 ### `umask`
 
@@ -528,7 +528,7 @@ Status codes:
 - [x] Attribute management: Implemented in `internal/commands/bash/unset/unset.go`
 - [x] Flag `-f`: `internal/commands/bash/unset/unset.go` (functions)
 - [x] Flag `-v`: `internal/commands/bash/unset/unset.go` (variables)
-- [x] Flag `-n`: `internal/commands/bash/declare/declare.go` (nameref - Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/../coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-n`: `internal/commands/bash/declare/declare.go` (nameref - Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
 
 ### `wait`
 

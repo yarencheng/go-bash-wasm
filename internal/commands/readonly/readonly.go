@@ -33,8 +33,21 @@ func (r *Readonly) Run(ctx context.Context, env *commands.Environment, args []st
 	}
 
 	targets := flags.Args()
+	processed := false
 
-	if len(targets) == 0 || *printFlag {
+	if len(targets) > 0 {
+		for _, arg := range targets {
+			if strings.Contains(arg, "=") {
+				parts := strings.SplitN(arg, "=", 2)
+				env.EnvVars[parts[0]] = parts[1]
+				processed = true
+			} else {
+				processed = true
+			}
+		}
+	}
+
+	if !processed || *printFlag {
 		keys := make([]string, 0, len(env.EnvVars))
 		for k := range env.EnvVars {
 			keys = append(keys, k)
@@ -43,14 +56,6 @@ func (r *Readonly) Run(ctx context.Context, env *commands.Environment, args []st
 
 		for _, k := range keys {
 			fmt.Fprintf(env.Stdout, "readonly %s=\"%s\"\n", k, env.EnvVars[k])
-		}
-		return 0
-	}
-
-	for _, arg := range targets {
-		if strings.Contains(arg, "=") {
-			parts := strings.SplitN(arg, "=", 2)
-			env.EnvVars[parts[0]] = parts[1]
 		}
 	}
 

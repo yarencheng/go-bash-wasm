@@ -157,3 +157,128 @@ func TestExecuteRedirection(t *testing.T) {
 	data, _ := afero.ReadFile(env.FS, "/test.txt")
 	assert.Equal(t, "hello", string(data))
 }
+
+func TestExecuteArithmetic(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	exitCode := s.Execute(context.Background(), "echo $((1 + 2 * 3))")
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "7\n", stdout.String())
+}
+
+func TestExecuteParamExpansion(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+	env.EnvVars["FOO"] = "bar"
+
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	s.Execute(context.Background(), "echo $FOO")
+	assert.Equal(t, "bar\n", stdout.String())
+	stdout.Reset()
+
+	s.Execute(context.Background(), "echo ${FOO}baz")
+	assert.Equal(t, "barbaz\n", stdout.String())
+}
+
+func TestExecuteTildeExpansion(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+	env.EnvVars["HOME"] = "/home/user"
+
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	s.Execute(context.Background(), "echo ~")
+	assert.Equal(t, "/home/user\n", stdout.String())
+}
+
+func TestExecuteSubshell(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+	env.EnvVars["X"] = "1"
+
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	s.Execute(context.Background(), "(X=2; echo $X); echo $X")
+	assert.Equal(t, "2\n1\n", stdout.String())
+}
+
+func TestExecuteIf(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+
+	env.Registry.Register(&mockCommand{
+		name: "true",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			return 0
+		},
+	})
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	s.Execute(context.Background(), "if true; then echo yes; else echo no; fi")
+	assert.Equal(t, "yes\n", stdout.String())
+}
+
+func TestExecuteLoops(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	// For loop
+	s.Execute(context.Background(), "for i in 1 2; do echo $i; done")
+	assert.Equal(t, "1\n2\n", stdout.String())
+}
+
+func TestExecuteCase(t *testing.T) {
+	s, env, stdout, _ := setupTestShell()
+	env.Registry.Register(&mockCommand{
+		name: "echo",
+		run: func(ctx context.Context, env *commands.Environment, args []string) int {
+			fmt.Fprintln(env.Stdout, strings.Join(args, " "))
+			return 0
+		},
+	})
+
+	s.Execute(context.Background(), "case foo in foo) echo yes ;; bar) echo no ;; esac")
+	assert.Equal(t, "yes\n", stdout.String())
+	stdout.Reset()
+
+	s.Execute(context.Background(), "case bar in foo) echo yes ;; bar) echo no ;; esac")
+	assert.Equal(t, "no\n", stdout.String())
+}
+
+

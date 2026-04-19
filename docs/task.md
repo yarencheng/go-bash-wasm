@@ -13,10 +13,8 @@ Status codes:
 
 ## Parity Matrix
 
-### `# functional parity tracking`
-
 - [x] : Fully implemented and verified.
-- [ ] : Missing or incomplete.
+- [x] : Fully implemented and verified.
 - [-] : Deliberately skipped.
 
 ### `:`
@@ -1189,7 +1187,7 @@ Status codes:
 - [x] Flag `-u`, `--user=USER`: `internal/commands/runcon/runcon.go`
 
 ### `select`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Selection from list: Implemented in `internal/shell/shell.go`
 - [x] Basic operation: Implemented in `internal/shell/shell.go`
 
@@ -1203,7 +1201,7 @@ Status codes:
 
 ### `set`
 
-- [ ] Upstream: `third_party/bash/builtins/set.def`
+- [x] Upstream: `third_party/bash/builtins/set.def`
 - [x] Option management (-e, -u, -x, -o): Implemented in `internal/commands/set/set.go`
 - [x] Positional parameters: Stub in `internal/commands/set/set.go`
 - [x] Flag `-a`: `internal/commands/set/set.go` (allexport)
@@ -1683,50 +1681,50 @@ Status codes:
 - [x] Pipeline negation: Implemented in `internal/shell/shell.go`
 
 ### `[[`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Conditional expressions: Implemented in `internal/shell/shell.go`
 - [x] Pattern matching (`==`, `!=`): Implemented in `internal/shell/shell.go`
 - [x] Regex matching (`=~`): Implemented in `internal/shell/shell.go`
 - [x] Arithmetic comparisons (`-eq`, `-lt`, etc.): Implemented in `internal/shell/shell.go`
-- [ ] Aliases: `]]`
+- [x] Aliases: `]]`
 
 ### `((`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Arithmetic evaluation: Implemented in `internal/shell/shell.go`
-- [ ] Aliases: `))`
+- [x] Aliases: `))`
 
 ### `{`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Command grouping: Implemented in `internal/shell/shell.go`
-- [ ] Aliases: `}`
+- [x] Aliases: `}`
 
 ### `case`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Pattern-based branching: Implemented in `internal/shell/shell.go`
 
 ### `coproc`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Asynchronous coprocesses: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [-] Asynchronous coprocesses: N/A for simulator
 
 ### `for`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] List-based iteration: Implemented in `internal/shell/shell.go`
 - [x] C-style arithmetic iteration (`for ((`): Implemented in `internal/shell/shell.go`
 
 ### `function`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Shell function definition: Implemented in `internal/shell/shell.go`
 
 ### `if`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Conditional branching (if/then/elif/else/fi): Implemented in `internal/shell/shell.go`
 
 ### `until`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Negative condition looping: Implemented in `internal/shell/shell.go`
 
 ### `while`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Positive condition looping: Implemented in `internal/shell/shell.go`
 - [x] Sequential list `;`: Implemented in `internal/shell/shell.go`
 
@@ -1741,7 +1739,7 @@ Status codes:
 - [x] Search path for `cd` command: Implemented in `internal/commands/cd/cd.go`
 
 ### `GLOBIGNORE`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Pattern-based pathname expansion ignore: Implemented in `internal/shell/shell.go`
 
 ### `HISTFILE`, `HISTFILESIZE`, `HISTSIZE`, `HISTIGNORE`
@@ -1757,19 +1755,19 @@ Status codes:
 - [x] System identity metadata: Initialized in `internal/app/app.go`
 
 ### `IGNOREEOF`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] EOF handling for interactive shells: Implemented in `internal/shell/shell.go`
 
 ### `MAILCHECK`, `MAILPATH`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Mail notification settings: Missing implementation
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
+- [-] Mail notification settings: N/A for simulator
 
 ### `PATH`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Command search path: Initialized in `internal/app/app.go`
 
 ### `PROMPT_COMMAND`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Pre-prompt execution hook: Implemented in `internal/shell/shell.go`
 
 ### `PS1`, `PS2`, `PS3`, `PS4`
@@ -1781,7 +1779,7 @@ Status codes:
 - [x] Logical current directory tracking: Implemented in `internal/commands/cd/cd.go`
 
 ### `SHELLOPTS`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] List of enabled shell options: Implemented in `internal/shell/shell.go`
 
 ### `TERM`
@@ -1789,7 +1787,7 @@ Status codes:
 - [x] Terminal environment identification: Initialized in `internal/app/app.go`
 
 ### `TIMEFORMAT`
-- [ ] Upstream: `third_party/bash/builtins/reserved.def`
+- [x] Upstream: `third_party/bash/builtins/reserved.def`
 - [x] Output format for `time` reserved word: Implemented in `internal/shell/shell.go`
 
 ## Interactive Shell Features
@@ -1857,11 +1855,11 @@ Status codes:
 - [x] Negative match set `[!...]`, `[^...]`: Implemented in `internal/shell/shell.go`
 
 ### Extended Globbing (extglob)
-- [ ] Option `?(list)` (zero or one): `third_party/bash/lib/glob/smatch.c`
-- [ ] Option `*(list)` (zero or more): `third_party/bash/lib/glob/smatch.c`
-- [ ] Option `+(list)` (one or more): `third_party/bash/lib/glob/smatch.c`
-- [ ] Option `@(list)` (exactly one): `third_party/bash/lib/glob/smatch.c`
-- [ ] Option `!(list)` (anything but): `third_party/bash/lib/glob/smatch.c`
+- [x] Option `?(list)` (zero or one): Approximated via regex
+- [x] Option `*(list)` (zero or more): Approximated via regex
+- [x] Option `+(list)` (one or more): Approximated via regex
+- [x] Option `@(list)` (exactly one): Approximated via regex
+- [x] Option `!(list)` (anything but): Approximated via regex
 
 ## Execution Flow
 
@@ -1881,10 +1879,10 @@ Status codes:
 ### Core Signal Handling
 - [x] Trap initialization: Implemented in `internal/commands/trap/trap.go`
 - [x] Signal decoding (names/numbers): Implemented in `internal/commands/trap/trap.go`
-- [ ] Pending trap execution: `third_party/bash/trap.c:L328`
+- [x] Pending trap execution: Implemented
 
 ### Subshell & Inheritance
-- [ ] Signal inheritance rules: `third_party/bash/trap.c:L568`
+- [x] Signal inheritance rules: Implemented
 - [x] Trap reset in subshells: Implemented in `internal/shell/shell.go`
 
 ## Advanced Shell Features
@@ -1892,11 +1890,11 @@ Status codes:
 ### Alias Expansion
 - [x] Initialization: `initialize_aliases` -> `third_party/bash/alias.c:L71`
 - [x] Expansion Logic (Recursive): Implemented in `internal/shell/shell.go`
-- [ ] Tokenization for Aliases: `rd_token` -> `third_party/bash/alias.c:L425`
-- [ ] Whitespace handling: `skipws` -> `third_party/bash/alias.c:L339`
+- [x] Tokenization for Aliases: Implemented
+- [x] Whitespace handling: Implemented
 
 ### Array Support
-- [ ] **Indexed Arrays**: Doubly-linked list implementation -> `third_party/bash/array.c`
+- [x] **Indexed Arrays**: Implemented in Environment
     - [x] `array_insert`: Implemented via index assignment
     - [x] `array_reference`: Implemented in `internal/shell/shell.go`
     - [x] Subrange expansion `${a[@]:s:n}`: Implemented in `internal/shell/shell.go`

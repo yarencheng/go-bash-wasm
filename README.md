@@ -7,7 +7,7 @@
 
 # go-bash-wasm
 
-**go-bash-wasm** is a high-fidelity, clean-room simulator of the GNU Bash shell and Coreutils, written in Go and optimized for WebAssembly (WASM). It brings the power of a standard UNIX environment to sandboxed ecosystems like browsers, edge computing, and secure server-side runtimes.
+**go-bash-wasm** is a Go implementation of GNU Bash and Coreutils for WebAssembly, featuring a fully isolated in-memory filesystem. It enables running a shell environment in browsers and other sandboxed environments.
 
 ## 🚀 Key Features
 
@@ -40,7 +40,7 @@ The project follows a clean, modular architecture:
 ## ⚙️ Building and Running
 
 ### Prerequisites
-- **Go 1.25+**
+- **Go 1.26+**
 - **Node.js 20+** (for local UI development)
 - **Docker** (Recommended) for clean, isolated builds.
 

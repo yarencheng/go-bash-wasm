@@ -19,7 +19,7 @@ This document tracks known functional gaps, intentional deviations, and implemen
 
 ### `read`
 
-- `[x]` Flags `-s`, `-u`, `-e`, `-i` (Stubs): `internal/commands/read/read.go`
+- `[x]` Flags `-s`, `-u`, `-e`, `-i` (Stubs): `internal/commands/bash/read/read.go`
   > Rationale: 
   > - `-s` (Silent): Interactive terminal echoing is managed by the frontend (Xterm.js).
   > - `-u` (FD): Browser WASM runtime has limited support for arbitrary file descriptor redirection beyond standard streams.
@@ -27,22 +27,22 @@ This document tracks known functional gaps, intentional deviations, and implemen
 
 ### `times`
 
-- `[x]` Basic Output (Simulation): `internal/commands/times/times.go`
+- `[x]` Basic Output (Simulation): `internal/commands/bash/times/times.go`
   > Rationale: Accurate process accounting for child processes is not supported by the WebAssembly environment. The shell's own user and system times are simulated based on the time elapsed since startup.
 
 ### `ulimit`
 
-- `[x]` Resource Management (Simulation): `internal/commands/ulimit/ulimit.go`
+- `[x]` Resource Management (Simulation): `internal/commands/bash/ulimit/ulimit.go`
   > Rationale: Setting real resource limits (e.g., stack size, file descriptors) is not possible within the browser's WebAssembly sandbox. All limits are reported as static simulated values, and setting new limits is disabled.
 
 ### `wait`
 
-- `[x]` Flags `-f`, `-n` (Ignored): `internal/commands/wait/wait.go:L1579`
+- `[x]` Flags `-f`, `-n` (Ignored): `internal/commands/bash/wait/wait.go:L1579`
   > Rationale: Job control in the simulator is currently basic. Synchronous waiting is implemented, but advanced polling flags are ignored to simplify the state-machine.
 
 ### `suspend`
 
-- `[-]` Process Suspension (Unsupported): `internal/commands/suspend/suspend.go`
+- `[-]` Process Suspension (Unsupported): `internal/commands/bash/suspend/suspend.go`
   > Rationale: WebAssembly processes in the browser cannot be suspended/resumed by the shell in the same way as OS-level processes.
 
 

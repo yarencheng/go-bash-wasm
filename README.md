@@ -9,51 +9,37 @@
 
 **go-bash-wasm** is a Go implementation of GNU Bash and Coreutils for WebAssembly, featuring a fully isolated in-memory filesystem. It enables running a shell environment in browsers and other sandboxed environments.
 
-## 🚀 Key Features
+**Demo**: [https://bash.devops-playground.dev/](https://bash.devops-playground.dev/)
 
-- **Strict Upstream Parity**: 
-  - Tracks **GNU Bash 5.3** for shell logic and syntax.
-  - Targets **GNU Coreutils 9.10** for utility behavior (e.g., `ls` with support for nearly all standard flags).
-- **WebAssembly Browser & Native**:
-  - Compiled with `GOOS=js GOARCH=wasm` for in-browser execution.
-  - Interactive **xterm.js** terminal integration with full stdin/stdout piping.
-  - Platform-agnostic input handling ensures compatibility with standard Go and JS/WASM environments.
-- **Pure In-Memory Filesystem (VFS)**:
-  - Uses `afero` for a fully detached, in-memory filesystem hierarchy.
-  - Zero Disk I/O: Enforces absolute host isolation.
-- **Structured Observability**:
-  - Integrated with `zerolog` for high-performance, structured logging (native) and clean browser console output.
+## Key Features
 
-## 🛠 Architecture
+- **GNU Parity**: Targets Bash 5.3 and Coreutils 9.10 (e.g., `ls` flag support).
+- **WASM Support**: Compiles to `js/wasm` and `wasip1/wasm`. Integrated with **xterm.js** for browser terminals.
+- **In-Memory VFS**: Uses `afero` for total host isolation. Zero disk I/O.
+- **Observability**: Structured logging via `zerolog` with browser console support.
 
-The project follows a clean, modular architecture:
-- `cmd/go-bash-wasm/`: Entry points for execution.
-  - `main.go`: Native Go CLI entry point.
-  - `main_js.go`: WebAssembly entry point using `syscall/js`.
-- `internal/`: Core shell and command implementations.
-  - `internal/shell`: REPL and command execution logic.
-  - `internal/commands`: High-parity utilities (ls, cat, grep, etc.).
-- `ui/`: Modern Svelte 5 frontend with xterm.js integration.
-- `ui.Dockerfile`: Production-ready multi-stage build for the browser environment (includes `wasm-opt`).
-- `Dockerfile`: CLI-focused environment using the `wasip1/wasm` target and Wasmtime.
+## Architecture
 
-## ⚙️ Building and Running
+- `cmd/go-bash-wasm/`: Entry points for native (`main.go`) and JS/WASM (`main_js.go`).
+- `internal/shell`: Execution engine using `mvdan.cc/sh/syntax`.
+- `internal/commands`: Coreutils implementation.
+- `ui`: Svelte 5 frontend with xterm.js components.
+- `Dockerfile`: Multi-stage builds for browser (Nginx) and CLI (Wasmtime).
 
-### Prerequisites
+## Prerequisites
+
 - **Go 1.26+**
-- **Node.js 20+** (for local UI development)
-- **Docker** (Recommended) for clean, isolated builds.
+- **Node.js 20+**
+- **Docker**
 
-### 🏠 Local Development
+## Local Development
 
-#### 1. Native CLI Shell
-Run the simulator directly on your host machine using the native Go runtime:
+### 1. Native CLI
 ```bash
 go run ./cmd/go-bash-wasm/
 ```
 
-#### 2. Browser UI (Svelte + WASM)
-To develop the frontend locally:
+### 2. Browser UI (Svelte + WASM)
 1. **Compile WASM**:
    ```bash
    GOOS=js GOARCH=wasm go build -o ui/static/main.wasm ./cmd/go-bash-wasm/
@@ -61,51 +47,38 @@ To develop the frontend locally:
    ```
 2. **Run Svelte App**:
    ```bash
-   cd ui
-   npm install
-   npm run dev
+   cd ui && npm install && npm run dev
    ```
-Access at `http://localhost:5173`.
+Accessible at `http://localhost:5173`.
 
-### 🐳 Docker Deployment
+## Docker Deployment
 
-#### 1. Browser Terminal (Svelte + Nginx)
-Built for the web, including WASM optimizations via `binaryen`.
+### 1. Browser Terminal (Nginx)
 ```bash
-# Build and run (mapped to port 8080)
 docker build -t go-bash-ui -f ui.Dockerfile .
 docker run -it --rm -p 8080:80 go-bash-ui
 ```
-*Supports `OPTIMIZE=fast` (default) or `OPTIMIZE=small` build args.*
 
-#### 2. Native CLI (Wasmtime)
-Runs the shell in a secure `wasip1` container.
+### 2. Native CLI (Wasmtime)
 ```bash
 docker build -t go-bash-cli -f Dockerfile .
 docker run -it --rm go-bash-cli
 ```
 
-## 🧪 Testing
+## Testing
 
-We ensure 100% behavioral parity through rigorous testing in both backend and frontend.
-
-### 1. Go Backend Tests
-Runs all unit tests for the shell and coreutils implementations:
+### 1. Go Backend
 ```bash
 go test -v ./...
 ```
 
-### 2. UI Frontend Tests
-Runs Svelte component and logic tests:
+### 2. UI Frontend
 ```bash
-cd ui
-npm run test
+cd ui && npm run test
 ```
 
-### 3. Full Docker Validation
-You can run a full build/test cycle inside Docker to verify environment parity:
+### 3. Full Validation
 ```bash
-# This triggers both go tests and npm tests as part of the build
 docker build -f ui.Dockerfile .
 ```
 

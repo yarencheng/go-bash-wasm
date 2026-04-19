@@ -1,6 +1,7 @@
 package base32cmd
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"strings"
@@ -11,62 +12,79 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
-func TestBase32_Run_Encode(t *testing.T) {
-	out := &strings.Builder{}
-	in := io.NopCloser(strings.NewReader("hello"))
-	env := &commands.Environment{
-		Stdin:  in,
-		Stdout: out,
+func TestBase32_Run(t *testing.T) {
+	tests := []struct {
+		name           string
+		args           []string
+		stdin          string
+		files          map[string]string
+		expectedStatus int
+		expectedOutput string
+	}{
+		{
+			name:           "encode stdin",
+			args:           []string{},
+			stdin:          "hello",
+			expectedStatus: 0,
+			expectedOutput: "NBSWY3DP\n",
+		},
+		{
+			name:           "decode stdin",
+			args:           []string{"-d"},
+			stdin:          "NBSWY3DP",
+			expectedStatus: 0,
+			expectedOutput: "hello",
+		},
+		{
+			name:           "encode file",
+			args:           []string{"test.txt"},
+			files:          map[string]string{"/test.txt": "world"},
+			expectedStatus: 0,
+			expectedOutput: "O5XXE3DE\n",
+		},
+		{
+			name:           "encode with wrap",
+			args:           []string{"-w", "2"},
+			stdin:          "hello",
+			expectedStatus: 0,
+			expectedOutput: "NB\nSW\nY3\nDP\n",
+		},
+		{
+			name:           "decode error",
+			args:           []string{"-d"},
+			stdin:          "invalid!!!",
+			expectedStatus: 1,
+		},
 	}
 
-	b := New()
-	status := b.Run(context.Background(), env, []string{})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "NBSWY3DP\n", out.String())
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
+			for path, content := range tt.files {
+				_ = afero.WriteFile(fs, path, []byte(content), 0644)
+			}
+
+			stdout := &bytes.Buffer{}
+			stderr := &bytes.Buffer{}
+			env := &commands.Environment{
+				FS:     fs,
+				Cwd:    "/",
+				Stdout: stdout,
+				Stderr: stderr,
+				Stdin:  io.NopCloser(strings.NewReader(tt.stdin)),
+			}
+
+			b := New()
+			status := b.Run(context.Background(), env, tt.args)
+			assert.Equal(t, tt.expectedStatus, status)
+			if tt.expectedStatus == 0 {
+				assert.Equal(t, tt.expectedOutput, stdout.String())
+			}
+		})
+	}
 }
 
-func TestBase32_Run_Decode(t *testing.T) {
-	out := &strings.Builder{}
-	in := io.NopCloser(strings.NewReader("NBSWY3DP"))
-	env := &commands.Environment{
-		Stdin:  in,
-		Stdout: out,
-	}
-
+func TestBase32_Metadata(t *testing.T) {
 	b := New()
-	status := b.Run(context.Background(), env, []string{"-d"})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "hello", out.String())
-}
-
-func TestBase32_Run_Wrap(t *testing.T) {
-	out := &strings.Builder{}
-	in := io.NopCloser(strings.NewReader("hello world this is a test"))
-	env := &commands.Environment{
-		Stdin:  in,
-		Stdout: out,
-	}
-
-	b := New()
-	// "hello world this is a test" -> "NBSWY3DPEB3W64TMMQQHI2DJOMQGS4ZAMEQHIZLTOQ======"
-	status := b.Run(context.Background(), env, []string{"-w", "10"})
-	assert.Equal(t, 0, status)
-	expected := "NBSWY3DPEB\n3W64TMMQQH\nI2DJOMQGS4\nZAMEQHIZLT\nOQ======\n"
-	assert.Equal(t, expected, out.String())
-}
-
-func TestBase32_Run_File(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	_ = afero.WriteFile(fs, "/test.txt", []byte("hello"), 0644)
-	out := &strings.Builder{}
-	env := &commands.Environment{
-		FS:     fs,
-		Stdout: out,
-		Cwd:    "/",
-	}
-
-	b := New()
-	status := b.Run(context.Background(), env, []string{"test.txt"})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "NBSWY3DP\n", out.String())
+	assert.Equal(t, "base32", b.Name())
 }

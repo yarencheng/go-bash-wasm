@@ -1,9 +1,9 @@
 package arch
 
 import (
+	"bytes"
 	"context"
 	"runtime"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,13 +11,17 @@ import (
 )
 
 func TestArch_Run(t *testing.T) {
-	out := &strings.Builder{}
+	stdout := &bytes.Buffer{}
 	env := &commands.Environment{
-		Stdout: out,
+		Stdout: stdout,
 	}
-
 	a := New()
-	status := a.Run(context.Background(), env, []string{})
+	status := a.Run(context.Background(), env, nil)
 	assert.Equal(t, 0, status)
-	assert.Equal(t, runtime.GOARCH+"\n", out.String())
+	assert.Equal(t, runtime.GOARCH+"\n", stdout.String())
+}
+
+func TestArch_Metadata(t *testing.T) {
+	a := New()
+	assert.Equal(t, "arch", a.Name())
 }

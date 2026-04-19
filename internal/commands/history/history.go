@@ -3,6 +3,7 @@ package history
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -77,7 +78,7 @@ func (h *History) Run(ctx context.Context, env *commands.Environment, args []str
 
 	if *doAppend {
 		// For now, same as write since we don't track session-only history separately yet
-		f, err := env.FS.OpenFile(histFile, 1|64, 0644) // O_WRONLY|O_APPEND|O_CREATE
+		f, err := env.FS.OpenFile(histFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 		if err != nil {
 			if env.Stderr != nil {
 				fmt.Fprintf(env.Stderr, "history: %v\n", err)

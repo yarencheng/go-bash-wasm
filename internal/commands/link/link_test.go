@@ -1,8 +1,9 @@
 package link
 
 import (
+	"bytes"
 	"context"
-	"io"
+	"errors"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -10,19 +11,72 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
+type MockLinkerFs struct {
+	afero.Fs
+	linkErr error
+}
+
+func (m *MockLinkerFs) Link(oldname, newname string) error {
+	return m.linkErr
+}
+
+func TestLink_Name(t *testing.T) {
+	l := New()
+	assert.Equal(t, "link", l.Name())
+}
+
 func TestLink_Run(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	_ = afero.WriteFile(fs, "/src.txt", []byte("hello"), 0644)
-	env := &commands.Environment{
-		FS:     fs,
-		Cwd:    "/",
-		Stderr: io.Discard,
+	tests := []struct {
+		name       string
+		args       []string
+		fs         afero.Fs
+		wantStatus int
+		wantErr    string
+	}{
+		{
+			name:       "invalid arguments",
+			args:       []string{"f1"},
+			wantStatus: 1,
+			wantErr:    "properly",
+		},
+		{
+			name:       "link not supported",
+			args:       []string{"f1", "f2"},
+			fs:         afero.NewMemMapFs(),
+			wantStatus: 1,
+			wantErr:    "hard links not supported",
+		},
+		{
+			name:       "link success",
+			args:       []string{"f1", "f2"},
+			fs:         &MockLinkerFs{Fs: afero.NewMemMapFs()},
+			wantStatus: 0,
+		},
+		{
+			name:       "link failed",
+			args:       []string{"f1", "f2"},
+			fs:         &MockLinkerFs{Fs: afero.NewMemMapFs(), linkErr: errors.New("perm denied")},
+			wantStatus: 1,
+			wantErr:    "cannot create link",
+		},
 	}
 
-	ln := New()
-	status := ln.Run(context.Background(), env, []string{"/src.txt", "/dst.txt"})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			errout := &bytes.Buffer{}
+			env := &commands.Environment{
+				FS:     tt.fs,
+				Cwd:    "/",
+				Stderr: errout,
+			}
 
-	// MemMapFs doesn't support Link, so we expect status 1 (error)
-	// If it ever supports it, this test will fail and we can update it.
-	assert.Equal(t, 1, status)
+			ln := New()
+			status := ln.Run(context.Background(), env, tt.args)
+
+			assert.Equal(t, tt.wantStatus, status)
+			if tt.wantErr != "" {
+				assert.Contains(t, errout.String(), tt.wantErr)
+			}
+		})
+	}
 }

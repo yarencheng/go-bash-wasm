@@ -53,38 +53,10 @@ This document tracks known functional gaps, intentional deviations, and implemen
 - `[x]` Flag `-q` (Ignored): `internal/commands/mktemp/mktemp.go:L28`
   > Rationale: The simulator environment is designed to be failure-tolerant for educational purposes. Detailed diagnostics are preferred over silent failures in this context.
 
-### `pwd`
-  
-- `[x]` Flag `--help` (Global Dispatcher): `docs/bash/tasks.md`
-  > Rationale: Built-in help is intercepted by the shell's help dispatcher to ensure a consistent instructional experience across all simulated commands.
-
-### `read`
-
-- `[x]` Flags `-s`, `-u`, `-e`, `-i` (Stubs): `internal/commands/read/read.go`
-  > Rationale: 
-  > - `-s` (Silent): Interactive terminal echoing is managed by the frontend (Xterm.js).
-  > - `-u` (FD): Browser WASM runtime has limited support for arbitrary file descriptor redirection beyond standard streams.
-  > - `-e` / `-i` (Readline): The simulator uses standard Go I/O rather than a full `readline` library for input.
-
 ### `stat`
 
 - `[x]` Flag `-f` (Ignored): `internal/commands/stat/stat.go:L28`
   > Rationale: Virtual filesystem (Afero MemMapFs) status information is static or unavailable. Standard file status reporting is prioritized over filesystem metadata.
-
-### `times`
-
-- `[x]` Basic Output (Simulation): `internal/commands/times/times.go`
-  > Rationale: Accurate process accounting for child processes is not supported by the WebAssembly environment. The shell's own user and system times are simulated based on the time elapsed since startup.
-
-### `ulimit`
-
-- `[x]` Resource Management (Simulation): `internal/commands/ulimit/ulimit.go`
-  > Rationale: Setting real resource limits (e.g., stack size, file descriptors) is not possible within the browser's WebAssembly sandbox. All limits are reported as static simulated values, and setting new limits is disabled.
-
-### `wait`
-
-- `[x]` Flags `-f`, `-n` (Ignored): `internal/commands/wait/wait.go:L1579`
-  > Rationale: Job control in the simulator is currently basic. Synchronous waiting is implemented, but advanced polling flags are ignored to simplify the state-machine.
 
 ### System Management (`mount`, `umount`, `su`)
 
@@ -153,11 +125,6 @@ Across multiple commands (`cp`, `mv`, `rm`, `chmod`, `chown`, `realpath`), sever
 
 - `[x]` TTY Configuration (Stub): `internal/commands/stty/stty.go`
   > Rationale: The simulator's terminal is a web frontend component (Xterm.js) and does not provide a raw Unix TTY device that can be configured via `ioctl` as required by `stty`.
-
-### `suspend`
-
-- `[-]` Process Suspension (Unsupported): `internal/commands/suspend/suspend.go`
-  > Rationale: WebAssembly processes in the browser cannot be suspended/resumed by the shell in the same way as OS-level processes.
 
 ### `ptx`
 

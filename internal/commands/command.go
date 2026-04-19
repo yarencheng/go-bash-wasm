@@ -49,6 +49,7 @@ type Environment struct {
 	EnvVars           map[string]string
 	PositionalArgs    []string
 	Arrays            map[string][]string
+	AssocArrays       map[string]map[string]string
 	DirStack          []string
 	Aliases           map[string]string
 	Functions         map[string]string

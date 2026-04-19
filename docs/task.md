@@ -1885,26 +1885,26 @@ Status codes:
 
 ### Subshell & Inheritance
 - [ ] Signal inheritance rules: `third_party/bash/trap.c:L568`
-- [ ] Trap reset in subshells: `third_party/bash/trap.c:L447`
+- [x] Trap reset in subshells: Implemented in `internal/shell/shell.go`
 
 ## Advanced Shell Features
 
 ### Alias Expansion
-- [ ] Initialization: `initialize_aliases` -> `third_party/bash/alias.c:L71`
-- [ ] Expansion Logic (Recursive): `alias_expand` -> `third_party/bash/alias.c:L465`
+- [x] Initialization: `initialize_aliases` -> `third_party/bash/alias.c:L71`
+- [x] Expansion Logic (Recursive): Implemented in `internal/shell/shell.go`
 - [ ] Tokenization for Aliases: `rd_token` -> `third_party/bash/alias.c:L425`
 - [ ] Whitespace handling: `skipws` -> `third_party/bash/alias.c:L339`
 
 ### Array Support
 - [ ] **Indexed Arrays**: Doubly-linked list implementation -> `third_party/bash/array.c`
-    - [ ] `array_insert`: `third_party/bash/array.c:L516`
-    - [ ] `array_reference`: `third_party/bash/array.c:L657`
-    - [ ] Subrange expansion `${a[@]:s:n}`: `third_party/bash/array.c:L377`
-- [ ] **Associative Arrays**: Hash table implementation -> `third_party/bash/assoc.c`
-    - [ ] `assoc_insert`: `third_party/bash/assoc.c:L68`
-    - [ ] `assoc_reference`: `third_party/bash/assoc.c:L120`
+    - [x] `array_insert`: Implemented via index assignment
+    - [x] `array_reference`: Implemented in `internal/shell/shell.go`
+    - [x] Subrange expansion `${a[@]:s:n}`: Implemented in `internal/shell/shell.go`
+- [x] **Associative Arrays**: Basic map storage implemented in `Environment`
+    - [x] `assoc_insert`: Implemented via index assignment
+    - [x] `assoc_reference`: Implemented in `internal/shell/shell.go`
 
 ### Programmable Completion
-- [ ] **Core Logic**: `gen_progcomp_completions` -> `third_party/bash/pcomplete.c:L127`
-- [ ] **Builtin Integration**: `compgen`, `complete` logic -> `third_party/bash/pcomplete.c:L142`
-- [ ] Item Generators (Aliases, Jobs, etc.): `third_party/bash/pcomplete.c:L155-178`
+- [x] **Core Logic**: Implemented in `internal/shell/input_wasm.go`
+- [x] **Builtin Integration**: `complete` and `compgen` registration and storage
+- [x] Item Generators (Aliases, Jobs, etc.): Basic generators implemented

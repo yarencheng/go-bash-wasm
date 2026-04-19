@@ -96,8 +96,11 @@ func (w *wasmReader) handleTab() {
 	parts := strings.Split(line, " ")
 	lastWord := parts[len(parts)-1]
 
-	var matches []string
-	if len(parts) == 1 {
+	// Programmable completion
+	cmdName := parts[0]
+	if spec, ok := w.env.Completions[cmdName]; ok && len(parts) > 1 {
+		matches = w.generateMatches(spec, lastWord)
+	} else if len(parts) == 1 {
 		// Complete commands
 		for _, name := range w.env.Registry.List() {
 			if strings.HasPrefix(name, lastWord) {
@@ -106,7 +109,67 @@ func (w *wasmReader) handleTab() {
 		}
 	}
 
-	// Complete files (always attempt if it looks like a path or not the first word)
+	if len(matches) == 0 {
+		// Fallback to file completion if no programmable matches or not a command
+		matches = w.generateFileMatches(lastWord)
+	}
+
+	if len(matches) == 1 {
+		// Unique match
+		completion := matches[0]
+		// Determine common prefix to know what to append
+		// This is a bit simplified: handle path completion prefix logic
+		prefix := lastWord
+		if strings.Contains(lastWord, "/") {
+			prefix = path.Base(lastWord)
+			if strings.HasSuffix(lastWord, "/") {
+				prefix = ""
+			}
+		}
+		
+		if strings.HasPrefix(completion, prefix) {
+			completion = completion[len(prefix):]
+		}
+
+		w.buf = append(w.buf, []rune(completion)...)
+		fmt.Fprint(w.env.Stdout, completion)
+	} else if len(matches) > 1 {
+		// Find common prefix among matches
+		prefix := lastWord
+		if strings.Contains(lastWord, "/") {
+			prefix = path.Base(lastWord)
+			if strings.HasSuffix(lastWord, "/") {
+				prefix = ""
+			}
+		}
+
+		common := matches[0]
+		for _, m := range matches[1:] {
+			common = commonPrefix(common, m)
+		}
+		if len(common) > len(prefix) {
+			completion := common[len(prefix):]
+			w.buf = append(w.buf, []rune(completion)...)
+			fmt.Fprint(w.env.Stdout, completion)
+		} else {
+			// Show all matches
+			fmt.Fprint(w.env.Stdout, "\r\n")
+			sort.Strings(matches)
+			for i, m := range matches {
+				fmt.Fprint(w.env.Stdout, m)
+				if (i+1)%4 == 0 {
+					fmt.Fprint(w.env.Stdout, "\r\n")
+				} else {
+					fmt.Fprint(w.env.Stdout, "\t")
+				}
+			}
+			fmt.Fprintf(w.env.Stdout, "\r\n$ %s", string(w.buf))
+		}
+	}
+}
+
+func (w *wasmReader) generateFileMatches(lastWord string) []string {
+	var matches []string
 	dir := "."
 	prefix := lastWord
 	if strings.Contains(lastWord, "/") {
@@ -134,38 +197,50 @@ func (w *wasmReader) handleTab() {
 			}
 		}
 	}
+	return matches
+}
 
-	if len(matches) == 1 {
-		// Unique match
-		completion := matches[0][len(prefix):]
-		w.buf = append(w.buf, []rune(completion)...)
-		fmt.Fprint(w.env.Stdout, completion)
-	} else if len(matches) > 1 {
-		// Find common prefix among matches
-		common := matches[0]
-		for _, m := range matches[1:] {
-			common = commonPrefix(common, m)
-		}
-		if len(common) > len(prefix) {
-			completion := common[len(prefix):]
-			w.buf = append(w.buf, []rune(completion)...)
-			fmt.Fprint(w.env.Stdout, completion)
-		} else {
-			// Show all matches if tab pressed again? 
-			// For now, just print them on new lines
-			fmt.Fprint(w.env.Stdout, "\r\n")
-			sort.Strings(matches)
-			for i, m := range matches {
-				fmt.Fprint(w.env.Stdout, m)
-				if (i+1)%4 == 0 {
-					fmt.Fprint(w.env.Stdout, "\r\n")
-				} else {
-					fmt.Fprint(w.env.Stdout, "\t")
-				}
+func (w *wasmReader) generateMatches(spec *commands.CompSpec, lastWord string) []string {
+	var matches []string
+
+	// Actions
+	if spec.Actions&(1<<2) != 0 { // -c: command
+		for _, name := range w.env.Registry.List() {
+			if strings.HasPrefix(name, lastWord) {
+				matches = append(matches, name)
 			}
-			fmt.Fprintf(w.env.Stdout, "\r\n$ %s", string(w.buf))
 		}
 	}
+	if spec.Actions&(1<<3) != 0 { // -d: directory
+		fileMatches := w.generateFileMatches(lastWord)
+		for _, m := range fileMatches {
+			if strings.HasSuffix(m, "/") {
+				matches = append(matches, m)
+			}
+		}
+	}
+	if spec.Actions&(1<<5) != 0 { // -f: file
+		matches = append(matches, w.generateFileMatches(lastWord)...)
+	}
+	if spec.Actions&(1<<11) != 0 { // -v: variable
+		for name := range w.env.EnvVars {
+			if strings.HasPrefix(name, lastWord) {
+				matches = append(matches, name)
+			}
+		}
+	}
+
+	// WordList
+	if spec.WordList != "" {
+		words := strings.Fields(spec.WordList)
+		for _, word := range words {
+			if strings.HasPrefix(word, lastWord) {
+				matches = append(matches, word)
+			}
+		}
+	}
+
+	return matches
 }
 
 func commonPrefix(s1, s2 string) string {

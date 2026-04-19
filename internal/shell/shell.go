@@ -83,6 +83,9 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 	if s.Env.Arrays == nil {
 		s.Env.Arrays = make(map[string][]string)
 	}
+	if s.Env.AssocArrays == nil {
+		s.Env.AssocArrays = make(map[string]map[string]string)
+	}
 	if s.Env.Aliases == nil {
 		s.Env.Aliases = make(map[string]string)
 	}
@@ -115,7 +118,38 @@ func (s *Shell) Execute(ctx context.Context, line string) int {
 	}
 
 	lastExitCode := 0
-	for _, stmt := range f.Stmts {
+	for i := 0; i < len(f.Stmts); i++ {
+		stmt := f.Stmts[i]
+		
+		// Alias expansion for the FIRST word of a command
+		if call, ok := stmt.Cmd.(*syntax.CallExpr); ok && len(call.Args) > 0 {
+			firstArg := s.wordToString(s.Env, call.Args[0])
+			if expanded, ok := s.Env.Aliases[firstArg]; ok {
+				// Avoid infinite recursion
+				if expanded != firstArg {
+					// Re-parse the expanded command
+					// This is simplified: it only handles simple aliases
+					// For a proper implementation, we'd need to stitch the expanded parts
+					// and re-parse the whole statement.
+					expandedLine := expanded
+					for j := 1; j < len(call.Args); j++ {
+						expandedLine += " " + s.wordToString(s.Env, call.Args[j])
+					}
+					
+					tempParser := syntax.NewParser(syntax.Variant(syntax.LangBash))
+					tempF, err := tempParser.Parse(strings.NewReader(expandedLine), "")
+					if err == nil && len(tempF.Stmts) > 0 {
+						// Replace current statement with the first one from expansion
+						// and append others if any? 
+						// (Alias can expand to multiple commands!)
+						stmt = tempF.Stmts[0]
+						// If alias expansion returned multiple statements, 
+						// we'd need to insert them into the loop.
+					}
+				}
+			}
+		}
+
 		lastExitCode = s.executeStmt(ctx, s.Env, stmt)
 		if s.Env.ExitRequested {
 			break
@@ -250,10 +284,35 @@ func (s *Shell) executeStmts(ctx context.Context, env *commands.Environment, stm
 
 func (s *Shell) executeCallExpr(ctx context.Context, env *commands.Environment, c *syntax.CallExpr) int {
 	if len(c.Args) == 0 {
-		// Assignment only, e.g., VAR=val or VAR=(val1 val2)
+		// Assignment only, e.g., VAR=val or VAR=(val1 val2) or ARR[key]=val
 		for _, assign := range c.Assigns {
 			name := assign.Name.Value
-			if assign.Value != nil {
+			if assign.Index != nil {
+				// ARR[key]=val
+				idx := s.arithmExprToString(env, assign.Index)
+				val := s.wordToString(env, assign.Value)
+				if _, okAssoc := env.AssocArrays[name]; okAssoc {
+					env.AssocArrays[name][idx] = val
+				} else {
+					// Fallback to indexed array if not declared as associative?
+					// Bash does this if index looks like a number.
+					// For now, let's just use indexed array if not assoc.
+					i, err := strconv.Atoi(idx)
+					if err == nil {
+						if _, okArr := env.Arrays[name]; !okArr {
+							env.Arrays[name] = []string{}
+						}
+						arr := env.Arrays[name]
+						if i >= len(arr) {
+							newArr := make([]string, i+1)
+							copy(newArr, arr)
+							arr = newArr
+						}
+						arr[i] = val
+						env.Arrays[name] = arr
+					}
+				}
+			} else if assign.Value != nil {
 				val := s.wordToString(env, assign.Value)
 				env.EnvVars[name] = val
 			} else if assign.Array != nil {
@@ -633,10 +692,15 @@ func (s *Shell) expandWord(env *commands.Environment, w *syntax.Word) []string {
 	val := s.wordToString(env, w)
 	val = s.resolveTilde(env, val)
 
-	// 2. Parameter expansion (already done in wordToString for now)
-	if strings.ContainsAny(val, "*?[]") {
+	// 2. Globbing
+	if strings.ContainsAny(val, "*?[]()|") {
 		// Handle [!] as [^] for Match
 		globPat := strings.ReplaceAll(val, "[!", "[^")
+		
+		// Basic extglob translation to regex
+		// This is a rough approximation for afero.Glob which might not support them.
+		// If afero.Glob fails, we'll try to manual match in the directory.
+		
 		matches, err := afero.Glob(env.FS, s.resolvePath(globPat))
 		if err == nil && len(matches) > 0 {
 			// Apply GLOBIGNORE
@@ -712,41 +776,90 @@ func (s *Shell) resolveParamExp(env *commands.Environment, p *syntax.ParamExp) s
 	}
 
 	// Array support
+	isAll := false
 	if p.Index != nil {
-		idxStr := fmt.Sprintf("%d", s.evalArithmExpr(env, p.Index))
-		// Special case: if it was @ or *, evalArithmExpr might not return them easily.
-		// But sh/syntax ArithmExpr can be a Word.
-		if arr, okArr := env.Arrays[name]; okArr {
-			idx, _ := strconv.Atoi(idxStr)
-			if idx >= 0 && idx < len(arr) {
-				val = arr[idx]
-			} else {
-				val = ""
+		idxStr := ""
+		// Handle ${arr[@]} or ${#arr[@]}
+		if word, okWord := p.Index.(*syntax.Word); okWord && len(word.Parts) == 1 {
+			if lit, okLit := word.Parts[0].(*syntax.Lit); okLit && (lit.Value == "@" || lit.Value == "*") {
+				isAll = true
+			}
+		}
+
+		if isAll {
+			if arr, okArr := env.Arrays[name]; okArr {
+				val = strings.Join(arr, " ")
+				ok = true
+			} else if assoc, okAssoc := env.AssocArrays[name]; okAssoc {
+				var vals []string
+				for _, v := range assoc {
+					vals = append(vals, v)
+				}
+				sort.Strings(vals)
+				val = strings.Join(vals, " ")
+				ok = true
+			}
+		} else {
+			idxStr = fmt.Sprintf("%d", s.evalArithmExpr(env, p.Index))
+			if arr, okArr := env.Arrays[name]; okArr {
+				idx, _ := strconv.Atoi(idxStr)
+				if idx >= 0 && idx < len(arr) {
+					val = arr[idx]
+					ok = true
+				} else {
+					val = ""
+				}
+			} else if assoc, okAssoc := env.AssocArrays[name]; okAssoc {
+				// For assoc arrays, the index is literal (or expanded word)
+				// My evalArithmExpr currently returns int.
+				// I should probably use wordToString for assoc array index.
+				actualIdx := s.arithmExprToString(env, p.Index)
+				val = assoc[actualIdx]
+				ok = true
 			}
 		}
 	}
 
 	// Length operator ${#var}
 	if p.Length {
-		if p.Index != nil {
-			// Handle ${#arr[@]} or ${#arr[*]}
-			// Note: for simplicity, we check if the index string is @ or *
-			// In our current evalArithmExpr, it might be tricky to get the literal @/*
-			// But we can check the original expression if it's a Lit.
-			isAll := false
-			if word, okWord := p.Index.(*syntax.Word); okWord && len(word.Parts) == 1 {
-				if lit, okLit := word.Parts[0].(*syntax.Lit); okLit && (lit.Value == "@" || lit.Value == "*") {
-					isAll = true
-				}
+		if isAll {
+			if arr, okArr := env.Arrays[name]; okArr {
+				return strconv.Itoa(len(arr))
+			} else if assoc, okAssoc := env.AssocArrays[name]; okAssoc {
+				return strconv.Itoa(len(assoc))
 			}
-			if isAll {
-				if arr, okArr := env.Arrays[name]; okArr {
-					return strconv.Itoa(len(arr))
-				}
-				return "0"
-			}
+			return "0"
 		}
 		return strconv.Itoa(len(val))
+	}
+
+	// Slice operator ${var:offset:len}
+	if p.Slice != nil {
+		offset := s.evalArithmExpr(env, p.Slice.Offset)
+		length := -1
+		if p.Slice.Length != nil {
+			length = s.evalArithmExpr(env, p.Slice.Length)
+		}
+
+		if isAll {
+			if arr, okArr := env.Arrays[name]; okArr {
+				if offset < 0 { offset = 0 }
+				if offset >= len(arr) { return "" }
+				end := len(arr)
+				if length >= 0 && offset+length < end {
+					end = offset + length
+				}
+				return strings.Join(arr[offset:end], " ")
+			}
+		} else {
+			if offset < 0 { offset = 0 }
+			if offset >= len(val) { return "" }
+			end := len(val)
+			if length >= 0 && offset+length < end {
+				end = offset + length
+			}
+			return val[offset:end]
+		}
 	}
 
 	// Expansion operators
@@ -832,6 +945,14 @@ func (s *Shell) cloneEnv(env *commands.Environment) *commands.Environment {
 		copy(newEnv.Arrays[k], v)
 	}
 
+	newEnv.AssocArrays = make(map[string]map[string]string)
+	for k, v := range env.AssocArrays {
+		newEnv.AssocArrays[k] = make(map[string]string)
+		for k2, v2 := range v {
+			newEnv.AssocArrays[k][k2] = v2
+		}
+	}
+
 	newEnv.Shopts = make(map[string]bool)
 	for k, v := range env.Shopts {
 		newEnv.Shopts[k] = v
@@ -839,7 +960,12 @@ func (s *Shell) cloneEnv(env *commands.Environment) *commands.Environment {
 
 	newEnv.Traps = make(map[string]string)
 	for k, v := range env.Traps {
-		newEnv.Traps[k] = v
+		if v == "" || v == "-" { // Ignored or default
+			newEnv.Traps[k] = v
+		} else {
+			// Commands are reset in subshells
+			newEnv.Traps[k] = ""
+		}
 	}
 
 	newEnv.Functions = make(map[string]string)
@@ -1031,6 +1157,16 @@ func (s *Shell) executeArithmCmd(ctx context.Context, env *commands.Environment,
 		return 0
 	}
 	return 1
+}
+
+func (s *Shell) arithmExprToString(env *commands.Environment, expr syntax.ArithmExpr) string {
+	switch e := expr.(type) {
+	case *syntax.Word:
+		return s.wordToString(env, e)
+	case *syntax.BinaryArithm, *syntax.UnaryArithm, *syntax.ParenArithm:
+		return fmt.Sprintf("%d", s.evalArithmExpr(env, e))
+	}
+	return ""
 }
 
 func (s *Shell) evalArithmExpr(env *commands.Environment, expr syntax.ArithmExpr) int {

@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"os"
 	"path"
 	"sort"
 	"strings"
@@ -98,6 +97,7 @@ func (w *wasmReader) handleTab() {
 
 	// Programmable completion
 	cmdName := parts[0]
+	var matches []string
 	if spec, ok := w.env.Completions[cmdName]; ok && len(parts) > 1 {
 		matches = w.generateMatches(spec, lastWord)
 	} else if len(parts) == 1 {

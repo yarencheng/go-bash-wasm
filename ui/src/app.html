@@ -21,8 +21,17 @@
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() { dataLayer.push(arguments); }
-		gtag('js', new Date());
 
+		// Initialize consent defaults
+		gtag('consent', 'default', {
+			'analytics_storage': 'denied',
+			'ad_storage': 'denied',
+			'ad_user_data': 'denied',
+			'ad_personalization': 'denied',
+			'wait_for_update': 500
+		});
+
+		gtag('js', new Date());
 		gtag('config', 'G-DG7SB8TTXF');
 	</script>
 	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2012179604062699"

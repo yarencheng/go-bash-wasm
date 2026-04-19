@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Terminal } from '@xterm/xterm';
 	import { FitAddon } from '@xterm/addon-fit';
+	import { WebLinksAddon } from '@xterm/addon-web-links';
 	import '@xterm/xterm/css/xterm.css';
 
 	let terminalElement: HTMLDivElement;
@@ -46,6 +47,7 @@
 
 		fitAddon = new FitAddon();
 		term.loadAddon(fitAddon);
+		term.loadAddon(new WebLinksAddon());
 		term.open(terminalElement);
 		fitAddon.fit();
 

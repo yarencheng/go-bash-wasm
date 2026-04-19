@@ -3,8 +3,10 @@ package testcmd
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 
+	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -99,6 +101,65 @@ func (t *Test) evalUnary(env *commands.Environment, op, arg string) bool {
 		return arg == ""
 	case "-n":
 		return arg != ""
+	case "-s":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && info.Size() > 0
+	case "-L", "-h":
+		path := t.absPath(env, arg)
+		if l, ok := env.FS.(afero.Lstater); ok {
+			info, _, err := l.LstatIfPossible(path)
+			return err == nil && (info.Mode()&os.ModeSymlink != 0)
+		}
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeSymlink != 0)
+	case "-r", "-w":
+		// TODO: Implement proper permission checks using env.Uid/Gid/Groups
+		path := t.absPath(env, arg)
+		_, err := env.FS.Stat(path)
+		return err == nil
+	case "-x":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&0111 != 0)
+	case "-S":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeSocket != 0)
+	case "-p":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeNamedPipe != 0)
+	case "-b":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeDevice != 0) && (info.Mode()&os.ModeCharDevice == 0)
+	case "-c":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeCharDevice != 0)
+	case "-u":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeSetuid != 0)
+	case "-g":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeSetgid != 0)
+	case "-k":
+		path := t.absPath(env, arg)
+		info, err := env.FS.Stat(path)
+		return err == nil && (info.Mode()&os.ModeSticky != 0)
+	case "-v":
+		_, ok := env.EnvVars[arg]
+		return ok
+	case "-t":
+		// FD defaults to 0 if not specified (though -t requires an arg in test)
+		fd := t.toInt(arg)
+		return fd >= 0 && fd <= 2 // In our simulator, standard FDs are always "terminals"
+	case "-o":
+		val, ok := env.Shopts[arg]
+		return ok && val
 	}
 	return false
 }
@@ -121,6 +182,42 @@ func (t *Test) evalBinary(env *commands.Environment, left, op, right string) boo
 		return t.toInt(left) > t.toInt(right)
 	case "-ge":
 		return t.toInt(left) >= t.toInt(right)
+	case "-nt":
+		i1, err1 := env.FS.Stat(t.absPath(env, left))
+		i2, err2 := env.FS.Stat(t.absPath(env, right))
+		if err1 != nil {
+			return false
+		}
+		if err2 != nil {
+			return true
+		}
+		return i1.ModTime().After(i2.ModTime())
+	case "-ot":
+		i1, err1 := env.FS.Stat(t.absPath(env, left))
+		i2, err2 := env.FS.Stat(t.absPath(env, right))
+		if err1 != nil {
+			return false
+		}
+		if err2 != nil {
+			return false
+		}
+		return i1.ModTime().Before(i2.ModTime())
+	case "-ef":
+		p1 := t.absPath(env, left)
+		p2 := t.absPath(env, right)
+		if p1 == p2 {
+			return true
+		}
+		i1, err1 := env.FS.Stat(p1)
+		i2, err2 := env.FS.Stat(p2)
+		if err1 != nil || err2 != nil {
+			return false
+		}
+		return os.SameFile(i1, i2)
+	case "<":
+		return left < right
+	case ">":
+		return left > right
 	}
 	return false
 }

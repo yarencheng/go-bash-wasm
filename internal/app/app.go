@@ -296,6 +296,7 @@ func New(stdin io.ReadCloser, stdout, stderr io.Writer) *App {
 		alias.New(),
 		unalias.New(),
 		declare.New(),
+		declare.NewWithName("typeset"),
 		groups.New(),
 		hashcmd.New(),
 		set.New(),

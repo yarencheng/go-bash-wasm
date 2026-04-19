@@ -10,14 +10,20 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
-type Declare struct{}
+type Declare struct {
+	name string
+}
 
 func New() *Declare {
-	return &Declare{}
+	return &Declare{name: "declare"}
+}
+
+func NewWithName(name string) *Declare {
+	return &Declare{name: name}
 }
 
 func (d *Declare) Name() string {
-	return "declare"
+	return d.name
 }
 
 func (d *Declare) Run(ctx context.Context, env *commands.Environment, args []string) int {
@@ -43,31 +49,43 @@ func (d *Declare) Run(ctx context.Context, env *commands.Environment, args []str
 		if err == pflag.ErrHelp {
 			return 0
 		}
-		fmt.Fprintf(env.Stderr, "declare: %v\n", err)
+		fmt.Fprintf(env.Stderr, "%s: %v\n", d.name, err)
 		return 2
 	}
 
 	if *help {
-		fmt.Fprintf(env.Stdout, "Usage: declare [-aAfFgilnrtux] [-p] [name[=value] ...]\n")
+		fmt.Fprintf(env.Stdout, "Usage: %s [-aAfFgilnrtux] [-p] [name[=value] ...]\n", d.name)
 		fmt.Fprintf(env.Stdout, "Declare variables and give them attributes.\n\n")
 		flags.PrintDefaults()
 		return 0
 	}
 
 	if *version {
-		commands.ShowVersion(env.Stdout, "declare")
+		commands.ShowVersion(env.Stdout, d.name)
 		return 0
 	}
 
 	targets := flags.Args()
-
-	if len(targets) == 0 || *printFlag {
+	
+	if *printFlag && len(targets) > 0 {
+		for _, k := range targets {
+			if v, ok := env.EnvVars[k]; ok {
+				fmt.Fprintf(env.Stdout, "declare %s=\"%s\"\n", k, v)
+			} else {
+				fmt.Fprintf(env.Stderr, "declare: %s: not found\n", k)
+				return 1
+			}
+		}
+		return 0
+	}
+	
+	if len(targets) == 0 {
 		keys := make([]string, 0, len(env.EnvVars))
 		for k := range env.EnvVars {
 			keys = append(keys, k)
 		}
 		sort.Strings(keys)
-
+		
 		for _, k := range keys {
 			fmt.Fprintf(env.Stdout, "declare %s=\"%s\"\n", k, env.EnvVars[k])
 		}

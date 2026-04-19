@@ -138,7 +138,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/declare.def`
 - [x] Basic operation: Implemented in `internal/commands/bash/declare/declare.go`
-- [ ] Flag `-p` (print individual names): `internal/commands/bash/declare/declare.go` (Currently prints all vars)
+- [x] Flag `-p` (print individual names): `internal/commands/bash/declare/declare.go`
 - [x] Flag `-l` (lowercase): `internal/commands/bash/declare/declare.go`
 - [x] Flag `-u` (uppercase): `internal/commands/bash/declare/declare.go`
 - [ ] Flag `-a` (indexed array): `third_party/bash/builtins/declare.def:L282` (Parsed but ignored in Go)
@@ -152,7 +152,7 @@ Status codes:
 - [ ] Flag `-I` (inherit): `third_party/bash/builtins/declare.def:L359` (Parsed but ignored in Go)
 - [ ] Flag `-t` (trace): `third_party/bash/builtins/declare.def:L333` (Parsed but ignored in Go)
 - [ ] Flag `-n` (nameref): `third_party/bash/builtins/declare.def:L327` (Parsed but ignored in Go)
-- [ ] Synonym `typeset`: `third_party/bash/builtins/declare.def:L66` (Not yet registered)
+- [x] Synonym `typeset`: `third_party/bash/builtins/declare.def:L66` (Registered in `internal/app/app.go`)
 
 ### `dirs`
 
@@ -462,28 +462,28 @@ Status codes:
 - [x] Binary operators (`=`, `==`, `!=`, `-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`): Implemented in `internal/commands/bash/test/test.go`
 - [x] Logical operators (`!`, `-a`, `-o`): Implemented in `internal/commands/bash/test/test.go`
 - [x] Synonym `[`: Implemented via command registration
-- [ ] Unary `-r` (readable): `third_party/bash/test.c:L552`
-- [ ] Unary `-w` (writable): `third_party/bash/test.c:L555`
-- [ ] Unary `-x` (executable): `third_party/bash/test.c:L558`
+- [x] Unary `-r` (readable): `internal/commands/bash/test/test.go`
+- [x] Unary `-w` (writable): `internal/commands/bash/test/test.go`
+- [x] Unary `-x` (executable): `internal/commands/bash/test/test.go`
 - [ ] Unary `-O` (owned by user): `third_party/bash/test.c:L562`
 - [ ] Unary `-G` (owned by group): `third_party/bash/test.c:L565`
 - [ ] Unary `-N` (newer than atime): `third_party/bash/test.c:L569`
-- [ ] Unary `-h`, `-L` (symlink): `third_party/bash/test.c:L613`
-- [ ] Unary `-S` (socket): `third_party/bash/test.c:L593`
-- [ ] Unary `-p` (pipe): `third_party/bash/test.c:L606`
-- [ ] Unary `-b` (block device): `third_party/bash/test.c:L603`
-- [ ] Unary `-c` (character device): `third_party/bash/test.c:L600`
-- [ ] Unary `-u` (setuid): `third_party/bash/test.c:L622`
-- [ ] Unary `-g` (setgid): `third_party/bash/test.c:L625`
-- [ ] Unary `-k` (sticky): `third_party/bash/test.c:L628`
-- [ ] Unary `-t` (tty): `third_party/bash/test.c:L636`
-- [ ] Unary `-o` (option): `third_party/bash/test.c:L647`
-- [ ] Unary `-v` (variable): `third_party/bash/test.c:L650`
+- [x] Unary `-h`, `-L` (symlink): `internal/commands/bash/test/test.go`
+- [x] Unary `-S` (socket): `internal/commands/bash/test/test.go`
+- [x] Unary `-p` (pipe): `internal/commands/bash/test/test.go`
+- [x] Unary `-b` (block device): `internal/commands/bash/test/test.go`
+- [x] Unary `-c` (character device): `internal/commands/bash/test/test.go`
+- [x] Unary `-u` (setuid): `internal/commands/bash/test/test.go`
+- [x] Unary `-g` (setgid): `internal/commands/bash/test/test.go`
+- [x] Unary `-k` (sticky): `internal/commands/bash/test/test.go`
+- [x] Unary `-t` (tty): `internal/commands/bash/test/test.go`
+- [x] Unary `-o` (option): `internal/commands/bash/test/test.go`
+- [x] Unary `-v` (variable): `internal/commands/bash/test/test.go`
 - [ ] Unary `-R` (nameref): `third_party/bash/test.c:L696`
-- [ ] Binary `-nt` (newer than): `third_party/bash/test.c:L433`
-- [ ] Binary `-ot` (older than): `third_party/bash/test.c:L434`
-- [ ] Binary `-ef` (equal file): `third_party/bash/test.c:L444`
-- [ ] Binary `<`, `>` (string comparison): `third_party/bash/test.c:L413`
+- [x] Binary `-nt` (newer than): `internal/commands/bash/test/test.go`
+- [x] Binary `-ot` (older than): `internal/commands/bash/test/test.go`
+- [x] Binary `-ef` (equal file): `internal/commands/bash/test/test.go`
+- [x] Binary `<`, `>` (string comparison): `internal/commands/bash/test/test.go`
 
 ### `time`
 

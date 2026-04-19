@@ -337,7 +337,19 @@ Status codes:
 - [x] Flag `--time[=WORD]`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
 - [x] Flag `--time-style=STYLE`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
 
+### `echo`
+
+- [x] Upstream: `third_party/coreutils/src/echo.c`
+- [x] Basic output: Implemented in `internal/commands/bash/echo/echo.go`
+- [x] Flag `-n`: `internal/commands/bash/echo/echo.go`
+- [x] Flag `-e`: `internal/commands/bash/echo/echo.go`
+- [x] Flag `-E`: `internal/commands/bash/echo/echo.go`
+- [ ] Escaped `\0NNN`: `third_party/coreutils/src/echo.c:L243`
+- [ ] Escaped `\xHH`: `third_party/coreutils/src/echo.c:L228`
+- [ ] Escaped `\c`: `third_party/coreutils/src/echo.c:L221`
+
 ### `env`
+
 
 - [x] Upstream: `third_party/coreutils/src/env.c`
 - [x] Basic execution: Implemented in `internal/commands/coreutils/env/env.go`
@@ -376,7 +388,13 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/factor.c`
 - [x] Prime factorization: Implemented in `internal/commands/coreutils/factor/factor.go`
 
+### `false`
+
+- [x] Upstream: `third_party/coreutils/src/false.c`
+- [x] Basic operation: Implemented in `internal/commands/bash/boolcmd/bool.go`
+
 ### `find`
+
 
 - [x] Upstream: `third_party/coreutils/src/find.c`
 - [x] Basic Search: `internal/commands/coreutils/find/find.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#find))
@@ -499,7 +517,16 @@ Status codes:
 - [x] Flag `--nocheck-order`: `internal/commands/coreutils/join/join.go` (do not check that the input is correctly sorted)
 - [x] Flag `--header`: `internal/commands/coreutils/join/join.go` (treat the first line of each file as field headers)
 
+### `kill`
+
+- [x] Upstream: `third_party/coreutils/src/kill.c`
+- [x] Basic signaling: Implemented in `internal/commands/bash/kill/kill.go`
+- [x] Flag `-l`, `--list`: `internal/commands/bash/kill/kill.go`
+- [x] Flag `-s`, `--signal`: `internal/commands/bash/kill/kill.go`
+- [ ] Flag `-t`, `--table`: `third_party/coreutils/src/kill.c:L80`
+
 ### `link`
+
 
 - [x] Basic hard link: Implemented in `internal/commands/coreutils/link/link.go`
 
@@ -769,7 +796,15 @@ Status codes:
 - [x] Flag `-t`, `--typeset-mode`: `internal/commands/coreutils/ptx/ptx.go`
 - [x] Flag `-w`, `--width=NUMBER`: `internal/commands/coreutils/ptx/ptx.go`
 
+### `pwd`
+
+- [x] Upstream: `third_party/coreutils/src/pwd.c`
+- [x] Basic operation: Implemented in `internal/commands/bash/pwd/pwd.go`
+- [x] Flag `-L`, `--logical`: `internal/commands/bash/pwd/pwd.go`
+- [x] Flag `-P`, `--physical`: `internal/commands/bash/pwd/pwd.go`
+
 ### `readlink`
+
 
 - [x] Upstream: `third_party/coreutils/src/readlink.c`
 - [x] Basic output: Implemented in `internal/commands/coreutils/readlink/readlink.go`
@@ -1060,7 +1095,9 @@ Status codes:
 
 ### `true`
 
-- [x] Basic operation: Implemented in `internal/commands/coreutils/boolcmd/bool.go`
+- [x] Upstream: `third_party/coreutils/src/true.c`
+- [x] Basic operation: Implemented in `internal/commands/bash/boolcmd/bool.go`
+
 
 ### `truncate`
 

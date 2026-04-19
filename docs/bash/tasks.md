@@ -298,7 +298,7 @@ Status codes:
 - [x] Flag `-l`: `internal/commands/bash/kill/kill.go:L68`
 - [x] Flag `-n num`: `internal/commands/bash/kill/kill.go:L50`
 - [x] Flag `-s SIGNAL`: `internal/commands/bash/kill/kill.go:L49`
-- [ ] Flag `-SIGNAL` (e.g. -9, -TERM): `third_party/bash/builtins/kill.def:157`
+- [ ] Flag `-SIGNAL` (e.g. -9, -TERM): `third_party/bash/builtins/kill.def:L157`
 
 ### `let`
 
@@ -346,8 +346,8 @@ Status codes:
 - [x] Format string reuse: `internal/commands/coreutils/printf/printf.go`
 - [ ] Format specifier `%Q` (quoted with precision): `third_party/bash/builtins/printf.def:L673`
 - [ ] Format specifier `%T` (date/time): `third_party/bash/builtins/printf.def:L584`
-- [ ] Width/precision `*` support: `third_party/bash/builtins/printf.def:L427`
-- [ ] Standard C format specifiers (proper types): `third_party/bash/builtins/printf.def:L726`
+- [ ] Width/precision `*` support: `third_party/bash/builtins/printf.def:L427` (width), `L443` (precision)
+- [ ] Standard C format specifiers (`csndiouxXeEfFgGaA`): `third_party/bash/builtins/printf.def:L38`
 
 ### `pushd`
 
@@ -446,6 +446,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/source.def`
 - [x] Basic sourcing: Implemented in `internal/commands/bash/source/source.go`
+- [ ] Flag `-p PATH`: `third_party/bash/builtins/source.def:L169`
 - [x] Aliases: `.`
 
 ### `suspend`
@@ -461,11 +462,28 @@ Status codes:
 - [x] Binary operators (`=`, `==`, `!=`, `-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`): Implemented in `internal/commands/bash/test/test.go`
 - [x] Logical operators (`!`, `-a`, `-o`): Implemented in `internal/commands/bash/test/test.go`
 - [x] Synonym `[`: Implemented via command registration
-- [ ] File operators (`-r`, `-w`, `-x`, `-L`, `-G`, `-O`, `-S`, `-p`, `-b`, `-c`, `-t`, `-k`, `-u`, `-g`, `-N`): `third_party/bash/test.c:L538`
-- [ ] Binary file operators (`-nt`, `-ot`, `-ef`): `third_party/bash/test.c:L433`
-- [ ] Shell option test (`-o OPTION`): `third_party/bash/test.c:L648`
-- [ ] Variable set test (`-v VAR`): `third_party/bash/test.c:L650`
-- [ ] Nameref test (`-R VAR`): `third_party/bash/test.c:L696`
+- [ ] Unary `-r` (readable): `third_party/bash/test.c:L552`
+- [ ] Unary `-w` (writable): `third_party/bash/test.c:L555`
+- [ ] Unary `-x` (executable): `third_party/bash/test.c:L558`
+- [ ] Unary `-O` (owned by user): `third_party/bash/test.c:L562`
+- [ ] Unary `-G` (owned by group): `third_party/bash/test.c:L565`
+- [ ] Unary `-N` (newer than atime): `third_party/bash/test.c:L569`
+- [ ] Unary `-h`, `-L` (symlink): `third_party/bash/test.c:L613`
+- [ ] Unary `-S` (socket): `third_party/bash/test.c:L593`
+- [ ] Unary `-p` (pipe): `third_party/bash/test.c:L606`
+- [ ] Unary `-b` (block device): `third_party/bash/test.c:L603`
+- [ ] Unary `-c` (character device): `third_party/bash/test.c:L600`
+- [ ] Unary `-u` (setuid): `third_party/bash/test.c:L622`
+- [ ] Unary `-g` (setgid): `third_party/bash/test.c:L625`
+- [ ] Unary `-k` (sticky): `third_party/bash/test.c:L628`
+- [ ] Unary `-t` (tty): `third_party/bash/test.c:L636`
+- [ ] Unary `-o` (option): `third_party/bash/test.c:L647`
+- [ ] Unary `-v` (variable): `third_party/bash/test.c:L650`
+- [ ] Unary `-R` (nameref): `third_party/bash/test.c:L696`
+- [ ] Binary `-nt` (newer than): `third_party/bash/test.c:L433`
+- [ ] Binary `-ot` (older than): `third_party/bash/test.c:L434`
+- [ ] Binary `-ef` (equal file): `third_party/bash/test.c:L444`
+- [ ] Binary `<`, `>` (string comparison): `third_party/bash/test.c:L413`
 
 ### `time`
 
@@ -515,6 +533,7 @@ Status codes:
 - [x] Basic mask management: Implemented in `internal/commands/bash/umask/umask.go`
 - [x] Flag `-S`: `internal/commands/bash/umask/umask.go`
 - [x] Flag `-p`: `internal/commands/bash/umask/umask.go`
+- [ ] Symbolic mode setting: `third_party/bash/builtins/umask.def:L120`, `third_party/bash/builtins/umask.def:L208`
 
 ### `unalias`
 
@@ -528,7 +547,7 @@ Status codes:
 - [x] Attribute management: Implemented in `internal/commands/bash/unset/unset.go`
 - [x] Flag `-f`: `internal/commands/bash/unset/unset.go` (functions)
 - [x] Flag `-v`: `internal/commands/bash/unset/unset.go` (variables)
-- [x] Flag `-n`: `internal/commands/bash/declare/declare.go` (nameref - Ignored; see [functional_gap.md](./functional_gap.md#commonly-ignored-flags))
+- [ ] Flag `-n`: `third_party/bash/builtins/set.def:L805` (nameref)
 
 ### `wait`
 

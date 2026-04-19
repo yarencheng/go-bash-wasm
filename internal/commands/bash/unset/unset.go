@@ -22,6 +22,7 @@ func (u *Unset) Run(ctx context.Context, env *commands.Environment, args []strin
 	flags := pflag.NewFlagSet("unset", pflag.ContinueOnError)
 	varsOnly := flags.BoolP("vars", "v", false, "unset variables")
 	funcsOnly := flags.BoolP("funcs", "f", false, "unset functions")
+	_ = flags.BoolP("nameref", "n", false, "treat each name as a nameref (ignored)")
 
 	if err := flags.Parse(args); err != nil {
 		if env.Stderr != nil {

@@ -493,7 +493,7 @@ Status codes:
 ### `times`
 
 - [x] Upstream: `third_party/bash/builtins/times.def`
-- [x] Basic output: Implemented in `internal/commands/bash/times/times.go`
+- [x] Basic output: Implemented in `internal/commands/bash/times/times.go` (Simulation; see [functional_gap.md](./functional_gap.md#times))
 
 ### `trap`
 
@@ -547,7 +547,7 @@ Status codes:
 - [x] Attribute management: Implemented in `internal/commands/bash/unset/unset.go`
 - [x] Flag `-f`: `internal/commands/bash/unset/unset.go` (functions)
 - [x] Flag `-v`: `internal/commands/bash/unset/unset.go` (variables)
-- [ ] Flag `-n`: `third_party/bash/builtins/set.def:L805` (nameref)
+- [x] Flag `-n`: `internal/commands/bash/unset/unset.go` (Ignored; see [functional_gap.md](./functional_gap.md#unset))
 
 ### `wait`
 
@@ -589,7 +589,7 @@ Status codes:
 
 ### `coproc`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
-- [-] Asynchronous coprocesses: N/A for simulator
+- [-] Asynchronous coprocesses: N/A for simulator (See [functional_gap.md](./functional_gap.md#coproc))
 
 ### `for`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
@@ -645,7 +645,7 @@ Status codes:
 
 ### `MAILCHECK`, `MAILPATH`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
-- [-] Mail notification settings: N/A for simulator
+- [-] Mail notification settings: N/A for simulator (See [functional_gap.md](./functional_gap.md#mail-notification))
 
 ### `PATH`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`

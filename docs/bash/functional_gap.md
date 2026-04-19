@@ -112,5 +112,14 @@ Across multiple Bash builtins, several flags are implemented in the parser but i
 - `[x]` Flags `-f`, `-n` (Ignored): `internal/commands/bash/wait/wait.go`
   > Rationale: Job control in the simulator is currently basic. Synchronous waiting is implemented, but advanced polling flags are ignored to simplify the state-machine.
 
+### `coproc`
 
-*Last Updated: 2026-04-19* (Current Date)
+- `[-]` Asynchronous Coprocesses (Unsupported): `docs/bash/tasks.md`
+  > Rationale: The simulator's execution model handles foreground and background processes via Go goroutines, but the complex bi-directional pipe management required for `coproc` is not supported in the current architecture.
+
+### Mail Notification
+
+- `[-]` MAILCHECK, MAILPATH (Unsupported): `docs/bash/tasks.md`
+  > Rationale: The browser-based simulator does not implement a mail delivery system or mailbox monitoring. These variables are ignored.
+
+*Last Updated: 2026-04-19*

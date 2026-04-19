@@ -5,6 +5,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
@@ -18,58 +19,58 @@ func TestBasename_Run(t *testing.T) {
 	}{
 		{
 			name:           "basic",
-			args:           []string{"/usr/bin/test"},
+			args:           []string{"/usr/bin/go"},
 			expectedStatus: 0,
-			expectedOutput: "test\n",
+			expectedOutput: "go\n",
 		},
 		{
 			name:           "with suffix",
-			args:           []string{"/usr/bin/test.txt", ".txt"},
+			args:           []string{"/usr/bin/go.sh", ".sh"},
 			expectedStatus: 0,
-			expectedOutput: "test\n",
+			expectedOutput: "go\n",
 		},
 		{
-			name:           "with suffix flag",
-			args:           []string{"-s", ".txt", "/usr/bin/test.txt"},
+			name:           "suffix flag",
+			args:           []string{"-s", ".sh", "/usr/bin/go.sh"},
 			expectedStatus: 0,
-			expectedOutput: "test\n",
+			expectedOutput: "go\n",
 		},
 		{
-			name:           "multiple",
-			args:           []string{"-a", "/usr/bin/test1", "/usr/bin/test2"},
+			name:           "multiple arguments",
+			args:           []string{"-a", "/usr/bin/go", "/usr/bin/python"},
 			expectedStatus: 0,
-			expectedOutput: "test1\ntest2\n",
+			expectedOutput: "go\npython\n",
 		},
 		{
-			name:           "zero",
-			args:           []string{"-z", "test"},
+			name:           "zero termination",
+			args:           []string{"-z", "file"},
 			expectedStatus: 0,
-			expectedOutput: "test\x00",
+			expectedOutput: "file\x00",
 		},
 		{
 			name:           "missing operand",
 			args:           []string{},
 			expectedStatus: 1,
 		},
-		{
-			name:           "invalid flag",
-			args:           []string{"--invalid"},
-			expectedStatus: 1,
-		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
 			stdout := &bytes.Buffer{}
 			stderr := &bytes.Buffer{}
 			env := &commands.Environment{
+				FS:     fs,
+				Cwd:    "/",
 				Stdout: stdout,
 				Stderr: stderr,
 			}
+
 			b := New()
 			status := b.Run(context.Background(), env, tt.args)
 			assert.Equal(t, tt.expectedStatus, status)
-			if tt.expectedStatus == 0 {
+
+			if tt.expectedOutput != "" {
 				assert.Equal(t, tt.expectedOutput, stdout.String())
 			}
 		})

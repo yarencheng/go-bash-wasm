@@ -59,6 +59,12 @@ func (t *Tr) Run(ctx context.Context, env *commands.Environment, args []string) 
 	}
 
 	if len(remaining) < 2 {
+		if *squeezeFlag && len(remaining) == 1 {
+			set1 := t.expandSet(remaining[0])
+			result := t.squeeze(string(data), set1)
+			fmt.Fprint(env.Stdout, result)
+			return 0
+		}
 		fmt.Fprintf(env.Stderr, "tr: missing operand\n")
 		return 1
 	}

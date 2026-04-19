@@ -1,6 +1,7 @@
 package rmdir
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"testing"
@@ -36,4 +37,45 @@ func TestRmdir_Run(t *testing.T) {
 	assert.Equal(t, 1, status)
 	_, err = fs.Stat("/testdir")
 	assert.NoError(t, err)
+
+	// Test parents flag
+	require.NoError(t, fs.MkdirAll("/a/b/c", 0755))
+	status = r.Run(context.Background(), env, []string{"-p", "a/b/c"})
+	assert.Equal(t, 0, status)
+	_, err = fs.Stat("/a/b/c")
+	assert.Error(t, err)
+	_, err = fs.Stat("/a/b")
+	assert.Error(t, err)
+	_, err = fs.Stat("/a")
+	assert.Error(t, err)
+
+	// Test verbose
+	require.NoError(t, fs.Mkdir("/vdir", 0755))
+	stdout := &bytes.Buffer{}
+	env.Stdout = stdout
+	status = r.Run(context.Background(), env, []string{"-v", "vdir"})
+	assert.Equal(t, 0, status)
+	assert.Contains(t, stdout.String(), "removing directory, 'vdir'")
+
+	// Test not a directory
+	require.NoError(t, afero.WriteFile(fs, "/notadir", []byte("data"), 0644))
+	status = r.Run(context.Background(), env, []string{"notadir"})
+	assert.Equal(t, 1, status)
+
+	// Test non-existent
+	status = r.Run(context.Background(), env, []string{"nonexistent"})
+	assert.Equal(t, 1, status)
+
+	// Test missing operand
+	status = r.Run(context.Background(), env, []string{})
+	assert.Equal(t, 1, status)
+
+	// Test invalid flag
+	status = r.Run(context.Background(), env, []string{"--invalid"})
+	assert.Equal(t, 1, status)
+}
+
+func TestRmdir_Metadata(t *testing.T) {
+	r := New()
+	assert.Equal(t, "rmdir", r.Name())
 }

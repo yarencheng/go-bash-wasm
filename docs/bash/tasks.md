@@ -138,21 +138,21 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/declare.def`
 - [x] Basic operation: Implemented in `internal/commands/bash/declare/declare.go`
-- [x] Flag `-p` (print): `internal/commands/bash/declare/declare.go`
+- [ ] Flag `-p` (print individual names): `internal/commands/bash/declare/declare.go` (Currently prints all vars)
 - [x] Flag `-l` (lowercase): `internal/commands/bash/declare/declare.go`
 - [x] Flag `-u` (uppercase): `internal/commands/bash/declare/declare.go`
-- [ ] Flag `-a` (indexed array): `third_party/bash/builtins/declare.def:L282`
-- [ ] Flag `-A` (associative array): `third_party/bash/builtins/declare.def:L294`
-- [ ] Flag `-i` (integer): `third_party/bash/builtins/declare.def:L324`
-- [ ] Flag `-r` (readonly): `third_party/bash/builtins/declare.def:L330`
-- [ ] Flag `-x` (export): `third_party/bash/builtins/declare.def:L336`
-- [ ] Flag `-f` (functions): `third_party/bash/builtins/declare.def:L313`
-- [ ] Flag `-F` (function names): `third_party/bash/builtins/declare.def:L309`
-- [ ] Flag `-g` (global): `third_party/bash/builtins/declare.def:L320`
-- [ ] Flag `-I` (inherit): `third_party/bash/builtins/declare.def:L359`
-- [ ] Flag `-t` (trace): `third_party/bash/builtins/declare.def:L333`
-- [ ] Flag `-n` (nameref): `third_party/bash/builtins/declare.def:L327`
-- [ ] Synonym `typeset`: `third_party/bash/builtins/declare.def:L66`
+- [ ] Flag `-a` (indexed array): `third_party/bash/builtins/declare.def:L282` (Parsed but ignored in Go)
+- [ ] Flag `-A` (associative array): `third_party/bash/builtins/declare.def:L294` (Parsed but ignored in Go)
+- [ ] Flag `-i` (integer): `third_party/bash/builtins/declare.def:L324` (Parsed but ignored in Go)
+- [ ] Flag `-r` (readonly): `third_party/bash/builtins/declare.def:L330` (Parsed but ignored in Go)
+- [ ] Flag `-x` (export): `third_party/bash/builtins/declare.def:L336` (Parsed but ignored in Go)
+- [ ] Flag `-f` (functions): `third_party/bash/builtins/declare.def:L313` (Parsed but ignored in Go)
+- [ ] Flag `-F` (function names): `third_party/bash/builtins/declare.def:L309` (Parsed but ignored in Go)
+- [ ] Flag `-g` (global): `third_party/bash/builtins/declare.def:L320` (Parsed but ignored in Go)
+- [ ] Flag `-I` (inherit): `third_party/bash/builtins/declare.def:L359` (Parsed but ignored in Go)
+- [ ] Flag `-t` (trace): `third_party/bash/builtins/declare.def:L333` (Parsed but ignored in Go)
+- [ ] Flag `-n` (nameref): `third_party/bash/builtins/declare.def:L327` (Parsed but ignored in Go)
+- [ ] Synonym `typeset`: `third_party/bash/builtins/declare.def:L66` (Not yet registered)
 
 ### `dirs`
 
@@ -298,7 +298,7 @@ Status codes:
 - [x] Flag `-l`: `internal/commands/bash/kill/kill.go:L68`
 - [x] Flag `-n num`: `internal/commands/bash/kill/kill.go:L50`
 - [x] Flag `-s SIGNAL`: `internal/commands/bash/kill/kill.go:L49`
-- [ ] Flag `-SIGNAL` (e.g. -9, -TERM): `third_party/bash/builtins/kill.def:L157`
+- [ ] Flag `-SIGNAL` (e.g. -9, -TERM): `third_party/bash/builtins/kill.def:L157` (Blocked by pflag parsing stub)
 
 ### `let`
 
@@ -343,11 +343,11 @@ Status codes:
 - [x] Flag `-v` (assign to variable): `internal/commands/coreutils/printf/printf.go`
 - [x] Format specifier `%b` (escapes): `internal/commands/coreutils/printf/printf.go`
 - [x] Format specifier `%q` (quoted): `internal/commands/coreutils/printf/printf.go`
-- [x] Format string reuse: `internal/commands/coreutils/printf/printf.go`
-- [ ] Format specifier `%Q` (quoted with precision): `third_party/bash/builtins/printf.def:L673`
-- [ ] Format specifier `%T` (date/time): `third_party/bash/builtins/printf.def:L584`
-- [ ] Width/precision `*` support: `third_party/bash/builtins/printf.def:L427` (width), `L443` (precision)
-- [ ] Standard C format specifiers (`csndiouxXeEfFgGaA`): `third_party/bash/builtins/printf.def:L38`
+- [ ] Format specifier `%Q` (quoted with precision): `third_party/bash/builtins/printf.def:L673` (Missing in Go implementation)
+- [ ] Format specifier `%T` (date/time): `third_party/bash/builtins/printf.def:L584` (Missing in Go implementation)
+- [ ] Width/precision `*` support: `third_party/bash/builtins/printf.def:L427` (Missing in Go implementation)
+- [ ] Standard C format specifiers (`csndiouxXeEfFgGaA`): `third_party/bash/builtins/printf.def:L38` (Passed to Go fmt without type conversion)
+- [ ] Format reusing: `internal/commands/coreutils/printf/printf.go` (Basic loop exists but lacks complex re-consumption)
 
 ### `pushd`
 
@@ -446,7 +446,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/source.def`
 - [x] Basic sourcing: Implemented in `internal/commands/bash/source/source.go`
-- [ ] Flag `-p PATH`: `third_party/bash/builtins/source.def:L169`
+- [ ] Flag `-p PATH`: `third_party/bash/builtins/source.def:L169` (Missing flag parsing in Go)
 - [x] Aliases: `.`
 
 ### `suspend`
@@ -533,7 +533,7 @@ Status codes:
 - [x] Basic mask management: Implemented in `internal/commands/bash/umask/umask.go`
 - [x] Flag `-S`: `internal/commands/bash/umask/umask.go`
 - [x] Flag `-p`: `internal/commands/bash/umask/umask.go`
-- [ ] Symbolic mode setting: `third_party/bash/builtins/umask.def:L120`, `third_party/bash/builtins/umask.def:L208`
+- [ ] Symbolic mode setting: `third_party/bash/builtins/umask.def:L120`, `L208` (Missing in Go; only octal supported for setting)
 
 ### `unalias`
 

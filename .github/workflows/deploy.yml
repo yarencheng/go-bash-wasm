@@ -43,7 +43,12 @@ jobs:
           rm -rf binaryen-version_${BINARYEN_VERSION}
 
       - name: Run Go tests
-        run: go test -v ./...
+        run: go test -v -coverprofile=coverage.txt ./...
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Build WASM
         run: |

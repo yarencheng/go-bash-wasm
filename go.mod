@@ -3,6 +3,7 @@ module github.com/yarencheng/go-bash-wasm
 go 1.26.2
 
 require (
+	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/chzyer/readline v1.5.1
 	github.com/rs/zerolog v1.35.0
 	github.com/spf13/afero v1.15.0
@@ -11,7 +12,6 @@ require (
 )
 
 require (
-	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de // indirect
 	golang.org/x/term v0.41.0 // indirect
 	rsc.io/qr v0.2.0 // indirect
 )
@@ -25,5 +25,5 @@ require (
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	mvdan.cc/sh/v3 v3.13.1 // indirect
+	mvdan.cc/sh/v3 v3.13.1
 )

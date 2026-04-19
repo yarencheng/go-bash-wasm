@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/ls"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/coreutils/ls"
 )
 
 type Dir struct {

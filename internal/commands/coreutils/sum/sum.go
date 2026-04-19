@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/cksum"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/coreutils/cksum"
 )
 
 type Sum struct {

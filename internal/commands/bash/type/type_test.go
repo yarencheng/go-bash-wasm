@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/boolcmd"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bash/boolcmd"
 )
 
 func TestType_Run(t *testing.T) {

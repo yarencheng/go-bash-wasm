@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/echo"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bash/echo"
 )
 
 func TestExec_Name(t *testing.T) {

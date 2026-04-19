@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/break"
-	"github.com/yarencheng/go-bash-wasm/internal/commands/continue"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bash/break"
+	"github.com/yarencheng/go-bash-wasm/internal/commands/bash/continue"
 )
 
 func TestExecuteTestClausePattern(t *testing.T) {

@@ -41,12 +41,12 @@ This document tracks known functional gaps, intentional deviations, and implemen
 - `[x]` Flags `-c`, `-m`, `-o`, `-g` (Ignored/Partial): `internal/commands/coreutils/install/install.go:L38`
   > Rationale: While ownership and mode flags are parsed, their effects are limited within the Afero MemMapFs sandbox. The `-c` flag (copy) is the default behavior and is strictly for compatibility.
 
-### `ls`
-
-- `[x]` Flag `--author` (Single User Simulation): `internal/commands/coreutils/ls/ls.go:L472`
-  > Rationale: The simulator currently models a single-user environment. The "author" field is hardcoded to the simulated user identity.
-- `[x]` Flag `--color` (ANSI Simulation): `internal/commands/coreutils/ls/ls.go:L515`
+- `[x]` Flag `--author` (Single User Simulation): `internal/commands/coreutils/ls/ls.go:L507`
+  > Rationale: The simulator currently models a single-user environment. While the flag is not explicitly parsed, the "owner" and "group" fields are hardcoded to "root", effectively simulating a single-author system.
+- `[x]` Flag `--color` (ANSI Simulation): `internal/commands/coreutils/ls/ls.go:L550`
   > Rationale: Instead of relying on `dircolors` databases, the simulator uses a hardcoded ANSI color-mapping logic tailored for web-based terminal themes.
+- `[x]` Flags `-Z`, `-D`, `-N` (Ignored): `internal/commands/coreutils/ls/ls.go:L142-L144`
+  > Rationale: Security contexts (SELinux), Emacs dired mode support, and raw literal printing are parsed for compatibility but perform no operations within the simulator's environment.
 
 ### `mktemp`
 
@@ -55,8 +55,22 @@ This document tracks known functional gaps, intentional deviations, and implemen
 
 ### `stat`
 
-- `[x]` Flag `-f` (Ignored): `internal/commands/coreutils/stat/stat.go:L28`
+- `[x]` Flag `-f` (Ignored): `internal/commands/coreutils/stat/stat.go`
   > Rationale: Virtual filesystem (Afero MemMapFs) status information is static or unavailable. Standard file status reporting is prioritized over filesystem metadata.
+
+### `df`
+
+- `[x]` Flags `--sync`, `--no-sync`, `--output`, `-B`, `-t`, `-x` (Ignored): `internal/commands/coreutils/df/df.go:L42-L47`
+  > Rationale: 
+  > - **Sync**: The memory-mapped filesystem is always "synced" as there is no underlying physical disk or delayed write buffer.
+  > - **Output/Type**: Advanced formatting and filesystem type filtering are restricted to a simplified static set of simulated mounts.
+
+### `du`
+
+- `[x]` Flags `-x`, `-X`, `--exclude`, `--files0-from`, `--time` (Ignored): `internal/commands/coreutils/du/du.go:L56-L61`
+  > Rationale: 
+  > - **Exclusions**: Advanced pattern-based exclusion and external file-list reading are omitted to keep the recursive walker implementation focused on core usage calculation.
+  > - **Times**: File modification times in the sandbox are handled by standard `os.FileInfo` but advanced formatting/styles are not yet linked to `du`.
 
 ### System Management (`mount`, `umount`, `su`)
 
@@ -75,6 +89,8 @@ Across multiple commands (`cp`, `mv`, `rm`, `chmod`, `chown`, `realpath`), sever
   > Rationale: The virtual filesystem (Afero) primarily handles logical path resolution. Physical vs. Logical path distinctions are ignored where the underlying implementation treats them as equivalent in the sandbox.
 - `[x]` **Filesystem Hints** (`-f`, `--file-system`, `--dereference`): `internal/commands/`
   > Rationale: Metadata like filesystem type or raw mount information is not available or static in the WASM memory-mapped filesystem.
+- `[x]` **Chown/Chgrp Stubs** (`-H`, `-L`, `-P`, `--from`): `internal/commands/coreutils/chown/chown.go`
+  > Rationale: Symlink dereference behavior and owner-based filtering for `chown` are currently stubbed. The simulator prioritizes simple path-based ownership changes over complex POSIX link-traversal logic.
 
 ### `chcon` / `runcon`
   

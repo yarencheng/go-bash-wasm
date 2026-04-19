@@ -109,7 +109,7 @@ Status codes:
 - [x] Flag `-h`, `--no-dereference`: `internal/commands/coreutils/chown/chown.go`
 - [x] Flag `--reference=RFILE`: `internal/commands/coreutils/chown/chown.go`
 - [x] Flag `-R`, `--recursive`: `internal/commands/coreutils/chown/chown.go`
-- [x] Flag `-H`, `-L`, `-P`: `internal/commands/coreutils/chown/chown.go` (Stub)
+- [x] Flag `-H`, `-L`, `-P`: `internal/commands/coreutils/chown/chown.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
 
 ### `chmod`
 
@@ -131,10 +131,10 @@ Status codes:
 - [x] Flag `-v`, `--verbose`: `internal/commands/coreutils/chown/chown.go`
 - [x] Flag `--dereference`: `internal/commands/coreutils/chown/chown.go`
 - [x] Flag `-h`, `--no-dereference`: `internal/commands/coreutils/chown/chown.go`
-- [x] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `internal/commands/coreutils/chown/chown.go` (Stub)
+- [x] Flag `--from=CURRENT_OWNER:CURRENT_GROUP`: `internal/commands/coreutils/chown/chown.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
 - [x] Flag `--reference=RFILE`: `internal/commands/coreutils/chown/chown.go`
 - [x] Flag `-R`, `--recursive`: `internal/commands/coreutils/chown/chown.go`
-- [x] Flag `-H`, `-L`, `-P`: `internal/commands/coreutils/chown/chown.go` (Stub)
+- [x] Flag `-H`, `-L`, `-P`: `internal/commands/coreutils/chown/chown.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
 
 ### `chroot`
 
@@ -271,11 +271,11 @@ Status codes:
 - [x] Upstream: `third_party/coreutils/src/df.c`
 - [x] Basic df: Implemented in `internal/commands/coreutils/df/df.go`
 - [x] Basic output: Implemented in `internal/commands/coreutils/df/df.go`
-- [x] Flag `--no-sync`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `--output[=FIELD_LIST]`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `--sync`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `--no-sync`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#df))
+- [x] Flag `--output[=FIELD_LIST]`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#df))
+- [x] Flag `--sync`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#df))
 - [x] Flag `--total`: `internal/commands/coreutils/df/df.go`
-- [x] Flag `-B`, `--block-size=SIZE`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-B`, `--block-size=SIZE`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#df))
 - [x] Flag `-H`: `internal/commands/coreutils/df/df.go`
 - [x] Flag `-P`: `internal/commands/coreutils/df/df.go`
 - [x] Flag `-T`: `internal/commands/coreutils/df/df.go`
@@ -284,8 +284,8 @@ Status codes:
 - [x] Flag `-i`: `internal/commands/coreutils/df/df.go`
 - [x] Flag `-k`: `internal/commands/coreutils/df/df.go`
 - [x] Flag `-l`: `internal/commands/coreutils/df/df.go`
-- [x] Flag `-t`, `--type=TYPE`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-x`, `--exclude-type=TYPE`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-t`, `--type=TYPE`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#df))
+- [x] Flag `-x`, `--exclude-type=TYPE`: `internal/commands/coreutils/df/df.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#df))
 
 ### `dir`
 
@@ -328,14 +328,14 @@ Status codes:
 - [x] Flag `-L`, `--dereference`: `internal/commands/coreutils/du/du.go`
 - [x] Flag `-P`, `--no-dereference`: `internal/commands/coreutils/du/du.go`
 - [x] Flag `-t`, `--threshold=SIZE`: `internal/commands/coreutils/du/du.go`
-- [x] Flag `-x`, `--one-file-system`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `-X`, `--exclude-from=FILE`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `--exclude=PATTERN`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `--files0-from=F`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-x`, `--one-file-system`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#du))
+- [x] Flag `-X`, `--exclude-from=FILE`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#du))
+- [x] Flag `--exclude=PATTERN`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#du))
+- [x] Flag `--files0-from=F`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#du))
 - [x] Flag `--inodes`: `internal/commands/coreutils/du/du.go`
 - [x] Flag `--si`: `internal/commands/coreutils/du/du.go`
-- [x] Flag `--time[=WORD]`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
-- [x] Flag `--time-style=STYLE`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `--time[=WORD]`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#du))
+- [x] Flag `--time-style=STYLE`: `internal/commands/coreutils/du/du.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#du))
 
 ### `echo`
 
@@ -547,7 +547,7 @@ Status codes:
 ### `ls`
 
 - [x] Basic listing: `internal/commands/coreutils/ls/ls.go`
-- [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L3312` (Simulated via single-user "root")
+- [x] Flag `--author`: `internal/commands/coreutils/ls/ls.go` (Simulated via single-user "root"; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#ls))
 - [x] Flag `--block-size`: `internal/commands/coreutils/ls/ls.go`
 - [x] Flag `--color`: `internal/commands/coreutils/ls/ls.go` (ANSI colors)
 - [x] Flag `--dereference-command-line-symlink-to-dir`: `internal/commands/coreutils/ls/ls.go` (-H)
@@ -568,20 +568,20 @@ Status codes:
 - [x] Flag `-A`: `internal/commands/coreutils/ls/ls.go` (almost-all)
 - [x] Flag `-B`: `internal/commands/coreutils/ls/ls.go` (ignore-backups)
 - [x] Flag `-C`: `internal/commands/coreutils/ls/ls.go` (vertical columns)
-- [x] Flag `-D`, `--dired`: `internal/commands/coreutils/ls/ls.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-D`, `--dired`: `internal/commands/coreutils/ls/ls.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#ls))
 - [x] Flag `-F`: `internal/commands/coreutils/ls/ls.go` (classify)
 - [x] Flag `-G`: `internal/commands/coreutils/ls/ls.go` (no-group)
 - [x] Flag `-H`: `internal/commands/coreutils/ls/ls.go` (dereference-command-line)
 - [x] Flag `-I`: `internal/commands/coreutils/ls/ls.go` (ignore)
 - [x] Flag `-L`: `internal/commands/coreutils/ls/ls.go` (dereference)
-- [x] Flag `-N`, `--literal`: `internal/commands/coreutils/ls/ls.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-N`, `--literal`: `internal/commands/coreutils/ls/ls.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#ls))
 - [x] Flag `-Q`: `internal/commands/coreutils/ls/ls.go` (quote-name)
 - [x] Flag `-R`: `internal/commands/coreutils/ls/ls.go` (recursive)
 - [x] Flag `-S`: `internal/commands/coreutils/ls/ls.go` (sort-size)
 - [x] Flag `-T`: `internal/commands/coreutils/ls/ls.go`
 - [x] Flag `-U`: `internal/commands/coreutils/ls/ls.go` (do not sort)
 - [x] Flag `-X`: `internal/commands/coreutils/ls/ls.go` (extension sort)
-- [x] Flag `-Z`: `internal/commands/coreutils/ls/ls.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#commonly-ignored-flags))
+- [x] Flag `-Z`: `internal/commands/coreutils/ls/ls.go` (Ignored; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#ls))
 - [x] Flag `-a`: `internal/commands/coreutils/ls/ls.go` (all)
 - [x] Flag `-b`: `internal/commands/coreutils/ls/ls.go` (escape)
 - [x] Flag `-c`: `internal/commands/coreutils/ls/ls.go` (ctime)

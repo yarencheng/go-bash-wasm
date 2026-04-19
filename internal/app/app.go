@@ -492,7 +492,7 @@ func (a *App) ShowBanner() {
 
 	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"Version:"+ansiReset, ansiBold+ansiWhite+BashVersion+" ("+MachType+")"+ansiReset)
 	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"Website:"+ansiReset, ansiUnderline+ansiCyan+ProjectURL+ansiReset)
-	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"GitHub:"+ansiReset, ansiUnderline+ansiCyan+SourceURL+ansiReset)
+	fmt.Fprintf(a.Env.Stdout, " %-12s %s\n", ansiGray+"GitHub: "+ansiReset, ansiUnderline+ansiCyan+SourceURL+ansiReset)
 
 	fmt.Fprint(a.Env.Stdout, divider)
 	fmt.Fprintln(a.Env.Stdout, " "+ansiBold+ansiYellow+"Support the Project (Donations):"+ansiReset)

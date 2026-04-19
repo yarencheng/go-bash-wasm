@@ -396,7 +396,7 @@ Status codes:
 ### `find`
 
 
-- [x] Upstream: `third_party/coreutils/src/find.c`
+- [x] Upstream: [External] (Part of GNU Findutils)
 - [x] Basic Search: `internal/commands/coreutils/find/find.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#find))
 - [x] Flag `-name`: `internal/commands/coreutils/find/find.go`
 - [x] Flag `-type`: `internal/commands/coreutils/find/find.go`
@@ -433,7 +433,7 @@ Status codes:
 
 ### `grep`
 
-- [x] Upstream: `third_party/coreutils/src/grep.c`
+- [x] Upstream: [External] (Part of GNU Grep)
 - [x] Regex Search: `internal/commands/coreutils/grep/grep.go` (Workaround; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#grep))
 - [x] Flag `-i`, `--ignore-case`: `internal/commands/coreutils/grep/grep.go`
 - [x] Flag `-v`, `--invert-match`: `internal/commands/coreutils/grep/grep.go`
@@ -547,8 +547,7 @@ Status codes:
 ### `ls`
 
 - [x] Basic listing: `internal/commands/coreutils/ls/ls.go`
-- [x] Color output (`--color`): `internal/commands/coreutils/ls/ls.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#ls))
-- [x] Flag `--author`: `internal/commands/coreutils/ls/ls.go` (Stub; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/coreutils/functional_gap.md#ls))
+- [ ] Flag `--author`: `third_party/coreutils/src/ls.c:L3312` (Simulated via single-user "root")
 - [x] Flag `--block-size`: `internal/commands/coreutils/ls/ls.go`
 - [x] Flag `--color`: `internal/commands/coreutils/ls/ls.go` (ANSI colors)
 - [x] Flag `--dereference-command-line-symlink-to-dir`: `internal/commands/coreutils/ls/ls.go` (-H)
@@ -772,7 +771,7 @@ Status codes:
 - [x] Flag `%q`: `internal/commands/coreutils/printf/printf.go`
 - [x] Flag `-v VAR`: Implemented in `internal/commands/coreutils/printf/printf.go`
 - [ ] Format specifier `*` width/precision: `third_party/coreutils/src/printf.c:L595`
-- [ ] Reusing format string: `third_party/coreutils/src/printf.c:L742`
+- [x] Reusing format string: `internal/commands/coreutils/printf/printf.go`
 
 ### `ptx`
 
@@ -1059,6 +1058,7 @@ Status codes:
 - [ ] File operators (`-r`, `-w`, `-x`, `-L`, `-G`, `-O`, `-S`, `-p`, `-b`, `-c`, `-t`, `-k`, `-u`, `-g`, `-N`): `third_party/coreutils/src/test.c:L380`
 - [ ] Binary file operators (`-nt`, `-ot`, `-ef`): `third_party/coreutils/src/test.c:L199`
 - [ ] String comparison operators (`>`, `<`): `third_party/coreutils/src/test.c:L191`
+- [ ] Length operator (`-l STRING`): `third_party/coreutils/src/test.c:L220`
 - [x] Aliases: `[`
 
 ### `timeout`

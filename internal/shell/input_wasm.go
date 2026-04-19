@@ -6,7 +6,12 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
+	"path"
+	"sort"
+	"strings"
 
+	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -39,6 +44,9 @@ func (w *wasmReader) Readline() (string, error) {
 				w.buf = w.buf[:len(w.buf)-1]
 				fmt.Fprint(w.env.Stdout, "\b \b")
 			}
+
+		case '\t':
+			w.handleTab()
 
 		case 27: // Escape
 			// Handle arrow keys
@@ -76,6 +84,96 @@ func (w *wasmReader) Readline() (string, error) {
 			}
 		}
 	}
+}
+
+func (w *wasmReader) handleTab() {
+	line := string(w.buf)
+	if line == "" {
+		return
+	}
+
+	// Simple word splitting by space for completion
+	parts := strings.Split(line, " ")
+	lastWord := parts[len(parts)-1]
+
+	var matches []string
+	if len(parts) == 1 {
+		// Complete commands
+		for _, name := range w.env.Registry.List() {
+			if strings.HasPrefix(name, lastWord) {
+				matches = append(matches, name)
+			}
+		}
+	}
+
+	// Complete files (always attempt if it looks like a path or not the first word)
+	dir := "."
+	prefix := lastWord
+	if strings.Contains(lastWord, "/") {
+		dir = path.Dir(lastWord)
+		prefix = path.Base(lastWord)
+		if strings.HasSuffix(lastWord, "/") {
+			prefix = ""
+		}
+	}
+
+	fullDir := dir
+	if !path.IsAbs(dir) {
+		fullDir = path.Join(w.env.Cwd, dir)
+	}
+
+	entries, err := afero.ReadDir(w.env.FS, fullDir)
+	if err == nil {
+		for _, entry := range entries {
+			name := entry.Name()
+			if strings.HasPrefix(name, prefix) {
+				if entry.IsDir() {
+					name += "/"
+				}
+				matches = append(matches, name)
+			}
+		}
+	}
+
+	if len(matches) == 1 {
+		// Unique match
+		completion := matches[0][len(prefix):]
+		w.buf = append(w.buf, []rune(completion)...)
+		fmt.Fprint(w.env.Stdout, completion)
+	} else if len(matches) > 1 {
+		// Find common prefix among matches
+		common := matches[0]
+		for _, m := range matches[1:] {
+			common = commonPrefix(common, m)
+		}
+		if len(common) > len(prefix) {
+			completion := common[len(prefix):]
+			w.buf = append(w.buf, []rune(completion)...)
+			fmt.Fprint(w.env.Stdout, completion)
+		} else {
+			// Show all matches if tab pressed again? 
+			// For now, just print them on new lines
+			fmt.Fprint(w.env.Stdout, "\r\n")
+			sort.Strings(matches)
+			for i, m := range matches {
+				fmt.Fprint(w.env.Stdout, m)
+				if (i+1)%4 == 0 {
+					fmt.Fprint(w.env.Stdout, "\r\n")
+				} else {
+					fmt.Fprint(w.env.Stdout, "\t")
+				}
+			}
+			fmt.Fprintf(w.env.Stdout, "\r\n$ %s", string(w.buf))
+		}
+	}
+}
+
+func commonPrefix(s1, s2 string) string {
+	i := 0
+	for i < len(s1) && i < len(s2) && s1[i] == s2[i] {
+		i++
+	}
+	return s1[:i]
 }
 
 func (w *wasmReader) replaceLine(newLine string) {

@@ -10,10 +10,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 	"mvdan.cc/sh/v3/syntax"
 	"os"
+	"path"
 	"regexp"
+	"sort"
 )
 
 // LineReader defines the interface for reading lines from the terminal.
@@ -47,6 +50,9 @@ func (s *Shell) RunInteractive() error {
 	defer rl.Close()
 
 	for {
+		if cmd, ok := s.Env.EnvVars["PROMPT_COMMAND"]; ok && cmd != "" {
+			s.Execute(context.Background(), cmd)
+		}
 		line, err := rl.Readline()
 		if err != nil {
 			// io.EOF is returned when Ctrl+D is pressed
@@ -125,15 +131,25 @@ func (s *Shell) executeStmt(ctx context.Context, env *commands.Environment, stmt
 	}
 
 	if stmt.Background {
-		// Basic stub for background execution in simulator
 		jobID := len(env.Jobs) + 1
 		job := &commands.Job{
 			ID:      jobID,
 			Command: s.stmtToString(stmt),
 			Status:  "Running",
+			PID:     1000 + jobID, // fake PID
 		}
 		env.Jobs = append(env.Jobs, job)
 		fmt.Fprintf(env.Stdout, "[%d] %d\n", job.ID, job.PID)
+
+		go func() {
+			subEnv := s.cloneEnv(env)
+			// Avoid infinite recursion by setting Background to false in the background goroutine
+			stmtCopy := *stmt
+			stmtCopy.Background = false
+			s.executeStmt(ctx, subEnv, &stmtCopy)
+			job.Status = "Done"
+		}()
+		return 0
 	}
 
 	// Handle redirections
@@ -210,7 +226,11 @@ func (s *Shell) executeCmd(ctx context.Context, env *commands.Environment, cmd s
 		}
 		return s.executeCallExpr(ctx, env, &syntax.CallExpr{Args: args})
 	case *syntax.TimeClause:
-		return s.executeStmt(ctx, env, c.Stmt)
+		start := time.Now()
+		exitCode := s.executeStmt(ctx, env, c.Stmt)
+		duration := time.Since(start)
+		fmt.Fprintf(env.Stderr, "\nreal\t%s\n", duration.String())
+		return exitCode
 	default:
 		fmt.Fprintf(env.Stderr, "bash: unsupported command type: %T\n", cmd)
 		return 1
@@ -444,13 +464,36 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 		*closers = append(*closers, f)
 	case syntax.DplIn: // <&
 		target := s.wordToString(env, redir.Word)
-		if target == "0" {
-			// No-op
-		} else if target == "1" {
-			env.Stdin = io.NopCloser(strings.NewReader("")) // Mock: can't easily duplicate stdout to stdin interface
+		if strings.HasSuffix(target, "-") {
+			// Move FD: [n]<&digit-
+			// Close the source after duplication
+			srcFdStr := strings.TrimSuffix(target, "-")
+			srcFd, _ := strconv.Atoi(srcFdStr)
+			// For simplicity in simulator, we just mock the duplication
+			if srcFd == 0 {
+				// stay stdin
+			} else {
+				env.Stdin = io.NopCloser(strings.NewReader(""))
+			}
+		} else if target == "-" {
+			// Close FD: [n]<&-
+			env.Stdin = io.NopCloser(strings.NewReader(""))
+		} else {
+			// Standard duplication: [n]<&digit
+			if target == "0" {
+				// stdin to stdin, do nothing
+			} else {
+				env.Stdin = io.NopCloser(strings.NewReader(""))
+			}
 		}
 	case syntax.DplOut: // >&
 		target := s.wordToString(env, redir.Word)
+		closeSource := false
+		if strings.HasSuffix(target, "-") {
+			closeSource = true
+			target = strings.TrimSuffix(target, "-")
+		}
+
 		if target == "1" {
 			if fd == 2 {
 				env.Stderr = env.Stdout
@@ -458,6 +501,13 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 		} else if target == "2" {
 			if fd == 1 {
 				env.Stdout = env.Stderr
+			}
+		} else if target == "-" {
+			// Close FD
+			if fd == 1 {
+				env.Stdout = io.Discard
+			} else if fd == 2 {
+				env.Stderr = io.Discard
 			}
 		} else {
 			// treat as &>
@@ -469,8 +519,23 @@ func (s *Shell) applyRedirection(env *commands.Environment, redir *syntax.Redire
 			env.Stderr = f
 			*closers = append(*closers, f)
 		}
+
+		if closeSource {
+			// Mock closing the source FD
+		}
 	case syntax.WordHdoc: // <<<
 		content := s.wordToString(env, redir.Word) + "\n"
+		env.Stdin = io.NopCloser(strings.NewReader(content))
+	case syntax.Hdoc, syntax.DashHdoc: // << and <<-
+		content := s.wordToString(env, redir.Hdoc)
+		if redir.Op == syntax.DashHdoc {
+			// Remove leading tabs
+			lines := strings.Split(content, "\n")
+			for i, line := range lines {
+				lines[i] = strings.TrimLeft(line, "\t")
+			}
+			content = strings.Join(lines, "\n")
+		}
 		env.Stdin = io.NopCloser(strings.NewReader(content))
 	default:
 		fmt.Fprintf(env.Stderr, "bash: unsupported redirection: %s\n", redir.Op.String())
@@ -484,6 +549,26 @@ func (s *Shell) cleanupClosers(closers []io.Closer) {
 	for _, c := range closers {
 		_ = c.Close()
 	}
+}
+
+func (s *Shell) resolveTilde(env *commands.Environment, val string) string {
+	if !strings.HasPrefix(val, "~") {
+		return val
+	}
+	if val == "~" || strings.HasPrefix(val, "~/") {
+		home := env.EnvVars["HOME"]
+		if home == "" {
+			home = "/home/" + env.User
+		}
+		return strings.Replace(val, "~", home, 1)
+	}
+	if !strings.Contains(val, "/") {
+		// ~user -> /home/user
+		return "/home/" + val[1:]
+	}
+	// ~user/path -> /home/user/path
+	parts := strings.SplitN(val[1:], "/", 2)
+	return "/home/" + parts[0] + "/" + parts[1]
 }
 
 func (s *Shell) wordToString(env *commands.Environment, w *syntax.Word) string {
@@ -521,18 +606,58 @@ func (s *Shell) resolveWordPart(env *commands.Environment, part syntax.WordPart)
 		return strings.TrimRight(out.String(), "\n")
 	case *syntax.ArithmExp:
 		return strconv.Itoa(s.evalArithmExpr(env, p.X))
+	case *syntax.ProcSubst:
+		// Process Substitution <(list) and >(list)
+		// Simulator implementation using temp files
+		var out strings.Builder
+		subEnv := s.cloneEnv(env)
+
+		// For <(list), we want to capture stdout
+		if p.Op == syntax.CmdIn {
+			subEnv.Stdout = &out
+		}
+
+		for _, stmt := range p.Stmts {
+			s.executeStmt(context.Background(), subEnv, stmt)
+		}
+
+		tmpPath := fmt.Sprintf("/tmp/bash-subst-%d", time.Now().UnixNano())
+		_ = afero.WriteFile(env.FS, tmpPath, []byte(out.String()), 0600)
+		return tmpPath
 	}
 	return ""
 }
 
 func (s *Shell) expandWord(env *commands.Environment, w *syntax.Word) []string {
-	// 1. Parameter expansion
+	// 1. Tilde expansion (only at start of word)
 	val := s.wordToString(env, w)
+	val = s.resolveTilde(env, val)
 
-	// 2. Globbing
-	if strings.ContainsAny(val, "*?") {
-		matches, err := filepath.Glob(s.resolvePath(val))
+	// 2. Parameter expansion (already done in wordToString for now)
+	if strings.ContainsAny(val, "*?[]") {
+		// Handle [!] as [^] for Match
+		globPat := strings.ReplaceAll(val, "[!", "[^")
+		matches, err := afero.Glob(env.FS, s.resolvePath(globPat))
 		if err == nil && len(matches) > 0 {
+			// Apply GLOBIGNORE
+			ignore := env.EnvVars["GLOBIGNORE"]
+			if ignore != "" {
+				patterns := strings.Split(ignore, ":")
+				var filtered []string
+				for _, m := range matches {
+					keep := true
+					for _, p := range patterns {
+						if matched, _ := path.Match(p, path.Base(m)); matched {
+							keep = false
+							break
+						}
+					}
+					if keep {
+						filtered = append(filtered, m)
+					}
+				}
+				matches = filtered
+			}
 			return matches
 		}
 	}
@@ -541,35 +666,150 @@ func (s *Shell) expandWord(env *commands.Environment, w *syntax.Word) []string {
 }
 
 func (s *Shell) resolveParamExp(env *commands.Environment, p *syntax.ParamExp) string {
-	name := p.Param.Value
-	val, ok := env.EnvVars[name]
-	if !ok {
-		// Handle positional parameters $1, $2, etc.
-		if idx, err := strconv.Atoi(name); err == nil {
-			if idx > 0 && idx <= len(env.PositionalArgs) {
-				return env.PositionalArgs[idx-1]
-			}
-			return ""
-		}
-
-		// Dynamic variables
-		switch name {
-		case "RANDOM":
-			return fmt.Sprintf("%d", time.Now().UnixNano()%32768)
-		case "SECONDS":
-			return fmt.Sprintf("%d", int(time.Since(env.StartTime).Seconds()))
-		case "UID", "EUID":
-			return fmt.Sprintf("%d", env.Uid)
-		case "GID":
-			return fmt.Sprintf("%d", env.Gid)
-		}
+	if p.Param == nil {
 		return ""
 	}
+	name := p.Param.Value
+
+	// Handle positional parameters $1, $2, etc.
+	var val string
+	var ok bool
+	if idx, err := strconv.Atoi(name); err == nil {
+		if idx > 0 && idx <= len(env.PositionalArgs) {
+			val = env.PositionalArgs[idx-1]
+			ok = true
+		}
+	} else {
+		val, ok = env.EnvVars[name]
+	}
+
+	// Dynamic variables
+	if !ok {
+		switch name {
+		case "RANDOM":
+			val = fmt.Sprintf("%d", time.Now().UnixNano()%32768)
+			ok = true
+		case "SECONDS":
+			val = fmt.Sprintf("%d", int(time.Since(env.StartTime).Seconds()))
+			ok = true
+		case "UID", "EUID":
+			val = fmt.Sprintf("%d", env.Uid)
+			ok = true
+		case "GID":
+			val = fmt.Sprintf("%d", env.Gid)
+			ok = true
+		case "SHELLOPTS":
+			var opts []string
+			for opt, enabled := range env.Shopts {
+				if enabled {
+					opts = append(opts, opt)
+				}
+			}
+			sort.Strings(opts)
+			val = strings.Join(opts, ":")
+			ok = true
+		}
+	}
+
+	// Array support
+	if p.Index != nil {
+		idxStr := fmt.Sprintf("%d", s.evalArithmExpr(env, p.Index))
+		// Special case: if it was @ or *, evalArithmExpr might not return them easily.
+		// But sh/syntax ArithmExpr can be a Word.
+		if arr, okArr := env.Arrays[name]; okArr {
+			idx, _ := strconv.Atoi(idxStr)
+			if idx >= 0 && idx < len(arr) {
+				val = arr[idx]
+			} else {
+				val = ""
+			}
+		}
+	}
+
+	// Length operator ${#var}
+	if p.Length {
+		if p.Index != nil {
+			// Handle ${#arr[@]} or ${#arr[*]}
+			// Note: for simplicity, we check if the index string is @ or *
+			// In our current evalArithmExpr, it might be tricky to get the literal @/*
+			// But we can check the original expression if it's a Lit.
+			isAll := false
+			if word, okWord := p.Index.(*syntax.Word); okWord && len(word.Parts) == 1 {
+				if lit, okLit := word.Parts[0].(*syntax.Lit); okLit && (lit.Value == "@" || lit.Value == "*") {
+					isAll = true
+				}
+			}
+			if isAll {
+				if arr, okArr := env.Arrays[name]; okArr {
+					return strconv.Itoa(len(arr))
+				}
+				return "0"
+			}
+		}
+		return strconv.Itoa(len(val))
+	}
+
+	// Expansion operators
+	if p.Exp != nil {
+		wordVal := s.wordToString(env, p.Exp.Word)
+		switch p.Exp.Op {
+		case syntax.DefaultUnsetOrNull: // :-
+			if val == "" {
+				return wordVal
+			}
+		case syntax.DefaultUnset: // -
+			if !ok {
+				return wordVal
+			}
+		case syntax.AssignUnsetOrNull: // :=
+			if val == "" {
+				env.EnvVars[name] = wordVal
+				return wordVal
+			}
+		case syntax.AssignUnset: // =
+			if !ok {
+				env.EnvVars[name] = wordVal
+				return wordVal
+			}
+		case syntax.ErrorUnsetOrNull: // :?
+			if val == "" {
+				fmt.Fprintf(env.Stderr, "bash: %s: %s\n", name, wordVal)
+				env.ExitRequested = true
+				return ""
+			}
+		case syntax.AlternateUnsetOrNull: // :+
+			if val != "" {
+				return wordVal
+			}
+		case syntax.RemSmallPrefix: // #
+			return strings.TrimPrefix(val, wordVal)
+		case syntax.RemLargePrefix: // ##
+			// simplified: just trim all occurrences if it was a single char
+			if len(wordVal) == 1 {
+				return strings.TrimLeft(val, wordVal)
+			}
+			return strings.TrimPrefix(val, wordVal)
+		case syntax.RemSmallSuffix: // %
+			return strings.TrimSuffix(val, wordVal)
+		case syntax.RemLargeSuffix: // %%
+			if len(wordVal) == 1 {
+				return strings.TrimRight(val, wordVal)
+			}
+			return strings.TrimSuffix(val, wordVal)
+		}
+	}
+
 	return val
 }
 
 func (s *Shell) stmtToString(stmt *syntax.Stmt) string {
-	return "cmd" // Placeholder
+	if stmt == nil {
+		return ""
+	}
+	var sb strings.Builder
+	p := syntax.NewPrinter()
+	_ = p.Print(&sb, stmt)
+	return sb.String()
 }
 
 func (s *Shell) cloneEnv(env *commands.Environment) *commands.Environment {

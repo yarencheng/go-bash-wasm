@@ -1742,7 +1742,7 @@ Status codes:
 
 ### `GLOBIGNORE`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Pattern-based pathname expansion ignore: Missing implementation
+- [x] Pattern-based pathname expansion ignore: Implemented in `internal/shell/shell.go`
 
 ### `HISTFILE`, `HISTFILESIZE`, `HISTSIZE`, `HISTIGNORE`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1758,7 +1758,7 @@ Status codes:
 
 ### `IGNOREEOF`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] EOF handling for interactive shells: Missing implementation
+- [x] EOF handling for interactive shells: Implemented in `internal/shell/shell.go`
 
 ### `MAILCHECK`, `MAILPATH`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1770,7 +1770,7 @@ Status codes:
 
 ### `PROMPT_COMMAND`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Pre-prompt execution hook: Missing implementation
+- [x] Pre-prompt execution hook: Implemented in `internal/shell/shell.go`
 
 ### `PS1`, `PS2`, `PS3`, `PS4`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1782,7 +1782,7 @@ Status codes:
 
 ### `SHELLOPTS`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] List of enabled shell options: Missing implementation
+- [x] List of enabled shell options: Implemented in `internal/shell/shell.go`
 
 ### `TERM`
 - [x] Upstream: `third_party/bash/builtins/reserved.def`
@@ -1790,13 +1790,13 @@ Status codes:
 
 ### `TIMEFORMAT`
 - [ ] Upstream: `third_party/bash/builtins/reserved.def`
-- [ ] Output format for `time` reserved word: Missing implementation
+- [x] Output format for `time` reserved word: Implemented in `internal/shell/shell.go`
 
 ## Interactive Shell Features
 
-- [ ] Interactive history navigation (Up/Down arrow keys)
-- [ ] Command line editing (Backspace, Ctrl+L, etc.)
-- [ ] Tab completion: Missing implementation
+- [x] Interactive history navigation (Up/Down arrow keys): Implemented in `internal/shell/input_wasm.go`
+- [x] Command line editing (Backspace, Ctrl+L, etc.): Implemented in `internal/shell/input_wasm.go`
+- [x] Tab completion: Implemented in `internal/shell/input_wasm.go`
 
 ## Shell Expansions
 
@@ -1838,13 +1838,13 @@ Status codes:
 ### File Descriptor Manipulation
 - [x] Duplicating input `[n]<&word`: Implemented in `internal/shell/shell.go`
 - [x] Duplicating output `[n]>&word`: Implemented in `internal/shell/shell.go`
-- [ ] Moving input `[n]<&digit-`: `third_party/bash/redir.c:L1117`
-- [ ] Moving output `[n]>&digit-`: `third_party/bash/redir.c:L1118`
+- [x] Moving input `[n]<&digit-`: Implemented in `internal/shell/shell.go`
+- [x] Moving output `[n]>&digit-`: Implemented in `internal/shell/shell.go`
 
 ### Advanced Redirections
-- [ ] Here-Documents `[n]<<[-]word`: `third_party/bash/redir.c:L1042`
+- [x] Here-Documents `[n]<<[-]word`: Implemented in `internal/shell/shell.go`
 - [x] Here-Strings `[n]<<<word`: Implemented in `internal/shell/shell.go`
-- [ ] Process Substitution `<(list)`, `>(list)`: `third_party/bash/subst.c:L321`
+- [x] Process Substitution `<(list)`, `>(list)`: Implemented in `internal/shell/shell.go`
 
 ## Globbing Patterns
 
@@ -1853,8 +1853,8 @@ Status codes:
 - [x] Match any character `?`: Implemented in `internal/shell/shell.go`
 
 ### Character Classes
-- [ ] Match set of characters `[...]`: `third_party/bash/lib/glob/smatch.c`
-- [ ] Negative match set `[!...]`, `[^...]`: `third_party/bash/lib/glob/smatch.c`
+- [x] Match set of characters `[...]`: Implemented in `internal/shell/shell.go`
+- [x] Negative match set `[!...]`, `[^...]`: Implemented in `internal/shell/shell.go`
 
 ### Extended Globbing (extglob)
 - [ ] Option `?(list)` (zero or one): `third_party/bash/lib/glob/smatch.c`
@@ -1871,16 +1871,16 @@ Status codes:
 
 ### Compound Commands & Lists
 - [x] Sequential list `;`: Implemented in `internal/shell/shell.go`
-- [ ] Background execution `&`: `third_party/bash/execute_cmd.c:L193`
-- [ ] Logical AND `&&`: `third_party/bash/execute_cmd.c:L193`
-- [ ] Logical OR `||`: `third_party/bash/execute_cmd.c:L193`
-- [ ] Subshell execution `( list )`: `third_party/bash/execute_cmd.c:L185`
+- [x] Background execution `&`: Implemented in `internal/shell/shell.go`
+- [x] Logical AND `&&`: Implemented in `internal/shell/shell.go`
+- [x] Logical OR `||`: Implemented in `internal/shell/shell.go`
+- [x] Subshell execution `( list )`: Implemented in `internal/shell/shell.go`
 
 ## Signal & Trap Handling
 
 ### Core Signal Handling
-- [ ] Trap initialization: `third_party/bash/trap.c:L154`
-- [ ] Signal decoding (names/numbers): `third_party/bash/trap.c:L236`
+- [x] Trap initialization: Implemented in `internal/commands/trap/trap.go`
+- [x] Signal decoding (names/numbers): Implemented in `internal/commands/trap/trap.go`
 - [ ] Pending trap execution: `third_party/bash/trap.c:L328`
 
 ### Subshell & Inheritance

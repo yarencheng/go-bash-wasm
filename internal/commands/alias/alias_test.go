@@ -1,8 +1,8 @@
 package alias
 
 import (
+	"bytes"
 	"context"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,25 +10,85 @@ import (
 )
 
 func TestAlias_Run(t *testing.T) {
-	env := &commands.Environment{
-		Aliases: make(map[string]string),
+	tests := []struct {
+		name           string
+		args           []string
+		initialAliases map[string]string
+		expectedStatus int
+		containsOutput string
+		containsStderr string
+		checkEnv       func(t *testing.T, env *commands.Environment)
+	}{
+		{
+			name: "define alias",
+			args: []string{"ll=ls -l"},
+			checkEnv: func(t *testing.T, env *commands.Environment) {
+				assert.Equal(t, "ls -l", env.Aliases["ll"])
+			},
+			expectedStatus: 0,
+		},
+		{
+			name: "print specific alias",
+			args: []string{"g"},
+			initialAliases: map[string]string{
+				"g": "grep",
+			},
+			expectedStatus: 0,
+			containsOutput: "alias g='grep'",
+		},
+		{
+			name: "alias not found",
+			args: []string{"missing"},
+			expectedStatus: 1,
+			containsStderr: "not found",
+		},
+		{
+			name: "list all aliases",
+			args: []string{"-p"},
+			initialAliases: map[string]string{
+				"a": "echo a",
+				"b": "echo b",
+			},
+			expectedStatus: 0,
+			containsOutput: "alias a='echo a'\nalias b='echo b'",
+		},
+		{
+			name: "invalid flag",
+			args: []string{"--invalid"},
+			expectedStatus: 2,
+		},
 	}
 
-	a := New()
-	status := a.Run(context.Background(), env, []string{"ll=ls -l"})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "ls -l", env.Aliases["ll"])
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			stdout := &bytes.Buffer{}
+			stderr := &bytes.Buffer{}
+			env := &commands.Environment{
+				Stdout:  stdout,
+				Stderr:  stderr,
+				Aliases: make(map[string]string),
+			}
+			for k, v := range tt.initialAliases {
+				env.Aliases[k] = v
+			}
+
+			a := New()
+			status := a.Run(context.Background(), env, tt.args)
+			assert.Equal(t, tt.expectedStatus, status)
+			if tt.containsOutput != "" {
+				assert.Contains(t, stdout.String(), tt.containsOutput)
+			}
+			if tt.containsStderr != "" {
+				assert.Contains(t, stderr.String(), tt.containsStderr)
+			}
+			if tt.checkEnv != nil {
+				tt.checkEnv(t, env)
+			}
+		})
+	}
 }
 
-func TestAlias_Run_FlagP(t *testing.T) {
-	out := &strings.Builder{}
-	env := &commands.Environment{
-		Aliases: map[string]string{"ll": "ls -l"},
-		Stdout:  out,
-	}
-
+func TestAlias_Metadata(t *testing.T) {
 	a := New()
-	status := a.Run(context.Background(), env, []string{"-p"})
-	assert.Equal(t, 0, status)
-	assert.Contains(t, out.String(), "alias ll='ls -l'\n")
+	assert.Equal(t, "alias", a.Name())
 }

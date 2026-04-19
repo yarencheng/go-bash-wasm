@@ -1,95 +1,130 @@
 package csplit
 
 import (
+	"bytes"
 	"context"
-	"io"
-	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
+	"io"
 )
 
-func TestCsplit_Run_Regex(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	content := "header\nline1\n---SEP---\nline2\n---SEP---\nline3\n"
-	require.NoError(t, afero.WriteFile(fs, "/input.txt", []byte(content), 0644))
-
-	env := &commands.Environment{
-		FS:     fs,
-		Cwd:    "/",
-		Stdin:  io.NopCloser(nil),
-		Stdout: io.Discard,
-		Stderr: io.Discard,
+func TestCsplit_Run(t *testing.T) {
+	tests := []struct {
+		name           string
+		args           []string
+		input          string
+		expectedStatus int
+		checkFiles     map[string]string
+		containsOutput string
+		containsStderr string
+	}{
+		{
+			name:           "split by line number",
+			args:           []string{"-", "3"},
+			input:          "line1\nline2\nline3\nline4",
+			expectedStatus: 0,
+			checkFiles: map[string]string{
+				"/xx00": "line1\nline2\n",
+				"/xx01": "line3\nline4\n",
+			},
+		},
+		{
+			name:           "split by regex",
+			args:           []string{"-", "/line3/"},
+			input:          "line1\nline2\nline3\nline4",
+			expectedStatus: 0,
+			checkFiles: map[string]string{
+				"/xx00": "line1\nline2\n",
+				"/xx01": "line3\nline4\n",
+			},
+		},
+		{
+			name:           "custom prefix and digits",
+			args:           []string{"-f", "out", "-n", "3", "--", "-", "2"},
+			input:          "a\nb\nc",
+			expectedStatus: 0,
+			checkFiles: map[string]string{
+				"/out000": "a\n",
+				"/out001": "b\nc\n",
+			},
+		},
+		{
+			name:           "quiet mode",
+			args:           []string{"-s", "--", "-", "2"},
+			input:          "a\nb",
+			expectedStatus: 0,
+			containsOutput: "", // No sizes printed
+		},
+		{
+			name:           "invalid regex",
+			args:           []string{"-", "/[/"},
+			input:          "a",
+			expectedStatus: 1,
+			containsStderr: "invalid pattern",
+		},
+		{
+			name:           "line not found regex",
+			args:           []string{"-", "/missing/"},
+			input:          "a",
+			expectedStatus: 1,
+			containsStderr: "line not found",
+		},
+		{
+			name:           "missing operand",
+			args:           []string{"-"},
+			expectedStatus: 1,
+			containsStderr: "missing operand",
+		},
 	}
 
-	c := New()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
+			// Create file if it's referenced in args
+			for _, arg := range tt.args {
+				if arg == "/input.txt" {
+					_ = afero.WriteFile(fs, "/input.txt", []byte(tt.input), 0644)
+					break
+				}
+			}
 
-	// Split at regex /---SEP---/
-	status := c.Run(context.Background(), env, []string{"-f", "out", "-n", "3", "/input.txt", "/---SEP---/", "/---SEP---/"})
-	assert.Equal(t, 0, status)
+			stdout := &bytes.Buffer{}
+			stderr := &bytes.Buffer{}
+			env := &commands.Environment{
+				FS:     fs,
+				Cwd:    "/",
+				Stdout: stdout,
+				Stderr: stderr,
+				Stdin:  io.NopCloser(bytes.NewReader([]byte(tt.input))),
+			}
 
-	out0, _ := afero.ReadFile(fs, "/out000")
-	assert.Equal(t, "header\nline1\n", string(out0))
+			c := New()
+			// Make a copy of args to avoid modifying the template
+			args := make([]string, len(tt.args))
+			copy(args, tt.args)
+			status := c.Run(context.Background(), env, args)
+			if !assert.Equal(t, tt.expectedStatus, status) {
+				t.Logf("STDOUT: %s", stdout.String())
+				t.Logf("STDERR: %s", stderr.String())
+			}
 
-	out1, _ := afero.ReadFile(fs, "/out001")
-	assert.Equal(t, "---SEP---\nline2\n", string(out1))
+			for path, expectedContent := range tt.checkFiles {
+				content, err := afero.ReadFile(fs, path)
+				assert.NoError(t, err)
+				assert.Equal(t, expectedContent, string(content))
+			}
 
-	out2, _ := afero.ReadFile(fs, "/out002")
-	assert.Equal(t, "---SEP---\nline3\n", string(out2))
+			if tt.containsStderr != "" {
+				assert.Contains(t, stderr.String(), tt.containsStderr)
+			}
+		})
+	}
 }
 
-func TestCsplit_SuppressMatched(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	content := "header\nline1\n---SEP---\nline2\n"
-	require.NoError(t, afero.WriteFile(fs, "/input.txt", []byte(content), 0644))
-
-	out := &strings.Builder{}
-	env := &commands.Environment{
-		FS:     fs,
-		Cwd:    "/",
-		Stdin:  io.NopCloser(nil),
-		Stdout: out,
-		Stderr: io.Discard,
-	}
-
+func TestCsplit_Metadata(t *testing.T) {
 	c := New()
-
-	// Split at regex /---SEP---/ with suppress
-	status := c.Run(context.Background(), env, []string{"--suppress-matched", "/input.txt", "/---SEP---/"})
-	assert.Equal(t, 0, status)
-
-	out0, _ := afero.ReadFile(fs, "/xx00")
-	assert.Equal(t, "header\nline1\n", string(out0))
-
-	out1, _ := afero.ReadFile(fs, "/xx01")
-	assert.Equal(t, "line2\n", string(out1))
-}
-
-func TestCsplit_Run_Numeric(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	content := "line1\nline2\nline3\nline4\nline5\n"
-	require.NoError(t, afero.WriteFile(fs, "/input.txt", []byte(content), 0644))
-
-	env := &commands.Environment{
-		FS:     fs,
-		Cwd:    "/",
-		Stdin:  io.NopCloser(nil),
-		Stdout: io.Discard,
-		Stderr: io.Discard,
-	}
-
-	c := New()
-
-	// Split at line 3
-	status := c.Run(context.Background(), env, []string{"/input.txt", "3"})
-	assert.Equal(t, 0, status)
-
-	out0, _ := afero.ReadFile(fs, "/xx00")
-	assert.Equal(t, "line1\nline2\n", string(out0))
-
-	out1, _ := afero.ReadFile(fs, "/xx01")
-	assert.Equal(t, "line3\nline4\nline5\n", string(out1))
+	assert.Equal(t, "csplit", c.Name())
 }

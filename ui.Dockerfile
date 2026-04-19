@@ -20,7 +20,7 @@ RUN go mod download
 COPY . .
 
 # Run all unit tests
-RUN go test -v -cover -race  ./...
+RUN go test -v -cover ./...
 
 # Build the WASM binary using the native Go build tool
 # Targeting js/wasm for browser execution

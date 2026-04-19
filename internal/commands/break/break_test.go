@@ -1,8 +1,8 @@
 package breakcmd
 
 import (
+	"bytes"
 	"context"
-	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,41 +11,60 @@ import (
 
 func TestBreak_Run(t *testing.T) {
 	tests := []struct {
-		name          string
-		args          []string
-		expectedBreak int
-		expectedCode  int
+		name           string
+		args           []string
+		expectedStatus int
+		expectedBreak  int
+		containsStderr string
 	}{
 		{
-			name:          "basic break",
-			args:          []string{},
-			expectedBreak: 1,
-			expectedCode:  0,
+			name:           "default break",
+			args:           []string{},
+			expectedStatus: 0,
+			expectedBreak:  1,
 		},
 		{
-			name:          "break 2",
-			args:          []string{"2"},
-			expectedBreak: 2,
-			expectedCode:  0,
+			name:           "break 2",
+			args:           []string{"2"},
+			expectedStatus: 0,
+			expectedBreak:  2,
 		},
 		{
-			name:          "break invalid",
-			args:          []string{"invalid"},
-			expectedBreak: 0,
-			expectedCode:  1,
+			name:           "invalid numeric",
+			args:           []string{"abc"},
+			expectedStatus: 1,
+			containsStderr: "numeric argument required",
+		},
+		{
+			name:           "invalid count",
+			args:           []string{"0"},
+			expectedStatus: 1,
+			containsStderr: "must be greater than or equal to 1",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			stdout := &bytes.Buffer{}
+			stderr := &bytes.Buffer{}
 			env := &commands.Environment{
-				Stdout: io.Discard,
-				Stderr: io.Discard,
+				Stdout: stdout,
+				Stderr: stderr,
 			}
 			b := New()
 			status := b.Run(context.Background(), env, tt.args)
-			assert.Equal(t, tt.expectedCode, status)
-			assert.Equal(t, tt.expectedBreak, env.BreakRequested)
+			assert.Equal(t, tt.expectedStatus, status)
+			if tt.expectedStatus == 0 {
+				assert.Equal(t, tt.expectedBreak, env.BreakRequested)
+			}
+			if tt.containsStderr != "" {
+				assert.Contains(t, stderr.String(), tt.containsStderr)
+			}
 		})
 	}
+}
+
+func TestBreak_Metadata(t *testing.T) {
+	b := New()
+	assert.Equal(t, "break", b.Name())
 }

@@ -89,7 +89,11 @@ func (c *Cksum) Run(ctx context.Context, env *commands.Environment, args []strin
 
 	exitCode := 0
 	for _, arg := range remaining {
-		f, err := env.FS.Open(arg)
+		fullPath := arg
+		if !strings.HasPrefix(arg, "/") {
+			fullPath = strings.TrimSuffix(env.Cwd, "/") + "/" + strings.TrimPrefix(arg, "./")
+		}
+		f, err := env.FS.Open(fullPath)
 		if err != nil {
 			if opts.Check && opts.IgnoreMissing {
 				continue
@@ -271,7 +275,11 @@ func (c *Cksum) RunCheck(env *commands.Environment, r io.Reader, opts CksumOptio
 			continue
 		}
 
-		f, err := env.FS.Open(fileName)
+		fullPath := fileName
+		if !strings.HasPrefix(fileName, "/") {
+			fullPath = strings.TrimSuffix(env.Cwd, "/") + "/" + strings.TrimPrefix(fileName, "./")
+		}
+		f, err := env.FS.Open(fullPath)
 		if err != nil {
 			if opts.IgnoreMissing {
 				continue

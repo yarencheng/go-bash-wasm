@@ -12,61 +12,111 @@ import (
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
-func TestCksum_Basic(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	afero.WriteFile(fs, "/test", []byte("hello"), 0644)
-
-	out := &strings.Builder{}
-	env := &commands.Environment{
-		FS:     fs,
-		Stdout: out,
+func TestCksum_Run(t *testing.T) {
+	tests := []struct {
+		name           string
+		args           []string
+		files          map[string]string
+		stdin          string
+		expectedStatus int
+		containsOutput string
+		containsStderr string
+	}{
+		{
+			name:           "default crc",
+			args:           []string{"test.txt"},
+			files:          map[string]string{"/test.txt": "hello"},
+			expectedStatus: 0,
+			containsOutput: "4222801193 5 test.txt",
+		},
+		{
+			name:           "md5 hash",
+			args:           []string{"-a", "md5", "test.txt"},
+			files:          map[string]string{"/test.txt": "hello"},
+			expectedStatus: 0,
+			containsOutput: "5d41402abc4b2a76b9719d911017c592  test.txt",
+		},
+		{
+			name:           "sha256 hash base64",
+			args:           []string{"-a", "sha256", "--base64", "test.txt"},
+			files:          map[string]string{"/test.txt": "hello"},
+			expectedStatus: 0,
+			containsOutput: "LPJNul+wow4m6DsqxbninhsWHlwfp0JecwQzYpOLmCQ=",
+		},
+		{
+			name:           "check mode",
+			args:           []string{"-c", "sums.txt"},
+			files:          map[string]string{
+				"/test.txt": "hello",
+				"/sums.txt": "5d41402abc4b2a76b9719d911017c592  test.txt",
+			},
+			expectedStatus: 0,
+			containsOutput: "test.txt: OK",
+		},
+		{
+			name:           "check mode fail",
+			args:           []string{"-c", "sums.txt"},
+			files:          map[string]string{
+				"/test.txt": "wrong",
+				"/sums.txt": "5d41402abc4b2a76b9719d911017c592  test.txt",
+			},
+			expectedStatus: 1,
+			containsOutput: "test.txt: FAILED",
+		},
+		{
+			name:           "bsd style tag",
+			args:           []string{"-a", "md5", "--tag", "test.txt"},
+			files:          map[string]string{"/test.txt": "hello"},
+			expectedStatus: 0,
+			containsOutput: "MD5 (test.txt) = 5d41402abc4b2a76b9719d911017c592",
+		},
+		{
+			name:           "zero terminator",
+			args:           []string{"-z", "test.txt"},
+			files:          map[string]string{"/test.txt": "hello"},
+			expectedStatus: 0,
+			containsOutput: "4222801193 5 test.txt\x00",
+		},
+		{
+			name:           "unknown algorithm",
+			args:           []string{"-a", "unknown", "test.txt"},
+			files:          map[string]string{"/test.txt": "hello"},
+			expectedStatus: 1,
+			containsStderr: "unknown algorithm",
+		},
 	}
 
-	c := New()
-	status := c.Run(context.Background(), env, []string{"/test"})
-	assert.Equal(t, 0, status)
-	assert.Contains(t, out.String(), "5") // length
-	assert.Contains(t, out.String(), "test")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
+			for path, content := range tt.files {
+				_ = afero.WriteFile(fs, path, []byte(content), 0644)
+			}
+
+			stdout := &bytes.Buffer{}
+			stderr := &bytes.Buffer{}
+			env := &commands.Environment{
+				FS:     fs,
+				Cwd:    "/",
+				Stdout: stdout,
+				Stderr: stderr,
+				Stdin:  io.NopCloser(strings.NewReader(tt.stdin)),
+			}
+
+			c := New()
+			status := c.Run(context.Background(), env, tt.args)
+			assert.Equal(t, tt.expectedStatus, status)
+			if tt.containsOutput != "" {
+				assert.Contains(t, stdout.String(), tt.containsOutput)
+			}
+			if tt.containsStderr != "" {
+				assert.Contains(t, stderr.String(), tt.containsStderr)
+			}
+		})
+	}
 }
 
-func TestCksum_Stdin(t *testing.T) {
-	out := &strings.Builder{}
-	env := &commands.Environment{
-		Stdin:  io.NopCloser(strings.NewReader("hello")),
-		Stdout: out,
-	}
-
+func TestCksum_Metadata(t *testing.T) {
 	c := New()
-	status := c.Run(context.Background(), env, []string{})
-	assert.Equal(t, 0, status)
-	assert.Contains(t, out.String(), "5")
-}
-
-func TestCksum_Hashing(t *testing.T) {
-	fs := afero.NewMemMapFs()
-	afero.WriteFile(fs, "/file1.txt", []byte("hello world"), 0644)
-
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	env := &commands.Environment{
-		FS:     fs,
-		Stdout: &stdout,
-		Stderr: &stderr,
-	}
-
-	c := New()
-
-	// Test MD5
-	status := c.Run(context.Background(), env, []string{"-a", "md5", "/file1.txt"})
-	assert.Equal(t, 0, status)
-	// md5("hello world") = 5eb63bbbe01eeed093cb22bb8f5acdc3
-	assert.Contains(t, stdout.String(), "5eb63bbbe01eeed093cb22bb8f5acdc3")
-
-	// Test Check
-	stdout.Reset()
-	checkFile := "5eb63bbbe01eeed093cb22bb8f5acdc3  /file1.txt\n"
-	afero.WriteFile(fs, "/check.md5", []byte(checkFile), 0644)
-	status = c.Run(context.Background(), env, []string{"-c", "/check.md5"})
-	assert.Equal(t, 0, status)
-	assert.Equal(t, "/file1.txt: OK\n", stdout.String())
+	assert.Equal(t, "cksum", c.Name())
 }

@@ -19,6 +19,7 @@ func (c *Command) Name() string {
 
 func (c *Command) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("command", pflag.ContinueOnError)
+	flags.SetInterspersed(false)
 	useDefaultPath := flags.BoolP("path", "p", false, "use a default value for PATH")
 	identify := flags.BoolP("verbose", "v", false, "print a description of COMMAND")
 	verboseIdentify := flags.BoolP("Verbose", "V", false, "print a more verbose description of COMMAND")

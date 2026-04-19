@@ -3,7 +3,6 @@ package clear
 import (
 	"bytes"
 	"context"
-	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,14 +10,17 @@ import (
 )
 
 func TestClear_Run(t *testing.T) {
-	var stdout bytes.Buffer
+	stdout := &bytes.Buffer{}
 	env := &commands.Environment{
-		Stdout: &stdout,
-		Stderr: io.Discard,
+		Stdout: stdout,
 	}
-
 	c := New()
-	status := c.Run(context.Background(), env, []string{})
+	status := c.Run(context.Background(), env, nil)
 	assert.Equal(t, 0, status)
-	assert.Contains(t, stdout.String(), "\033[H\033[2J")
+	assert.Equal(t, "\033[H\033[2J", stdout.String())
+}
+
+func TestClear_Metadata(t *testing.T) {
+	c := New()
+	assert.Equal(t, "clear", c.Name())
 }

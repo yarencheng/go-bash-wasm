@@ -4,3 +4,6 @@
 [submodule "third_party/coreutils"]
 	path = third_party/coreutils
 	url = https://git.savannah.gnu.org/git/coreutils.git
+[submodule "third_party/curl"]
+	path = third_party/curl
+	url = https://github.com/curl/curl.git

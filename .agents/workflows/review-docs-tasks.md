@@ -1,17 +1,17 @@
 ---
-description: Comprehensive workflow guide for AI agents to audit upstream parity and maintain docs/task.md
+description: Comprehensive workflow guide for AI agents to audit upstream parity and maintain docs/bash/tasks.md and docs/coreutils/tasks.md
 ---
 
 // turbo-all
 
-This workflow instructs the AI agent on how to systematically review and identify missing parity features directly from the upstream `bash` and `coreutils` repositories, maintaining an alignment checklist in `docs/task.md`.
+This workflow instructs the AI agent on how to systematically review and identify missing parity features directly from the upstream `bash` and `coreutils` repositories, maintaining alignment checklists in `docs/bash/tasks.md` and `docs/coreutils/tasks.md`.
 
 ## Goal
 Achieve high-fidelity functional parity with GNU Bash and Coreutils by identifying implementation gaps and tracking them systematically.
 
-## Phase 1: Context Discovery
-Examine the master tracking file located at `docs/task.md`.
-- If the file does not exist, initialize it with a basic structure.
+Examine the tracking files located in `docs/bash/tasks.md` and `docs/coreutils/tasks.md`.
+- Choose the appropriate file based on whether the target command is a Bash builtin or a Coreutils utility.
+- If the files do not exist, initialize them with a basic structure.
 - Review existing entries for the target command to avoid redundant research.
 
 ## Phase 2: Upstream Deep-Dive
@@ -30,15 +30,15 @@ Search the local codebase (`internal/`, `pkg/`, `cmd/`) for the Go implementatio
 - Identify which flags are already handled.
 - Check for existing tests to confirm implementation status.
 
-## Phase 4: Gap Mapping & task.md Update
-Log every identified flag and feature in a strict hierarchical checkbox list in `docs/task.md`.
+## Phase 4: Gap Mapping & tasks.md Update
+Log every identified flag and feature in a strict hierarchical checkbox list in the appropriate `docs/*/tasks.md` file.
 
 **Review Checkbox Syntax:**
 - `[x]` : Feature is fully implemented and verified. **Requirement:** Link to the local Go implementation.
 - `[ ]` : Feature is incomplete or missing. **Requirement:** Link to the specific file and line range in `third_party/*` where this is handled upstream.
 - `[-]` : Deliberately skipped. **Requirement:** State a brief rationale (e.g., *[Not Simulation-friendly] Relies on hardware IO*).
 
-### Example Output for `docs/task.md`
+### Example Output for `docs/bash/tasks.md` or `docs/coreutils/tasks.md`
 
 ```markdown
 ## Parity: `pwd`

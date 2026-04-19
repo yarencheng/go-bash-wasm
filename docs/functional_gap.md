@@ -55,7 +55,7 @@ This document tracks known functional gaps, intentional deviations, and implemen
 
 ### `pwd`
   
-- `[x]` Flag `--help` (Global Dispatcher): `docs/task.md:L1065`
+- `[x]` Flag `--help` (Global Dispatcher): `docs/bash/tasks.md`
   > Rationale: Built-in help is intercepted by the shell's help dispatcher to ensure a consistent instructional experience across all simulated commands.
 
 ### `read`
@@ -88,7 +88,7 @@ This document tracks known functional gaps, intentional deviations, and implemen
 
 ### System Management (`mount`, `umount`, `su`)
 
-- `[-]` Commands (WASM/Sandbox Limitation): `docs/task.md`
+- `[-]` Commands (WASM/Sandbox Limitation): `docs/coreutils/tasks.md`
   > Rationale:
   > - **mount/umount**: The WebAssembly runtime lacks the necessary syscalls for block-device management and mounting.
   > - **su**: The simulator operates as a single-user environment. Privilege escalation is restricted to maintain sandbox integrity and simplify state management.

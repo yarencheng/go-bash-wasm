@@ -134,6 +134,26 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/break.def`
 - [x] Basic operation: Implemented in `internal/commands/continue/continue.go`
 
+### `declare`
+
+- [x] Upstream: `third_party/bash/builtins/declare.def`
+- [x] Basic operation: Implemented in `internal/commands/bash/declare/declare.go`
+- [x] Flag `-p` (print): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-l` (lowercase): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-u` (uppercase): `internal/commands/bash/declare/declare.go`
+- [ ] Flag `-a` (indexed array): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-A` (associative array): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-i` (integer): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-r` (readonly): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-x` (export): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-f` (functions): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-F` (function names): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-g` (global): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-I` (inherit): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-t` (trace): `third_party/bash/builtins/declare.def`
+- [ ] Flag `-n` (nameref): `third_party/bash/builtins/declare.def`
+- [ ] Synonym `typeset`: `third_party/bash/builtins/declare.def`
+
 ### `dirs`
 
 - [x] Upstream: `third_party/bash/builtins/pushd.def`
@@ -215,6 +235,14 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/fg_bg.def`
 - [x] Basic operation: Implemented in `internal/commands/fg/fg.go`
+
+### `getopts`
+
+- [x] Upstream: `third_party/bash/builtins/getopts.def`
+- [x] Basic parsing: Implemented in `internal/commands/bash/getopts/getopts.go`
+- [x] Variable assignment (OPTARG, OPTIND): `internal/commands/bash/getopts/getopts.go`
+- [x] Silent error reporting: `internal/commands/bash/getopts/getopts.go`
+- [ ] Shell positional parameters fallback: `third_party/bash/builtins/getopts.def`
 
 ### `hash`
 
@@ -302,6 +330,19 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/pushd.def`
 - [x] Basic popping: Implemented in `internal/commands/popd/popd.go`
 - [x] Flag `-n`: `internal/commands/popd/popd.go`
+
+### `printf`
+
+- [x] Upstream: `third_party/bash/builtins/printf.def`
+- [x] Basic formatting: Implemented in `internal/commands/coreutils/printf/printf.go`
+- [x] Flag `-v` (assign to variable): `internal/commands/coreutils/printf/printf.go`
+- [x] Format specifier `%b` (escapes): `internal/commands/coreutils/printf/printf.go`
+- [x] Format specifier `%q` (quoted): `internal/commands/coreutils/printf/printf.go`
+- [x] Format string reuse: `internal/commands/coreutils/printf/printf.go`
+- [ ] Format specifier `%Q` (quoted with precision): `third_party/bash/builtins/printf.def`
+- [ ] Format specifier `%T` (date/time): `third_party/bash/builtins/printf.def`
+- [ ] Width/precision `*` support: `third_party/bash/builtins/printf.def`
+- [ ] Standard C format specifiers (proper types): `third_party/bash/builtins/printf.def`
 
 ### `pushd`
 
@@ -407,6 +448,19 @@ Status codes:
 - [x] Upstream: `third_party/bash/builtins/suspend.def`
 - [x] Basic operation: `internal/commands/suspend/suspend.go` (Unsupported; see [functional_gap.md](file:///Users/aren/github/yarencheng/go-bash-wasm/docs/bash/functional_gap.md#suspend))
 - [x] Flag `-f`: `internal/commands/suspend/suspend.go`
+
+### `test`
+
+- [x] Upstream: `third_party/bash/builtins/test.def`
+- [x] Unary operators (`-e`, `-f`, `-d`, `-z`, `-n`): Implemented in `internal/commands/bash/test/test.go`
+- [x] Binary operators (`=`, `==`, `!=`, `-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`): Implemented in `internal/commands/bash/test/test.go`
+- [x] Logical operators (`!`, `-a`, `-o`): Implemented in `internal/commands/bash/test/test.go`
+- [x] Synonym `[`: Implemented via command registration
+- [ ] File operators (`-r`, `-w`, `-x`, `-L`, `-G`, `-O`, `-S`, `-p`, `-b`, `-c`, `-t`, `-k`, `-u`, `-g`, `-N`): `third_party/bash/builtins/test.def`
+- [ ] Binary file operators (`-nt`, `-ot`, `-ef`): `third_party/bash/builtins/test.def`
+- [ ] Shell option test (`-o OPTION`): `third_party/bash/builtins/test.def`
+- [ ] Variable set test (`-v VAR`): `third_party/bash/builtins/test.def`
+- [ ] Nameref test (`-R VAR`): `third_party/bash/builtins/test.def`
 
 ### `time`
 

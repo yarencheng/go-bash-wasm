@@ -5,6 +5,7 @@ import (
 	"context"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -468,6 +469,216 @@ func TestLs_Run(t *testing.T) {
 		assert.Equal(t, 0, status)
 		// Should contain ANSI color codes (e.g., \033[1;34m for directories)
 		assert.Contains(t, stdout.String(), "\033[1;34m")
+	})
+
+	t.Run("help flag", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--help"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "Usage:")
+	})
+
+	t.Run("version flag", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--version"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "ls")
+	})
+
+	t.Run("almost all -A", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-A"})
+		assert.Equal(t, 0, status)
+		assert.NotContains(t, stdout.String(), ".\n")
+		assert.NotContains(t, stdout.String(), "..\n")
+		assert.Contains(t, stdout.String(), ".hidden")
+	})
+
+	t.Run("reverse sort -r", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-r"})
+		assert.Equal(t, 0, status)
+		output := stdout.String()
+		// Alphabetical: big.txt, dir1, file1.txt, file2.txt
+		// Reverse: file2.txt, file1.txt, dir1, big.txt
+		assert.True(t, strings.Index(output, "file2.txt") < strings.Index(output, "big.txt"))
+	})
+
+	t.Run("sort by time -t", func(t *testing.T) {
+		fs7 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs7, "/old", []byte(""), 0644))
+		time.Sleep(10 * time.Millisecond)
+		require.NoError(t, afero.WriteFile(fs7, "/new", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs7,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-t"})
+		assert.Equal(t, 0, status)
+		output := stdout.String()
+		assert.True(t, strings.Index(output, "new") < strings.Index(output, "old"))
+	})
+
+	t.Run("human readable -h", func(t *testing.T) {
+		fs8 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs8, "/large", make([]byte, 2048), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs8,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-lh"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "2.0K")
+	})
+
+	t.Run("SI units --si", func(t *testing.T) {
+		fs9 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs9, "/large", make([]byte, 2000), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs9,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-l", "--si"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "2.0K")
+	})
+
+	t.Run("multiple targets", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"file1.txt", "file2.txt"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "file1.txt")
+		assert.Contains(t, stdout.String(), "file2.txt")
+	})
+
+	t.Run("inode -i", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-i"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "0 ")
+	})
+
+	t.Run("block size --block-size", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-l", "--block-size=1"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "8")
+	})
+
+	t.Run("time styles", func(t *testing.T) {
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		styles := []string{"full-iso", "long-iso", "iso"}
+		for _, style := range styles {
+			stdout.Reset()
+			status := ls.Run(context.Background(), env, []string{"-l", "--time-style=" + style})
+			assert.Equal(t, 0, status)
+			assert.NotEmpty(t, stdout.String())
+		}
+	})
+
+	t.Run("quoting style shell", func(t *testing.T) {
+		fs10 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs10, "/file with space", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs10,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"--quoting-style=shell"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "'file with space'")
+	})
+
+	t.Run("hide control chars -q", func(t *testing.T) {
+		fs11 := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs11, "/file\x01name", []byte(""), 0644))
+
+		var stdout, stderr bytes.Buffer
+		env := &commands.Environment{
+			FS:     fs11,
+			Stdout: &stdout,
+			Stderr: &stderr,
+			Cwd:    "/",
+		}
+
+		status := ls.Run(context.Background(), env, []string{"-q"})
+		assert.Equal(t, 0, status)
+		assert.Contains(t, stdout.String(), "file?name")
 	})
 
 	t.Run("invalid directory", func(t *testing.T) {

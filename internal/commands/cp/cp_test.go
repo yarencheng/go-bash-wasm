@@ -3,7 +3,9 @@ package cp
 import (
 	"bytes"
 	"context"
+	"io"
 	"testing"
+	"time"
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -79,6 +81,55 @@ func TestCp_Run(t *testing.T) {
 			expectedStatus: 1,
 			containsStderr: "missing destination",
 		},
+		{
+			name:           "help flag",
+			args:           []string{"--help"},
+			expectedStatus: 0,
+			containsOutput: "Usage:",
+		},
+		{
+			name:           "version flag",
+			args:           []string{"--version"},
+			expectedStatus: 0,
+			containsOutput: "cp",
+		},
+		{
+			name:           "archive flag",
+			args:           []string{"-a", "srcdir", "destdir"},
+			dirs:           []string{"/srcdir"},
+			files:          map[string]string{"/srcdir/f": "f"},
+			expectedStatus: 0,
+			checkFiles:     map[string]string{"/destdir/f": "f"},
+		},
+		{
+			name:           "preserve flag",
+			args:           []string{"-p", "src.txt", "dest.txt"},
+			files:          map[string]string{"/src.txt": "hello"},
+			expectedStatus: 0,
+			checkFiles:     map[string]string{"/dest.txt": "hello"},
+		},
+		{
+			name:           "update flag skip",
+			args:           []string{"-u", "src.txt", "dest.txt"},
+			files:          map[string]string{"/src.txt": "old", "/dest.txt": "new"},
+			expectedStatus: 0,
+			// Since we can't easily set Chtimes here without manual intervention, 
+			// I'll just check it runs. 
+			// Use a real test for update in a separate function if needed.
+		},
+		{
+			name:           "omitting directory",
+			args:           []string{"srcdir", "destdir"},
+			dirs:           []string{"/srcdir"},
+			expectedStatus: 1,
+			containsStderr: "omitting directory",
+		},
+		{
+			name:           "empty source error",
+			args:           []string{},
+			expectedStatus: 1,
+			containsStderr: "missing file operand",
+		},
 	}
 
 	for _, tt := range tests {
@@ -119,6 +170,31 @@ func TestCp_Run(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestCp_Update(t *testing.T) {
+	fs := afero.NewMemMapFs()
+	_ = afero.WriteFile(fs, "/newer", []byte("newer"), 0644)
+	_ = afero.WriteFile(fs, "/older", []byte("older"), 0644)
+
+	now := time.Now()
+	_ = fs.Chtimes("/older", now.Add(-time.Hour), now.Add(-time.Hour))
+	_ = fs.Chtimes("/newer", now, now)
+
+	env := &commands.Environment{FS: fs, Cwd: "/", Stdout: io.Discard, Stderr: io.Discard}
+	c := New()
+
+	// cp -u older newer -> should not overwrite newer
+	status := c.Run(context.Background(), env, []string{"-u", "/older", "/newer"})
+	assert.Equal(t, 0, status)
+	content, _ := afero.ReadFile(fs, "/newer")
+	assert.Equal(t, "newer", string(content))
+
+	// cp -u newer older -> should overwrite older
+	status = c.Run(context.Background(), env, []string{"-u", "/newer", "/older"})
+	assert.Equal(t, 0, status)
+	content, _ = afero.ReadFile(fs, "/older")
+	assert.Equal(t, "newer", string(content))
 }
 
 func TestCp_Metadata(t *testing.T) {

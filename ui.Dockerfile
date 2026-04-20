@@ -26,7 +26,7 @@ RUN go test -v -cover ./...
 # Targeting js/wasm for browser execution
 RUN GOOS=js GOARCH=wasm go build -ldflags="-s -w -X 'github.com/yarencheng/go-bash-wasm/internal/app.MachType=wasm32-unknown-wasi'" -o main.wasm ./cmd/go-bash-wasm/
 
-ARG OPTIMIZE=fast
+ARG OPTIMIZE=none
 RUN if [ "${OPTIMIZE}" = "fast" ]; then \
     wasm-opt -O4 \
     --enable-bulk-memory \

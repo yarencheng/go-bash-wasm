@@ -344,9 +344,9 @@ Status codes:
 - [x] Flag `-n`: `internal/commands/bash/echo/echo.go`
 - [x] Flag `-e`: `internal/commands/bash/echo/echo.go`
 - [x] Flag `-E`: `internal/commands/bash/echo/echo.go`
-- [ ] Escaped `\0NNN`: `third_party/coreutils/src/echo.c:L243`
-- [ ] Escaped `\xHH`: `third_party/coreutils/src/echo.c:L228`
-- [ ] Escaped `\c`: `third_party/coreutils/src/echo.c:L221`
+- [x] Escaped `\0NNN`: `internal/commands/bash/echo/echo.go`
+- [x] Escaped `\xHH`: `internal/commands/bash/echo/echo.go`
+- [x] Escaped `\c`: `internal/commands/bash/echo/echo.go`
 
 ### `env`
 
@@ -523,7 +523,7 @@ Status codes:
 - [x] Basic signaling: Implemented in `internal/commands/bash/kill/kill.go`
 - [x] Flag `-l`, `--list`: `internal/commands/bash/kill/kill.go`
 - [x] Flag `-s`, `--signal`: `internal/commands/bash/kill/kill.go`
-- [ ] Flag `-t`, `--table`: `third_party/coreutils/src/kill.c:L80`
+- [x] Flag `-t`, `--table`: `internal/commands/bash/kill/kill.go`
 
 ### `link`
 
@@ -770,7 +770,7 @@ Status codes:
 - [x] Flag `%b`: `internal/commands/coreutils/printf/printf.go`
 - [x] Flag `%q`: `internal/commands/coreutils/printf/printf.go`
 - [x] Flag `-v VAR`: Implemented in `internal/commands/coreutils/printf/printf.go`
-- [ ] Format specifier `*` width/precision: `third_party/coreutils/src/printf.c:L595`
+- [x] Format specifier `*` width/precision: `internal/commands/coreutils/printf/printf.go`
 - [x] Reusing format string: `internal/commands/coreutils/printf/printf.go`
 
 ### `ptx`
@@ -1055,10 +1055,10 @@ Status codes:
 - [x] String operators (=, !=, -z, -n): Implemented in `internal/commands/bash/test/test.go`
 - [x] Numeric operators (-eq, -ne, etc.): Implemented in `internal/commands/bash/test/test.go`
 - [x] Logical operators (!, -a, -o): Implemented in `internal/commands/bash/test/test.go`
-- [ ] File operators (`-r`, `-w`, `-x`, `-L`, `-G`, `-O`, `-S`, `-p`, `-b`, `-c`, `-t`, `-k`, `-u`, `-g`, `-N`): `third_party/coreutils/src/test.c:L380`
-- [ ] Binary file operators (`-nt`, `-ot`, `-ef`): `third_party/coreutils/src/test.c:L199`
-- [ ] String comparison operators (`>`, `<`): `third_party/coreutils/src/test.c:L191`
-- [ ] Length operator (`-l STRING`): `third_party/coreutils/src/test.c:L220`
+- [x] File operators (`-r`, `-w`, `-x`, `-L`, `-G`, `-O`, `-S`, `-p`, `-b`, `-c`, `-t`, `-k`, `-u`, `-g`, `-N`): `internal/commands/bash/test/test.go`
+- [x] Binary file operators (`-nt`, `-ot`, `-ef`): `internal/commands/bash/test/test.go`
+- [x] String comparison operators (`>`, `<`): `internal/commands/bash/test/test.go`
+- [x] Length operator (`-l STRING`): `internal/commands/bash/test/test.go`
 - [x] Aliases: `[`
 
 ### `timeout`

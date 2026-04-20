@@ -46,6 +46,7 @@ var signals = map[int]string{
 func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string) int {
 	flags := pflag.NewFlagSet("kill", pflag.ContinueOnError)
 	list := flags.BoolP("list", "l", false, "list signal names")
+	table := flags.BoolP("table", "t", false, "print a table of signal information")
 	sigName := flags.StringP("signal", "s", "", "specify the signal to be sent")
 	sigNum := flags.IntP("signum", "n", -1, "specify the signal number to be sent")
 
@@ -77,7 +78,7 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 		return 1
 	}
 
-	if *list {
+	if *list || *table {
 		h := flags.Args()
 		if len(h) == 0 {
 			// print all
@@ -87,12 +88,16 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 			}
 			sort.Ints(keys)
 			for i, key := range keys {
-				fmt.Fprintf(env.Stdout, "%2d) SIG%-8s", key, signals[key])
-				if (i+1)%4 == 0 {
-					fmt.Fprintln(env.Stdout, "")
+				if *table {
+					fmt.Fprintf(env.Stdout, "%d\t%s\n", key, signals[key])
+				} else {
+					fmt.Fprintf(env.Stdout, "%2d) SIG%-8s", key, signals[key])
+					if (i+1)%4 == 0 {
+						fmt.Fprintln(env.Stdout, "")
+					}
 				}
 			}
-			if len(keys)%4 != 0 {
+			if !*table && len(keys)%4 != 0 {
 				fmt.Fprintln(env.Stdout, "")
 			}
 			return 0

@@ -155,7 +155,7 @@ func (t *Test) evalUnary(env *commands.Environment, op, arg string) bool {
 		return ok
 	case "-t":
 		// FD defaults to 0 if not specified (though -t requires an arg in test)
-		fd := t.toInt(arg)
+		fd := t.toInt(env, arg, "")
 		return fd >= 0 && fd <= 2 // In our simulator, standard FDs are always "terminals"
 	case "-o":
 		val, ok := env.Shopts[arg]
@@ -194,17 +194,17 @@ func (t *Test) evalBinary(env *commands.Environment, left, op, right string) boo
 	case "!=":
 		return left != right
 	case "-eq":
-		return t.toInt(left) == t.toInt(right)
+		return t.toInt(env, left, "") == t.toInt(env, right, "")
 	case "-ne":
-		return t.toInt(left) != t.toInt(right)
+		return t.toInt(env, left, "") != t.toInt(env, right, "")
 	case "-lt":
-		return t.toInt(left) < t.toInt(right)
+		return t.toInt(env, left, "") < t.toInt(env, right, "")
 	case "-le":
-		return t.toInt(left) <= t.toInt(right)
+		return t.toInt(env, left, "") <= t.toInt(env, right, "")
 	case "-gt":
-		return t.toInt(left) > t.toInt(right)
+		return t.toInt(env, left, "") > t.toInt(env, right, "")
 	case "-ge":
-		return t.toInt(left) >= t.toInt(right)
+		return t.toInt(env, left, "") >= t.toInt(env, right, "")
 	case "-nt":
 		i1, err1 := env.FS.Stat(t.absPath(env, left))
 		i2, err2 := env.FS.Stat(t.absPath(env, right))
@@ -252,7 +252,10 @@ func (t *Test) absPath(env *commands.Environment, path string) string {
 	return filepath.Join(env.Cwd, path)
 }
 
-func (t *Test) toInt(s string) int64 {
+func (t *Test) toInt(env *commands.Environment, s string, nextArg string) int64 {
+	if s == "-l" {
+		return int64(len(nextArg))
+	}
 	var n int64
 	fmt.Sscanf(s, "%d", &n)
 	return n

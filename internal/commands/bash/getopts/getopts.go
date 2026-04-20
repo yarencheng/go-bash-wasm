@@ -28,11 +28,10 @@ func (g *Getopts) Run(ctx context.Context, env *commands.Environment, args []str
 	varname := args[1]
 
 	// Arguments to parse are from args[2:]
-	// If args[2:] is empty, we should probably look at shell's positional parameters.
-	// But our Environment doesn't have shell positional parameters directly yet.
-	// Wait, standard getopts uses the shell's positional parameters if not provided.
-	// For now, we'll assume they are passed in args[2:].
 	cmdArgs := args[2:]
+	if len(cmdArgs) == 0 {
+		cmdArgs = env.PositionalArgs
+	}
 
 	optindStr, ok := env.EnvVars["OPTIND"]
 	if !ok {

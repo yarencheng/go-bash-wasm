@@ -41,3 +41,21 @@ func TestGetopts_Run(t *testing.T) {
 	assert.Equal(t, 1, status)
 	assert.Equal(t, "?", env.EnvVars["var"])
 }
+
+func TestGetopts_Fallback(t *testing.T) {
+	env := &commands.Environment{
+		EnvVars: map[string]string{
+			"OPTIND": "1",
+		},
+		PositionalArgs: []string{"-x", "extra"},
+		Stdout:         io.Discard,
+		Stderr:         io.Discard,
+	}
+	g := New()
+
+	// No args provided, should use env.PositionalArgs
+	status := g.Run(context.Background(), env, []string{"x", "var"})
+	assert.Equal(t, 0, status)
+	assert.Equal(t, "x", env.EnvVars["var"])
+	assert.Equal(t, "2", env.EnvVars["OPTIND"])
+}

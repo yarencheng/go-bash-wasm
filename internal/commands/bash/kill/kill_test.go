@@ -118,6 +118,18 @@ func TestKill_Run(t *testing.T) {
 			jobs:       []*commands.Job{{PID: 100, Status: "Stopped"}},
 			wantStatus: 0,
 		},
+		{
+			name:       "kill job with -9",
+			args:       []string{"-9", "100"},
+			jobs:       []*commands.Job{{PID: 100, Status: "Running"}},
+			wantStatus: 0,
+		},
+		{
+			name:       "kill job with -KILL",
+			args:       []string{"-KILL", "101"},
+			jobs:       []*commands.Job{{PID: 101, Status: "Running"}},
+			wantStatus: 0,
+		},
 	}
 
 	for _, tt := range tests {
@@ -142,7 +154,7 @@ func TestKill_Run(t *testing.T) {
 			}
 
 			// Verify job status changes
-			if tt.name == "kill job by pid" || tt.name == "kill job by pid with signal name" {
+			if tt.name == "kill job by pid" || tt.name == "kill job by pid with signal name" || tt.name == "kill job with -9" || tt.name == "kill job with -KILL" {
 				assert.Equal(t, "Done", tt.jobs[0].Status)
 			} else if tt.name == "stop job by pid" {
 				assert.Equal(t, "Stopped", tt.jobs[0].Status)

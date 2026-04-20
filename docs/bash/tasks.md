@@ -247,7 +247,7 @@ Status codes:
 - [x] Basic parsing: Implemented in `internal/commands/bash/getopts/getopts.go`
 - [x] Variable assignment (OPTARG, OPTIND): `internal/commands/bash/getopts/getopts.go`
 - [x] Silent error reporting: `internal/commands/bash/getopts/getopts.go`
-- [ ] Shell positional parameters fallback: `third_party/bash/builtins/getopts.def:L197`
+- [x] Shell positional parameters fallback: `internal/commands/bash/getopts/getopts.go`
 
 ### `hash`
 
@@ -298,7 +298,7 @@ Status codes:
 - [x] Flag `-l`: `internal/commands/bash/kill/kill.go:L68`
 - [x] Flag `-n num`: `internal/commands/bash/kill/kill.go:L50`
 - [x] Flag `-s SIGNAL`: `internal/commands/bash/kill/kill.go:L49`
-- [ ] Flag `-SIGNAL` (e.g. -9, -TERM): `third_party/bash/builtins/kill.def:L157` (Blocked by pflag parsing stub)
+- [x] Flag `-SIGNAL` (e.g. -9, -TERM): `internal/commands/bash/kill/kill.go`
 
 ### `let`
 

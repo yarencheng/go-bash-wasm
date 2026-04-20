@@ -50,17 +50,29 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 	sigNum := flags.IntP("signum", "n", -1, "specify the signal number to be sent")
 
 	// kill has weird flag parsing where -SIGNAL is common.
-	// pflag doesn't handle -9 or -TERM easily as flags.
-	// We'll manually check for those.
-
+	// We'll manually extract the signal if it's in the first argument.
+	var customSig string
+	var pflagArgs = args
 	if len(args) > 0 && strings.HasPrefix(args[0], "-") && !strings.HasPrefix(args[0], "--") && len(args[0]) > 1 {
-		// Might be -9 or -TERM
-		if !*list {
-			// handled below
+		potentialSig := args[0][1:]
+		// Check if it's a number
+		if _, err := strconv.Atoi(potentialSig); err == nil {
+			customSig = potentialSig
+			pflagArgs = args[1:]
+		} else {
+			// Check if it's a known signal name
+			name := strings.ToUpper(strings.TrimPrefix(potentialSig, "SIG"))
+			for _, s := range signals {
+				if s == name {
+					customSig = potentialSig
+					pflagArgs = args[1:]
+					break
+				}
+			}
 		}
 	}
 
-	if err := flags.Parse(args); err != nil {
+	if err := flags.Parse(pflagArgs); err != nil {
 		fmt.Fprintf(env.Stderr, "kill: %v\n", err)
 		return 1
 	}
@@ -120,7 +132,19 @@ func (k *Kill) Run(ctx context.Context, env *commands.Environment, args []string
 	}
 
 	signal := 15 // Default SIGTERM
-	if *sigNum != -1 {
+	if customSig != "" {
+		if n, err := strconv.Atoi(customSig); err == nil {
+			signal = n
+		} else {
+			name := strings.ToUpper(strings.TrimPrefix(customSig, "SIG"))
+			for num, s := range signals {
+				if s == name {
+					signal = num
+					break
+				}
+			}
+		}
+	} else if *sigNum != -1 {
 		signal = *sigNum
 	} else if *sigName != "" {
 		name := strings.ToUpper(strings.TrimPrefix(*sigName, "SIG"))

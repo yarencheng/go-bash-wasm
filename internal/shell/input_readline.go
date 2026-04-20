@@ -22,6 +22,7 @@ func (r *readlineReader) Close() error {
 func newLineReader(env *commands.Environment) (LineReader, error) {
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt:          "$ ",
+		AutoComplete:    NewCompleter(env),
 		HistoryFile:     "", // Disable history file for WASM/mock simplicity
 		InterruptPrompt: "^C",
 		EOFPrompt:       "exit",

@@ -10,7 +10,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/spf13/afero"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
 )
 
@@ -91,34 +90,16 @@ func (w *wasmReader) handleTab() {
 		return
 	}
 
-	// Simple word splitting by space for completion
+	completer := NewCompleter(w.env)
 	parts := strings.Split(line, " ")
 	lastWord := parts[len(parts)-1]
-
-	// Programmable completion
-	cmdName := parts[0]
-	var matches []string
-	if spec, ok := w.env.Completions[cmdName]; ok && len(parts) > 1 {
-		matches = w.generateMatches(spec, lastWord)
-	} else if len(parts) == 1 {
-		// Complete commands
-		for _, name := range w.env.Registry.List() {
-			if strings.HasPrefix(name, lastWord) {
-				matches = append(matches, name)
-			}
-		}
-	}
-
-	if len(matches) == 0 {
-		// Fallback to file completion if no programmable matches or not a command
-		matches = w.generateFileMatches(lastWord)
-	}
+	
+	matches := completer.getMatches(line, lastWord, parts)
 
 	if len(matches) == 1 {
 		// Unique match
 		completion := matches[0]
 		// Determine common prefix to know what to append
-		// This is a bit simplified: handle path completion prefix logic
 		prefix := lastWord
 		if strings.Contains(lastWord, "/") {
 			prefix = path.Base(lastWord)
@@ -168,88 +149,8 @@ func (w *wasmReader) handleTab() {
 	}
 }
 
-func (w *wasmReader) generateFileMatches(lastWord string) []string {
-	var matches []string
-	dir := "."
-	prefix := lastWord
-	if strings.Contains(lastWord, "/") {
-		dir = path.Dir(lastWord)
-		prefix = path.Base(lastWord)
-		if strings.HasSuffix(lastWord, "/") {
-			prefix = ""
-		}
-	}
 
-	fullDir := dir
-	if !path.IsAbs(dir) {
-		fullDir = path.Join(w.env.Cwd, dir)
-	}
 
-	entries, err := afero.ReadDir(w.env.FS, fullDir)
-	if err == nil {
-		for _, entry := range entries {
-			name := entry.Name()
-			if strings.HasPrefix(name, prefix) {
-				if entry.IsDir() {
-					name += "/"
-				}
-				matches = append(matches, name)
-			}
-		}
-	}
-	return matches
-}
-
-func (w *wasmReader) generateMatches(spec *commands.CompSpec, lastWord string) []string {
-	var matches []string
-
-	// Actions
-	if spec.Actions&(1<<2) != 0 { // -c: command
-		for _, name := range w.env.Registry.List() {
-			if strings.HasPrefix(name, lastWord) {
-				matches = append(matches, name)
-			}
-		}
-	}
-	if spec.Actions&(1<<3) != 0 { // -d: directory
-		fileMatches := w.generateFileMatches(lastWord)
-		for _, m := range fileMatches {
-			if strings.HasSuffix(m, "/") {
-				matches = append(matches, m)
-			}
-		}
-	}
-	if spec.Actions&(1<<5) != 0 { // -f: file
-		matches = append(matches, w.generateFileMatches(lastWord)...)
-	}
-	if spec.Actions&(1<<11) != 0 { // -v: variable
-		for name := range w.env.EnvVars {
-			if strings.HasPrefix(name, lastWord) {
-				matches = append(matches, name)
-			}
-		}
-	}
-
-	// WordList
-	if spec.WordList != "" {
-		words := strings.Fields(spec.WordList)
-		for _, word := range words {
-			if strings.HasPrefix(word, lastWord) {
-				matches = append(matches, word)
-			}
-		}
-	}
-
-	return matches
-}
-
-func commonPrefix(s1, s2 string) string {
-	i := 0
-	for i < len(s1) && i < len(s2) && s1[i] == s2[i] {
-		i++
-	}
-	return s1[:i]
-}
 
 func (w *wasmReader) replaceLine(newLine string) {
 	// Clear current line

@@ -9,6 +9,7 @@ require (
 	github.com/spf13/afero v1.15.0
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.11.1
+	github.com/yarencheng/go-curl v0.0.0-20260419154457-c2afba754c37
 )
 
 require (

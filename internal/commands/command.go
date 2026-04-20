@@ -59,9 +59,22 @@ type Environment struct {
 	Completions       map[string]*CompSpec
 	Shopts            map[string]bool
 	Traps             map[string]string
+	VarAttributes     map[string]uint32 // Bitmask: 1=readonly, 2=export, 4=integer, 8=array, 16=assoc
 	Registry          *Registry
 	Executor          Executor
 }
+
+const (
+	AttrReadonly  uint32 = 1
+	AttrExport    uint32 = 2
+	AttrInteger   uint32 = 4
+	AttrArray     uint32 = 8
+	AttrAssoc     uint32 = 16
+	AttrFunction  uint32 = 32
+	AttrNameref   uint32 = 64
+	AttrLowercase uint32 = 128
+	AttrUppercase uint32 = 256
+)
 
 // Executor defines the interface for executing shell commands.
 type Executor interface {

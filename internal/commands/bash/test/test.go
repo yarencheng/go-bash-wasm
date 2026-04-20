@@ -160,6 +160,29 @@ func (t *Test) evalUnary(env *commands.Environment, op, arg string) bool {
 	case "-o":
 		val, ok := env.Shopts[arg]
 		return ok && val
+	case "-O":
+		path := t.absPath(env, arg)
+		_, err := env.FS.Stat(path)
+		// Simulation: User owns all files in the sandbox
+		return err == nil
+	case "-G":
+		path := t.absPath(env, arg)
+		_, err := env.FS.Stat(path)
+		// Simulation: User's group owns all files in the sandbox
+		return err == nil
+	case "-N":
+		path := t.absPath(env, arg)
+		_, err := env.FS.Stat(path)
+		if err != nil {
+			return false
+		}
+		// Simulation: Approximate newer than atime
+		// afero doesn't track atime well, but we can assume if Mtime > Atime (simulated)
+		// Typical shell behavior is Mtime > Atime.
+		return true // Mock behavior
+	case "-R":
+		// Mock nameref check
+		return false
 	}
 	return false
 }

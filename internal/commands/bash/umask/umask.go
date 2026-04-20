@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/yarencheng/go-bash-wasm/internal/commands"
@@ -50,9 +51,14 @@ func (u *Umask) Run(ctx context.Context, env *commands.Environment, args []strin
 	// Set umask
 	newMask, err := strconv.ParseUint(remaining[0], 8, 32)
 	if err != nil {
-		// Try symbolic or more complex parsing if needed, but for now octal only
+		// Try symbolic parsing
+		m, ok := parseSymbolic(remaining[0], env.Umask)
+		if ok {
+			env.Umask = m
+			return 0
+		}
 		if env.Stderr != nil {
-			fmt.Fprintf(env.Stderr, "umask: %s: invalid octal number\n", remaining[0])
+			fmt.Fprintf(env.Stderr, "umask: %s: invalid symbolic or octal mode\n", remaining[0])
 		}
 		return 1
 	}
@@ -66,6 +72,51 @@ func (u *Umask) Run(ctx context.Context, env *commands.Environment, args []strin
 
 	env.Umask = uint32(newMask)
 	return 0
+}
+
+func parseSymbolic(mode string, currentMask uint32) (uint32, bool) {
+	// Very basic parser for "u=rwx,g=rx,o=rx" style
+	// umask is bitwise inversion of permissions
+	perm := 0777 - int(currentMask)
+	u := (perm >> 6) & 7
+	g := (perm >> 3) & 7
+	o := perm & 7
+
+	parts := strings.Split(mode, ",")
+	for _, part := range parts {
+		if !strings.Contains(part, "=") {
+			return 0, false
+		}
+		sub := strings.SplitN(part, "=", 2)
+		target := sub[0]
+		val := sub[1]
+		p := 0
+		if strings.Contains(val, "r") {
+			p |= 4
+		}
+		if strings.Contains(val, "w") {
+			p |= 2
+		}
+		if strings.Contains(val, "x") {
+			p |= 1
+		}
+
+		for _, c := range target {
+			switch c {
+			case 'u':
+				u = p
+			case 'g':
+				g = p
+			case 'o':
+				o = p
+			case 'a':
+				u, g, o = p, p, p
+			}
+		}
+	}
+
+	finalPerm := (u << 6) | (g << 3) | o
+	return uint32(0777 - finalPerm), true
 }
 
 func formatSymbolic(val uint32) string {

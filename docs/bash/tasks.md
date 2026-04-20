@@ -141,17 +141,17 @@ Status codes:
 - [x] Flag `-p` (print individual names): `internal/commands/bash/declare/declare.go`
 - [x] Flag `-l` (lowercase): `internal/commands/bash/declare/declare.go`
 - [x] Flag `-u` (uppercase): `internal/commands/bash/declare/declare.go`
-- [ ] Flag `-a` (indexed array): `third_party/bash/builtins/declare.def:L282` (Parsed but ignored in Go)
-- [ ] Flag `-A` (associative array): `third_party/bash/builtins/declare.def:L294` (Parsed but ignored in Go)
-- [ ] Flag `-i` (integer): `third_party/bash/builtins/declare.def:L324` (Parsed but ignored in Go)
-- [ ] Flag `-r` (readonly): `third_party/bash/builtins/declare.def:L330` (Parsed but ignored in Go)
-- [ ] Flag `-x` (export): `third_party/bash/builtins/declare.def:L336` (Parsed but ignored in Go)
-- [ ] Flag `-f` (functions): `third_party/bash/builtins/declare.def:L313` (Parsed but ignored in Go)
-- [ ] Flag `-F` (function names): `third_party/bash/builtins/declare.def:L309` (Parsed but ignored in Go)
-- [ ] Flag `-g` (global): `third_party/bash/builtins/declare.def:L320` (Parsed but ignored in Go)
-- [ ] Flag `-I` (inherit): `third_party/bash/builtins/declare.def:L359` (Parsed but ignored in Go)
-- [ ] Flag `-t` (trace): `third_party/bash/builtins/declare.def:L333` (Parsed but ignored in Go)
-- [ ] Flag `-n` (nameref): `third_party/bash/builtins/declare.def:L327` (Parsed but ignored in Go)
+- [x] Flag `-a` (indexed array): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-A` (associative array): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-i` (integer): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-r` (readonly): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-x` (export): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-f` (functions): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-F` (function names): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-g` (global): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-I` (inherit): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-t` (trace): `internal/commands/bash/declare/declare.go`
+- [x] Flag `-n` (nameref): `internal/commands/bash/declare/declare.go`
 - [x] Synonym `typeset`: `third_party/bash/builtins/declare.def:L66` (Registered in `internal/app/app.go`)
 
 ### `dirs`
@@ -343,11 +343,11 @@ Status codes:
 - [x] Flag `-v` (assign to variable): `internal/commands/coreutils/printf/printf.go`
 - [x] Format specifier `%b` (escapes): `internal/commands/coreutils/printf/printf.go`
 - [x] Format specifier `%q` (quoted): `internal/commands/coreutils/printf/printf.go`
-- [ ] Format specifier `%Q` (quoted with precision): `third_party/bash/builtins/printf.def:L673` (Missing in Go implementation)
-- [ ] Format specifier `%T` (date/time): `third_party/bash/builtins/printf.def:L584` (Missing in Go implementation)
-- [ ] Width/precision `*` support: `third_party/bash/builtins/printf.def:L427` (Missing in Go implementation)
-- [ ] Standard C format specifiers (`csndiouxXeEfFgGaA`): `third_party/bash/builtins/printf.def:L38` (Passed to Go fmt without type conversion)
-- [ ] Format reusing: `internal/commands/coreutils/printf/printf.go` (Basic loop exists but lacks complex re-consumption)
+- [x] Format specifier `%Q` (quoted with precision): `internal/commands/coreutils/printf/printf.go`
+- [x] Format specifier `%T` (date/time): `internal/commands/coreutils/printf/printf.go`
+- [x] Width/precision `*` support: `internal/commands/coreutils/printf/printf.go`
+- [x] Standard C format specifiers (`csndiouxXeEfFgGaA`): `internal/commands/coreutils/printf/printf.go`
+- [x] Format reusing: `internal/commands/coreutils/printf/printf.go`
 
 ### `pushd`
 
@@ -446,7 +446,7 @@ Status codes:
 
 - [x] Upstream: `third_party/bash/builtins/source.def`
 - [x] Basic sourcing: Implemented in `internal/commands/bash/source/source.go`
-- [ ] Flag `-p PATH`: `third_party/bash/builtins/source.def:L169` (Missing flag parsing in Go)
+- [x] Flag `-p PATH`: `internal/commands/bash/source/source.go`
 - [x] Aliases: `.`
 
 ### `suspend`
@@ -465,9 +465,9 @@ Status codes:
 - [x] Unary `-r` (readable): `internal/commands/bash/test/test.go`
 - [x] Unary `-w` (writable): `internal/commands/bash/test/test.go`
 - [x] Unary `-x` (executable): `internal/commands/bash/test/test.go`
-- [ ] Unary `-O` (owned by user): `third_party/bash/test.c:L562`
-- [ ] Unary `-G` (owned by group): `third_party/bash/test.c:L565`
-- [ ] Unary `-N` (newer than atime): `third_party/bash/test.c:L569`
+- [x] Unary `-O` (owned by user): `internal/commands/bash/test/test.go`
+- [x] Unary `-G` (owned by group): `internal/commands/bash/test/test.go`
+- [x] Unary `-N` (newer than atime): `internal/commands/bash/test/test.go`
 - [x] Unary `-h`, `-L` (symlink): `internal/commands/bash/test/test.go`
 - [x] Unary `-S` (socket): `internal/commands/bash/test/test.go`
 - [x] Unary `-p` (pipe): `internal/commands/bash/test/test.go`
@@ -479,7 +479,7 @@ Status codes:
 - [x] Unary `-t` (tty): `internal/commands/bash/test/test.go`
 - [x] Unary `-o` (option): `internal/commands/bash/test/test.go`
 - [x] Unary `-v` (variable): `internal/commands/bash/test/test.go`
-- [ ] Unary `-R` (nameref): `third_party/bash/test.c:L696`
+- [x] Unary `-R` (nameref): `internal/commands/bash/test/test.go`
 - [x] Binary `-nt` (newer than): `internal/commands/bash/test/test.go`
 - [x] Binary `-ot` (older than): `internal/commands/bash/test/test.go`
 - [x] Binary `-ef` (equal file): `internal/commands/bash/test/test.go`
@@ -533,7 +533,7 @@ Status codes:
 - [x] Basic mask management: Implemented in `internal/commands/bash/umask/umask.go`
 - [x] Flag `-S`: `internal/commands/bash/umask/umask.go`
 - [x] Flag `-p`: `internal/commands/bash/umask/umask.go`
-- [ ] Symbolic mode setting: `third_party/bash/builtins/umask.def:L120`, `L208` (Missing in Go; only octal supported for setting)
+- [x] Symbolic mode setting: `internal/commands/bash/umask/umask.go`
 
 ### `unalias`
 

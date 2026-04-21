@@ -151,25 +151,28 @@
 	});
 
 	const seoData = {
-		title: 'Bash Simulator WASM (Golang) - Interactive Unix Shell',
+		title: 'Bash Simulator Online - Interactive WASM Linux Terminal (Go)',
 		description:
-			'A high-performance Bash shell simulator powered by Go and WebAssembly. Run interactive Linux commands directly in your browser with our WASM-based terminal.',
+			'Run a full-featured Bash shell in your browser. Powered by Go and WebAssembly, our Linux simulation includes coreutils, file system, and interactive command execution.',
 		url: 'https://bash.devops-playground.dev/',
 		image: 'https://bash.devops-playground.dev/social-preview.png',
 		twitterHandle: '@yarencheng',
 		siteName: 'Bash Simulator WASM',
-		keywords: 'Bash, WASM, Golang, WebAssembly, Terminal, Shell Simulator, Linux Online, DevOps'
+		keywords:
+			'Bash Online, Linux Simulator, WebAssembly, Golang, Terminal Emulator, Coreutils, DevOps Tools, Web Shell'
 	};
 
 	const schemaData = {
 		'@context': 'https://schema.org',
 		'@type': 'SoftwareApplication',
 		name: 'Bash Simulator WASM',
-		alternateName: 'Bash WASM(Golang)',
+		alternateName: 'Bash Online Terminal',
 		operatingSystem: 'Any browser with WebAssembly support',
 		applicationCategory: 'DeveloperApplication',
 		description:
 			'A robust, interactive Bash shell simulator built with Go and compiled to WebAssembly. Features include coreutils parity, filesystem simulation, and interactive command execution.',
+		url: seoData.url,
+		image: seoData.image,
 		offers: {
 			'@type': 'Offer',
 			price: '0',
@@ -184,32 +187,60 @@
 		keywords: seoData.keywords
 	};
 
+	const breadcrumbData = {
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{
+				'@type': 'ListItem',
+				position: 1,
+				name: 'Home',
+				item: seoData.url
+			}
+		]
+	};
+
+	const websiteData = {
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'Bash Simulator WASM',
+		url: seoData.url,
+		potentialAction: {
+			'@type': 'SearchAction',
+			target: {
+				'@type': 'EntryPoint',
+				urlTemplate: `${seoData.url}?q={search_term_string}`
+			},
+			'query-input': 'required name=search_term_string'
+		}
+	};
+
 	const faqData = {
 		'@context': 'https://schema.org',
 		'@type': 'FAQPage',
 		mainEntity: [
 			{
 				'@type': 'Question',
-				name: 'What is Bash Simulator WASM?',
+				name: 'What is Bash Simulator Online?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'It is a full-featured Bash shell simulator developed in Go and running entirely in the browser using WebAssembly (WASM).'
+					text: 'It is a full-featured Bash shell simulator developed in Go and running entirely in the browser using WebAssembly (WASM). It allows you to practice Linux commands without installing anything.'
 				}
 			},
 			{
 				'@type': 'Question',
-				name: 'How do I use this Bash shell?',
+				name: 'How do I use this interactive Bash shell?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'Simply open the website and start typing standard Unix commands like ls, cd, mkdir, and echo. The environment is persistent within your browser session.'
+					text: 'Simply open the website and start typing standard Unix commands like ls, cd, mkdir, and echo. The environment simulates a real filesystem persistent within your browser session.'
 				}
 			},
 			{
 				'@type': 'Question',
-				name: 'Is this a real Linux kernel?',
+				name: 'Is this a real Linux kernel running in the browser?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'No, it is a high-fidelity simulation of the Bash shell and Coreutils running on a virtual filesystem in WebAssembly, not a full Linux kernel.'
+					text: 'No, it is a high-fidelity simulation of the Bash shell and GNU Coreutils running on a virtual filesystem in WebAssembly, optimized for speed and safety.'
 				}
 			}
 		]
@@ -243,6 +274,8 @@
 	<!-- Structured Data -->
 	{@html `<script type="application/ld+json">${JSON.stringify(schemaData)}</script>`}
 	{@html `<script type="application/ld+json">${JSON.stringify(faqData)}</script>`}
+	{@html `<script type="application/ld+json">${JSON.stringify(breadcrumbData)}</script>`}
+	{@html `<script type="application/ld+json">${JSON.stringify(websiteData)}</script>`}
 </svelte:head>
 
 <!-- Visually hidden semantic content for SEO and AEO -->
@@ -250,13 +283,35 @@
 	<h1>{seoData.title}</h1>
 	<p>{seoData.description}</p>
 	<section>
-		<h2>Key Features of Bash WASM(Golang)</h2>
+		<h2>Interactive Bash Shell Simulator</h2>
+		<p>
+			This online terminal provides a high-fidelity simulation of the GNU Bash shell. It is
+			designed for developers, students, and DevOps engineers who want to practice Linux
+			commands or test scripts in a safe, sandboxed environment directly in their browser.
+		</p>
+	</section>
+	<section>
+		<h2>Advanced Technology Stack: Go & WebAssembly (WASM)</h2>
+		<p>
+			Built with the performance of Golang and the portability of WebAssembly, this simulator
+			runs at near-native speeds. The entire shell logic and core utilities are compiled to a
+			main.wasm file, which is executed by the browser without any backend server requirements.
+		</p>
 		<ul>
-			<li>Full interactive Bash shell simulation</li>
-			<li>Powered by Go and WebAssembly</li>
-			<li>Virtual filesystem within the browser</li>
-			<li>GNU Coreutils parity (ls, cd, cp, mv, etc.)</li>
-			<li>Fast and lightweight execution</li>
+			<li><strong>True Bash Parity:</strong> Implements core Bash features and syntax.</li>
+			<li><strong>Virtual Filesystem:</strong> A fully functional in-memory filesystem (MEMFS).</li>
+			<li><strong>GNU Coreutils:</strong> Includes common commands like ls, cd, cat, grep, and more.</li>
+			<li><strong>Fast & Responsive:</strong> Instant startup and low-latency interaction.</li>
+			<li><strong>Secure Sandbox:</strong> Runs entirely client-side; your data never leaves the browser.</li>
+		</ul>
+	</section>
+	<section>
+		<h2>Use Cases for Bash Online</h2>
+		<ul>
+			<li>Learning Unix/Linux command line basics.</li>
+			<li>Testing shell scripts without a virtual machine.</li>
+			<li>Quickly running coreutils commands on any device.</li>
+			<li>DevOps interview preparation and practice.</li>
 		</ul>
 	</section>
 	<section>

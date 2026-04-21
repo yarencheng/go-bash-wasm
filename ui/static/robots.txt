@@ -2,4 +2,12 @@
 User-agent: *
 Disallow:
 
+# AI crawlers
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+
 Sitemap: https://bash.devops-playground.dev/sitemap.xml
